@@ -202,3 +202,25 @@ next native UX work is project/session evidence filtering and artifact navigatio
 Canonical run/test/starters, lifecycle bridge, remaining recovery and release
 acceptance retain their full original scope. Prior live-provider and publication
 external failures were not rechecked in this checkpoint.
+
+## Scoped evidence checkpoint (2026-10-16)
+
+Commits 8a8ffce and 2acb3e9 add host-owned canonical project attribution before
+receipt persistence, native project/session/legacy filters, full receipt details,
+comparison, contained current-artifact previews and CLI JSON export. The generated
+runtime remains unchanged; the canonical receipt-list Ability still has its
+shared-ledger contract. Scope defaults to project and never guesses attribution
+for old receipts. Native reads inspect up to 2 MiB per current/archive ledger
+(four files) and disclose coverage rather than claiming complete history.
+
+54 offline tests, E2E, native OpenCode 2.0.31 (kujo-native-host-490aMZ), and packed
+fresh/upgrade (kujo-opencode-packed-nYeTzy) passed. Packed export verifies an
+actual source-inspection receipt from installed bytes. Artifact previews are
+bounded current files, not immutable snapshots; directories list up to 50 entries
+without recursive browsing. Detailed scope/digest: PRODUCTION-READINESS.md.
+
+All seven product outcomes remain open. Continue canonical approved run/test and
+starter workflows, opt-in lifecycle integration, remaining recovery including
+multiple-project execution-state behavior, and immutable release acceptance.
+Project-scoped receipt metadata is not a change to canonical approval/idempotency
+state scoping. Prior external provider/publication/CI failures were not rechecked.

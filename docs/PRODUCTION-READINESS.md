@@ -324,11 +324,17 @@ out-of-project and symlink paths, and bound text/directory output. They describe
 current file contents, not immutable evidence snapshots. Directory previews list
 entries without recursive navigation or execution.
 
-53 offline tests plus 11 focused evidence/UI tests passed (the focused gate
-includes one later UI regression). Canonical E2E and OpenCode 2.0.31 native gate
+54 offline tests passed after the final UI regression was added. Canonical E2E and OpenCode 2.0.31 native gate
 `kujo-native-host-490aMZ` passed with actual receipts from separate sessions,
 project/detail filtering and comparison. Tests cover archive/legacy separation,
 malformed lines, contained artifact bounds and escape refusal, scoped UI requests,
 JSON export and metadata persistence. Earlier native assertion failure compared
 a /var path with its correct /private/var canonical form; tests now compare
 canonical roots. Full parity and the release platform/version matrix remain open.
+
+Packed fresh/0.1.0 upgrade passed (`kujo-opencode-packed-nYeTzy`, SHA-256
+`5ace6c54a13940e1d803677995c51967532924f983d814959e2e582bc1cbcea4`).
+The installed package executed the source inspection and exported its exact
+project-attributed receipt through the durable CLI, then retained the five-tool
+fallback baseline. Documentation was updated after this candidate was packed;
+this is a checkpoint gate, not final immutable release certification.
