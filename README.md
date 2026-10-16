@@ -33,8 +33,8 @@ kujo-opencode demo
 opencode
 ```
 
-In OpenCode, type **`/kujo`**. It explains the available capabilities, runs a
-repository readiness scan, and suggests a next step. **`/kujo-review`** reviews
+In OpenCode, type **`/kujo`** to manage profiles, individual capabilities and
+specialists, or inspect evidence. The menu does not start inference. **`/kujo-review`** reviews
 changes; **`/kujo-doctor`** helps diagnose setup. The demo runs a real read-only
 ShipCheck scan and shows its receipt; it requires no model or API key. A successful
 scan is evidence gathering, not a claim that the repository is ready to ship.
@@ -45,7 +45,7 @@ including root-level configs, preserving comments, models, permissions, and othe
 servers. It refuses malformed configs, conflicting Kujo definitions, and unowned
 assets. It adds project skills, a native plugin with a `/kujo` menu, review and doctor commands, and `.kujo/opencode.json`.
 The native interface provides searchable capabilities, profile selection with a
-fresh host permission, and receipt history. The MCP entry is retained disabled
+fresh host permission, individual capability controls, and receipt history. The MCP entry is retained disabled
 to avoid duplicate tools. Restart OpenCode after setup, update, or repair.
 Repeated setup retains your selected profile and overrides.
 
@@ -70,8 +70,15 @@ kujo-opencode abilities
 `enable` and `disable` accept a product name, a tool name, or the canonical Ability
 ID. Product names select all of that product's supported operations. Canonical
 profile IDs remain supported. Explicit overrides survive profile changes and
-upgrades. Restart OpenCode after changing tool exposure. Profiles grant no
-authority; effectful operations still require approval.
+upgrades. CLI changes require restarting OpenCode to refresh exposure. In the
+native `/kujo` menu, **Manage individual capabilities** lets you enable, disable,
+or restore the profile default for one tool. Each change requests fresh host
+permission, updates the project's configuration and skills transactionally, and
+refreshes tools immediately. Cancelling or declining leaves exposure unchanged.
+If another process changes configuration during approval, the operation fails
+without overwriting it; reopen the picker and review the current state.
+Profiles and overrides grant no execution authority: effectful operations still
+require their own approval, and specialist scope remains enforced.
 
 The catalog covers Scout, Scent, PatchBrief, ChangeBucket, ShipCheck, Fence,
 Spec, Eval, RunLedger, Dispatch, RAG, Watchdog, CaseFile, Concord, Muzzle,

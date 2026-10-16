@@ -273,3 +273,28 @@ OpenCode 2.0.31 then loaded that packed fresh project and passed native status
 RPC and command discovery with the fallback disabled, without inference. Later
 changes in this checkpoint were test diagnostics and documentation only. This
 remains local macOS evidence, not a final release or platform matrix.
+
+## Implementation checkpoint: individual native capability controls
+
+The /kujo menu now lists every installed capability with active state and
+profile/override provenance. Users can enable, disable, or restore the inherited
+profile default. Changes require a fresh host permission with the exact Ability,
+requested mode, profile and effects. They bind the current workspace and use
+the same project activation transaction and stale-configuration precondition.
+Tool and skill registries refresh immediately; enabling exposure grants no
+execution approval and cannot bypass specialist scope.
+
+49 offline tests and canonical E2E passed. OpenCode 2.0.31 fixture
+`kujo-native-host-T8QfdH` verified real host denial without writes, once-approved
+disable/enable/default (including out-of-profile exposure), unchanged configuration while permission was pending,
+rejection of an intervening configuration edit without overwriting it, rejection
+of unknown identifiers, and no inference from management. UI fixtures cover
+selection, cancellation, unchanged choices and denial. This is not evidence of
+provider-backed specialist execution or the complete OS/host release matrix.
+
+This pass also corrected pre-existing override visibility: registering an enabled
+out-of-profile handler was insufficient because the canonical runtime resolves
+its own profile filter. App construction now supplies an in-memory effective
+profile matching the resolved project exposure. No generated runtime or catalog
+identity was changed. Regression tests inspect actual runtime/catalog visibility
+and the real host's out-of-profile enable/reset behavior.

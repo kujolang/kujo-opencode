@@ -14,7 +14,7 @@ Reference revisions inspected locally:
 
 | User task | Current OpenCode evidence | Remaining parity work |
 | --- | --- | --- |
-| Discover and select capabilities | Native menu, profiles, catalog; 38/38 CMD IDs plus two host-owned source projections | Enable/disable individual capabilities in host UI; complete real-host specialist workflow acceptance |
+| Discover and select capabilities | Native menu, profiles, individual capability enable/disable/default controls, catalog; 38/38 CMD IDs plus two host-owned source projections | Complete real-host specialist workflow acceptance |
 | Understand repository | Scout, Scent, PatchBrief canonical adapters | Scoped Understand agent projected with evidence/coverage instructions; complete workflow acceptance remains |
 | Review and release scan | ChangeBucket, Fence, Spec, Concord, ShipCheck, Eval adapters | Workflow acceptance and clear distinction between metadata scan and executing checks |
 | Inspect Kujo source | Build profile: canonical check/lint and non-writing format preview on bounded private copies, source digest, diagnostics; runtime tests and receipt E2E pass | Supported OS/host matrix and immutable candidate verification |

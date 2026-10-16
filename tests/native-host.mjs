@@ -60,6 +60,37 @@ try {
  for(let i=0;i<40;i++){messages=await api(`/api/session/${session.id}/inbox`);if(JSON.stringify(messages).includes(`kujo.profile.${selectedProfile}`))break;await delay(100);}
  assert.ok(JSON.stringify(messages).includes(`kujo.profile.${selectedProfile}`));
  assert.ok((await api(`/api/session/${session.id}/message?limit=100`)).data.every(message=>message.type!=='assistant'),'management commands must not trigger model inference');
+ // Exercise capability changes through real host permission and actual config.
+ const configPath=join(project,'.kujo/opencode.json');
+ let ability='kujo.scout.repository.inspect';let inherited=true;
+ const originalConfig=await readFile(configPath,'utf8');
+ async function capabilityChange(mode,decision,{stale=false}={}) {
+  const before=await readFile(configPath,'utf8');
+  const outcome=api('/api/rpc/kujo.control/capability',{input:{sessionID:session.id,ability,mode}}).then(value=>({value}),error=>({error}));
+  let permission;
+  for(let i=0;i<40;i++){permission=(await api(`/api/session/${session.id}/permission`)).data.find(p=>p.action==='kujo.capability.change');if(permission)break;await delay(100);}
+  assert.ok(permission,'capability change requires fresh host permission');
+  assert.deepEqual(permission.save,[]);assert.equal(permission.metadata.ability,ability);assert.equal(permission.metadata.mode,mode);
+  assert.equal(await readFile(configPath,'utf8'),before,'no write while permission pending');
+  if(stale){const edited=JSON.parse(before);edited.updated_at='concurrent-fixture-edit';await writeFile(configPath,JSON.stringify(edited,null,2)+'\n');}
+  await api(`/api/session/${session.id}/permission/${permission.id}/reply`,{decision});
+  const result=await outcome;
+  if(decision==='reject'||stale){assert.ok(result.error);if(stale)assert.equal(JSON.parse(await readFile(configPath,'utf8')).updated_at,'concurrent-fixture-edit');else assert.equal(await readFile(configPath,'utf8'),before);}
+  else {if(result.error)throw result.error;const status=(await api('/api/rpc/kujo.control/status',{input:{}})).output;const item=status.capabilities.find(item=>item.id===ability);assert.equal(item.mode,mode);assert.equal(item.active,mode==='profile'?inherited:mode==='enabled');}
+ }
+ await capabilityChange('disabled','reject');
+ await capabilityChange('disabled','once');
+ await capabilityChange('enabled','once');
+ await capabilityChange('profile','once');
+ assert.deepEqual(JSON.parse(await readFile(configPath,'utf8')),JSON.parse(originalConfig));
+ const hidden=(await api('/api/rpc/kujo.control/status',{input:{}})).output.capabilities.find(item=>!item.active);
+ assert.ok(hidden,'fixture profile must have an unexposed tool');ability=hidden.id;inherited=false;
+ await capabilityChange('enabled','once');
+ await capabilityChange('profile','once');
+ await capabilityChange('disabled','once',{stale:true});
+ await writeFile(configPath,originalConfig);
+ await assert.rejects(api('/api/rpc/kujo.control/capability',{input:{sessionID:session.id,ability:'kujo.unknown',mode:'enabled'}}));
+ assert.ok((await api(`/api/session/${session.id}/message?limit=100`)).data.every(message=>message.type!=='assistant'),'capability management must not trigger inference');
  const live=process.env.KUJO_TEST_MODEL ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
- console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,model_call:Boolean(live)}));
+ console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,model_call:Boolean(live)}));
 } finally {child.kill('SIGTERM');}

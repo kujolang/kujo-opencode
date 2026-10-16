@@ -5,6 +5,7 @@ import {promisify} from 'node:util';
 import {mkdtemp,mkdir,writeFile,readFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
 const exec=promisify(execFile);
 const repo=resolve('.');
 const root=await mkdtemp(join(tmpdir(),'kujo-opencode-packed-'));
@@ -51,6 +52,14 @@ assert.ok(Object.values(installed.sources).every(source=>source.mode==='pinned' 
 // Execute from the durable projection with no npm cache/package dependency.
 const projectedCli=join(installed.projection_root,'bin/kujo-opencode.mjs');
 assert.equal(JSON.parse((await command(process.execPath,[projectedCli,'status','--project',fresh,'--json'])).stdout).ok,true);
+// Verify real runtime visibility, not only persisted override configuration.
+await call(['enable','kujo.opencode.source.inspect'],fresh);
+await writeFile(join(fresh,'override.kujo'),'print("override works")\n');
+const appUrl=pathToFileURL(join(installed.projection_root,'lib/app.mjs')).href;
+const probe=`const {createApp}=await import(${JSON.stringify(appUrl)});const app=await createApp(${JSON.stringify(fresh)});const result=await app.runtime.execute({abilityId:'kujo.opencode.source.inspect',input:{file:'override.kujo'}});console.log(JSON.stringify({ids:app.runtime.describe().map(item=>item.definition.id),ok:result.ok}));`;
+const enabled=JSON.parse((await command(process.execPath,['--input-type=module','-e',probe])).stdout);
+assert.ok(enabled.ids.includes('kujo.opencode.source.inspect'));assert.equal(enabled.ok,true);
+await call(['disable','kujo.opencode.source.inspect'],fresh);
 const mcp=join(installed.projection_root,'bin/kujo-opencode-mcp.mjs');
 const rpc=await new Promise((resolveResult,reject)=>{
  import('node:child_process').then(({spawn})=>{
