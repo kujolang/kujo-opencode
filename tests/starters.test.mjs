@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,readFile,writeFile,mkdir,symlink} from 'node:fs/promises';
+import {mkdtemp,readFile,writeFile,mkdir,symlink,lstat,rmdir} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
 import {tmpdir} from 'node:os';
 import {execFile} from 'node:child_process';
@@ -15,8 +15,10 @@ test('canonical script and agent previews are reproducible and create reviewed b
   const opts=await fixture();const input={kind,name:'example'};const preview=await previewStarter({...opts,input});assert.equal(preview.digest,(await previewStarter({...opts,input})).digest);
   await assert.rejects(readFile(join(opts.project,'example',preview.entrypoint)),{code:'ENOENT'});
   const created=await createStarter({...opts,input:preview.creation_input});assert.equal(created.digest,preview.digest);
+  for(const directory of preview.directories)assert.equal((await lstat(join(opts.project,'example',directory))).isDirectory(),true);
   for(const file of preview.files)assert.equal(await readFile(join(opts.project,'example',file.path),'utf8'),file.content);
   assert.equal((await inspectStarter({...opts,input:preview.creation_input})).status,'complete');
+  if(kind==='agent'){assert.ok(preview.directories.includes('agent/tools'));await rmdir(join(opts.project,'example/agent/tools'));assert.equal((await inspectStarter({...opts,input:preview.creation_input})).status,'partial');await mkdir(join(opts.project,'example/agent/tools'));}
   await assert.rejects(createStarter({...opts,input:preview.creation_input}),{code:'kujo_output_exists'});await assert.rejects(previewStarter({...opts,input}),{code:'kujo_output_exists'});
   await writeFile(join(opts.project,'example',preview.entrypoint),'changed');assert.equal((await inspectStarter({...opts,input:preview.creation_input})).status,'changed');
  }

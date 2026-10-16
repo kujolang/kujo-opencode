@@ -1,3 +1,4 @@
+import {verifyAgentStarter} from './starter-agent-acceptance.mjs';
 import {verifyStarterServers} from './starter-runtime-acceptance.mjs';
 // Network gate: actual release tarballs, empty HOME/prefix, no sibling checkouts.
 import assert from 'node:assert/strict';
@@ -76,6 +77,7 @@ for(const id of ['kujo.opencode.starter.preview','kujo.opencode.starter.create',
 const starterProbe=`const {createApp}=await import(${JSON.stringify(appUrl)});const app=await createApp(${JSON.stringify(fresh)});for(const kind of ['script','agent','api','mcp']){const preview=await app.runtime.execute({abilityId:'kujo.opencode.starter.preview',input:{kind,name:kind+'-starter'}});if(!preview.ok)throw Error(JSON.stringify(preview));const input=preview.receipt.result.creation_input;const controls={invocationId:kind,idempotencyKey:kind};const pending=await app.runtime.execute({abilityId:'kujo.opencode.starter.create',input,controls});if(pending.code!=='ability_approval_required')throw Error('Expected approval');const approval=await app.runtime.requestApproval({abilityId:'kujo.opencode.starter.create',input,invocationId:kind});const result=await app.runtime.execute({abilityId:'kujo.opencode.starter.create',input,controls:{...controls,approvalId:approval.approval_id}});if(!result.ok)throw Error(JSON.stringify(result));const inspected=await app.runtime.execute({abilityId:'kujo.opencode.starter.inspect',input});if(inspected.receipt.result.status!=='complete')throw Error('Starter inventory mismatch');}console.log('passed');`;
 assert.match((await command(process.execPath,['--input-type=module','-e',starterProbe])).stdout,/passed/);
 await verifyStarterServers(fresh,installed.kujo_bin);
+await verifyAgentStarter(fresh,installed.kujo_bin,installed.sources.kennel.path);
 for(const id of ['kujo.opencode.starter.preview','kujo.opencode.starter.create','kujo.opencode.starter.inspect'])await call(['disable',id],fresh);
 
 const mcp=join(installed.projection_root,'bin/kujo-opencode-mcp.mjs');
@@ -88,7 +90,7 @@ const rpc=await new Promise((resolveResult,reject)=>{
  });
 });
 assert.equal(rpc.result.tools.length,5);
-const verification={ok:true,root,tarball,upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
+const verification={ok:true,root,tarball,upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,starter_kinds:['script','agent','api','mcp'],starter_services_verified:true,agent_fixture_verified:true,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
 await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
 // Keep the immutable tarballs and verification record, not hundreds of MiB of
 // duplicate clones/caches after every successful run. Failures retain diagnosis.

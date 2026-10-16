@@ -313,7 +313,7 @@ starter. `kujo_starter_preview` takes `kind`, a lowercase `name`, and an optiona
 project-relative `output_dir` (default: the name). The parent directory must
 already exist; an existing destination is refused before approval.
 
-The preview contains every proposed file, SHA-256 digests, canonical runtime or
+The preview contains every proposed file and directory, SHA-256 digests, canonical runtime or
 source provenance, and `creation_input`. Review the files, then approve
 `kujo_starter_create` with that exact input. Changed generator/source bytes are
 refused. Creation writes only those files into a new directory. It does not
@@ -332,6 +332,6 @@ silently resumes or overwrites it. Additional files are outside this comparison.
 If the canonical source/runtime has changed, inspection refuses to substitute a
 new inventory: use the original preview receipt to review the retained files.
 
-Limits: 64 files, 64 KiB per file, 256 KiB total UTF-8 content, depth eight and
+Limits: 64 files, 128 directories, 64 KiB per file, 256 KiB total UTF-8 content, depth eight and
 300 KB serialized preview. Full live specialist and platform acceptance remain
 tracked in the production-readiness document.

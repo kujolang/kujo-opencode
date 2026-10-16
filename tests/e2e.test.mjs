@@ -168,6 +168,7 @@ for(const kind of ['script','agent','api','mcp']){
  const created=await rpc.request('tools/call',{name:'kujo_starter_create',arguments:{...input,_kujo:{...controls,approvalId:approval.approval_id}}});assert.equal(created.result.structuredContent.ok,true,JSON.stringify(created));
  const inspected=await rpc.request('tools/call',{name:'kujo_starter_inspect',arguments:input});assert.equal(inspected.result.structuredContent.receipt.result.status,'complete');
  const replay=await rpc.request('tools/call',{name:'kujo_starter_create',arguments:{...input,_kujo:controls}});assert.equal(replay.result.structuredContent.receipt.receipt_id,created.result.structuredContent.receipt.receipt_id);
+ if(['api','mcp'].includes(kind))assert.match(await readFile(join(project,input.output_dir,'.gitignore'),'utf8'),/data\/\*\.db/);
  assert.equal(existsSync(join(project,input.output_dir,'kennel_packages')),false);assert.equal(existsSync(join(project,input.output_dir,'data/kujo_crud_api.db')),false);
 }
 
