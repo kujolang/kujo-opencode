@@ -1,0 +1,54 @@
+{
+  "name": "@kujolang/kujo-opencode",
+  "version": "0.1.0",
+  "description": "Local Kujo Ability and skills integration for OpenCode 2.",
+  "type": "module",
+  "bin": {
+    "kujo-opencode": "bin/kujo-opencode.mjs"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "catalog/",
+    "assets/",
+    ".generated/",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md",
+    "CHANGELOG.md",
+    "docs/PROVENANCE.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build-release.mjs",
+    "prepack": "npm run build",
+    "pretest": "npm run build",
+    "test": "node --test tests/catalog.test.mjs tests/executor.test.mjs tests/runtime.test.mjs tests/security.test.mjs tests/setup.test.mjs tests/release.test.mjs tests/opencode.test.mjs",
+    "test:e2e": "node tests/e2e.test.mjs",
+    "test:opencode": "node scripts/check-opencode-host.mjs"
+  },
+  "dependencies": {
+    "@kujolang/kujo-runtime": "1.8.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kujolang/kujo-opencode.git"
+  },
+  "homepage": "https://github.com/kujolang/kujo-opencode#readme",
+  "bugs": {
+    "url": "https://github.com/kujolang/kujo-opencode/issues"
+  },
+  "keywords": [
+    "kujo",
+    "opencode",
+    "mcp",
+    "agent-skills",
+    "ability"
+  ]
+}
