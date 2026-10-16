@@ -307,3 +307,28 @@ installed canonical runtime, disables it again and verifies five fallback MCP
 tools. It also preserves the older project, profile/overrides and receipts.
 The native menu entry was rendered in a real local PTY; management behavior is
 covered by the real-host RPC gate above rather than inferred from that rendering.
+
+## Implementation checkpoint: scoped evidence navigation
+
+New app receipts receive a canonical project_root from the host-owned state
+adapter. Native evidence defaults to project scope, supports session filtering
+and an explicitly separate legacy view, and reads the current plus three retained
+archives within a documented 2 MiB/file window. A receipt detail request cannot
+select another project's record. Comparison reports recorded fields and exact
+serialized-result equality without claiming quality. CLI evidence exports full
+matching receipts as JSON to stdout. Management reads do not create query receipts
+or invoke models. The canonical receipt-list Ability remains unchanged.
+
+Linked artifact previews resolve server-selected receipt references, reject
+out-of-project and symlink paths, and bound text/directory output. They describe
+current file contents, not immutable evidence snapshots. Directory previews list
+entries without recursive navigation or execution.
+
+53 offline tests plus 11 focused evidence/UI tests passed (the focused gate
+includes one later UI regression). Canonical E2E and OpenCode 2.0.31 native gate
+`kujo-native-host-490aMZ` passed with actual receipts from separate sessions,
+project/detail filtering and comparison. Tests cover archive/legacy separation,
+malformed lines, contained artifact bounds and escape refusal, scoped UI requests,
+JSON export and metadata persistence. Earlier native assertion failure compared
+a /var path with its correct /private/var canonical form; tests now compare
+canonical roots. Full parity and the release platform/version matrix remain open.

@@ -26,7 +26,7 @@ Reference revisions inspected locally:
 | Package declarations/dependencies | Kennel validation/install adapters | Distinguish declaration validity from resolved bytes and compatibility |
 | Workflow operation | Dispatch validate/run and Muzzle adapters | Scoped Workflow agent projected; checkpoints, cancellation and lost-response reconciliation remain |
 | Project knowledge | RAG query/ingest adapters | Guided index/query workflow, freshness and citations, retained-index management |
-| Evidence | Canonical receipts and native history/details | Project/session filtering, comparison/export and navigable linked artifacts |
+| Evidence | Canonical receipts, native project/session/legacy filtering, details/comparison, contained artifact previews and JSON export | Retention limits are explicit; immutable artifact snapshots and full directory browsing are not provided |
 | Browser verification | Lens adapters and explicit browser install | Native readiness/remediation workflow and real supported-host acceptance |
 | Session lifecycle | Receipt session/agent/model correlation | Opt-in Watchdog metadata bridge, durable bounded retries, optional RunLedger |
 | External approval/service integrations | Local native one-time approvals | Explicitly scoped service support matrix including Leash; never imply remote gateway capability from a local catalog |

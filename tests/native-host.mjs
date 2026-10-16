@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {execFile,spawn} from 'node:child_process';
 import {promisify} from 'node:util';
-import {mkdtemp,mkdir,readFile,writeFile} from 'node:fs/promises';
+import {mkdtemp,mkdir,readFile,writeFile,realpath} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
@@ -36,6 +36,8 @@ try {
  const nativeStatus=await api('/api/rpc/kujo.control/status',{input:{}});
  assert.match(JSON.stringify(nativeStatus),/kujo.profile.essentials/);
  const nativeEvidence=await api('/api/rpc/kujo.control/evidence',{input:{}});
+ assert.equal(nativeEvidence.output.scope,'project');
+ assert.ok(nativeEvidence.output.receipts.every(receipt=>receipt.metadata.project_root===nativeStatus.output.project));
  assert.match(JSON.stringify(nativeEvidence),/receipts/);
  const session=(await api('/api/session',{title:'Kujo native acceptance',directory:project})).data;
  await api('/api/rpc/kujo.control/specialist',{input:{sessionID:session.id,agent:'kujo-build'}});
@@ -91,6 +93,19 @@ try {
  await writeFile(configPath,originalConfig);
  await assert.rejects(api('/api/rpc/kujo.control/capability',{input:{sessionID:session.id,ability:'kujo.unknown',mode:'enabled'}}));
  assert.ok((await api(`/api/session/${session.id}/message?limit=100`)).data.every(message=>message.type!=='assistant'),'capability management must not trigger inference');
+ const {createApp}=await import('../lib/app.mjs');const {withDataRoot}=await import('../lib/paths.mjs');
+ const fixtureApp=await withDataRoot(env.KUJO_OPENCODE_HOME,()=>createApp(project));
+ const ownReceipt=await fixtureApp.runtime.execute({abilityId:'kujo.ability.catalog.list',input:{},controls:{sessionId:session.id}});
+ await fixtureApp.runtime.execute({abilityId:'kujo.ability.catalog.list',input:{},controls:{sessionId:'another-fixture-session'}});
+ const scoped=await api('/api/rpc/kujo.control/evidence',{input:{scope:'session',sessionID:session.id}});
+ assert.ok(scoped.output.receipts.some(receipt=>receipt.receipt_id===ownReceipt.receipt.receipt_id));
+ assert.ok(scoped.output.receipts.every(receipt=>receipt.metadata.session_id===session.id));
+ const projectEvidence=(await api('/api/rpc/kujo.control/evidence',{input:{scope:'project'}})).output;
+ assert.ok(projectEvidence.receipts.length,'setup should record project evidence');
+ const compared=(await api('/api/rpc/kujo.control/compare',{input:{left:ownReceipt.receipt.receipt_id,right:projectEvidence.receipts[0].receipt_id}})).output;assert.equal(compared.same_ability,true);
+ const detail=(await api('/api/rpc/kujo.control/evidenceDetail',{input:{receiptID:projectEvidence.receipts[0].receipt_id}})).output;
+ assert.equal(detail.receipt.metadata.project_root,await realpath(project));
+ await assert.rejects(api('/api/rpc/kujo.control/artifact',{input:{receiptID:'not-retained',index:0}}));
  const live=process.env.KUJO_TEST_MODEL ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
  console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,model_call:Boolean(live)}));
 } finally {child.kill('SIGTERM');}

@@ -193,3 +193,34 @@ does not enable capabilities or start inference; the picker reports missing
 exposure. Change the profile separately when needed. Build/run/test and starter
 creation remain separate unfinished capabilities, not implicit powers granted
 to the Build specialist. Ship gathers evidence; it does not publish releases.
+
+## Find and export evidence
+
+In `/kujo` → **Evidence history**, choose this project, the current session, or
+older unscoped receipts. New receipts carry the canonical project path. Older
+receipts are kept separate because their project cannot be inferred safely.
+Choose a receipt to view its outcome/provenance, recorded result, or referenced
+artifacts. Compare two project receipts to see status, duration, model and exact
+serialized-result differences; comparison does not establish correctness.
+
+Artifact previews show current local files, which may have changed since the
+run. They reject paths outside the project and symlinks, show at most 64 KiB of
+UTF-8 text or 50 directory entries, and do not execute or open external URLs.
+The terminal display further limits long previews to 16,000 characters.
+
+Export full retained receipts to standard output for your own tooling:
+
+```sh
+kujo-opencode evidence --json > evidence.json
+kujo-opencode evidence --session SESSION_ID --json
+kujo-opencode evidence --receipt RECEIPT_ID --json
+kujo-opencode evidence --scope legacy --json
+```
+
+Native evidence scans up to 2 MiB from each of the current ledger and three
+retained archives, showing up to 50 matches; CLI exports include up to 100.
+The response states this coverage. Missing history is not evidence that an
+operation never ran. Receipt inspection, comparison and export do not call a
+model or create new receipts. The canonical catalog's receipt-list Ability
+retains its existing shared-ledger contract; these scoped views are native
+management and CLI features.

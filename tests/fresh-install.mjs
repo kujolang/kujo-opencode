@@ -56,9 +56,10 @@ assert.equal(JSON.parse((await command(process.execPath,[projectedCli,'status','
 await call(['enable','kujo.opencode.source.inspect'],fresh);
 await writeFile(join(fresh,'override.kujo'),'print("override works")\n');
 const appUrl=pathToFileURL(join(installed.projection_root,'lib/app.mjs')).href;
-const probe=`const {createApp}=await import(${JSON.stringify(appUrl)});const app=await createApp(${JSON.stringify(fresh)});const result=await app.runtime.execute({abilityId:'kujo.opencode.source.inspect',input:{file:'override.kujo'}});console.log(JSON.stringify({ids:app.runtime.describe().map(item=>item.definition.id),ok:result.ok}));`;
+const probe=`const {createApp}=await import(${JSON.stringify(appUrl)});const app=await createApp(${JSON.stringify(fresh)});const result=await app.runtime.execute({abilityId:'kujo.opencode.source.inspect',input:{file:'override.kujo'}});console.log(JSON.stringify({ids:app.runtime.describe().map(item=>item.definition.id),ok:result.ok,receipt_id:result.receipt.receipt_id}));`;
 const enabled=JSON.parse((await command(process.execPath,['--input-type=module','-e',probe])).stdout);
 assert.ok(enabled.ids.includes('kujo.opencode.source.inspect'));assert.equal(enabled.ok,true);
+const exported=JSON.parse((await command(process.execPath,[projectedCli,'evidence','--project',fresh,'--receipt',enabled.receipt_id,'--json'])).stdout);assert.equal(exported.receipts[0].receipt_id,enabled.receipt_id);assert.ok(exported.receipts[0].metadata.project_root);
 await call(['disable','kujo.opencode.source.inspect'],fresh);
 const mcp=join(installed.projection_root,'bin/kujo-opencode-mcp.mjs');
 const rpc=await new Promise((resolveResult,reject)=>{
