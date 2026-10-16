@@ -367,3 +367,20 @@ source acquisition timed out during upgrade (`Recv failure: Operation timed
 out`). This is a failed gate, not a passing fresh/upgrade certification. The
 fixture is retained for diagnosis; rerun the exact candidate after acquisition
 recovers. Offline and canonical E2E results above remain valid.
+
+## Native lifecycle bridge (2026-10-16)
+
+See lifecycle-host.mjs, plugin.mjs, lifecycle-host.test.mjs and native-host.mjs.
+Native config/menu controls and opt-in metadata observers are implemented; this
+supersedes the foundation-only checkpoint. Explicit ask permission is required in
+every specialist policy because default-deny otherwise defeats the evaluate hook.
+89 offline tests, final canonical E2E and native fixture0w4mfU passed; expanded
+retry/recover/discard native acceptance and packed vzcDKv are pending below.
+Packed bytes predate final unload-race and queue-action stop refinements.
+
+Next: canonical optional RunLedger lifecycle and bounded failure intervention, then
+real specialist tasks and guided RAG/Lens readiness. Preserve original full parity
+and release requirements. Native SDK event subscription is an abortable async
+iterable; session.execution.interrupted gives truthful cancellation without reading
+error text. Tool result metadata ok=false is failure even when the host tool
+transport completes. Watchdog HTTP responses are headers, not model completion.

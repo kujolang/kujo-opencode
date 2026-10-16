@@ -122,8 +122,30 @@ OpenCode's own permission checks remain independent.
   manage the optional loopback service. Neither starts automatically.
 
 Shared data lives in `~/.local/share/kujo/opencode`, or `KUJO_OPENCODE_HOME`.
-CMD and Pi state remain separate. Watchdog and RunLedger are explicit tools;
-automatic host lifecycle hooks and agent projections are not included.
+CMD and Pi state remain separate. Six scoped specialists are available through
+`/kujo` → Choose a specialist. Tool exposure still follows the selected profile.
+
+### Optional lifecycle delivery
+
+In a project session, choose `/kujo` → Lifecycle delivery → Enable local Watchdog
+delivery, then review the native permission request. Delivery is off by default.
+Start Watchdog separately with `kujo-opencode services start watchdog`. The default
+endpoint is `http://127.0.0.1:7700`; token-protected services use `WDG_API_AUTH_TOKEN`
+in OpenCode's environment. The bridge never starts the service or changes model
+providers. It sends only session/tool/model IDs and status metadata, never prompts,
+tool inputs/outputs, response bodies or credentials.
+
+The same menu shows queue status and requests approval to retry one pending event,
+recover an interrupted queue, discard pending events or disable delivery. Disabling
+stops observers and delivery; pending events remain on disk for re-enabling. Retry
+is bounded to five attempts, 128 events and 24 hours (expiry is applied on the next
+queue operation). Authentication failures discard the affected event; fix the token
+before enabling new work. An endpoint change holds existing events for the original
+endpoint. Shutdown aborts delivery; stable IDs let Watchdog deduplicate a retry if
+its acknowledgement was lost. Failed telemetry does not fail the user's tool call.
+
+Automatic RunLedger runs and failure interventions remain under development.
+The existing RunLedger Abilities still require their normal explicit approval.
 
 ## Development and verification
 

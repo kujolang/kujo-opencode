@@ -31,8 +31,9 @@ try {
  let commands=[];
  for(let i=0;i<20;i++){commands=(await api('/api/command')).data;if(commands.some(c=>c.name==='kujo-status'))break;await delay(250);}
  if (!commands.some(c=>c.name==='kujo-status')) throw new Error('Native command did not load: '+JSON.stringify((await api('/api/plugin')).data.filter(p=>p.source.type!=='builtin')));
- const agents=(await api('/api/agent')).data;
- for(const id of ['kujo-understand','kujo-build','kujo-review','kujo-browser','kujo-workflow','kujo-ship'])assert.ok(agents.some(agent=>agent.id===id),`missing specialist ${id}`);
+ const requiredAgents=['kujo-understand','kujo-build','kujo-review','kujo-browser','kujo-workflow','kujo-ship'];
+ let agents=[];for(let i=0;i<40;i++){agents=(await api('/api/agent')).data;if(requiredAgents.every(id=>agents.some(agent=>agent.id===id)))break;await delay(250);}
+ for(const id of requiredAgents)assert.ok(agents.some(agent=>agent.id===id),`missing specialist ${id}`);
  const nativeStatus=await api('/api/rpc/kujo.control/status',{input:{}});
  assert.match(JSON.stringify(nativeStatus),/kujo.profile.essentials/);
  const nativeEvidence=await api('/api/rpc/kujo.control/evidence',{input:{}});
@@ -93,6 +94,31 @@ try {
  await writeFile(configPath,originalConfig);
  await assert.rejects(api('/api/rpc/kujo.control/capability',{input:{sessionID:session.id,ability:'kujo.unknown',mode:'enabled'}}));
  assert.ok((await api(`/api/session/${session.id}/message?limit=100`)).data.every(message=>message.type!=='assistant'),'capability management must not trigger inference');
+ // Lifecycle activation is a separate explicit human choice, never a tool.
+ assert.equal((await api('/api/rpc/kujo.control/lifecycle',{input:{sessionID:session.id,action:'status'}})).output.enabled,false);
+ async function lifecycleChange(action,decision,{stale=false}={}) {
+  const before=await readFile(configPath,'utf8');
+  const outcome=api('/api/rpc/kujo.control/lifecycle',{input:{sessionID:session.id,action}}).then(value=>({value}),error=>({error}));
+  let permission;
+  for(let i=0;i<40;i++){permission=(await api(`/api/session/${session.id}/permission`)).data.find(p=>p.action==='kujo.lifecycle.change');if(permission)break;await delay(100);}
+  assert.ok(permission,'lifecycle requires native permission');assert.deepEqual(permission.save,[]);
+  assert.equal(await readFile(configPath,'utf8'),before,'no lifecycle write before approval');
+  if(stale)await writeFile(configPath,JSON.stringify({...JSON.parse(before),updated_at:'lifecycle-stale-fixture'}));
+  await api(`/api/session/${session.id}/permission/${permission.id}/reply`,{decision});
+  const result=await outcome;
+  if(decision==='reject'||stale){assert.ok(result.error);if(!stale)assert.equal(await readFile(configPath,'utf8'),before);}
+  else {if(result.error)throw result.error;const output=result.value.output;if(['enable','disable'].includes(action))assert.equal(output.enabled,action==='enable');else if(action==='retry')assert.equal(output.reason,'idle');else if(action==='discard')assert.equal(output.discarded,0);else assert.equal(output.recovered,false);}
+ }
+ await lifecycleChange('enable','reject');
+ await lifecycleChange('enable','once',{stale:true});
+ await writeFile(configPath,originalConfig);
+ await lifecycleChange('enable','once');
+ await lifecycleChange('retry','once');
+ await lifecycleChange('recover','once');
+ await lifecycleChange('discard','once');
+ await lifecycleChange('disable','once');
+ assert.equal(JSON.parse(await readFile(configPath,'utf8')).lifecycle.enabled,false);
+ assert.ok((await api(`/api/session/${session.id}/message?limit=100`)).data.every(message=>message.type!=='assistant'),'lifecycle management must not trigger inference');
  const {createApp}=await import('../lib/app.mjs');const {withDataRoot}=await import('../lib/paths.mjs');
  const fixtureApp=await withDataRoot(env.KUJO_OPENCODE_HOME,()=>createApp(project));
  const ownReceipt=await fixtureApp.runtime.execute({abilityId:'kujo.ability.catalog.list',input:{},controls:{sessionId:session.id}});
@@ -107,5 +133,5 @@ try {
  assert.equal(detail.receipt.metadata.project_root,await realpath(project));
  await assert.rejects(api('/api/rpc/kujo.control/artifact',{input:{receiptID:'not-retained',index:0}}));
  const live=process.env.KUJO_TEST_MODEL ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
- console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,model_call:Boolean(live)}));
+ console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,model_call:Boolean(live)}));
 } finally {child.kill('SIGTERM');}

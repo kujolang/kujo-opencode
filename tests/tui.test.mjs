@@ -9,9 +9,10 @@ function fixture({choices=[],profileError,waitStatus,evidenceReceipts=[]}={}) {
  const location={directory:'/fixture/project'};
  const ctx={location,client:{rpc:definition=>{
   assert.equal(definition.id,'kujo.control');
-  return Object.fromEntries(['status','profile','evidence','specialist','capability','evidenceDetail','artifact','compare'].map(method=>[method,async(input,options)=>{
+  return Object.fromEntries(['status','profile','evidence','specialist','capability','evidenceDetail','artifact','compare','lifecycle'].map(method=>[method,async(input,options)=>{
    calls.push({method,input,options});assert.deepEqual(options,{location});
    if(method==='status'){if(waitStatus)await waitStatus;return {capabilities:[{id:'kujo.test.check',name:'check',description:'Check repository',active:true,inherited:true,mode:'profile'}],project:location.directory,version:'0.2.0',profile:'kujo.profile.essentials',specialists:[{id:'kujo-browser',title:'Browser verification',profile:'ship',description:'Verify pages',abilities:['kujo.lens.page.check'],available:[],missing:['kujo.lens.page.check']}],profiles:[{id:'kujo.profile.review',label:'Review',description:'Review repository'}],tools:[{name:'check',description:'Check repository'}]};}
+   if(method==='lifecycle'){if(input.action==='status')return {enabled:false,pending:0};if(profileError)throw Error(profileError);return {enabled:input.action==='enable'};}
    if(method==='capability'){if(profileError)throw Error(profileError);return {active:input.mode!=='disabled'};}
    if(method==='profile'){if(profileError)throw Error(profileError);return {abilities:18};}
    if(method==='evidenceDetail')return {receipt:evidenceReceipts.find(item=>item.receipt_id===input.receiptID),artifacts:['/fixture/project/report.txt']};
@@ -79,4 +80,10 @@ test('evidence opens only server-selected artifacts and compares chosen receipt 
  assert.deepEqual(artifact.calls[2].input,{receiptID:'r1',index:0});assert.match(artifact.alerts[0].message,/artifact text/);
  const compare=fixture({choices:['project','compare','r1','r2'],evidenceReceipts:receipts});await compare.run('kujo.evidence');
  assert.deepEqual(compare.calls[1].input,{left:'r1',right:'r2'});assert.match(compare.alerts[0].message,/informational/);
+});
+
+test('lifecycle picker requires deliberate action and reports denied activation',async()=>{
+ const f=fixture({choices:['enable']});await f.run('kujo.lifecycle');assert.deepEqual(f.calls.map(call=>call.input.action),['status','enable']);assert.equal(f.calls[1].input.sessionID,'fixture-session');assert.match(f.alerts[0].message,/true/);
+ const cancel=fixture();await cancel.run('kujo.lifecycle');assert.equal(cancel.calls.length,1);
+ const denied=fixture({choices:['enable'],profileError:'Human declined'});await denied.run('kujo.lifecycle');assert.match(denied.alerts[0].message,/declined/);
 });

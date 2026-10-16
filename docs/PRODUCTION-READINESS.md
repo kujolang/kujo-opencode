@@ -540,3 +540,36 @@ source acquisition timed out during upgrade (`Recv failure: Operation timed
 out`). This is a failed gate, not a passing fresh/upgrade certification. The
 fixture is retained for diagnosis; rerun the exact candidate after acquisition
 recovers. Offline and canonical E2E results above remain valid.
+
+## Native lifecycle bridge checkpoint (2026-10-16)
+
+The delivery foundation is now wired to native OpenCode hooks and a `/kujo`
+lifecycle menu. Activation, disable, retry, interrupted-queue recovery and discard
+require a fresh host permission; configuration changes use transactional activation
+and reject stale approval. Specialist default-deny policies explicitly ask for this
+human management action. No model-visible activation tool is added. Setup/repair
+preserve the opt-in setting. Disabled installations register no lifecycle observers
+and perform no queue/network activity.
+
+Enabled observers accept only workspace-validated session IDs and allowlisted
+metadata from session execution/idle/interruption, tool before/after, model request,
+HTTP response and retry events. HTTP response status is not a claim of model
+completion. A one-second bounded worker sends one eligible batch at a time; event
+subscription reconnects with delay. Configuration is checked before capture and
+delivery. Unload stops subscriptions, observers and delivery; recovery/discard stop
+in-flight delivery before acting. Existing queue state survives disable/re-enable.
+No prompt, tool content, error body or credential enters the queue.
+
+89 offline tests and canonical E2E pass. OpenCode2.0.31 native fixture 0w4mfU
+passed activation/denial/stale-config/disable without inference; expanded queue
+management acceptance is recorded below when terminal. The initial native run
+correctly exposed specialist default-deny rejection before the explicit ask rule
+was added. Agent discovery now polls its own readiness within a bounded window.
+Packed fresh/upgrade vzcDKv is pending; it predates the final unload-race guard
+and stop-before-recovery/discard refinement and cannot certify those final bytes.
+
+This supersedes the previous foundation-only integration status. Optional automatic
+RunLedger, bounded failure intervention, live specialist workflows, guided RAG/Lens
+readiness, remaining recovery/mixed-version acceptance and the immutable supported
+platform/host/public release matrix remain required. All seven broad outcomes
+remain open. Native permission acceptance is not live-model telemetry acceptance.
