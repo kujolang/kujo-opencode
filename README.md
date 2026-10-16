@@ -142,3 +142,11 @@ See [verification](docs/VERIFICATION.md), [provenance](docs/PROVENANCE.md),
 [commands](https://opencode.ai/v2/docs/commands/),
 [MCP](https://opencode.ai/v2/docs/mcp-servers/), and
 [skills](https://opencode.ai/v2/docs/skills/) documentation.
+
+For explicit live-provider native execution and permission acceptance, set
+`KUJO_TEST_MODEL=opencode/glm-5.3-flash-free` when running `npm run test:native`.
+This makes real provider requests in isolated fixture sessions. Without that
+variable, the native gate tests management and permissions without inference.
+The current cross-host coverage and remaining work are tracked in
+[the capability matrix](docs/CAPABILITY-PARITY.md) and
+[production acceptance](docs/PRODUCTION-READINESS.md).

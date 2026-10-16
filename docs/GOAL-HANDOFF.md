@@ -88,3 +88,22 @@ native host acceptance, and packed fresh/0.1.0 upgrade gates passed. Packed fixt
 kujo-opencode-packed-S4TrTR acquired 25 pinned sources and retained the old
 project. A final uninstall change removes the plugin directory only when empty,
 with focused setup/security tests passing; it postdates that packed candidate.
+
+## Real native model checkpoint 4
+
+Live `KUJO_TEST_MODEL=opencode/glm-5.3-flash-free OPENCODE_BIN=/Users/robertdevore/.opencode/bin/opencode npm run test:native` passed against OpenCode2.0.31.
+Read ShipCheck and once-approved RunLedger produced canonical plugin receipts;
+rejected RunLedger left no artifact or succeeded receipt. Fixture and receipt IDs
+are in PRODUCTION-READINESS.md. The helper keeps write inference pending while
+observing/replying to the exact fixture permission. Do not use blanket --auto.
+Profile is selected before inference to avoid concurrent host session changes.
+
+CAPABILITY-PARITY.md now compares exact CMD/Pi/Paperclip revisions and names
+missing source/build/starter/MCP-generator/Agents-SDK/evidence workflows. Native
+basic execution/approval is now proven locally; lifecycle, specialists, missing
+canonical workflows, recovery, supported matrix and release remain open.
+Strata consolidation remains pending (tsx unavailable); target Agent Notes,
+local session ID local-kujo-opencode-native-model-20261016. Save this handoff
+with preceding pending checkpoints when available; dedup and retrieve exact and
+conceptual queries: OpenCode native model approval RunLedger denied write.
+SignalBox: no captures warranted; all remaining work is already in this goal.

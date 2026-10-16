@@ -1,0 +1,48 @@
+# Kujo host capability parity
+
+Evidence snapshot: 2026-10-16. This compares behavior, not tool counts. All
+missing rows remain required work under PRODUCTION-READINESS.md. A similar name
+does not establish equivalent execution, recovery, or evidence semantics.
+
+Reference revisions inspected locally:
+
+- CMD: `7cedc7758cfd5214ec28c2ba62a20bd5cc3d8988`, catalog/abilities.json.
+- Pi: `89e1188643024f7132871c2071ba28e3cac6e303`, README.md included capabilities
+  and src/extension.ts registrations.
+- Paperclip: `88b53328cc38b209372f5a10f9640efd8881106b`, README.md build,
+  run/test, starters, knowledge and evidence sections.
+
+| User task | Current OpenCode evidence | Remaining parity work |
+| --- | --- | --- |
+| Discover and select capabilities | Native menu, profiles, catalog; 38/38 CMD Ability IDs present | Enable/disable individual capabilities in host UI; useful scoped specialists |
+| Understand repository | Scout, Scent, PatchBrief canonical adapters | Guided understanding workflow and explicit incomplete-evidence handling |
+| Review and release scan | ChangeBucket, Fence, Spec, Concord, ShipCheck, Eval adapters | Workflow acceptance and clear distinction between metadata scan and executing checks |
+| Inspect Kujo source | No source check/lint/format projection | Canonical runtime check/lint and formatting preview, bounded input/output, file diagnostics |
+| Run or test Kujo source | No native source/test projection | Fixed reviewed commands, exact approval binding, cancellation, bounded execution, retained evidence |
+| Preview starters | No script/AI-agent/API/MCP preview workflow | Canonical generators/pinned application sources, review every proposed file, no execution during preview |
+| Create starter files | No approved creation workflow | No-overwrite contained creation from approved bytes; partial failure reconciliation |
+| Generate repository MCP | No equivalent of Pi kujo_mcp_make | Canonical guarded MCP generator, reviewed destination, receipts |
+| Agents SDK fixtures | No equivalent of Pi kujo_agents_smoke | Pinned canonical offline fixture runner, bounded execution and approval |
+| Package declarations/dependencies | Kennel validation/install adapters | Distinguish declaration validity from resolved bytes and compatibility |
+| Workflow operation | Dispatch validate/run and Muzzle adapters | Scoped operator workflow; checkpoints, cancellation and lost-response reconciliation |
+| Project knowledge | RAG query/ingest adapters | Guided index/query workflow, freshness and citations, retained-index management |
+| Evidence | Canonical receipts and native history/details | Project/session filtering, comparison/export and navigable linked artifacts |
+| Browser verification | Lens adapters and explicit browser install | Native readiness/remediation workflow and real supported-host acceptance |
+| Session lifecycle | Receipt session/agent/model correlation | Opt-in Watchdog metadata bridge, durable bounded retries, optional RunLedger |
+| External approval/service integrations | Local native one-time approvals | Explicitly scoped service support matrix including Leash; never imply remote gateway capability from a local catalog |
+| Recovery and distribution | Staged source/runtime replacement, packed local install/upgrade | Full project transaction, orphan locks, supported OS/host matrix, public release/provenance |
+
+## Boundaries to preserve
+
+Paperclip's issue cards, company settings and issue-document attachments are
+host-specific. OpenCode must provide equivalent human review and accessible
+evidence using its own interfaces, not duplicate Paperclip's database/UI.
+Pi's project trust/session activation are host-specific too; tool exposure and
+approval enforcement must be explicit in OpenCode. Local execution does not
+provide remote Ability gateway tenant authentication. No host should silently
+claim that feature on the strength of catalog discovery.
+
+Source/build/starter operations must invoke canonical tools or generators.
+Do not invent a substitute compiler, formatter, application scaffold or workflow
+engine in this adapter. Publish only claims supported by the exact release
+candidate's runtime and failure-path evidence.

@@ -132,3 +132,35 @@ uninstall-directory cleanup; final release certification still requires an
 immutable final candidate through all gates.
 Native RPC and command discovery also passed in real OpenCode 2.0.31 against
 that packed fresh project, without a custom wrapper or KUJO_OPENCODE_HOME.
+
+## Implementation checkpoint: real model and native Ability approval
+
+`tests/native-host.mjs` accepts explicit `KUJO_TEST_MODEL=provider/model` to run
+`tests/native-model-acceptance.mjs` against a real provider. The ordinary native
+gate still makes no inference calls. Live acceptance creates an isolated project,
+private real host, and separate fixture sessions for read, rejected write, and
+approved write. It never enables blanket auto-approval. Permission replies are
+limited to the exact fixture requests, and production approval code is unchanged.
+
+OpenCode 2.0.31 with `opencode/glm-5.3-flash-free` passed on 2026-10-16:
+
+- Native ShipCheck returned a succeeded canonical receipt with real session,
+  agent, model and plugin-surface correlation.
+- RunLedger's ledger directory did not exist while host permission was pending.
+- Rejecting the exact write left no ledger and no succeeded receipt for that
+  session after inference finished.
+- A separate once-approved write created its ledger and a succeeded canonical
+  receipt containing an approval ID and the actual model identity.
+
+Fixture: `kujo-native-host-rXE8A9`; read receipt
+`receipt-6ad7dba6-7794-46eb-9a1e-3bc2ee9b9e65`; approved write receipt
+`receipt-542d03a8-c15c-4c19-8752-0b8774e7b4e7`.
+
+The HTTP prompt remains open while inference or approval is pending. The harness
+must observe permissions concurrently with the write's prompt request, and use
+an explicit bounded inference timeout. It selects the Ship profile before model
+execution so a profile change cannot compete with an active model turn.
+This live-provider gate can fail due to provider availability; it is not part of
+the deterministic offline suite. OS/version and immutable final-candidate gates
+remain required. See CAPABILITY-PARITY.md for the source-backed remaining product
+gaps; CMD's 38 matching IDs do not establish parity with Pi or Paperclip.
