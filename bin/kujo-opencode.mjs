@@ -70,7 +70,7 @@ async function setup(opts) {
   const projection = await installProjection(VERSION, kujoBin);
   const installedAt = new Date().toISOString();
   const installation = await writeInstallation({ version: VERSION, sources, projection_root: projection.root, kujo_bin: projection.kujo, installed_at: installedAt });
-  const paths = projectPaths(project); const config = { schema: "kujo.opencode.config/v1", version: VERSION, installation_version: VERSION, profile, enabled: previous?.enabled || [], disabled: previous?.disabled || [], installed_at: previous?.installed_at || installedAt };
+  const paths = projectPaths(project); const config = { schema: "kujo.opencode.config/v1", version: VERSION, installation_version: VERSION, profile, enabled: previous?.enabled || [], disabled: previous?.disabled || [], ...(previous?.lifecycle ? {lifecycle:previous.lifecycle} : {}), installed_at: previous?.installed_at || installedAt };
   const trustedConfig = { ...config, ...installation };
   const {skills,hostAssets,mcp}=await activateProject(catalog,trustedConfig,project,config,{host:true,expectedConfig:previous});
   const app = await createApp(project); const smoke = await app.runtime.execute({ abilityId: "kujo.ability.catalog.list", input: {}, controls: { host: "opencode", surface: "mcp", invocationId: `setup-${Date.now()}` } });
