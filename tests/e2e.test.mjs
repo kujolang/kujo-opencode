@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
-import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, writeFile, realpath } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { createInterface } from "node:readline";
@@ -139,7 +139,22 @@ for(const name of ["kujo_source_inspect","kujo_source_format"]){
 assert.equal(await readFile(join(project,"source.kujo"),"utf8"),'x := 1\nprintln(x)\n');
 rpc.close();
 
+// Two installed projects share receipts but never execution grants or keys.
+const otherProject=join(temporary,'other-project');await mkdir(otherProject);await writeFile(join(otherProject,'README.md'),'# Second project\n');
+await exec(process.execPath,[cli,'setup','--project',otherProject,...(localCatalogAvailable?['--source-root',sourceRoot]:[]),'--json'],{env:{...process.env,...env},timeout:180000});
+const otherRpc=rpcProcess({...env,KUJO_OPENCODE_PROJECT:otherProject});await otherRpc.request('initialize',{protocolVersion:'2025-11-25'});
+try{
+ const unused=JSON.parse((await exec(process.execPath,[cli,'approve','--project',project,'--ability','kujo.scout.repository.inspect','--invocation','unused-project-grant','--input',JSON.stringify(scoutInput),'--json'],{env:{...process.env,...env}})).stdout);
+ const foreign=await otherRpc.request('tools/call',{name:'kujo_scout_inspect',arguments:{...scoutInput,_kujo:{invocationId:'unused-project-grant',idempotencyKey:'foreign-grant',approvalId:unused.approval_id}}});
+ assert.equal(foreign.result.structuredContent.code,'ability_approval_invalid');assert.equal(existsSync(join(otherProject,'.kujo/scout')),false);
+ const pending=await otherRpc.request('tools/call',{name:'kujo_scout_inspect',arguments:{...scoutInput,_kujo:{invocationId:'scout-1',idempotencyKey:'scout-key'}}});
+ assert.equal(pending.result.structuredContent.code,'ability_approval_required');assert.equal(pending.result.structuredContent.replayed,undefined);
+ const own=JSON.parse((await exec(process.execPath,[cli,'approve','--project',otherProject,'--ability','kujo.scout.repository.inspect','--invocation','scout-1','--input',JSON.stringify(scoutInput),'--json'],{env:{...process.env,...env}})).stdout);
+ const done=await otherRpc.request('tools/call',{name:'kujo_scout_inspect',arguments:{...scoutInput,_kujo:{invocationId:'scout-1',idempotencyKey:'scout-key',approvalId:own.approval_id}}});
+ assert.equal(done.result.structuredContent.ok,true,JSON.stringify(done));assert.notEqual(done.result.structuredContent.receipt.receipt_id,receiptId);assert.equal(done.result.structuredContent.receipt.metadata.project_root,await realpath(otherProject));assert.ok(existsSync(join(otherProject,'.kujo/scout')));
+}finally{otherRpc.close();}
+
 const config = JSON.parse(await readFile(join(project, ".kujo", "opencode.json"), "utf8"));
 assert.equal(config.sources, undefined);
 assert.equal(Object.keys(installation.sources).length, 25);
-console.log("OpenCode local package compatibility: setup, discovery, schema metadata, canonical invocation, approvals, receipts, concurrency, and restart passed");
+console.log("OpenCode local package compatibility: setup, discovery, schema metadata, canonical invocation, approvals, receipts, cross-project isolation, concurrency, and restart passed");
