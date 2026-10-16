@@ -264,3 +264,12 @@ suite now passes 48 tests; local canonical E2E also passed for this runtime
 change. The live-provider harness now reports terminal provider errors promptly
 and omits raw response bodies, rather than waiting for a missing tool receipt.
 The provider-rejected specialist acceptance remains open.
+
+Packed fresh-install/0.1.0 upgrade passed for the specialist and complete-lock
+implementation: fixture `kujo-opencode-packed-x4tYHn`, 25 pinned sources, previous
+project preserved, five packaged MCP fallback tools. Candidate tarball SHA-256:
+`40d3e783cdcec0ac5ed63f01f251aa2980b76edc6a02b160fec3a53048066c9c`.
+OpenCode 2.0.31 then loaded that packed fresh project and passed native status
+RPC and command discovery with the fallback disabled, without inference. Later
+changes in this checkpoint were test diagnostics and documentation only. This
+remains local macOS evidence, not a final release or platform matrix.

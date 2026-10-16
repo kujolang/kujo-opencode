@@ -164,3 +164,22 @@ Checkpoint 6 packed fresh/upgrade gate completed successfully in fixture
 kujo-opencode-packed-a4xBRb. Strata's authenticated API on loopback3939 is now
 confirmed available despite the missing source CLI dependency; consolidation
 can use documented /v1 endpoints with local credential discovery.
+
+## Specialist and installer ownership checkpoint (2026-10-16)
+
+Commits fd35bbc, 333a094 and e18faa7 add six scoped native specialists, a session
+picker, Build's nine-tool exposure, complete source/runtime lock publication,
+and immediate provider-failure diagnostics. 48 offline tests, local E2E, real
+host specialist discovery/switching, packed fresh/upgrade, and packed native
+RPC/command discovery passed. See PRODUCTION-READINESS.md for candidate digest.
+The live Ship-specialist test failed before any tool execution with provider.auth
+HTTP 403 (FreeTierError); do not attribute it to tool permission rules or mark
+that gate passed. Do not spoof the provider client to bypass this rejection.
+
+All seven product outcomes remain open. Next implementation priorities are
+canonical approved source run/test and starter workflows, richer native
+capability/evidence management, and the opt-in lifecycle bridge. Remaining
+recovery scope includes lost responses and multiple-project/version acceptance;
+the old mkdir-before-owner gap is fixed for new source/runtime locks. Legacy
+empty locks remain a deliberate manual-inspection case. Release still requires
+fresh npm/CI external checks and an immutable supported-platform/host matrix.
