@@ -245,3 +245,22 @@ agent through native RPC (`kujo-native-host-naYxxw`). The live Ship-specialist
 run using opencode/glm-5.3-flash-free failed before tool execution with provider
 auth HTTP 403 / FreeTierError. This is not evidence of specialist execution;
 that gate remains open. No provider identity spoofing or inference proxy was used.
+
+## Implementation checkpoint: complete source/runtime lock publication
+
+New directory transactions publish a fully written owner journal through an
+exclusive hard link, eliminating the earlier mkdir-before-owner crash window.
+Failure immediately after acquisition is recoverable with the normal command.
+Older complete directory journals remain supported; an older empty lock is
+preserved for manual inspection because its ownership cannot be established.
+A crash before publication can leave an inert uniquely named pending file; it
+does not reserve the destination or block a subsequent installation. This is
+process-crash recovery, not a claim of power-loss durability.
+
+Recovery tests cover acquisition failure, every activation boundary, a real
+process exit immediately after publication, a real exit after backup, concurrent
+installation, live-owner refusal and legacy compatibility. The full offline
+suite now passes 48 tests; local canonical E2E also passed for this runtime
+change. The live-provider harness now reports terminal provider errors promptly
+and omits raw response bodies, rather than waiting for a missing tool receipt.
+The provider-rejected specialist acceptance remains open.

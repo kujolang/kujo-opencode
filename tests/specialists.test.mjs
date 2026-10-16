@@ -32,3 +32,9 @@ test('catalog discovery does not advertise abilities forbidden to a specialist',
  assert.ok(!visible.some(item=>item.definition.id==='kujo.runledger.runs.start'));
  assert.equal(specialistCapabilities('build',catalog.abilities).length,catalog.abilities.length);
 });
+
+test('live acceptance distinguishes provider rejection from missing tool execution',async()=>{
+ const {assertProviderHealthy}=await import('./native-model-acceptance.mjs');
+ assert.doesNotThrow(()=>assertProviderHealthy({data:[{type:'assistant',content:[]}]}));
+ assert.throws(()=>assertProviderHealthy({data:[{error:{type:'provider.auth',status:403,response:{body:'private response'}}}]}),error=>error.message.includes('provider.auth (HTTP 403)')&&!error.message.includes('private response'));
+});
