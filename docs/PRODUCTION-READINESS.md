@@ -216,3 +216,32 @@ this checkpoint does not close the complete recovery or release matrix outcome.
 Packed fresh installation and 0.1.0 upgrade also passed for this activation
 checkpoint (`kujo-opencode-packed-a4xBRb`): 25 pinned sources, older project
 preserved, and packaged MCP fallback discovery verified.
+
+## Implementation checkpoint: scoped specialist workflows
+
+Six native agents are projected with owned files and transactional setup/removal:
+Understand, Build, Review, Browser verification, Workflow operation and Ship
+readiness. The /kujo picker switches the current session without inference or
+changing profile exposure, and reports missing capabilities. Build now has nine
+tools, adding package/contract validation; Full remains 40.
+
+Each specialist has a fixed native Ability allowlist, explicit host permission
+rules, a model-context tool filter and scope-aware catalog discovery. An
+out-of-scope native call is rejected before runtime execution or approval.
+Raw shell, edits, arbitrary network tools and delegation are denied by default;
+normal request-bound approval remains required for allowed Ability effects.
+Profiles still independently constrain exposure. Source execution/starters and
+publication are not implied by a specialist name.
+
+Offline tests cover every specialist against the catalog, denied cross-scope
+calls, missing exposure, model tool filtering, catalog filtering and picker
+behavior. Real host acceptance verifies all six agents are discovered and the
+native selector changes the session agent. Real-provider specialist execution is
+a separate gate; do not infer it from agent discovery or prompt files alone.
+
+Specialist checkpoint validation: 45 offline tests and the real-product E2E
+gate passed. OpenCode 2.0.31 discovered all six agents and switched the session
+agent through native RPC (`kujo-native-host-naYxxw`). The live Ship-specialist
+run using opencode/glm-5.3-flash-free failed before tool execution with provider
+auth HTTP 403 / FreeTierError. This is not evidence of specialist execution;
+that gate remains open. No provider identity spoofing or inference proxy was used.

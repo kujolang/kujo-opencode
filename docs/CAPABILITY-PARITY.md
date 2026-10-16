@@ -14,8 +14,8 @@ Reference revisions inspected locally:
 
 | User task | Current OpenCode evidence | Remaining parity work |
 | --- | --- | --- |
-| Discover and select capabilities | Native menu, profiles, catalog; 38/38 CMD IDs plus two host-owned source projections | Enable/disable individual capabilities in host UI; useful scoped specialists |
-| Understand repository | Scout, Scent, PatchBrief canonical adapters | Guided understanding workflow and explicit incomplete-evidence handling |
+| Discover and select capabilities | Native menu, profiles, catalog; 38/38 CMD IDs plus two host-owned source projections | Enable/disable individual capabilities in host UI; complete real-host specialist workflow acceptance |
+| Understand repository | Scout, Scent, PatchBrief canonical adapters | Scoped Understand agent projected with evidence/coverage instructions; complete workflow acceptance remains |
 | Review and release scan | ChangeBucket, Fence, Spec, Concord, ShipCheck, Eval adapters | Workflow acceptance and clear distinction between metadata scan and executing checks |
 | Inspect Kujo source | Build profile: canonical check/lint and non-writing format preview on bounded private copies, source digest, diagnostics; runtime tests and receipt E2E pass | Supported OS/host matrix and immutable candidate verification |
 | Run or test Kujo source | No native source/test projection | Fixed reviewed commands, exact approval binding, cancellation, bounded execution, retained evidence |
@@ -24,7 +24,7 @@ Reference revisions inspected locally:
 | Generate repository MCP | No equivalent of Pi kujo_mcp_make | Canonical guarded MCP generator, reviewed destination, receipts |
 | Agents SDK fixtures | No equivalent of Pi kujo_agents_smoke | Pinned canonical offline fixture runner, bounded execution and approval |
 | Package declarations/dependencies | Kennel validation/install adapters | Distinguish declaration validity from resolved bytes and compatibility |
-| Workflow operation | Dispatch validate/run and Muzzle adapters | Scoped operator workflow; checkpoints, cancellation and lost-response reconciliation |
+| Workflow operation | Dispatch validate/run and Muzzle adapters | Scoped Workflow agent projected; checkpoints, cancellation and lost-response reconciliation remain |
 | Project knowledge | RAG query/ingest adapters | Guided index/query workflow, freshness and citations, retained-index management |
 | Evidence | Canonical receipts and native history/details | Project/session filtering, comparison/export and navigable linked artifacts |
 | Browser verification | Lens adapters and explicit browser install | Native readiness/remediation workflow and real supported-host acceptance |

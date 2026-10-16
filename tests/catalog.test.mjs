@@ -6,7 +6,7 @@ import { validateDefinition } from "../.generated/local-runtime.mjs";
 test("portable profiles expose a growing catalog without changing installation", async () => {
   const catalog = await loadCatalog();
   assert.equal(catalog.sources.length, 25);
-  assert.equal(profileAbilities(catalog,"kujo.profile.build").length,7);
+  assert.equal(profileAbilities(catalog,"kujo.profile.build").length,9);
   const essentials = profileAbilities(catalog, "kujo.profile.essentials");
   const review = profileAbilities(catalog, "kujo.profile.review");
   const ship = profileAbilities(catalog, "kujo.profile.ship");

@@ -31,11 +31,15 @@ try {
  let commands=[];
  for(let i=0;i<20;i++){commands=(await api('/api/command')).data;if(commands.some(c=>c.name==='kujo-status'))break;await delay(250);}
  if (!commands.some(c=>c.name==='kujo-status')) throw new Error('Native command did not load: '+JSON.stringify((await api('/api/plugin')).data.filter(p=>p.source.type!=='builtin')));
+ const agents=(await api('/api/agent')).data;
+ for(const id of ['kujo-understand','kujo-build','kujo-review','kujo-browser','kujo-workflow','kujo-ship'])assert.ok(agents.some(agent=>agent.id===id),`missing specialist ${id}`);
  const nativeStatus=await api('/api/rpc/kujo.control/status',{input:{}});
  assert.match(JSON.stringify(nativeStatus),/kujo.profile.essentials/);
  const nativeEvidence=await api('/api/rpc/kujo.control/evidence',{input:{}});
  assert.match(JSON.stringify(nativeEvidence),/receipts/);
  const session=(await api('/api/session',{title:'Kujo native acceptance',directory:project})).data;
+ await api('/api/rpc/kujo.control/specialist',{input:{sessionID:session.id,agent:'kujo-build'}});
+ assert.equal((await api(`/api/session/${session.id}`)).data.agent,'kujo-build');
  await api(`/api/session/${session.id}/command`,{name:'kujo-status',text:''});
  const inbox=await api(`/api/session/${session.id}/inbox`);
  assert.match(JSON.stringify(inbox),/kujo\.profile\.essentials/);

@@ -17,7 +17,7 @@ test("setup, profiles, repair, and uninstall preserve unrelated host config", as
   await mkdir(join(project, ".opencode"));
   await writeFile(join(project, ".opencode", "opencode.json"), JSON.stringify({ model: "opencode/glm-5.3-flash-free", mcp: { servers: { existing: { type: "local", command: ["existing"] } } } }));
   const env = { ...process.env, KUJO_OPENCODE_HOME: home, KUJO_BIN: linkedRuntime };
-  let call = await exec(process.execPath, [cli, "setup", "--project", project, "--source-root", sources, "--json"], { env }); let result = JSON.parse(call.stdout); assert.equal(result.abilities, 5); assert.equal(result.hosted_service_required, false); assert.equal(result.host_assets, 6);
+  let call = await exec(process.execPath, [cli, "setup", "--project", project, "--source-root", sources, "--json"], { env }); let result = JSON.parse(call.stdout); assert.equal(result.abilities, 5); assert.equal(result.hosted_service_required, false); assert.equal(result.host_assets, 12);
   await assert.rejects(() => exec(process.execPath, [cli, "browser", "status", "--project", project, "--json"], { env }), (error) => { const status = JSON.parse(error.stdout); return status.ready === false && status.browser === "chromium"; });
   call = await exec(process.execPath, [cli, "profile", "review", "--project", project, "--json"], { env }); result = JSON.parse(call.stdout); assert.equal(result.abilities, 18);
   await exec(process.execPath, [cli, "disable", "fence", "--project", project, "--json"], { env });

@@ -9,13 +9,14 @@ export async function nativeModelAcceptance({api,project,dataRoot,model}) {
  const split=model.indexOf('/');assert.ok(split>0,'model must be provider/id');
  const modelRef={providerID:model.slice(0,split),id:model.slice(split+1)};
  const receipts=async()=> (await readFile(join(dataRoot,'receipts.jsonl'),'utf8')).trim().split('\n').filter(Boolean).map(line=>JSON.parse(line));
- const waitFor=async(fn,label)=>{for(let i=0;i<240;i++){const result=await fn();if(result)return result;await delay(500);}throw Error(`Timed out: ${label}`);};
- const session=async title=>(await api('/api/session',{title,location:{directory:project},model:modelRef})).data;
+ const waitFor=async(fn,label,diagnostics=async()=>null)=>{for(let i=0;i<240;i++){const result=await fn();if(result)return result;await delay(500);}throw Error(`Timed out: ${label}; ${JSON.stringify(await diagnostics()).slice(-12000)}`);};
+ const session=async title=>(await api('/api/session',{title,location:{directory:project},model:modelRef,...(process.env.KUJO_TEST_AGENT?{agent:process.env.KUJO_TEST_AGENT}:{})})).data;
  const prompt=async(s,text)=>api(`/api/session/${s.id}/prompt`,{text},180000);
  console.log('Live acceptance: native read');
  const scan=await session('Kujo real native read acceptance');
  await prompt(scan,'Use kujo_shipcheck_scan exactly once with {"path":"."}. Do not use shell or any other tools. Report the receipt ID.');
- const scanReceipt=await waitFor(async()=> (await receipts()).find(r=>r.metadata?.session_id===scan.id&&r.ability_id==='kujo.shipcheck.repository.scan'&&r.status==='succeeded'),'native ShipCheck receipt');
+ const scanReceipt=await waitFor(async()=> (await receipts()).find(r=>r.metadata?.session_id===scan.id&&r.ability_id==='kujo.shipcheck.repository.scan'&&r.status==='succeeded'),'native ShipCheck receipt',()=>api(`/api/session/${scan.id}/message?limit=5`));
+ if(process.env.KUJO_TEST_AGENT)assert.equal(scanReceipt.metadata.agent_id,process.env.KUJO_TEST_AGENT);
  assert.equal(scanReceipt.surface,'plugin');assert.equal(scanReceipt.metadata.model_id,model);
  const evidence={read_receipt:scanReceipt.receipt_id};
  for(const decision of ['reject','once']) {
@@ -31,6 +32,7 @@ export async function nativeModelAcceptance({api,project,dataRoot,model}) {
   await api(`/api/session/${s.id}/permission/${permission.id}/reply`,{decision});
   if(decision==='once') {
    const receipt=await waitFor(async()=> (await receipts()).find(r=>r.metadata?.session_id===s.id&&r.ability_id==='kujo.runledger.runs.start'&&r.status==='succeeded'),'approved native write receipt');
+   if(process.env.KUJO_TEST_AGENT)assert.equal(receipt.metadata.agent_id,process.env.KUJO_TEST_AGENT);
    assert.ok(receipt.approval_id);assert.equal(receipt.surface,'plugin');assert.equal(receipt.metadata.model_id,model);
    await access(join(project,ledger));evidence.write_receipt=receipt.receipt_id;
   } else {

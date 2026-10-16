@@ -64,7 +64,7 @@ kujo-opencode abilities
 | `essentials` | 5 | Understand a repository and its changes |
 | `review` | 18 | Check architecture, contracts, context, and change footprint |
 | `ship` | 29 | Run verification and retain release evidence |
-| `build` | 7 | Check/lint source and preview formatting without changing files |
+| `build` | 9 | Check/lint source and preview formatting without changing files |
 | `full` | 40 | Add orchestration, RAG, and optional service tools |
 
 `enable` and `disable` accept a product name, a tool name, or the canonical Ability
@@ -166,3 +166,23 @@ activation transaction. If interrupted, run `kujo-opencode recover --project DIR
 before retrying. Recovery refuses a live installer. If it reports a changed-file
 conflict, preserve that file outside its managed path before recovery, then merge
 your edits back deliberately; recovery will not discard them automatically.
+
+
+Choose **Choose a specialist** in `/kujo`, or use OpenCode's agent selector:
+
+| Specialist | Scope | Starting profile |
+| --- | --- | --- |
+| `kujo-understand` | Repository map, context and task contract | Review |
+| `kujo-build` | Source checks, formatting preview and package/contract validation | Build |
+| `kujo-review` | Change footprint, architecture and artifact review | Review |
+| `kujo-browser` | Lens flow/page verification and failure evidence | Ship |
+| `kujo-workflow` | Explicit Dispatch/Muzzle operation and run evidence | Full |
+| `kujo-ship` | Release scan, requested evaluation and run evidence | Ship |
+
+Specialists inherit your model choice. Each has an enforced native Ability
+allowlist and denies raw shell, edits, network tools and delegation by default.
+Normal approvals still apply to its declared effects. Selecting a specialist
+does not enable capabilities or start inference; the picker reports missing
+exposure. Change the profile separately when needed. Build/run/test and starter
+creation remain separate unfinished capabilities, not implicit powers granted
+to the Build specialist. Ship gathers evidence; it does not publish releases.
