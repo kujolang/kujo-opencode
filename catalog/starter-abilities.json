@@ -1,0 +1,177 @@
+[
+  {
+    "definition": {
+      "schema": "kujo.ability/v1",
+      "id": "kujo.opencode.starter.preview",
+      "version": "1.0.0",
+      "title": "Preview canonical starter",
+      "description": "Preview every file from canonical script/fixture-agent generators or pinned API/MCP application sources. No project writes, dependency install or program execution. Review the returned creation_input and file contents.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "script",
+              "agent",
+              "api",
+              "mcp"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+          },
+          "output_dir": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "kind",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "effects": [
+        {
+          "kind": "read",
+          "resource": "kujo.starter.files"
+        }
+      ],
+      "idempotency": {
+        "mode": "intrinsic"
+      }
+    },
+    "tool": {
+      "name": "kujo_starter_preview",
+      "description": "Preview every file from canonical script/fixture-agent generators or pinned API/MCP application sources. No project writes, dependency install or program execution. Review the returned creation_input and file contents."
+    },
+    "adapter": "starter_preview"
+  },
+  {
+    "definition": {
+      "schema": "kujo.ability/v1",
+      "id": "kujo.opencode.starter.create",
+      "version": "1.0.0",
+      "title": "Create canonical starter",
+      "description": "Create the exact reviewed starter bytes in a new contained directory after approval. Refuse digest changes and existing destinations. Retain partial failures; never install dependencies or start generated programs.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "script",
+              "agent",
+              "api",
+              "mcp"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+          },
+          "output_dir": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "digest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "kind",
+          "name",
+          "digest"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "effects": [
+        {
+          "kind": "write",
+          "resource": "kujo.starter.files"
+        }
+      ],
+      "idempotency": {
+        "mode": "keyed"
+      }
+    },
+    "tool": {
+      "name": "kujo_starter_create",
+      "description": "Create the exact reviewed starter bytes in a new contained directory after approval. Refuse digest changes and existing destinations. Retain partial failures; never install dependencies or start generated programs."
+    },
+    "adapter": "starter_create"
+  },
+  {
+    "definition": {
+      "schema": "kujo.ability/v1",
+      "id": "kujo.opencode.starter.inspect",
+      "version": "1.0.0",
+      "title": "Inspect canonical starter",
+      "description": "Compare the reviewed starter inventory against current destination files after creation or interruption. Reports matching, missing and changed bytes without modifying files; additional files are not inspected.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "script",
+              "agent",
+              "api",
+              "mcp"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+          },
+          "output_dir": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "digest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "kind",
+          "name",
+          "digest"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "effects": [
+        {
+          "kind": "read",
+          "resource": "kujo.starter.files"
+        }
+      ],
+      "idempotency": {
+        "mode": "intrinsic"
+      }
+    },
+    "tool": {
+      "name": "kujo_starter_inspect",
+      "description": "Compare the reviewed starter inventory against current destination files after creation or interruption. Reports matching, missing and changed bytes without modifying files; additional files are not inspected."
+    },
+    "adapter": "starter_inspect"
+  }
+]

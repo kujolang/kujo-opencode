@@ -14,13 +14,13 @@ Reference revisions inspected locally:
 
 | User task | Current OpenCode evidence | Remaining parity work |
 | --- | --- | --- |
-| Discover and select capabilities | Native menu, profiles, individual capability enable/disable/default controls, catalog; 38/38 CMD IDs plus seven host-owned source/build projections | Complete real-host specialist workflow acceptance |
+| Discover and select capabilities | Native menu, profiles, individual capability enable/disable/default controls, catalog; 38/38 CMD IDs plus ten host-owned source/build/starter projections | Complete real-host specialist workflow acceptance |
 | Understand repository | Scout, Scent, PatchBrief canonical adapters | Scoped Understand agent projected with evidence/coverage instructions; complete workflow acceptance remains |
 | Review and release scan | ChangeBucket, Fence, Spec, Concord, ShipCheck, Eval adapters | Workflow acceptance and clear distinction between metadata scan and executing checks |
 | Inspect Kujo source | Build profile: canonical check/lint and non-writing format preview on bounded private copies, source digest, diagnostics; runtime tests and receipt E2E pass | Supported OS/host matrix and immutable candidate verification |
 | Run or test Kujo source | Digest-bound multi-file preview and approved canonical run/test snapshots with retained evidence | Live specialist and supported OS/host matrix acceptance |
-| Preview starters | No script/AI-agent/API/MCP preview workflow | Canonical generators/pinned application sources, review every proposed file, no execution during preview |
-| Create starter files | No approved creation workflow | No-overwrite contained creation from approved bytes; partial failure reconciliation |
+| Preview starters | Canonical script/fixture-agent generators and inventoried pinned API/MCP sources; every file and digest reviewed | Live specialist and platform acceptance |
+| Create starter files | Digest-bound approved creation, no-overwrite destinations and read-only partial-output inspection | Live specialist/platform acceptance; changed upstream inventory requires original receipt review |
 | Generate repository MCP | Canonical offline preview and approved MCP generation with no-overwrite destinations and review artifacts | Live specialist and supported host/OS acceptance |
 | Agents SDK fixtures | Pinned canonical offline fixture runner with approval and per-example acceptance checks | Live specialist and supported host/OS acceptance |
 | Package declarations/dependencies | Kennel validation/install adapters | Distinguish declaration validity from resolved bytes and compatibility |

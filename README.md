@@ -13,7 +13,7 @@ npm install --global /path/to/kujolang-kujo-opencode-0.2.0.tgz && kujo-opencode 
 ```
 
 This is one paste, with no checkout, build, test, or linking step. Setup downloads
-27 pinned source repositories, installs its own Kujo binary, and configures this
+28 pinned source repositories, installs its own Kujo binary, and configures this
 project. Internet access is required during installation. It can take several
 minutes. npm publication is pending; **the registry package name is not yet an
 available install route**. A maintainer creates the tarball with `npm ci && npm pack`.
@@ -64,8 +64,8 @@ kujo-opencode abilities
 | `essentials` | 5 | Understand a repository and its changes |
 | `review` | 18 | Check architecture, contracts, context, and change footprint |
 | `ship` | 29 | Run verification and retain release evidence |
-| `build` | 14 | Inspect source and run reviewed source/test snapshots |
-| `full` | 45 | Add orchestration, RAG, and optional service tools |
+| `build` | 17 | Inspect source and run reviewed source/test snapshots |
+| `full` | 48 | Add orchestration, RAG, and optional service tools |
 
 `enable` and `disable` accept a product name, a tool name, or the canonical Ability
 ID. Product names select all of that product's supported operations. Canonical
@@ -166,8 +166,8 @@ Select `Build` in `/kujo` (or run `kujo-opencode profile build`) to use
 canonical diagnostics or formatting preview. Files are copied into a private
 temporary directory; formatting is never applied to your source. These are
 single-file checks, not proof that imports, project tests, or runtime behavior
-work. Use the reviewed run/test workflow below for execution. Starter creation
-remains tracked parity work.
+work. Use the reviewed run/test workflow below for execution, or starter
+preview/creation for a new project.
 
 Project setup, updates, profile changes, repair, and uninstall use a recoverable
 activation transaction. If interrupted, run `kujo-opencode recover --project DIR`
@@ -192,8 +192,7 @@ allowlist and denies raw shell, edits, network tools and delegation by default.
 Normal approvals still apply to its declared effects. Selecting a specialist
 does not enable capabilities or start inference; the picker reports missing
 exposure. Change the profile separately when needed. Build supports reviewed
-run/test, MCP generation and Agents SDK fixtures. Starter creation remains
-unimplemented. Ship gathers evidence; it does not publish releases.
+run/test, starter creation, MCP generation and Agents SDK fixtures. Ship gathers evidence; it does not publish releases.
 
 ## Find and export evidence
 
@@ -305,3 +304,34 @@ reports a failed run: its acceptance flag verifies rejection. These fixtures do
 not certify live providers or your application's agent behavior. Generator and
 SDK commands have 120-second windows; each generated-server check has 30 seconds.
 Output is bounded, and receipts support normal replay.
+
+
+## Create a reviewed starter
+
+Choose Build and ask for a `script`, fixture `agent`, SQLite `api`, or local `mcp`
+starter. `kujo_starter_preview` takes `kind`, a lowercase `name`, and an optional
+project-relative `output_dir` (default: the name). The parent directory must
+already exist; an existing destination is refused before approval.
+
+The preview contains every proposed file, SHA-256 digests, canonical runtime or
+source provenance, and `creation_input`. Review the files, then approve
+`kujo_starter_create` with that exact input. Changed generator/source bytes are
+refused. Creation writes only those files into a new directory. It does not
+install dependencies, run evaluations, start a server or configure a provider.
+
+Scripts use canonical `kujo init`; agents use `kujo agent new` with the basic
+fixture profile and no Git initialization. API and MCP starters copy an explicit,
+checksum-verified inventory from pinned canonical repositories, with a local
+getting-started guide. The agent README explains dependency installation and
+fixture execution; application guides explain local startup and exposure limits.
+
+After an interrupted or uncertain creation, call `kujo_starter_inspect` with the
+reviewed creation input. It reports matching, missing, changed or unreadable
+files without modifying them. Partial output is retained; creation never
+silently resumes or overwrites it. Additional files are outside this comparison.
+If the canonical source/runtime has changed, inspection refuses to substitute a
+new inventory: use the original preview receipt to review the retained files.
+
+Limits: 64 files, 64 KiB per file, 256 KiB total UTF-8 content, depth eight and
+300 KB serialized preview. Full live specialist and platform acceptance remain
+tracked in the production-readiness document.

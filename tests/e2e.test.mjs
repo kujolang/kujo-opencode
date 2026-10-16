@@ -1,3 +1,4 @@
+import {verifyStarterServers} from './starter-runtime-acceptance.mjs';
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { execFile } from "node:child_process";
@@ -36,7 +37,7 @@ await writeFile(join(project, "README.md"), "# Fixture\n"); await writeFile(join
 await exec("git", ["init", "-q"], { cwd: project }); await exec("git", ["add", "."], { cwd: project }); await exec("git", ["-c", "user.name=Kujo", "-c", "user.email=kujo@example.invalid", "commit", "-qm", "fixture"], { cwd: project }); await writeFile(join(project, "README.md"), "# Fixture\n\nChanged.\n");
 await exec(process.execPath, [join(packageRoot, "scripts", "build-release.mjs")]);
 const env = { KUJO_OPENCODE_HOME: home, KUJO_OPENCODE_PROJECT: project, KUJO_BIN: kujo };
-const localCatalogAvailable = ["ability", "scout", "scent", "patchbrief", "changebucket", "shipcheck", "dispatch", "runledger", "watchdog", "rag", "fence", "spec", "eval", "kujo-skills", "casefile", "concord", "muzzle", "kennel", "redact", "versionseal", "packwrite", "tribunal", "dossier", "howl", "lens", "mcp", "agents-sdk"]
+const localCatalogAvailable = ["ability", "scout", "scent", "patchbrief", "changebucket", "shipcheck", "dispatch", "runledger", "watchdog", "rag", "fence", "spec", "eval", "kujo-skills", "casefile", "concord", "muzzle", "kennel", "redact", "versionseal", "packwrite", "tribunal", "dossier", "howl", "lens", "mcp", "agents-sdk", "crud-api"]
   .every((source) => existsSync(join(sourceRoot, source)));
 const setupArgs = [cli, "setup", "--project", project, ...(localCatalogAvailable ? ["--source-root", sourceRoot] : []), "--json"];
 const setup = JSON.parse((await exec(process.execPath, setupArgs, { env: { ...process.env, ...env }, timeout: 180_000 })).stdout);
@@ -159,6 +160,19 @@ for(const [ability,name,input,key] of [['kujo.opencode.mcp.generate','kujo_mcp_m
  const replay=await rpc.request('tools/call',{name,arguments:argumentsWithApproval});assert.equal(replay.result.structuredContent.receipt.receipt_id,result.receipt.receipt_id);
 }
 
+for(const kind of ['script','agent','api','mcp']){
+ const plan=await rpc.request('tools/call',{name:'kujo_starter_preview',arguments:{kind,name:`${kind}-starter`}});assert.equal(plan.result.structuredContent.ok,true,JSON.stringify(plan));const input=plan.result.structuredContent.receipt.result.creation_input;
+ assert.equal(existsSync(join(project,input.output_dir)),false);
+ const controls={invocationId:`starter-${kind}`,idempotencyKey:`starter-${kind}`};const pending=await rpc.request('tools/call',{name:'kujo_starter_create',arguments:{...input,_kujo:controls}});assert.equal(pending.result.structuredContent.code,'ability_approval_required');
+ const approval=JSON.parse((await exec(process.execPath,[cli,'approve','--project',project,'--ability','kujo.opencode.starter.create','--invocation',controls.invocationId,'--input',JSON.stringify(input),'--json'],{env:{...process.env,...env}})).stdout);
+ const created=await rpc.request('tools/call',{name:'kujo_starter_create',arguments:{...input,_kujo:{...controls,approvalId:approval.approval_id}}});assert.equal(created.result.structuredContent.ok,true,JSON.stringify(created));
+ const inspected=await rpc.request('tools/call',{name:'kujo_starter_inspect',arguments:input});assert.equal(inspected.result.structuredContent.receipt.result.status,'complete');
+ const replay=await rpc.request('tools/call',{name:'kujo_starter_create',arguments:{...input,_kujo:controls}});assert.equal(replay.result.structuredContent.receipt.receipt_id,created.result.structuredContent.receipt.receipt_id);
+ assert.equal(existsSync(join(project,input.output_dir,'kennel_packages')),false);assert.equal(existsSync(join(project,input.output_dir,'data/kujo_crud_api.db')),false);
+}
+
+await verifyStarterServers(project,kujo);
+
 rpc.close();
 
 // Two installed projects share receipts but never execution grants or keys.
@@ -178,5 +192,5 @@ try{
 
 const config = JSON.parse(await readFile(join(project, ".kujo", "opencode.json"), "utf8"));
 assert.equal(config.sources, undefined);
-assert.equal(Object.keys(installation.sources).length, 27);
+assert.equal(Object.keys(installation.sources).length, 28);
 console.log("OpenCode local package compatibility: setup, discovery, schema metadata, canonical invocation, approvals, receipts, cross-project isolation, concurrency, and restart passed");

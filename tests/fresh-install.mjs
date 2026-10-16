@@ -1,3 +1,4 @@
+import {verifyStarterServers} from './starter-runtime-acceptance.mjs';
 // Network gate: actual release tarballs, empty HOME/prefix, no sibling checkouts.
 import assert from 'node:assert/strict';
 import {execFile} from 'node:child_process';
@@ -70,6 +71,12 @@ for(const id of ['kujo.opencode.mcp.preview','kujo.opencode.mcp.generate','kujo.
 const buildProbe=`const {createApp}=await import(${JSON.stringify(appUrl)});const app=await createApp(${JSON.stringify(fresh)});const preview=await app.runtime.execute({abilityId:'kujo.opencode.mcp.preview',input:{}});if(!preview.ok)throw Error(JSON.stringify(preview));for(const abilityId of ['kujo.opencode.mcp.generate','kujo.opencode.agents.smoke']){const controls={invocationId:abilityId,idempotencyKey:abilityId};const pending=await app.runtime.execute({abilityId,input:{},controls});if(pending.code!=='ability_approval_required')throw Error('Expected approval');const approval=await app.runtime.requestApproval({abilityId,input:{},invocationId:abilityId});const result=await app.runtime.execute({abilityId,input:{},controls:{...controls,approvalId:approval.approval_id}});if(!result.ok)throw Error(JSON.stringify(result));if(abilityId.endsWith('generate')&&!result.receipt.result.generated_tools)throw Error('No MCP tools generated');if(abilityId.endsWith('smoke')&&!result.receipt.result.examples.hello_agent.ok)throw Error('SDK smoke failed');}console.log('passed');`;
 assert.match((await command(process.execPath,['--input-type=module','-e',buildProbe])).stdout,/passed/);
 for(const id of ['kujo.opencode.mcp.preview','kujo.opencode.mcp.generate','kujo.opencode.agents.smoke'])await call(['disable',id],fresh);
+
+for(const id of ['kujo.opencode.starter.preview','kujo.opencode.starter.create','kujo.opencode.starter.inspect'])await call(['enable',id],fresh);
+const starterProbe=`const {createApp}=await import(${JSON.stringify(appUrl)});const app=await createApp(${JSON.stringify(fresh)});for(const kind of ['script','agent','api','mcp']){const preview=await app.runtime.execute({abilityId:'kujo.opencode.starter.preview',input:{kind,name:kind+'-starter'}});if(!preview.ok)throw Error(JSON.stringify(preview));const input=preview.receipt.result.creation_input;const controls={invocationId:kind,idempotencyKey:kind};const pending=await app.runtime.execute({abilityId:'kujo.opencode.starter.create',input,controls});if(pending.code!=='ability_approval_required')throw Error('Expected approval');const approval=await app.runtime.requestApproval({abilityId:'kujo.opencode.starter.create',input,invocationId:kind});const result=await app.runtime.execute({abilityId:'kujo.opencode.starter.create',input,controls:{...controls,approvalId:approval.approval_id}});if(!result.ok)throw Error(JSON.stringify(result));const inspected=await app.runtime.execute({abilityId:'kujo.opencode.starter.inspect',input});if(inspected.receipt.result.status!=='complete')throw Error('Starter inventory mismatch');}console.log('passed');`;
+assert.match((await command(process.execPath,['--input-type=module','-e',starterProbe])).stdout,/passed/);
+await verifyStarterServers(fresh,installed.kujo_bin);
+for(const id of ['kujo.opencode.starter.preview','kujo.opencode.starter.create','kujo.opencode.starter.inspect'])await call(['disable',id],fresh);
 
 const mcp=join(installed.projection_root,'bin/kujo-opencode-mcp.mjs');
 const rpc=await new Promise((resolveResult,reject)=>{
