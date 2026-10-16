@@ -107,7 +107,7 @@ try {
   await api(`/api/session/${session.id}/permission/${permission.id}/reply`,{decision});
   const result=await outcome;
   if(decision==='reject'||stale){assert.ok(result.error);if(!stale)assert.equal(await readFile(configPath,'utf8'),before);}
-  else {if(result.error)throw result.error;const output=result.value.output;if(['enable','disable'].includes(action))assert.equal(output.enabled,action==='enable');else if(action==='retry')assert.equal(output.reason,'idle');else if(action==='discard')assert.equal(output.discarded,0);else assert.equal(output.recovered,false);}
+  else {if(result.error)throw result.error;const output=result.value.output;if(['enable','disable'].includes(action))assert.equal(output.enabled,action==='enable');else if(action==='retry')assert.equal(output.reason,'idle');else if(action==='discard')assert.equal(output.discarded,0);else if(action.endsWith('_guard'))assert.equal(output.intervention.enabled,action==='enable_guard');else assert.equal(output.recovered,false);}
  }
  await lifecycleChange('enable','reject');
  await lifecycleChange('enable','once',{stale:true});
@@ -117,8 +117,38 @@ try {
  await lifecycleChange('recover','once');
  await lifecycleChange('discard','once');
  await lifecycleChange('disable','once');
+ await lifecycleChange('enable_guard','reject');
+ await lifecycleChange('enable_guard','once');
+ await lifecycleChange('disable_guard','once');
  assert.equal(JSON.parse(await readFile(configPath,'utf8')).lifecycle.enabled,false);
  assert.ok((await api(`/api/session/${session.id}/message?limit=100`)).data.every(message=>message.type!=='assistant'),'lifecycle management must not trigger inference');
+ // Session RunLedger uses canonical records and exact native Ability grants.
+ for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish']){
+  const state=(await api('/api/rpc/kujo.control/status',{input:{}})).output;
+  if(!state.capabilities.find(item=>item.id===id).active){ability=id;inherited=false;await capabilityChange('enabled','once');}
+ }
+ const ledgerSession=(await api('/api/session',{title:'Session ledger fixture',location:{directory:await realpath(project)},agent:'kujo-ship',model:{providerID:'opencode',id:'glm-5.3-flash-free'}})).data;
+ await api(`/api/session/${ledgerSession.id}/command`,{name:'kujo-status',text:''});
+ const ledgerStatus=()=>api('/api/rpc/kujo.control/runledger',{input:{sessionID:ledgerSession.id,action:'status'}});
+ assert.equal((await ledgerStatus()).output.state,'not_started');
+ async function sessionLedgerChange(action,decision,status){
+  const outcome=api('/api/rpc/kujo.control/runledger',{input:{sessionID:ledgerSession.id,action,...(status?{status}:{})}}).then(value=>({value}),error=>({error}));
+  let permission;for(let i=0;i<50;i++){permission=(await api(`/api/session/${ledgerSession.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(permission)break;await delay(100);}
+  assert.ok(permission,'session ledger mutation requires approval');assert.deepEqual(permission.save,[]);
+  assert.equal((await ledgerStatus()).output.state,action==='start'?'not_started':'in_progress');
+  await api(`/api/session/${ledgerSession.id}/permission/${permission.id}/reply`,{decision});
+  const result=await outcome;if(decision==='reject')assert.ok(result.error);else{if(result.error)throw result.error;assert.equal(result.value.output.state,action==='start'?'in_progress':status);assert.ok(result.value.output.receipt_id);}
+ }
+ await sessionLedgerChange('start','reject');
+ assert.equal((await ledgerStatus()).output.state,'not_started');
+ await sessionLedgerChange('start','once');
+ const beforeRepeat=(await ledgerStatus()).output;
+ const repeated=(await api('/api/rpc/kujo.control/runledger',{input:{sessionID:ledgerSession.id,action:'start'}})).output;
+ assert.equal(repeated.run_id,beforeRepeat.run_id);
+ assert.equal((await api(`/api/session/${ledgerSession.id}/permission`)).data.length,0);
+ await sessionLedgerChange('finish','once','partial');
+ const finished=(await ledgerStatus()).output;assert.equal(finished.record.status,'partial');assert.equal(finished.record.prompt_file,null);
+ assert.ok((await api(`/api/session/${ledgerSession.id}/message?limit=100`)).data.every(message=>message.type!=='assistant'));
  const {createApp}=await import('../lib/app.mjs');const {withDataRoot}=await import('../lib/paths.mjs');
  const fixtureApp=await withDataRoot(env.KUJO_OPENCODE_HOME,()=>createApp(project));
  const ownReceipt=await fixtureApp.runtime.execute({abilityId:'kujo.ability.catalog.list',input:{},controls:{sessionId:session.id}});
@@ -133,5 +163,5 @@ try {
  assert.equal(detail.receipt.metadata.project_root,await realpath(project));
  await assert.rejects(api('/api/rpc/kujo.control/artifact',{input:{receiptID:'not-retained',index:0}}));
  const live=process.env.KUJO_TEST_MODEL ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
- console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,model_call:Boolean(live)}));
+ console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,model_call:Boolean(live)}));
 } finally {child.kill('SIGTERM');}

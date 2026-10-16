@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {readFile,access} from 'node:fs/promises';
+import {readFile,access,realpath} from 'node:fs/promises';
 import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 
@@ -11,6 +11,7 @@ export function assertProviderHealthy(messages) {
 // Live-provider acceptance is explicit and separate from the offline gate.
 // Decisions below apply only to sessions and artifacts created by this fixture.
 export async function nativeModelAcceptance({api,project,dataRoot,model}) {
+ project=await realpath(project);
  const split=model.indexOf('/');assert.ok(split>0,'model must be provider/id');
  const modelRef={providerID:model.slice(0,split),id:model.slice(split+1)};
  const receipts=async()=> (await readFile(join(dataRoot,'receipts.jsonl'),'utf8')).trim().split('\n').filter(Boolean).map(line=>JSON.parse(line));

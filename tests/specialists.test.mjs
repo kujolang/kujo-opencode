@@ -8,6 +8,7 @@ test('six specialist policies resolve to real capabilities and block cross-scope
   for(const id of specialist.abilities){assert.ok(known.has(id),`${specialist.id}: ${id}`);assert.doesNotThrow(()=>assertSpecialistAbility(specialist.id,id));}
   for(const id of known)if(!specialist.abilities.includes(id))assert.throws(()=>assertSpecialistAbility(specialist.id,id),{code:'kujo_specialist_scope'});
   const markdown=specialistMarkdown(specialist,catalog);const permissions=JSON.parse(markdown.split('\n').find(line=>line.startsWith('permissions: ')).slice(13));
+  assert.ok(permissions.some(rule=>rule.action==='kujo.runledger.session'&&rule.effect==='ask'));
   assert.ok(permissions.some(rule=>rule.action==='kujo.lifecycle.change'&&rule.effect==='ask'));
   assert.deepEqual(permissions[0],{action:'*',resource:'*',effect:'deny'});
   assert.ok(!permissions.some(rule=>['shell','edit','subagent','webfetch','websearch'].includes(rule.action)));

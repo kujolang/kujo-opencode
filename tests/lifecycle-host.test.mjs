@@ -11,8 +11,8 @@ function fixture(){
  return {options,hooks,records,setCurrent:value=>{current=value;},counts:()=>({subscribed,disposed,flushed,closed})};
 }
 test('lifecycle defaults off and rejects unknown configuration and remote endpoints',async()=>{
- const f=fixture(),bridge=await startLifecycle(f.options);assert.equal(f.hooks.size,0);assert.equal(f.counts().subscribed,0);assert.deepEqual(await bridge.status(),{enabled:false});await bridge.close();
- for(const value of [{enabled:'true'},{enabled:true,token:'secret'},{enabled:true,url:'https://remote.example'}])assert.throws(()=>lifecycleConfig(value));
+ const f=fixture(),bridge=await startLifecycle(f.options);assert.equal(f.hooks.size,0);assert.equal(f.counts().subscribed,0);assert.equal((await bridge.status()).enabled,false);assert.equal((await bridge.status()).intervention.enabled,false);await bridge.close();
+ for(const value of [{enabled:'true'},{enabled:false,intervention:'yes'},{enabled:true,token:'secret'},{enabled:true,url:'https://remote.example'}])assert.throws(()=>lifecycleConfig(value));
 });
 test('enabled observers bind real metadata, reject other workspaces, and stop at unload',async()=>{
  const f=fixture(),bridge=await startLifecycle({...f.options,config:{enabled:true}});
@@ -45,4 +45,11 @@ test('event subscription reconnects with backoff and unload aborts the replaceme
 test('partial observer registration failure disposes already registered hooks',async()=>{
  const f=fixture();f.options.ctx.session.hook=async()=>{throw Error('host registration failed');};
  await assert.rejects(startLifecycle({...f.options,config:{enabled:true}}),/registration failed/);assert.equal(f.counts().disposed,2);assert.equal(f.counts().closed,1);assert.equal(f.counts().subscribed,0);
+});
+
+test('guard-only mode has no telemetry and does not wait for interruption inside a tool hook',async t=>{
+ const f=fixture();let release,pauses=0;f.options.ctx.session.interrupt=async()=>{pauses++;await new Promise(resolve=>{release=resolve;});};f.options.ctx.session.synthetic=async()=>{};
+ const bridge=await startLifecycle({...f.options,config:{enabled:false,intervention:true}});t.after(()=>bridge.close());
+ for(const id of ['a','b','c'])await f.hooks.get('tool.execute.after')({sessionID:'local',tool:'fixture',id,status:'error'});
+ for(let i=0;i<20&&!pauses;i++)await delay(1);assert.equal(pauses,1);assert.equal(f.records.length,0);release();await bridge.close();
 });

@@ -144,8 +144,29 @@ before enabling new work. An endpoint change holds existing events for the origi
 endpoint. Shutdown aborts delivery; stable IDs let Watchdog deduplicate a retry if
 its acknowledgement was lost. Failed telemetry does not fail the user's tool call.
 
-Automatic RunLedger runs and failure interventions remain under development.
-The existing RunLedger Abilities still require their normal explicit approval.
+The optional failure guard is a separate switch in the lifecycle menu. After
+three distinct consecutive failures from the same tool within five minutes, it
+pauses that session and adds a non-resuming evidence reminder. Success, a different
+tool or an expired window resets the count. It never retries tools or grants
+approval. The guard tracks at most 128 sessions and intervenes at most once per
+session per plugin activation; its counters reset on reload. It also works with
+Watchdog delivery disabled. Queue status shows its intervention/attention counts.
+
+### Session RunLedger
+
+Choose `/kujo` → Session RunLedger to start, inspect or finish a canonical record
+for the current session. Enable RunLedger start/finish capabilities first, or use
+Ship/Full, and select an OpenCode model. Starting records the selected model and
+initial git state after approval; it does not submit a model request or save the
+prompt. Finishing asks you to choose Pass, Partial, Fail or Abandoned and approve
+the final git snapshot. Idle sessions are never assigned a verdict automatically.
+
+Records live under `.kujo/opencode-runledger/<session-hash>/`. Stable session keys
+and canonical records let repeated starts inspect the existing run after a lost
+response. Ambiguous/corrupt records or unresolved execution state require evidence
+inspection rather than an automatic repeated write. Tracking remains tied to its
+original session and project; no usage/cost values are invented. Automatic session
+activation/finalization and live-provider lifecycle acceptance remain unfinished.
 
 ## Development and verification
 
