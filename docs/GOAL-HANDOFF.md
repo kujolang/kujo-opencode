@@ -224,3 +224,27 @@ starter workflows, opt-in lifecycle integration, remaining recovery including
 multiple-project execution-state behavior, and immutable release acceptance.
 Project-scoped receipt metadata is not a change to canonical approval/idempotency
 state scoping. Prior external provider/publication/CI failures were not rechecked.
+
+## Project execution-state isolation checkpoint (2026-10-16)
+
+Commits 2fe81fc and 49233c6 isolate approvals/idempotency by canonical workspace
+while keeping receipt writes serialized under the shared canonical writer lock.
+This supersedes the earlier handoff's unchanged-state-scoping note. Legacy
+attributed completed outcomes can replay in their owning project; unscoped or
+in-progress legacy outcomes refuse retry; old grants are not imported. Existing
+scoped outcomes win over later legacy records. Aliases share state; moving a
+workspace creates a new namespace. Old binaries retain prior behavior.
+
+58 offline tests, expanded canonical E2E with two installed projects and genuine
+Scout effects, native host fixture kujo-native-host-LPYgPe, and packed fresh/
+0.1.0 upgrade kujo-opencode-packed-3wQu3B passed. The first packed attempt failed
+on ENOSPC; four exact task-created old fixture work folders were removed while
+retaining tarballs. Commit 83df96b prevents further successful-fixture buildup,
+retaining package bytes/verification.json by default; KEEP opt-out and failure
+retention are documented. See PRODUCTION-READINESS.md for digest and limits.
+
+External release gates freshly rechecked: npm whoami E401; GitHub run38975403007
+all seven jobs failed before steps due to account payments/spending limits.
+Independent work remains. Continue canonical approved source run/test/starters,
+opt-in Watchdog/RunLedger lifecycle, remaining lost-response/mixed-version
+acceptance and immutable release matrix. All seven outcomes remain open.

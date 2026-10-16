@@ -370,3 +370,11 @@ was performed. The test harness now removes only its own generated work folders
 after success, retaining tarballs and verification.json. An explicit
 KUJO_TEST_KEEP_FIXTURE=1 opt-out supports manual inspection; failed fixtures are
 retained. Retry acceptance is recorded separately below.
+
+Final checkpoint acceptance: 58 offline tests passed, including an in-progress
+legacy operation that must not execute again. The packed retry passed in
+kujo-opencode-packed-3wQu3B: fresh installation, 0.1.0 upgrade, previous project
+retention, source execution/receipt export and five fallback tools. Tarball
+SHA-256: 3bece7a7b6c3dfab5e4a3d18ccaadc4c1328238a93245fb6eeaefdfbaa50f24a.
+The candidate bytes matched the initial failed attempt. Only tarballs, baseline
+archive and verification.json remain in the successful fixture, as intended.
