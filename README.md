@@ -64,7 +64,8 @@ kujo-opencode abilities
 | `essentials` | 5 | Understand a repository and its changes |
 | `review` | 18 | Check architecture, contracts, context, and change footprint |
 | `ship` | 29 | Run verification and retain release evidence |
-| `full` | 38 | Add orchestration, RAG, and optional service tools |
+| `build` | 7 | Check/lint source and preview formatting without changing files |
+| `full` | 40 | Add orchestration, RAG, and optional service tools |
 
 `enable` and `disable` accept a product name, a tool name, or the canonical Ability
 ID. Product names select all of that product's supported operations. Canonical
@@ -150,3 +151,12 @@ variable, the native gate tests management and permissions without inference.
 The current cross-host coverage and remaining work are tracked in
 [the capability matrix](docs/CAPABILITY-PARITY.md) and
 [production acceptance](docs/PRODUCTION-READINESS.md).
+
+
+Select `Build` in `/kujo` (or run `kujo-opencode profile build`) to use
+`kujo_source_inspect` and `kujo_source_format`. Both accept a project-relative
+`.kujo` file of at most 64 KiB. They return a digest of the inspected bytes and
+canonical diagnostics or formatting preview. Files are copied into a private
+temporary directory; formatting is never applied to your source. These are
+single-file checks, not proof that imports, project tests, or runtime behavior
+work. Run/test and starter creation remain tracked parity work.

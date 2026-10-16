@@ -107,3 +107,24 @@ local session ID local-kujo-opencode-native-model-20261016. Save this handoff
 with preceding pending checkpoints when available; dedup and retrieve exact and
 conceptual queries: OpenCode native model approval RunLedger denied write.
 SignalBox: no captures warranted; all remaining work is already in this goal.
+
+## Canonical source tooling checkpoint 5
+
+Build profile has seven tools; Full has 40. New host-owned definitions are in
+catalog/source-abilities.json; lib/source-tools.mjs calls the installed canonical
+runtime check/lint/format on bounded private source copies, without execution or
+source writes. Single-file reports retain digest and native diagnostics; parse
+failures may be text stderr with exit 3 despite --json. Read tests/source-tools
+and the new E2E assertions before extending to execution.
+
+Verification: 34 offline tests, real-product E2E receipts for both source tools,
+and OpenCode2.0.31 native Build profile permission/refresh gate passed. Source
+run/test, starter preview/creation, scoped specialists, lifecycle, evidence UX,
+full recovery, supported matrix and release remain required. The capability
+matrix marks source inspection implemented but does not close the broad goal.
+
+Pending Strata delta: target Agent Notes; local session ID
+local-kujo-opencode-source-tools-20261016. Preserve source snapshot safety and
+canonical parse-error behavior as retrieval cues; link this handoff and
+PRODUCTION-READINESS.md. No Strata save is claimed while its tsx CLI dependency
+is unavailable. SignalBox: no captures warranted.

@@ -13,3 +13,11 @@ This is an independent OpenCode adapter, not a published Kujo CMD version.
 Future catalog/runtime updates must be reviewed against those upstream files
 and run through this adapter's tests. OpenCode 2 configuration follows
 https://opencode.ai/v2/docs/mcp-servers/ and skills documentation.
+
+Source tooling definitions in `catalog/source-abilities.json` are host-owned
+`kujo.opencode.source.*` projections. Their implementation invokes the pinned
+installed Kujo runtime's `check`, `lint`, and non-writing `format --json`
+commands on bounded private source copies. They do not modify the generated
+Ability runtime, reuse Paperclip-specific identities, or implement a compiler
+or formatter. Runtime behavior is verified with the packaged native runtime
+and the local integration gate; full platform certification remains separate.

@@ -14,10 +14,10 @@ Reference revisions inspected locally:
 
 | User task | Current OpenCode evidence | Remaining parity work |
 | --- | --- | --- |
-| Discover and select capabilities | Native menu, profiles, catalog; 38/38 CMD Ability IDs present | Enable/disable individual capabilities in host UI; useful scoped specialists |
+| Discover and select capabilities | Native menu, profiles, catalog; 38/38 CMD IDs plus two host-owned source projections | Enable/disable individual capabilities in host UI; useful scoped specialists |
 | Understand repository | Scout, Scent, PatchBrief canonical adapters | Guided understanding workflow and explicit incomplete-evidence handling |
 | Review and release scan | ChangeBucket, Fence, Spec, Concord, ShipCheck, Eval adapters | Workflow acceptance and clear distinction between metadata scan and executing checks |
-| Inspect Kujo source | No source check/lint/format projection | Canonical runtime check/lint and formatting preview, bounded input/output, file diagnostics |
+| Inspect Kujo source | Build profile: canonical check/lint and non-writing format preview on bounded private copies, source digest, diagnostics; runtime tests and receipt E2E pass | Supported OS/host matrix and immutable candidate verification |
 | Run or test Kujo source | No native source/test projection | Fixed reviewed commands, exact approval binding, cancellation, bounded execution, retained evidence |
 | Preview starters | No script/AI-agent/API/MCP preview workflow | Canonical generators/pinned application sources, review every proposed file, no execution during preview |
 | Create starter files | No approved creation workflow | No-overwrite contained creation from approved bytes; partial failure reconciliation |

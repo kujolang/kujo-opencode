@@ -164,3 +164,25 @@ This live-provider gate can fail due to provider availability; it is not part of
 the deterministic offline suite. OS/version and immutable final-candidate gates
 remain required. See CAPABILITY-PARITY.md for the source-backed remaining product
 gaps; CMD's 38 matching IDs do not establish parity with Pi or Paperclip.
+
+## Implementation checkpoint: canonical source tooling
+
+Build is a new seven-tool profile (Essentials plus source inspection and
+formatting preview); Full now exposes 40 tools. The two host-owned source
+projection definitions invoke the canonical installed runtime without modifying
+the generated Ability runtime. Check/lint/format operate on private copies of
+one contained UTF-8 .kujo file of at most 64 KiB. Each report includes the source
+SHA-256 and explicitly says the program was not executed and source was not
+modified. Formatting is preview-only; imports, project tests and runtime behavior
+are not established by these single-file checks.
+
+34 offline tests passed, including real packaged-runtime source checks,
+malformed-source diagnostics, non-writing formatting, path/symlink/size/encoding
+boundaries and cancellation. The real-product E2E executes both tools through
+MCP and validates their canonical receipts and unchanged source. OpenCode 2.0.31
+native acceptance switches to Build through a fresh host permission and confirms
+the refreshed profile. Source run/test and starter workflows remain open.
+
+Canonical CLI detail: failed parsing can return exit 3 with structured text
+errors on stderr even with --json. Preserve those diagnostics as explicit text;
+do not misreport them as a successful compile or discard them as invalid JSON.
