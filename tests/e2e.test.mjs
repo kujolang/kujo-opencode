@@ -127,6 +127,18 @@ if ((await lensBrowserStatus(installation.sources.lens.path)).ready) {
 }
 rpc.close();
 
+await exec(process.execPath,[cli,"profile","build","--project",project,"--json"],{env:{...process.env,...env}});
+await writeFile(join(project,"source.kujo"),'x := 1\nprintln(x)\n');
+rpc=rpcProcess(env);await rpc.request("initialize",{protocolVersion:"2025-11-25"});
+for(const name of ["kujo_source_inspect","kujo_source_format"]){
+ const reply=await rpc.request("tools/call",{name,arguments:{file:"source.kujo"}});
+ assert.equal(reply.result.structuredContent.ok,true,JSON.stringify(reply));
+ assert.equal(reply.result.structuredContent.receipt.result.modified_source,false);
+ assert.match(reply.result.structuredContent.receipt.result.sha256,/^[a-f0-9]{64}$/);
+}
+assert.equal(await readFile(join(project,"source.kujo"),"utf8"),'x := 1\nprintln(x)\n');
+rpc.close();
+
 const config = JSON.parse(await readFile(join(project, ".kujo", "opencode.json"), "utf8"));
 assert.equal(config.sources, undefined);
 assert.equal(Object.keys(installation.sources).length, 25);

@@ -165,7 +165,7 @@ async function select(opts, enable) {
 }
 
 async function setProfile(opts) {
-  const id = profileId(opts._[0]); if (!id) throw new Error("usage: kujo-opencode profile essentials|review|ship|full");
+  const id = profileId(opts._[0]); if (!id) throw new Error("usage: kujo-opencode profile essentials|build|review|ship|full");
   const project = resolve(opts.project || process.cwd()); const { config, projectConfig, paths } = await loadProjectConfig(project);
   const catalog = await loadCatalog(); profileAbilities(catalog, id); projectConfig.profile = id; await writeJson(paths.config, projectConfig); const next = { ...config, ...projectConfig }; const skills = await projectSkills(catalog, next, project);
   output({ ok: true, message: `Active profile changed to ${id}. Restart OpenCode to refresh tools.`, abilities: profileAbilities(catalog, id, next.enabled, next.disabled).length, skills }, opts.json);

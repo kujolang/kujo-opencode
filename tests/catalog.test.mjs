@@ -6,11 +6,12 @@ import { validateDefinition } from "../.generated/local-runtime.mjs";
 test("portable profiles expose a growing catalog without changing installation", async () => {
   const catalog = await loadCatalog();
   assert.equal(catalog.sources.length, 25);
+  assert.equal(profileAbilities(catalog,"kujo.profile.build").length,7);
   const essentials = profileAbilities(catalog, "kujo.profile.essentials");
   const review = profileAbilities(catalog, "kujo.profile.review");
   const ship = profileAbilities(catalog, "kujo.profile.ship");
   const full = profileAbilities(catalog, "kujo.profile.full");
-  assert.deepEqual([essentials.length, review.length, ship.length, full.length], [5, 18, 29, 38]);
+  assert.deepEqual([essentials.length, review.length, ship.length, full.length], [5, 18, 29, 40]);
   assert.equal(new Set(catalog.abilities.map((item) => item.definition.id)).size, catalog.abilities.length);
   for (const item of catalog.abilities) {
     assert.equal(validateDefinition(item.definition), item.definition);

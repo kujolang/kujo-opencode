@@ -1,0 +1,84 @@
+[
+  {
+    "definition": {
+      "schema": "kujo.ability/v1",
+      "id": "kujo.opencode.source.inspect",
+      "version": "1.0.0",
+      "title": "Check and lint Kujo source",
+      "description": "Check and lint Kujo source using the canonical installed runtime on a private copy, without executing the program or modifying source. Single UTF-8 .kujo file, at most 64 KiB.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "effects": [
+        {
+          "kind": "read",
+          "resource": "kujo.source.file"
+        }
+      ],
+      "idempotency": {
+        "mode": "intrinsic"
+      }
+    },
+    "tool": {
+      "name": "kujo_source_inspect",
+      "description": "Check and lint Kujo source. Returns source digest and canonical diagnostics; does not execute code or apply changes."
+    },
+    "adapter": "source_inspect"
+  },
+  {
+    "definition": {
+      "schema": "kujo.ability/v1",
+      "id": "kujo.opencode.source.format",
+      "version": "1.0.0",
+      "title": "Preview Kujo formatting",
+      "description": "Preview Kujo formatting using the canonical installed runtime on a private copy, without executing the program or modifying source. Single UTF-8 .kujo file, at most 64 KiB.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "effects": [
+        {
+          "kind": "read",
+          "resource": "kujo.source.file"
+        }
+      ],
+      "idempotency": {
+        "mode": "intrinsic"
+      }
+    },
+    "tool": {
+      "name": "kujo_source_format",
+      "description": "Preview Kujo formatting. Returns source digest and canonical diagnostics; does not execute code or apply changes."
+    },
+    "adapter": "source_format"
+  }
+]

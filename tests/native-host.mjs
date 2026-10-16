@@ -42,7 +42,7 @@ try {
  await api(`/api/session/${session.id}/command`,{name:'kujo-evidence',text:''});
  // Drive only this isolated fixture's human permission endpoint. No live user
  // session or production mutation is approved by this acceptance harness.
- const selectedProfile=process.env.KUJO_TEST_MODEL?'ship':'review';
+ const selectedProfile=process.env.KUJO_TEST_MODEL?'ship':'build';
  const changing=api('/api/rpc/kujo.control/profile',{input:{sessionID:session.id,profile:selectedProfile}});
  let pending;
  for(let i=0;i<40;i++) {const list=(await api(`/api/session/${session.id}/permission`)).data;pending=list.find(p=>p.action==='kujo.profile.change');if(pending)break;await delay(100);}
