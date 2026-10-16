@@ -30,7 +30,7 @@ Reference revisions inspected locally:
 | Browser verification | Lens adapters and explicit browser install | Native readiness/remediation workflow and real supported-host acceptance |
 | Session lifecycle | Receipt session/agent/model correlation | Opt-in Watchdog metadata bridge, durable bounded retries, optional RunLedger |
 | External approval/service integrations | Local native one-time approvals | Explicitly scoped service support matrix including Leash; never imply remote gateway capability from a local catalog |
-| Recovery and distribution | Staged source/runtime replacement, packed local install/upgrade | Full project transaction, orphan locks, supported OS/host matrix, public release/provenance |
+| Recovery and distribution | Transactional project activation and staged source/runtime replacement with complete lock publication; packed local install/upgrade | Lost-response reconciliation, multiple-project/version cases, supported OS/host matrix, public release/provenance |
 
 ## Boundaries to preserve
 
