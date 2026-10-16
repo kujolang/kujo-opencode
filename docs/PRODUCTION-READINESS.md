@@ -534,3 +534,9 @@ Watchdog accepted a batch, then a simulated lost acknowledgement caused restart
 and retry: the server retained exactly one record with no private-content
 canaries. Final packed fresh/upgrade acceptance is pending below. All seven
 production outcomes remain open.
+
+Packed lifecycle candidate 7XhEFJ ended without acceptance: GitHub crud-api
+source acquisition timed out during upgrade (`Recv failure: Operation timed
+out`). This is a failed gate, not a passing fresh/upgrade certification. The
+fixture is retained for diagnosis; rerun the exact candidate after acquisition
+recovers. Offline and canonical E2E results above remain valid.

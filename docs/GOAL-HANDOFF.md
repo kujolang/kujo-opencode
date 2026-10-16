@@ -361,3 +361,9 @@ HTTP response headers do not prove model completion. Pass canonical project
 paths to the outbox. Remaining specialist workflows, guided knowledge/browser
 readiness, service support boundaries, recovery matrix and public release retain
 their original scope. No new external release/provider checks in this checkpoint.
+
+Packed lifecycle candidate 7XhEFJ ended without acceptance: GitHub crud-api
+source acquisition timed out during upgrade (`Recv failure: Operation timed
+out`). This is a failed gate, not a passing fresh/upgrade certification. The
+fixture is retained for diagnosis; rerun the exact candidate after acquisition
+recovers. Offline and canonical E2E results above remain valid.
