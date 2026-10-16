@@ -25,10 +25,11 @@
     "build": "node scripts/build-release.mjs",
     "prepack": "npm run build",
     "pretest": "npm run build",
-    "test": "node --test tests/catalog.test.mjs tests/executor.test.mjs tests/runtime.test.mjs tests/security.test.mjs tests/setup.test.mjs tests/release.test.mjs tests/opencode.test.mjs",
+    "test": "node --test tests/catalog.test.mjs tests/executor.test.mjs tests/runtime.test.mjs tests/security.test.mjs tests/setup.test.mjs tests/release.test.mjs tests/opencode.test.mjs tests/recovery.test.mjs tests/plugin.test.mjs",
     "test:e2e": "node tests/e2e.test.mjs",
     "test:opencode": "node scripts/check-opencode-host.mjs",
-    "test:fresh": "node tests/fresh-install.mjs"
+    "test:fresh": "node tests/fresh-install.mjs",
+    "test:native": "node tests/native-host.mjs"
   },
   "dependencies": {
     "@kujolang/kujo-runtime": "1.8.0",
@@ -55,5 +56,8 @@
     "mcp",
     "agent-skills",
     "ability"
-  ]
+  ],
+  "devDependencies": {
+    "@opencode/plugin": "2.0.31"
+  }
 }
