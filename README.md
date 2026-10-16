@@ -224,3 +224,21 @@ operation never ran. Receipt inspection, comparison and export do not call a
 model or create new receipts. The canonical catalog's receipt-list Ability
 retains its existing shared-ledger contract; these scoped views are native
 management and CLI features.
+
+## Execution state across projects
+
+Approvals and idempotency records are now stored per canonical workspace under
+`projects/<workspace-hash>/state.json` in Kujo's data directory. Path aliases for
+the same workspace use the same state. Different projects cannot use each other's
+approvals or completed outcomes, even when a caller reuses an invocation ID or
+idempotency key. Receipts remain in the shared ledger with project attribution.
+
+On upgrade, completed legacy outcomes with matching project attribution can
+still replay. Old approval grants are not transferred: request fresh approval
+for unfinished work. An unscoped or in-progress legacy idempotency record stops
+execution with `kujo_legacy_outcome_unresolved`. Inspect the receipts and actual
+artifacts before deliberately starting a new operation with a new key; do not
+retry blindly or delete state to bypass that check. Old state is preserved.
+Moving a workspace to a different canonical path creates a different execution
+namespace; automatic state relocation is not supported. Older installed versions
+retain their prior behavior until each project is upgraded.

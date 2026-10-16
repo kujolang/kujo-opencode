@@ -338,3 +338,22 @@ The installed package executed the source inspection and exported its exact
 project-attributed receipt through the durable CLI, then retained the five-tool
 fallback baseline. Documentation was updated after this candidate was packed;
 this is a checkpoint gate, not final immutable release certification.
+
+## Implementation checkpoint: project-isolated execution state
+
+Approval and idempotency state now uses canonical-workspace namespaces. Shared
+receipt writing still uses the legacy canonical writer/lock, so concurrent
+projects cannot independently rotate the same ledger. Generated runtime bytes
+remain unchanged. Existing project-scoped records win over later legacy records;
+legacy completed receipts with matching project attribution replay without
+repeating effects. Unscoped or in-progress legacy keys stop with an explicit
+reconciliation error, and legacy grants cannot authorize new scoped executions.
+
+Canonical local E2E now installs two projects under one data root: an unused
+first-project approval is rejected in the second, an identical already-used key
+requires the second project's approval, and Scout writes artifacts only after
+that approval. Native OpenCode 2.0.31 management acceptance passed in fixture
+`kujo-native-host-LPYgPe`. Offline tests cover restart/path-alias replay, foreign
+grants, legacy known/unknown outcomes and late legacy records. Relocating a
+workspace creates a new namespace; old binaries retain their original behavior.
+This does not close all lost-response, mixed-version or release matrix cases.

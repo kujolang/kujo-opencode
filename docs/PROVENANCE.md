@@ -35,3 +35,11 @@ configured workspace, never model-provided metadata. The same object is returned
 and retained for idempotent replay. Generated runtime bytes, receipt identity,
 approval binding and canonical storage/rotation remain unchanged. Native evidence
 management reads retained receipts without executing the receipt-list Ability.
+
+Execution-state projection now selects a state file by SHA-256 of the canonical
+workspace path. The host-owned ProjectState adapter delegates approval and
+idempotency behavior to the unchanged canonical FileAbilityState. Receipts use
+the original shared writer and lock, preserving serialized rotation. The legacy
+key guard reads under that shared lock, permits only attributed same-project
+completed replay, ignores other attributed projects, and refuses unresolved or
+unscoped outcomes. Legacy approval records are never imported.
