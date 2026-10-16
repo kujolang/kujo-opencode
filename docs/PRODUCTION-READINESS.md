@@ -412,3 +412,57 @@ sources and preservation of the older project. Tarball SHA-256:
 The prior source-run packed attempt failed on ENOSPC; only exact task-owned
 fixture work folders/runtime copies were removed, preserving tarballs/receipts.
 This checkpoint does not close the full product acceptance list.
+
+## Implementation checkpoint: MCP generation and Agents SDK fixtures
+
+Build now exposes 14 tools, Full 45, with 27 pinned source repositories. Three
+host-owned definitions delegate to canonical MCP dry-run/generation and Agents
+SDK offline smoke commands. MCP generation requires a new contained output
+directory with an existing parent, uses --no-ai and --validate, refuses overwrite,
+and retains partial output on failure. Preview is an advisory classification of
+the current repository, not a digest-bound generated-file approval. No generated
+server is started or registered. Review artifacts remain required before exposure.
+
+Agents smoke runs in a temporary working directory with the installed SDK as its
+explicit module root. It checks each canonical example's ok/requires_network
+flags; the approval example's intentional failed status is preserved. These are
+offline examples, not live-provider or application acceptance. Both operations
+use normal canonical approvals and completed-request replay, bounded output and
+process supervision. Generated runtime unchanged.
+
+The first packed upgrade exposed catalog migration validation using the new
+catalog against the old installation. Update now reads the prior catalog only
+from its validated installed projection, checks its source pins/paths, and then
+installs the new catalog. Ordinary execution still requires the current catalog.
+Unchanged local development sources are preserved; new or changed pins are
+installed, or an explicit --source-root supplies the complete local catalog.
+
+Commits b198a1b and a15fec3. 69 offline tests and expanded canonical E2E passed,
+including MCP preview/no writes, approved generation, safety artifacts, SDK
+acceptance and replay. Native OpenCode2.0.31 management passed in m2xGD4 without
+model calls before the migration-only CLI fix. Live specialist execution and the
+OS/host matrix remain open. Starter preview/creation remains unimplemented.
+
+
+The migration retry 5M17zi passed packed fresh/upgrade with 27 sources, prior
+project preservation and actual installed MCP/SDK execution. Subsequent commit
+4bef6f4 suppresses upstream shell-based extended validation (KUJO_BIN empty) and
+runs the same syntax/self-check using direct argument vectors. The receipt
+reports these checks separately from the canonical artifact report. This avoids
+shell substitution from destination paths and handles runtime paths with spaces.
+Canonical E2E verifies a literal $(printf injected) destination; no shell exploit
+was executed. Direct checks have 30-second windows, in addition to the 120-second
+generator bound. The normal offline suite still passes 69 tests.
+
+Upstream MCP source remains unchanged. Source-verified shell interpolation at
+src/make/validate_generated_server.kujo:152-160 was captured for human review as
+SignalBox cap_781c3b50-1bc5-4bc9-90ff-0606d0b41dc3 and
+sig_96a4ebd6-7b94-4026-b3de-c36a9f3a0475; exact-ID and concept retrieval passed.
+This risk is mitigated in this adapter, not claimed fixed for other MCP callers.
+
+Final checkpoint packed retry 0g2VQT passed fresh installation and 0.1.0 upgrade,
+including installed MCP generation/direct checks and SDK fixtures, all 27 sources
+and older project preservation. Candidate SHA-256: 8cd06f98fd775bf3b9be408a46b0b19e57fa19bdae028d2551dce8cef5d709f4.
+Native management tRrtyP also passed after the direct-validation change. Only
+test cleanup and timeout documentation changed after packing; this remains a
+local checkpoint, not immutable full release/platform certification.

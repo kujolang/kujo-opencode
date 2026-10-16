@@ -302,5 +302,6 @@ for inspection. Choose a new destination deliberately after reviewing a failure.
 normal approval, from a private temporary working directory. Every example must
 report `ok: true` and `requires_network: false`. The approval example deliberately
 reports a failed run: its acceptance flag verifies rejection. These fixtures do
-not certify live providers or your application's agent behavior. Both workflows
-use a 120-second window and bounded output; their receipts support normal replay.
+not certify live providers or your application's agent behavior. Generator and
+SDK commands have 120-second windows; each generated-server check has 30 seconds.
+Output is bounded, and receipts support normal replay.

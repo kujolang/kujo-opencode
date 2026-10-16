@@ -270,3 +270,41 @@ remain unverified. Generated runtime unchanged. Source run/test implementation
 is now committed; broader starter/MCP/SDK, lifecycle, recovery, specialist and
 release outcomes remain open. Next: canonical reviewed starter preview/creation,
 MCP generator and Agents SDK fixtures, preserving thin-adapter ownership.
+
+## Canonical MCP and SDK checkpoint (2026-10-16)
+
+b198a1b implements canonical MCP preview/generation and offline Agents SDK smoke;
+a15fec3 fixes upgrades when the source catalog changes. See build-workflows.mjs,
+build-abilities.json and catalog-migration.test.mjs. Build14, Full45, sources27.
+MCP uses a new contained destination, no AI, canonical validation, retained
+partial failures and review artifacts. SDK preserves the deliberate failed
+approval-example status while requiring every example's ok=true/network=false.
+69 offline tests, canonical E2E and pre-migration native management passed.
+
+Catalog migration must validate the old installation with its own contained
+catalog before preparing the new sources. Normal app execution remains strict.
+The first packed attempt otE3EM demonstrated the old/new mismatch and failed;
+its exact owned work folders were cleaned after diagnosis, retaining tarballs.
+Packed retry evidence must be checked before claiming acceptance.
+
+Next: reviewed starter preview/creation for script, agent, API and MCP. Reference
+Paperclip src/features/starters/preview.ts and application.ts: canonical kujo init
+and agent new generators, plus explicitly inventoried pinned CRUD/MCP source
+files with provenance. Do not copy product implementations or invent substitute
+starters. The full lifecycle, recovery, specialist execution and release scope
+remains active; no external npm/provider/CI gate was rechecked this checkpoint.
+
+Migration retry 5M17zi completed successfully. Follow-up 4bef6f4 suppresses the
+canonical shell-based extended checks and runs generated syntax/self-check with
+argv; E2E covers a literal shell-special destination. SDK and MCP generation
+still delegate product behavior upstream. Final packed retry for this correction
+is 0g2VQT; confirm its terminal outcome. Upstream risk retained for human review
+in SignalBox cap_781c3b50-1bc5-4bc9-90ff-0606d0b41dc3 and
+sig_96a4ebd6-7b94-4026-b3de-c36a9f3a0475, both retrieved exactly and conceptually.
+
+Final checkpoint packed retry 0g2VQT passed fresh installation and 0.1.0 upgrade,
+including installed MCP generation/direct checks and SDK fixtures, all 27 sources
+and older project preservation. Candidate SHA-256: 8cd06f98fd775bf3b9be408a46b0b19e57fa19bdae028d2551dce8cef5d709f4.
+Native management tRrtyP also passed after the direct-validation change. Only
+test cleanup and timeout documentation changed after packing; this remains a
+local checkpoint, not immutable full release/platform certification.
