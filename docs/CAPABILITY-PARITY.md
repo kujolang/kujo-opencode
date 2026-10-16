@@ -28,7 +28,7 @@ Reference revisions inspected locally:
 | Project knowledge | RAG query/ingest adapters | Guided index/query workflow, freshness and citations, retained-index management |
 | Evidence | Canonical receipts, native project/session/legacy filtering, details/comparison, contained artifact previews and JSON export | Retention limits are explicit; immutable artifact snapshots and full directory browsing are not provided |
 | Browser verification | Lens adapters and explicit browser install | Native readiness/remediation workflow and real supported-host acceptance |
-| Session lifecycle | Native opt-in controls and session/tool/model metadata observers; bounded durable Watchdog retries, reconnect and unload | Optional canonical RunLedger, bounded failure intervention, full real-task/platform acceptance |
+| Session lifecycle | Native opt-in metadata observers, durable Watchdog delivery, session-linked canonical RunLedger controls and bounded opt-in failure guard | Automatic session tracking/finalization with truthful human verdicts; live-model guard/telemetry and platform acceptance |
 | External approval/service integrations | Local native one-time approvals | Explicitly scoped service support matrix including Leash; never imply remote gateway capability from a local catalog |
 | Recovery and distribution | Transactional project activation and staged source/runtime replacement with complete lock publication; packed local install/upgrade | Lost-response reconciliation, multiple-project/version cases, supported OS/host matrix, public release/provenance |
 

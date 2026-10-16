@@ -583,3 +583,42 @@ This clears the previous download timeout for this retry. As noted above, the
 packed candidate predates two final plugin shutdown/queue-action refinements;
 final native Pnl7ZH and canonical E2E cover current local code, while immutable
 full-release certification remains open.
+
+## Session RunLedger and bounded failure guard (2026-10-16)
+
+Commits dae8d71 and b96962b add session-linked native RunLedger start/inspect/finish
+controls and a separate opt-in failure guard. The ledger invokes the canonical
+Ability runtime for effects and canonical RunLedger show for inspection. Stable
+session keys and one session-specific ledger directory preserve association after
+restart/lost response; repeated starts inspect the existing record. Start and finish
+require separate exact native grants, current capability exposure/digest checks,
+workspace validation and unchanged canonical state. A human chooses the terminal
+verdict. No prompt, inferred usage/cost or automatic success verdict is written.
+Ambiguous records or unresolved execution state fail closed instead of duplicating
+a write. Source: lib/session-runledger.mjs and its unit/canonical acceptance tests.
+
+The guard pauses once after three distinct consecutive failures from the same
+tool within five minutes and sends a resume:false evidence reminder. It never
+retries or approves a tool. Success/different tools/expired windows reset counts;
+state is capped at 128 sessions per plugin activation and resets on reload. It
+can operate without Watchdog. Interrupt is launched outside the awaited tool hook
+to avoid waiting for a session that is itself awaiting that hook. Configuration
+is rechecked before interruption/notification, and unload suppresses later work.
+Counters and outcomes are visible in native lifecycle status.
+
+99 offline tests and expanded canonical E2E passed. Real OpenCode2.0.31 fixture
+J0eoBH passed guard activation/rejection/disable and RunLedger rejection, approved
+start, duplicate-start inspection and human-selected partial finish without model
+inference. Earlier test sessions used a /var alias while the host location used
+/private/var: approval remained pending outside the queried location. Creating
+sessions with the canonical workspace fixed the acceptance; the live-provider
+harness now also canonicalizes its workspace. This is a test routing correction,
+not evidence that native host permission storage unifies arbitrary path aliases.
+
+Packed candidate s1hMEi is running with the new installed-byte session RunLedger
+acceptance; check its terminal result before claiming fresh/upgrade success.
+The full lifecycle outcome remains open: automatic session tracking/finalization,
+real-model telemetry and failure-guard acceptance are not established by manual
+controls or host mocks. All six specialist tasks, guided knowledge/browser UX,
+remaining recovery/mixed-version and immutable platform/host/public-release gates
+retain their original scope.

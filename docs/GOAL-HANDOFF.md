@@ -394,3 +394,21 @@ This clears the previous download timeout for this retry. As noted above, the
 packed candidate predates two final plugin shutdown/queue-action refinements;
 final native Pnl7ZH and canonical E2E cover current local code, while immutable
 full-release certification remains open.
+
+## Session RunLedger and failure guard checkpoint (2026-10-16)
+
+dae8d71/b96962b implement session-ledger controls and opt-in bounded intervention.
+See session-runledger.mjs, failure-guard.mjs, lifecycle-host.mjs and their tests.
+99 offline tests, expanded canonical E2E and native J0eoBH passed. Packed s1hMEi
+is running (handle62025 at checkpoint) with installed-byte canonical ledger tests.
+Native session creation must use realpath(project): /var vs /private/var produced
+pending permission in a different host location. Live model harness corrected too.
+Never await session.interrupt inside a tool after-hook: the session may be waiting
+for that same hook. Guard launches bounded once-only intervention asynchronously.
+
+Next lifecycle work: automatic optional session tracking/finalization that preserves
+request-bound human approval and truthful human verdicts, Watchdog/RunLedger
+correlation, and real live-model failure/telemetry acceptance. Manual menu controls
+do not complete that scope. Retain six specialist tasks, guided RAG/Lens readiness,
+recovery/mixed-version and immutable supported-platform/host/public release gates.
+No external npm/CI/provider gate was rechecked. No new SignalBox capture warranted.
