@@ -36,7 +36,7 @@ await writeFile(join(project, "README.md"), "# Fixture\n"); await writeFile(join
 await exec("git", ["init", "-q"], { cwd: project }); await exec("git", ["add", "."], { cwd: project }); await exec("git", ["-c", "user.name=Kujo", "-c", "user.email=kujo@example.invalid", "commit", "-qm", "fixture"], { cwd: project }); await writeFile(join(project, "README.md"), "# Fixture\n\nChanged.\n");
 await exec(process.execPath, [join(packageRoot, "scripts", "build-release.mjs")]);
 const env = { KUJO_OPENCODE_HOME: home, KUJO_OPENCODE_PROJECT: project, KUJO_BIN: kujo };
-const localCatalogAvailable = ["ability", "scout", "scent", "patchbrief", "changebucket", "shipcheck", "dispatch", "runledger", "watchdog", "rag", "fence", "spec", "eval", "kujo-skills", "casefile", "concord", "muzzle", "kennel", "redact", "versionseal", "packwrite", "tribunal", "dossier", "howl", "lens"]
+const localCatalogAvailable = ["ability", "scout", "scent", "patchbrief", "changebucket", "shipcheck", "dispatch", "runledger", "watchdog", "rag", "fence", "spec", "eval", "kujo-skills", "casefile", "concord", "muzzle", "kennel", "redact", "versionseal", "packwrite", "tribunal", "dossier", "howl", "lens", "mcp", "agents-sdk"]
   .every((source) => existsSync(join(sourceRoot, source)));
 const setupArgs = [cli, "setup", "--project", project, ...(localCatalogAvailable ? ["--source-root", sourceRoot] : []), "--json"];
 const setup = JSON.parse((await exec(process.execPath, setupArgs, { env: { ...process.env, ...env }, timeout: 180_000 })).stdout);
@@ -146,6 +146,19 @@ const sourceApproval=JSON.parse((await exec(process.execPath,[cli,'approve','--p
 const sourceDone=await rpc.request('tools/call',{name:'kujo_source_execute',arguments:{...sourceInput,_kujo:{...sourceControls,approvalId:sourceApproval.approval_id}}});assert.equal(sourceDone.result.structuredContent.ok,true,JSON.stringify(sourceDone));assert.match(sourceDone.result.structuredContent.receipt.result.stdout,/1/);
 const sourceReplay=await rpc.request('tools/call',{name:'kujo_source_execute',arguments:{...sourceInput,_kujo:sourceControls}});assert.equal(sourceReplay.result.structuredContent.replayed,true);assert.equal(sourceReplay.result.structuredContent.receipt.receipt_id,sourceDone.result.structuredContent.receipt.receipt_id);
 
+const mcpInput={path:'.',output_dir:'.kujo/mcp-fixture'};
+message=await rpc.request('tools/call',{name:'kujo_mcp_preview',arguments:mcpInput});assert.equal(message.result.structuredContent.ok,true,JSON.stringify(message));assert.equal(existsSync(join(project,mcpInput.output_dir)),false);
+for(const [ability,name,input,key] of [['kujo.opencode.mcp.generate','kujo_mcp_make',mcpInput,'mcp-fixture'],['kujo.opencode.agents.smoke','kujo_agents_smoke',{},'agents-fixture']]){
+ const controls={invocationId:key,idempotencyKey:key};
+ message=await rpc.request('tools/call',{name,arguments:{...input,_kujo:controls}});assert.equal(message.result.structuredContent.code,'ability_approval_required');
+ const grant=JSON.parse((await exec(process.execPath,[cli,'approve','--project',project,'--ability',ability,'--invocation',key,'--input',JSON.stringify(input),'--json'],{env:{...process.env,...env}})).stdout);
+ const argumentsWithApproval={...input,_kujo:{...controls,approvalId:grant.approval_id}};
+ message=await rpc.request('tools/call',{name,arguments:argumentsWithApproval});assert.equal(message.result.structuredContent.ok,true,JSON.stringify(message));const result=message.result.structuredContent;
+ if(name==='kujo_agents_smoke')assert.equal(result.receipt.result.examples.approval_agent.ok,true);
+ else{assert.ok(result.receipt.result.generated_tools>0);await readFile(join(project,mcpInput.output_dir,'artifacts/safety-review.md'));}
+ const replay=await rpc.request('tools/call',{name,arguments:argumentsWithApproval});assert.equal(replay.result.structuredContent.receipt.receipt_id,result.receipt.receipt_id);
+}
+
 rpc.close();
 
 // Two installed projects share receipts but never execution grants or keys.
@@ -165,5 +178,5 @@ try{
 
 const config = JSON.parse(await readFile(join(project, ".kujo", "opencode.json"), "utf8"));
 assert.equal(config.sources, undefined);
-assert.equal(Object.keys(installation.sources).length, 25);
+assert.equal(Object.keys(installation.sources).length, 27);
 console.log("OpenCode local package compatibility: setup, discovery, schema metadata, canonical invocation, approvals, receipts, cross-project isolation, concurrency, and restart passed");

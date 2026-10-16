@@ -1,0 +1,120 @@
+[
+  {
+    "definition": {
+      "schema": "kujo.ability/v1",
+      "id": "kujo.opencode.mcp.preview",
+      "version": "1.0.0",
+      "title": "Preview repository MCP generation",
+      "description": "Classify the current repository and preview output paths with the canonical offline MCP generator; no generated files or discovered commands are executed.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "output_dir": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "effects": [
+        {
+          "kind": "read",
+          "resource": "kujo.repository"
+        }
+      ],
+      "idempotency": {
+        "mode": "intrinsic"
+      }
+    },
+    "tool": {
+      "name": "kujo_mcp_preview",
+      "description": "Classify the current repository and preview output paths with the canonical offline MCP generator; no generated files or discovered commands are executed."
+    },
+    "adapter": "mcp_preview"
+  },
+  {
+    "definition": {
+      "schema": "kujo.ability/v1",
+      "id": "kujo.opencode.mcp.generate",
+      "version": "1.0.0",
+      "title": "Generate guarded repository MCP scaffold",
+      "description": "Generate and validate canonical MCP scaffolds offline into a new contained directory after approval. Never overwrite existing outputs; inspect retained safety and validation reports before exposing the server.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "output_dir": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "effects": [
+        {
+          "kind": "write",
+          "resource": "kujo.mcp.generated-scaffold"
+        }
+      ],
+      "idempotency": {
+        "mode": "keyed"
+      }
+    },
+    "tool": {
+      "name": "kujo_mcp_make",
+      "description": "Generate and validate canonical MCP scaffolds offline into a new contained directory after approval. Never overwrite existing outputs; inspect retained safety and validation reports before exposing the server."
+    },
+    "adapter": "mcp_generate"
+  },
+  {
+    "definition": {
+      "schema": "kujo.ability/v1",
+      "id": "kujo.opencode.agents.smoke",
+      "version": "1.0.0",
+      "title": "Run Agents SDK offline examples",
+      "description": "Execute the pinned canonical Agents SDK offline example suite after approval; validate each example acceptance flag, preserving intentional rejected-approval status.",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "effects": [
+        {
+          "kind": "external",
+          "resource": "kujo.agents.offline-process"
+        }
+      ],
+      "idempotency": {
+        "mode": "keyed"
+      }
+    },
+    "tool": {
+      "name": "kujo_agents_smoke",
+      "description": "Execute the pinned canonical Agents SDK offline example suite after approval; validate each example acceptance flag, preserving intentional rejected-approval status."
+    },
+    "adapter": "agents_smoke"
+  }
+]

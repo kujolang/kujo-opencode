@@ -13,7 +13,7 @@ npm install --global /path/to/kujolang-kujo-opencode-0.2.0.tgz && kujo-opencode 
 ```
 
 This is one paste, with no checkout, build, test, or linking step. Setup downloads
-25 pinned source repositories, installs its own Kujo binary, and configures this
+27 pinned source repositories, installs its own Kujo binary, and configures this
 project. Internet access is required during installation. It can take several
 minutes. npm publication is pending; **the registry package name is not yet an
 available install route**. A maintainer creates the tarball with `npm ci && npm pack`.
@@ -64,8 +64,8 @@ kujo-opencode abilities
 | `essentials` | 5 | Understand a repository and its changes |
 | `review` | 18 | Check architecture, contracts, context, and change footprint |
 | `ship` | 29 | Run verification and retain release evidence |
-| `build` | 11 | Inspect source and run reviewed source/test snapshots |
-| `full` | 42 | Add orchestration, RAG, and optional service tools |
+| `build` | 14 | Inspect source and run reviewed source/test snapshots |
+| `full` | 45 | Add orchestration, RAG, and optional service tools |
 
 `enable` and `disable` accept a product name, a tool name, or the canonical Ability
 ID. Product names select all of that product's supported operations. Canonical
@@ -166,7 +166,8 @@ Select `Build` in `/kujo` (or run `kujo-opencode profile build`) to use
 canonical diagnostics or formatting preview. Files are copied into a private
 temporary directory; formatting is never applied to your source. These are
 single-file checks, not proof that imports, project tests, or runtime behavior
-work. Run/test and starter creation remain tracked parity work.
+work. Use the reviewed run/test workflow below for execution. Starter creation
+remains tracked parity work.
 
 Project setup, updates, profile changes, repair, and uninstall use a recoverable
 activation transaction. If interrupted, run `kujo-opencode recover --project DIR`
@@ -180,7 +181,7 @@ Choose **Choose a specialist** in `/kujo`, or use OpenCode's agent selector:
 | Specialist | Scope | Starting profile |
 | --- | --- | --- |
 | `kujo-understand` | Repository map, context and task contract | Review |
-| `kujo-build` | Source checks, formatting preview and package/contract validation | Build |
+| `kujo-build` | Source checks, reviewed execution, MCP generation and SDK fixtures | Build |
 | `kujo-review` | Change footprint, architecture and artifact review | Review |
 | `kujo-browser` | Lens flow/page verification and failure evidence | Ship |
 | `kujo-workflow` | Explicit Dispatch/Muzzle operation and run evidence | Full |
@@ -190,9 +191,9 @@ Specialists inherit your model choice. Each has an enforced native Ability
 allowlist and denies raw shell, edits, network tools and delegation by default.
 Normal approvals still apply to its declared effects. Selecting a specialist
 does not enable capabilities or start inference; the picker reports missing
-exposure. Change the profile separately when needed. Build/run/test and starter
-creation remain separate unfinished capabilities, not implicit powers granted
-to the Build specialist. Ship gathers evidence; it does not publish releases.
+exposure. Change the profile separately when needed. Build supports reviewed
+run/test, MCP generation and Agents SDK fixtures. Starter creation remains
+unimplemented. Ship gathers evidence; it does not publish releases.
 
 ## Find and export evidence
 
@@ -277,3 +278,26 @@ Limits: 256 files, 4 MiB total source/resources, 32 KiB execution manifest,
 16 KiB preview excerpts, 32 KiB combined output and a 120-second process window.
 Cancellation and output/time limits terminate the supervised process tree;
 platform acceptance remains subject to the documented release matrix.
+
+
+## Generate MCP scaffolds and verify Agents SDK
+
+In Build, ask `kujo_mcp_preview` to inspect a repository (`path`, default `.`)
+and an output directory (`output_dir`, default `.kujo/mcp-generated`). Its parent
+must exist and the destination must be new. Preview runs the canonical generator
+with `--no-ai --dry-run`; it writes no scaffold and executes no discovered command.
+Approve `kujo_mcp_make` to generate and validate the scaffold in that destination.
+Generation analyzes current repository contents again, so a preview is advisory,
+not a digest-bound source snapshot.
+
+Open the returned `safety-review.md`, `mcp.manifest.json` and validation report
+before exposing a generated server. The tool does not start or register it.
+Existing destinations are refused, and failed generation retains partial files
+for inspection. Choose a new destination deliberately after reviewing a failure.
+
+`kujo_agents_smoke` runs the installed canonical Agents SDK offline examples with
+normal approval, from a private temporary working directory. Every example must
+report `ok: true` and `requires_network: false`. The approval example deliberately
+reports a failed run: its acceptance flag verifies rejection. These fixtures do
+not certify live providers or your application's agent behavior. Both workflows
+use a 120-second window and bounded output; their receipts support normal replay.

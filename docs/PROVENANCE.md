@@ -50,3 +50,10 @@ SHA-256 values, copies the verified runtime before launch, and keeps canonical
 request-bound approvals/idempotency. Canonical test semantics and expected-output
 comparison are not reimplemented. Process-tree supervision is host adapter code;
 trusted source execution is not advertised as an OS sandbox.
+
+Host-owned build definitions delegate MCP preview/generation to the pinned MCP
+package with --no-ai, and SDK fixture execution to the pinned Agents SDK smoke
+runner. The adapter controls contained new output destinations, subprocess limits,
+approval and receipt projection; canonical packages own scaffold generation,
+safety classification, validation and example expectations. The intentional
+approval-example failure status is preserved when its acceptance flag passes.

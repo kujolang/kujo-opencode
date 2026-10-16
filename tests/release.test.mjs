@@ -20,6 +20,7 @@ for (const required of [
   ".generated/local-runtime.mjs",
   "catalog/abilities.json",
   "catalog/source-abilities.json",
+  "catalog/build-abilities.json",
   "lib/source-tools.mjs",
   "catalog/profiles.json",
   "catalog/sources.json",

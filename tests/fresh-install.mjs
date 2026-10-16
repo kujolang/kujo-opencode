@@ -66,6 +66,11 @@ const executionProbe=`const {createApp}=await import(${JSON.stringify(appUrl)});
 const execution=JSON.parse((await command(process.execPath,['--input-type=module','-e',executionProbe])).stdout);assert.equal(execution.ok,true);assert.match(execution.stdout,/override works/);
 for(const id of ['kujo.opencode.source.preview','kujo.opencode.source.execute'])await call(['disable',id],fresh);
 
+for(const id of ['kujo.opencode.mcp.preview','kujo.opencode.mcp.generate','kujo.opencode.agents.smoke'])await call(['enable',id],fresh);
+const buildProbe=`const {createApp}=await import(${JSON.stringify(appUrl)});const app=await createApp(${JSON.stringify(fresh)});const preview=await app.runtime.execute({abilityId:'kujo.opencode.mcp.preview',input:{}});if(!preview.ok)throw Error(JSON.stringify(preview));for(const abilityId of ['kujo.opencode.mcp.generate','kujo.opencode.agents.smoke']){const controls={invocationId:abilityId,idempotencyKey:abilityId};const pending=await app.runtime.execute({abilityId,input:{},controls});if(pending.code!=='ability_approval_required')throw Error('Expected approval');const approval=await app.runtime.requestApproval({abilityId,input:{},invocationId:abilityId});const result=await app.runtime.execute({abilityId,input:{},controls:{...controls,approvalId:approval.approval_id}});if(!result.ok)throw Error(JSON.stringify(result));if(abilityId.endsWith('generate')&&!result.receipt.result.generated_tools)throw Error('No MCP tools generated');if(abilityId.endsWith('smoke')&&!result.receipt.result.examples.hello_agent.ok)throw Error('SDK smoke failed');}console.log('passed');`;
+assert.match((await command(process.execPath,['--input-type=module','-e',buildProbe])).stdout,/passed/);
+for(const id of ['kujo.opencode.mcp.preview','kujo.opencode.mcp.generate','kujo.opencode.agents.smoke'])await call(['disable',id],fresh);
+
 const mcp=join(installed.projection_root,'bin/kujo-opencode-mcp.mjs');
 const rpc=await new Promise((resolveResult,reject)=>{
  import('node:child_process').then(({spawn})=>{
