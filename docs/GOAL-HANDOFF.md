@@ -412,3 +412,12 @@ correlation, and real live-model failure/telemetry acceptance. Manual menu contr
 do not complete that scope. Retain six specialist tasks, guided RAG/Lens readiness,
 recovery/mixed-version and immutable supported-platform/host/public release gates.
 No external npm/CI/provider gate was rechecked. No new SignalBox capture warranted.
+
+Packed s1hMEi completed successfully: fresh install, 0.1.0 upgrade, 28 pinned
+sources, older project retained, real starter services/agent fixture, Watchdog
+deduplication and installed-byte session RunLedger rejection/start/lost-response
+inspection/finish. verification.json includes session_runledger_verified:true.
+Candidate SHA-256: 70c8dde715187007ed9e0215b3e46f87f8e959373eded1f016ba9a579b8bf826. Only test assertions and
+acceptance documentation changed after packing; shipped executable bytes match
+this checkpoint. This remains local macOS evidence, not the full immutable
+supported-platform/live-specialist/public-release certification.

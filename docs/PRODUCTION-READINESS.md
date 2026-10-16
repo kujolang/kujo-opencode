@@ -622,3 +622,12 @@ real-model telemetry and failure-guard acceptance are not established by manual
 controls or host mocks. All six specialist tasks, guided knowledge/browser UX,
 remaining recovery/mixed-version and immutable platform/host/public-release gates
 retain their original scope.
+
+Packed s1hMEi completed successfully: fresh install, 0.1.0 upgrade, 28 pinned
+sources, older project retained, real starter services/agent fixture, Watchdog
+deduplication and installed-byte session RunLedger rejection/start/lost-response
+inspection/finish. verification.json includes session_runledger_verified:true.
+Candidate SHA-256: 70c8dde715187007ed9e0215b3e46f87f8e959373eded1f016ba9a579b8bf826. Only test assertions and
+acceptance documentation changed after packing; shipped executable bytes match
+this checkpoint. This remains local macOS evidence, not the full immutable
+supported-platform/live-specialist/public-release certification.
