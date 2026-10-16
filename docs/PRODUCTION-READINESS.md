@@ -82,3 +82,25 @@ Important host behaviors established by this checkpoint:
 Checkpoint validation: 26 offline tests, local real-product E2E, packed
 fresh-install/0.1.0 upgrade, and the native host command/profile-permission gate.
 These do not close the full production-readiness list above.
+
+## Implementation checkpoint: native management RPC and TUI candidate
+
+The package now exports native server and TUI entrypoints. The TUI provides a
+Kujo menu, status/capability details, profile selection, and receipt inspection
+using host dialogs. It does not call a model or answer permission requests.
+The server RPC requires a workspace-bound session and fresh host permission for
+profile changes. RPC calls pass location options on each method invocation,
+as required by the installed 2.0.31 SDK; raw HTTP uses an `input` envelope.
+
+An async-local data root follows registered host callbacks rather than mutating
+process environment. Tests overlap callbacks for separate roots and verify their
+isolation. UI fixtures cover declined profile changes, cancellation, idle setup,
+workspace routing, and suppression of late UI after unload. These are behavior
+fixtures, not proof of a rendered OpenCode TUI. Default installation projection,
+actual terminal interaction, and real native Ability execution remain open.
+
+Validation: 30 offline tests and real-product E2E passed. The real 2.0.31 host
+acceptance also exercises status/evidence RPC and profile RPC with a real pending
+host permission, verifies configuration remains unchanged before the decision,
+and verifies management produces no assistant messages. This does not close the
+seven product outcomes above.

@@ -46,3 +46,22 @@ Save the durable checkpoint with links to PRODUCTION-READINESS.md, then verify
 with notes get NOTE_ID --json and conceptual search "OpenCode parity native
 plugin interrupted upgrade recovery". SignalBox: no captures warranted; this is
 already authorized goal work and resolved implementation evidence.
+
+## Native management checkpoint 2
+
+Server RPC and TUI dialog candidate implemented in lib/plugin-rpc.mjs and
+lib/tui.mjs, with package exports for the server and ./tui. SDK location routing
+belongs on individual RPC method calls, not the RPC factory; HTTP RPC bodies
+use an input envelope. AsyncLocalStorage binds the explicit data root through
+host tool/command/permission/RPC callbacks without process.env mutation.
+30 offline tests and the real-product E2E passed. Real host RPC profile permission,
+status/evidence and no-model-call checks passed. TUI tests are fixtures; real
+terminal rendering, default plugin projection and real tool execution/approval
+acceptance are still next steps. All seven parity outcomes remain incomplete.
+
+Strata health was retried: `npm run strata -- health --json` exits 127 because
+`tsx` is absent. No checkpoint memory has been saved; retain the pending bundle
+above and include this delta when Strata becomes available. Intended target:
+Agent Notes; local session ID local-kujo-opencode-native-management-20261016.
+Retrieval cue: OpenCode native management RPC workspace isolation. SignalBox:
+no captures warranted; these are existing goal commitments and resolved lessons.
