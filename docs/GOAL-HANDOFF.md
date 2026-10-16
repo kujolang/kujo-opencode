@@ -1,5 +1,13 @@
 # Active parity goal checkpoint — 2026-10-16
 
+Strata consolidation is now complete for checkpoints 1–6: Agent Notes note
+`1bca6881-719a-4e15-b140-12402af46564`, “Session Memory · Kujo OpenCode · Native
+source and recovery parity checkpoint · 2026-10-16”. Exact-ID and conceptual
+“OpenCode recovery” retrieval both passed through the authenticated /v1 API.
+Earlier pending-memory sections below are historical; do not duplicate them.
+The source CLI still lacks tsx, but the documented local API is available.
+
+
 The user authorized all seven areas in PRODUCTION-READINESS.md. The goal remains
 active and incomplete. Continue implementation; do not replace the full scope
 with the passing checkpoint tests. No subagents have been authorized.
