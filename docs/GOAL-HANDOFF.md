@@ -183,3 +183,22 @@ recovery scope includes lost responses and multiple-project/version acceptance;
 the old mkdir-before-owner gap is fixed for new source/runtime locks. Legacy
 empty locks remain a deliberate manual-inspection case. Release still requires
 fresh npm/CI external checks and an immutable supported-platform/host matrix.
+
+## Native capability management checkpoint (2026-10-16)
+
+Commits b3b8b6b and ffe1ea8 fix actual runtime visibility for explicitly enabled
+out-of-profile tools and add native enable/disable/profile-default controls.
+Fresh host approval binds each requested change; project activation rejects stale
+configuration without overwriting it. All 49 offline tests, canonical E2E, real
+OpenCode 2.0.31 approval/denial/default/out-of-profile/stale-edit checks and packed
+fresh/upgrade passed. The packed test executes an out-of-profile source tool
+from the installed package. See PRODUCTION-READINESS.md for fixture and digest.
+
+The canonical runtime independently filters profile IDs, so registering extra
+handlers alone does not make an enabled tool visible. Preserve the in-memory
+effective-profile projection in app.mjs; do not patch the generated runtime.
+All seven broader outcomes remain open. Individual native toggles are now done;
+next native UX work is project/session evidence filtering and artifact navigation.
+Canonical run/test/starters, lifecycle bridge, remaining recovery and release
+acceptance retain their full original scope. Prior live-provider and publication
+external failures were not rechecked in this checkpoint.

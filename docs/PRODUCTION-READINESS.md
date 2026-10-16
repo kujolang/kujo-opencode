@@ -298,3 +298,12 @@ its own profile filter. App construction now supplies an in-memory effective
 profile matching the resolved project exposure. No generated runtime or catalog
 identity was changed. Regression tests inspect actual runtime/catalog visibility
 and the real host's out-of-profile enable/reset behavior.
+
+Packed fresh installation and 0.1.0 upgrade passed with the final override fix
+(`kujo-opencode-packed-L1q3An`; tarball SHA-256
+`827e164cf03b631287a4ef6bbb41818e41c66e5783f7e1d9741eb442f7ecb2bd`).
+The gate enables source inspection outside Essentials, executes it through the
+installed canonical runtime, disables it again and verifies five fallback MCP
+tools. It also preserves the older project, profile/overrides and receipts.
+The native menu entry was rendered in a real local PTY; management behavior is
+covered by the real-host RPC gate above rather than inferred from that rendering.
