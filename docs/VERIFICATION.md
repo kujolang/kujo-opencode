@@ -1,22 +1,33 @@
-# Local verification — 2026-10-16
+# Kujo OpenCode 0.2.0 verification
 
-- OpenCode v2.0.31; Node v26.7.0; macOS.
-- npm test: 19 passing tests, including source-digest verification, approval
-  binding, idempotency races, cancellation, bounded state/output, contained
-  paths, configuration preservation, unowned-file rejection, and packaging.
-- npm run test:e2e with the local Kujo runtime: passed canonical tool calls,
-  discovery, schema metadata, approvals, receipts, concurrency, and restart.
-- npm run test:opencode: a private real OpenCode server reports kujo connected.
-  The check waits for asynchronous startup and makes no model request.
-- Live native OpenCode GLM 5.3 Flash Free session called kujo_ability_catalog.
-  Receipt receipt-d53f97a2-ff5f-4b1a-badf-f794a36ee2e0 was independently read
-  from the local receipt log: succeeded, host/principal opencode, 38 Abilities.
-- Full profile local setup exposes 38 Abilities and 23 canonical ecosystem skills,
-  plus the host guidance skill. Doctor: 30 checks passed, no failures.
-- Lens headless Chromium launch verified. Readiness supports headless-only installs.
+Verified on macOS on 2026-10-16 with Node 26.7.0 and OpenCode 2.0.31.
 
-Local-source mode was used for integration checks; it does not certify every
-pinned product revision or every product feature. Windows/Linux CI is configured,
-but is not claimed as locally verified. Automatic lifecycle hooks are out of scope.
-Runtime configuration, receipts, source checkouts, and model transcripts are not
-committed. No npm publication or public release was performed.
+- `npm test`: 22 passing offline contracts covering policy, approvals, idempotency,
+  bounded output, path containment, setup, JSONC preservation, conflicting config,
+  friendly aliases, repeated setup, and release contents.
+- `npm run test:e2e`: real Kujo operations, MCP discovery, approval requests,
+  canonical approval execution, concurrency, restart and receipt evidence passed.
+- `npm run test:fresh`: actual packed 0.1.0 -> 0.2.0 upgrade and independent clean
+  0.2.0 install passed in isolated HOME/XDG/npm prefix/cache. Neither used local
+  sibling sources nor KUJO_BIN. All 25 sources came from their pinned Git commits.
+  The packaged runtime executed the repository demo and exposed five MCP tools.
+  Upgrade preserved profile, disabled capabilities, prior receipts, and a second
+  project still running its original 0.1.0 projection.
+- Real OpenCode MCP connection passed. `/api/command` discovered `kujo`,
+  `kujo-review`, and `kujo-doctor`. No model call was needed for these host checks.
+- The workstation's full-profile `doctor` passed all 31 checks, including optional
+  Lens readiness. Browser installation remains opt-in for fresh installs.
+- The canonical generated Ability runtime's adapted and upstream digests passed.
+
+The fresh test retains its temporary root and prints it for inspection. CI now
+runs the network fresh/upgrade gate on Linux in addition to the existing offline
+Node 20/22 Linux/macOS/Windows matrix. Remote CI results are separate from these
+local results; the matrix was not run locally.
+
+The one-paste tarball installation is verified. Direct Git installation requires
+access to the private repository. Public npm publication is still blocked by
+unavailable registry authentication; no published package or public release is
+claimed. No OpenCode 1 support or automatic host lifecycle hooks are claimed.
+
+Commands use the documented OpenCode 2 Markdown command format:
+https://opencode.ai/v2/docs/commands/

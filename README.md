@@ -1,97 +1,139 @@
 # Kujo OpenCode
 
-Run the Kujo ecosystem's supported portable Abilities inside OpenCode 2.
-This local integration adapts Kujo CMD's catalog and executor to OpenCode's
-MCP and skill interfaces. Models stay inside OpenCode, including its free models.
-No Kujo account or hosted execution service is required.
+Use Kujo's supported ecosystem tools from OpenCode 2, with local execution,
+clear approvals, and evidence receipts. Your models stay in OpenCode.
 
-## Install from this checkout
+## Install and start
+
+Requires Node.js 20+, npm, Git, and [OpenCode 2](https://opencode.ai/v2/docs/).
+From the project you want to work on, install the release tarball and set up:
 
 ```sh
-npm install
-npm test
-npm link
-cd /path/to/project
-kujo-opencode setup
+npm install --global /path/to/kujolang-kujo-opencode-0.2.0.tgz && kujo-opencode setup
+```
+
+This is one paste, with no checkout, build, test, or linking step. Setup downloads
+25 pinned source repositories, installs its own Kujo binary, and configures this
+project. Internet access is required during installation. It can take several
+minutes. npm publication is pending; **the registry package name is not yet an
+available install route**. A maintainer creates the tarball with `npm ci && npm pack`.
+Users with access to the private repository can instead install directly:
+
+```sh
+npm install --global 'git+ssh://git@github.com/kujolang/kujo-opencode.git#codex/opencode-ability-integration' && kujo-opencode setup
+```
+
+For a temporary package invocation, `npm exec --yes --package=/path/to/package.tgz
+-- kujo-opencode setup` also works. Repeat that prefix for later CLI commands,
+or install globally for convenient maintenance commands.
+
+```sh
+kujo-opencode doctor
+kujo-opencode demo
 opencode
 ```
 
-This package is not yet published to npm. Setup downloads pinned ecosystem
-sources and installs a private Kujo runtime. For local development with existing
-checkouts, use `kujo-opencode setup --source-root /absolute/path/to/kujo-repos`.
-That mode trusts local source contents rather than claiming the pinned revisions
-are checked out. Set `KUJO_BIN` to choose an existing runtime.
+In OpenCode, type **`/kujo`**. It explains the available capabilities, runs a
+repository readiness scan, and suggests a next step. **`/kujo-review`** reviews
+changes; **`/kujo-doctor`** helps diagnose setup. The demo runs a real read-only
+ShipCheck scan and shows its receipt; it requires no model or API key. A successful
+scan is evidence gathering, not a claim that the repository is ready to ship.
+Scout's deeper repository map writes artifacts and therefore needs approval.
 
-Setup writes `.opencode/opencode.json`, `.kujo/opencode.json`, and skills under
-`.opencode/skills`. It preserves unrelated JSON settings and refuses to replace
-an unrelated `kujo` MCP entry or shadow `.opencode/opencode.jsonc`.
-If that JSONC file exists, merge the server configuration manually after choosing
-one configuration format; do not delete existing settings.
-Shared sources, private runtime, approvals, and receipts are stored under
-`~/.local/share/kujo/opencode`; override with `KUJO_OPENCODE_HOME`.
-Command Code and Pi state are separate.
+Setup safely merges the Kujo server into existing project JSON or JSONC,
+including root-level configs, preserving comments, models, permissions, and other
+servers. It refuses malformed configs, conflicting Kujo definitions, and unowned
+assets. It adds project skills, three commands, and `.kujo/opencode.json`.
+Repeated setup retains your selected profile and overrides.
 
-## Select capabilities
+## Choose what OpenCode can use
 
 ```sh
 kujo-opencode profiles
-kujo-opencode profile kujo.profile.full
+kujo-opencode profile review
+kujo-opencode enable lens
+kujo-opencode disable kujo_lens_page_check
 kujo-opencode abilities
-kujo-opencode doctor --json
-opencode mcp list
 ```
 
-Restart/reload the Kujo MCP connection after changing profiles or enabling tools.
-Essentials exposes 5 tools; Review 18; Ship 29; Full 38. All supported product
-sources are installed, while profiles only select exposure. They grant no authority.
-Use `enable ABILITY_ID` or `disable ABILITY_ID` for individual overrides.
+| Profile | Tools | Intended use |
+| --- | ---: | --- |
+| `essentials` | 5 | Understand a repository and its changes |
+| `review` | 18 | Check architecture, contracts, context, and change footprint |
+| `ship` | 29 | Run verification and retain release evidence |
+| `full` | 38 | Add orchestration, RAG, and optional service tools |
+
+`enable` and `disable` accept a product name, a tool name, or the canonical Ability
+ID. Product names select all of that product's supported operations. Canonical
+profile IDs remain supported. Explicit overrides survive profile changes and
+upgrades. Restart OpenCode after changing tool exposure. Profiles grant no
+authority; effectful operations still require approval.
 
 The catalog covers Scout, Scent, PatchBrief, ChangeBucket, ShipCheck, Fence,
 Spec, Eval, RunLedger, Dispatch, RAG, Watchdog, CaseFile, Concord, Muzzle,
 Kennel, Redact, VersionSeal, PackWrite, Tribunal, Dossier, Howl, and Lens,
 plus catalog discovery and receipts. See [the exact catalog](catalog/abilities.json)
-for supported operations and schemas. This is not every feature of every Kujo
-product; new operations need canonical definitions and tested executor bindings.
+for supported operations. This is not every feature of every Kujo product.
 
-Ask OpenCode:
+## Approve an operation
 
-> Use the Kujo catalog, inspect this repository with Scout, summarize its changes
-> with PatchBrief, and cite the returned receipt IDs. Report failed checks honestly.
+When an operation needs approval, OpenCode gives you a request ID. In your terminal:
 
-## Approval and evidence
+```sh
+kujo-opencode approve REQUEST_ID
+```
 
-Read effects run under local policy. Write, delete, and external effects require
-an explicit one-time human approval. The failed call returns the exact Ability,
-input, and invocation ID. Use `kujo-opencode approve --ability ID --invocation ID
---input JSON`, then retry with the returned `_kujo.approvalId`, unchanged input
-and invocation, and the required idempotency key. Approvals expire after five
-minutes and are bound to the principal, definition digest, invocation, and input.
-OpenCode permission checks remain independent. Agents must not self-approve.
+You see the project, operation, effects, and exact input. Enter `y` to execute that
+operation once, or press Enter to decline. No JSON assembly or token copying.
+Requests expire after 15 minutes; changed definitions or disabled tools require a
+new request. Canonical one-time approvals are still bound to identity, input,
+invocation, and definition. Idempotency protects retries. OpenCode can inspect the
+resulting receipt; it should not repeat a write with a new request.
 
-Each call retains canonical Ability identity, policy decision, receipt, and
-explicit correlation fields. Receipts are local JSONL. Watchdog telemetry and
-RunLedger are explicit tools; automatic Pi/Command Code lifecycle hooks and
-agent projections are not ported. No inference proxy is included.
+Agents must never issue their own approvals. The friendly command requires an
+interactive terminal and has no `--yes` bypass. The low-level explicit
+`approve --ability ID --invocation ID --input JSON` remains for compatibility;
+its caller remains responsible for obtaining human authorization.
+OpenCode's own permission checks remain independent.
 
 ## Maintenance
 
-`status`, `repair`, `update`, and `uninstall` manage the project integration.
-Uninstall preserves shared data unless `--purge` is explicitly supplied.
-`browser status` and `browser install` manage optional Lens Chromium prerequisites.
-`services start watchdog`, `services status watchdog`, and `services stop watchdog`
-manage the optional loopback service. Networked installation and services are
-explicit operations, never hidden startup work.
+- `status` shows the active installation; `doctor` reports readiness and fixes.
+- Install the newer release package, then run `update` in each project. It keeps
+  profiles, overrides, and receipts. Projects on 0.1.0 keep their prior projection.
+- `repair` restores owned MCP, skill, and command projections.
+- `uninstall` removes project integration and retains shared data. `--purge`
+  deletes shared sources and receipts, affecting every configured project.
+- `browser install` installs optional Lens Chromium prerequisites.
+- `services start watchdog`, `services status watchdog`, and `services stop watchdog`
+  manage the optional loopback service. Neither starts automatically.
 
-## Verify
+Shared data lives in `~/.local/share/kujo/opencode`, or `KUJO_OPENCODE_HOME`.
+CMD and Pi state remain separate. Watchdog and RunLedger are explicit tools;
+automatic host lifecycle hooks and agent projections are not included.
+
+## Development and verification
 
 ```sh
-npm test                       # offline contract, security, setup, packaging tests
-npm run test:e2e                # real local Kujo products; needs sources/runtime
+npm ci
+npm test
+npm run test:e2e
+npm run test:fresh
 npm run test:opencode -- --project /path/to/configured/project
 ```
 
-The host check starts a private loopback OpenCode 2 server, waits for its
-asynchronous MCP connection, and stops that server without a model call.
-OpenCode 2.0.31 can briefly report no servers before asynchronous startup finishes. The adapter uses the documented [OpenCode 2 MCP configuration](https://opencode.ai/v2/docs/mcp-servers/)
-and [skills format](https://opencode.ai/v2/docs/skills/). OpenCode 1 is unsupported.
-See [provenance](docs/PROVENANCE.md) and [security](SECURITY.md).
+The fresh gate packs the release, installs it through npm in an empty home and
+prefix, acquires the real pinned sources, executes a demo and packaged MCP server,
+and upgrades the actual 0.1.0 tarball while retaining another older project.
+It requires network access and retains its temporary directory for inspection.
+The host check uses a private loopback OpenCode server without a model request.
+
+For development, `setup --source-root /absolute/path/to/kujo-repos` uses local
+checkouts, trusting their contents rather than claiming pinned revisions.
+`KUJO_BIN` selects an existing runtime. Public setup needs neither override.
+
+See [verification](docs/VERIFICATION.md), [provenance](docs/PROVENANCE.md),
+[security](SECURITY.md), and the official OpenCode 2
+[commands](https://opencode.ai/v2/docs/commands/),
+[MCP](https://opencode.ai/v2/docs/mcp-servers/), and
+[skills](https://opencode.ai/v2/docs/skills/) documentation.
