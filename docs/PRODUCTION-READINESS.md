@@ -378,3 +378,37 @@ retention, source execution/receipt export and five fallback tools. Tarball
 SHA-256: 3bece7a7b6c3dfab5e4a3d18ccaadc4c1328238a93245fb6eeaefdfbaa50f24a.
 The candidate bytes matched the initial failed attempt. Only tarballs, baseline
 archive and verification.json remain in the successful fixture, as intended.
+
+
+## Implementation checkpoint: approved source run and test
+
+Build now exposes 11 tools and Full exposes 42. Source preview selects explicit
+project files/resources, binds their digests and the installed runtime digest,
+and shows the canonical command before execution approval. Execution uses copies
+of those bytes in a retained project snapshot. Source/runtime changes refuse the
+operation; canonical approvals and completed-request replay remain enforced.
+The generated Ability runtime is unchanged. This is trusted host execution,
+not an OS sandbox; programs retain host permissions and inherited environment.
+
+The canonical fixture runner creates missing expectations and accepts an empty
+suite. The adapter therefore requires a reviewed .out or .interpreter.out for
+each selected top-level test and rejects a zero-runnable-test result. Nested-only
+selections are refused. Expected-output comparison stays in the canonical runner.
+Imports resolve from the snapshot root with automatic project fallback disabled.
+Failure receipts retain snapshot locations and bounded command diagnostics.
+
+65 offline tests, canonical E2E including preview/approval/execution/replay, and
+OpenCode 2.0.31 native management acceptance passed (kujo-native-host-s0ldju).
+Tests cover source/runtime digest changes, selected/omitted imports, passing and
+failing fixtures, missing expectations, skipped suites, path boundaries, nonzero
+exits and cancellation of a spawned descendant. Native management acceptance
+makes no model calls and does not prove provider-backed Build execution. Windows
+process-tree behavior and the supported host/OS matrix remain unverified.
+
+Packed fresh install and 0.1.0 upgrade passed in kujo-opencode-packed-FutjoC,
+including approved source execution from installed package bytes, 25 pinned
+sources and preservation of the older project. Tarball SHA-256:
+27676fe18076fe9e49cf51e7e3a7e7809fbfd26962d30139d4f0abca09d51481.
+The prior source-run packed attempt failed on ENOSPC; only exact task-owned
+fixture work folders/runtime copies were removed, preserving tarballs/receipts.
+This checkpoint does not close the full product acceptance list.

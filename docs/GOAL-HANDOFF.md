@@ -248,3 +248,25 @@ all seven jobs failed before steps due to account payments/spending limits.
 Independent work remains. Continue canonical approved source run/test/starters,
 opt-in Watchdog/RunLedger lifecycle, remaining lost-response/mixed-version
 acceptance and immutable release matrix. All seven outcomes remain open.
+
+
+## Approved source execution checkpoint (2026-10-16)
+
+Commit e8d2f4b adds source preview and approved canonical run/test snapshots.
+Build has 11 tools; Full has 42. See source-execution.mjs and its regression tests.
+Every selected file and runtime bytes are digest-bound; execution copies the
+verified runtime and uses the snapshot as the explicit module root. Canonical
+receipts retain failed artifacts, diagnostics and completed-request replay.
+Trusted programs retain host permissions; this is not an OS sandbox.
+
+Important canonical runner behavior: missing expectations are auto-created and
+zero runnable tests return success. The adapter now requires reviewed .out or
+.interpreter.out for each top-level fixture, rejects nested-only selections and
+marks zero-runnable results failed. It does not implement output comparison.
+65 offline tests, canonical E2E, native management s0ldju and packed fresh/upgrade
+FutjoC passed. Exact digest and limits are in PRODUCTION-READINESS.md. Tests prove
+local POSIX descendant cancellation; Windows and live Build-agent execution
+remain unverified. Generated runtime unchanged. Source run/test implementation
+is now committed; broader starter/MCP/SDK, lifecycle, recovery, specialist and
+release outcomes remain open. Next: canonical reviewed starter preview/creation,
+MCP generator and Agents SDK fixtures, preserving thin-adapter ownership.
