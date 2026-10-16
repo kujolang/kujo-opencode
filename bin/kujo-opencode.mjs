@@ -236,10 +236,10 @@ async function repair(opts) { const project = resolve(opts.project || process.cw
 
 async function update(opts) {
   const catalog = await loadCatalog();
-  const project = resolve(opts.project || process.cwd()); const { projectConfig, installation, paths } = await loadProjectConfig(project, catalog);
+  const project = resolve(opts.project || process.cwd()); const { projectConfig, installation, paths } = await loadProjectConfig(project, catalog, { migration: true });
   await preflightHost(project);
-  const localSources = Object.values(installation.sources || {}).every((source) => source.mode === "local");
-  const sources = localSources && !opts["source-root"] ? installation.sources : await installSources(catalog, { sourceRoot: opts["source-root"], force: Boolean(opts.force) });
+  const preservedLocal = opts["source-root"] ? {} : Object.fromEntries(catalog.sources.filter(source => installation.sources[source.id]?.mode === "local" && installation.sources[source.id].commit === source.commit).map(source => [source.id, installation.sources[source.id]]));
+  const sources = { ...preservedLocal, ...await installSources({ ...catalog, sources: catalog.sources.filter(source => !preservedLocal[source.id]) }, { sourceRoot: opts["source-root"], force: Boolean(opts.force) }) };
   let runtime = process.env.KUJO_BIN;
   if (!runtime) {
     try { runtime = (await import("@kujolang/kujo-runtime")).resolveKujoBinary(); }

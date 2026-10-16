@@ -25,7 +25,7 @@
     "build": "node scripts/build-release.mjs",
     "prepack": "npm run build",
     "pretest": "npm run build",
-    "test": "node --test tests/catalog.test.mjs tests/executor.test.mjs tests/runtime.test.mjs tests/security.test.mjs tests/setup.test.mjs tests/release.test.mjs tests/opencode.test.mjs tests/recovery.test.mjs tests/plugin.test.mjs tests/tui.test.mjs tests/source-tools.test.mjs tests/project-activation.test.mjs tests/specialists.test.mjs tests/evidence.test.mjs tests/project-state.test.mjs tests/source-execution.test.mjs tests/build-workflows.test.mjs",
+    "test": "node --test tests/catalog.test.mjs tests/executor.test.mjs tests/runtime.test.mjs tests/security.test.mjs tests/setup.test.mjs tests/release.test.mjs tests/opencode.test.mjs tests/recovery.test.mjs tests/plugin.test.mjs tests/tui.test.mjs tests/source-tools.test.mjs tests/project-activation.test.mjs tests/specialists.test.mjs tests/evidence.test.mjs tests/project-state.test.mjs tests/source-execution.test.mjs tests/build-workflows.test.mjs tests/catalog-migration.test.mjs",
     "test:e2e": "node tests/e2e.test.mjs",
     "test:opencode": "node scripts/check-opencode-host.mjs",
     "test:fresh": "node tests/fresh-install.mjs",
