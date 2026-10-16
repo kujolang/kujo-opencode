@@ -466,3 +466,45 @@ and older project preservation. Candidate SHA-256: 8cd06f98fd775bf3b9be408a46b0b
 Native management tRrtyP also passed after the direct-validation change. Only
 test cleanup and timeout documentation changed after packing; this remains a
 local checkpoint, not immutable full release/platform certification.
+
+## Implementation checkpoint: reviewed starter creation
+
+Commits 84459bd and f3e9754 add canonical script, fixture-agent, API and MCP
+starter previews, approved creation and read-only inspection. Build17/Full48,
+28 pinned sources. Script/agent use runtime init/agent new; API/MCP copy a bounded
+checksum inventory derived from Paperclip88b53328's canonical component lock,
+plus a local guide and ignore rules. The preview exposes every file and directory
+and binds kind/name, runtime/component provenance and inventory digests. Creation
+regenerates and checks the digest before an exclusive new-directory operation.
+Existing destinations, changed inputs and path escapes are refused.
+
+Partial creation is retained, not silently resumed or rolled back. Inspection
+reports matching/missing/changed/unreadable reviewed files and directories without
+writes; extra files are explicitly outside coverage. A changed canonical inventory
+requires review of the original preview receipt. It is not a sandbox or proof of
+runtime correctness, and creation never starts services or installs dependencies.
+
+A real agent startup test found that preserving only files omitted the canonical
+generator's empty agent/tools directory. Required directories now participate in
+the digest and creation/inspection contract. The regression checks their presence
+and detects their removal. Application ignore rules keep generated databases,
+logs and local credential files out of normal Git additions.
+
+74 offline tests passed, including concurrent creation, unchanged source/digests,
+path boundaries and real process death after the first file. Five focused starter
+tests passed after adding missing-directory coverage. Canonical E2E proves all
+four previews/approvals/creation/inspection/replay, then starts the created API/MCP
+servers on isolated loopback ports and verifies API requests and MCP discovery.
+The test changes only the MCP fixture's port before startup. A separate isolated
+Kennel install and agent run returns fixture output 'Owned agent fixture: Hello';
+that acceptance is now part of the packed network test. Native OpenCode2.0.31
+management QssxAs passed without model calls. Real Build-specialist execution,
+OS/host matrix and final release certification remain open.
+
+Final packed Vp2ILf passed fresh installation and 0.1.0 upgrade with 28 sources,
+all four reviewed starter workflows, real API/MCP startup and agent pinned
+dependency installation/fixture execution. verification.json records the explicit
+starter_services_verified and agent_fixture_verified flags. Tarball SHA-256:
+b420e45c1cc033fbb4412eca78b51fc4f7b268d0c8303ab2b1f8ce8baa19f989. Only test coverage and verification documentation
+changed after packing; executable bytes match this checkpoint. This is local
+macOS acceptance, not the full supported-platform/live-specialist release gate.

@@ -308,3 +308,38 @@ and older project preservation. Candidate SHA-256: 8cd06f98fd775bf3b9be408a46b0b
 Native management tRrtyP also passed after the direct-validation change. Only
 test cleanup and timeout documentation changed after packing; this remains a
 local checkpoint, not immutable full release/platform certification.
+
+## Reviewed starters checkpoint (2026-10-16)
+
+84459bd and f3e9754 implement preview/create/inspect for script, fixture agent,
+API and MCP. Build17/Full48/source28. See lib/starters.mjs, starter-abilities.json,
+starter-components.json and tests/starters.test.mjs. Canonical runtime generators
+or pinned application inventories own product bytes; the adapter supplies guides,
+ignore rules and digest-bound approval/no-overwrite/inspection. Required empty
+directories matter: actual agent run initially failed on missing agent/tools.
+Directories now participate in preview, digest, creation and inspection.
+
+74 offline tests, five focused regressions, canonical E2E with all four receipt
+flows and API/MCP loopback startup, isolated agent dependency install plus fixture
+execution, and native QssxAs management passed. Agent proof Zb4VDQ produced 'Owned
+agent fixture: Hello' after pinned Kennel dependencies. Earlier packed6Fa766 and
+7VYOoE passes predated directory preservation/full agent execution acceptance;
+they are superseded for starter readiness. Final network retry Vp2ILf must finish
+before claiming packed acceptance; it includes agent execution and explicit
+verification flags. Creation itself still performs no dependency install/startup.
+
+Inspect does not resume partial writes or compare unlisted extra files. If runtime
+or component bytes change, use the original preview receipt rather than silently
+substituting a different inventory. All seven broader goal outcomes remain open.
+Next major implementation: opt-in lifecycle Watchdog/RunLedger bridge, durable
+bounded retry/cancellation/reconnect; then remaining recovery, six live specialist
+workflows and immutable release matrix/public distribution. No new SignalBox
+finding: directory loss is fixed and broader acceptance is already-authorized work.
+
+Final packed Vp2ILf passed fresh installation and 0.1.0 upgrade with 28 sources,
+all four reviewed starter workflows, real API/MCP startup and agent pinned
+dependency installation/fixture execution. verification.json records the explicit
+starter_services_verified and agent_fixture_verified flags. Tarball SHA-256:
+b420e45c1cc033fbb4412eca78b51fc4f7b268d0c8303ab2b1f8ce8baa19f989. Only test coverage and verification documentation
+changed after packing; executable bytes match this checkpoint. This is local
+macOS acceptance, not the full supported-platform/live-specialist release gate.
