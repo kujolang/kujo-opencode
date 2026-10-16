@@ -160,3 +160,9 @@ canonical diagnostics or formatting preview. Files are copied into a private
 temporary directory; formatting is never applied to your source. These are
 single-file checks, not proof that imports, project tests, or runtime behavior
 work. Run/test and starter creation remain tracked parity work.
+
+Project setup, updates, profile changes, repair, and uninstall use a recoverable
+activation transaction. If interrupted, run `kujo-opencode recover --project DIR`
+before retrying. Recovery refuses a live installer. If it reports a changed-file
+conflict, preserve that file outside its managed path before recovery, then merge
+your edits back deliberately; recovery will not discard them automatically.

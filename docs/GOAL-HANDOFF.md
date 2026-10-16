@@ -128,3 +128,31 @@ local-kujo-opencode-source-tools-20261016. Preserve source snapshot safety and
 canonical parse-error behavior as retrieval cues; link this handoff and
 PRODUCTION-READINESS.md. No Strata save is claimed while its tsx CLI dependency
 is unavailable. SignalBox: no captures warranted.
+
+## Project activation checkpoint 6
+
+lib/project-activation.mjs stages owned project replacements, publishes a complete
+exclusive journal, activates with backups, and rolls back/recover-checks all
+expected digests before modifying targets. install.mjs builds one plan for skills,
+native host files, host JSONC and project config. Setup/update/repair/profile/
+exposure changes/native profile and uninstall use it. Config reads fail while
+activation is pending; expected-config checks prevent stale profile overwrites.
+`recover --project DIR` restores dead-owner project transactions and preserves
+post-crash edits as conflicts. Source/runtime directory transactions are separate;
+their original empty-owner lock gap remains unresolved.
+
+40 tests, real-product E2E and native profile acceptance passed. Packed fresh/
+upgrade verification is running; inspect its final result before claiming pass.
+Next product work remains native guided build/run/test/starters, specialist
+agents, opt-in lifecycle, evidence UX, remaining recovery and external release
+certification. This is progress on the original seven-area goal, not completion.
+
+Strata pending delta target: Agent Notes; local session ID
+local-kujo-opencode-project-activation-20261016. Retrieval cues: transactional
+OpenCode project activation recovery stale profile post-crash edits. Include
+this handoff and the acceptance document; do not claim it saved while tsx is
+missing. SignalBox: no captures warranted.
+Checkpoint 6 packed fresh/upgrade gate completed successfully in fixture
+kujo-opencode-packed-a4xBRb. Strata's authenticated API on loopback3939 is now
+confirmed available despite the missing source CLI dependency; consolidation
+can use documented /v1 endpoints with local credential discovery.

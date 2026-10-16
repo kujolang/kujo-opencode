@@ -186,3 +186,33 @@ the refreshed profile. Source run/test and starter workflows remain open.
 Canonical CLI detail: failed parsing can return exit 3 with structured text
 errors on stderr even with --json. Preserve those diagnostics as explicit text;
 do not misreport them as a successful compile or discard them as invalid JSON.
+
+## Implementation checkpoint: transactional project activation
+
+Setup, update, repair, profile/exposure changes (CLI and native), and uninstall
+now prepare project changes before activation. One journal covers owned skills,
+native plugin assets, host configuration, projection manifests and project
+configuration. A complete initial journal is published using exclusive hard-link
+creation, preventing the empty-owner gap for this new project lock. Competing
+activations are rejected. Configuration reads reject an active/interrupted
+activation; profile changes also compare the configuration they started with so
+a stale request cannot silently overwrite a newer profile.
+
+Replacements and original files are kept beside the project on the same
+filesystem. A process interrupted before commit can be rolled back with
+`kujo-opencode recover --project DIR`. Recovery checks every affected path and
+its expected digest before restoring anything. A file edited after a crash is
+a conflict: preserve the edit, move it out of the managed path, then recover and
+merge it deliberately. Recovery does not kill a live owner or discard changed
+files. Symlinked skills are restored as links without touching their source.
+
+40 offline tests, real-product E2E and OpenCode2.0.31 native profile acceptance
+passed. Failure injection covers every backup/activation boundary, real child
+process death, concurrent writers, live-owner refusal, stale preconditions,
+post-crash edits and symlink/remove rollback. These tests cover process failure,
+not power-loss durability or concurrent edits by unrelated filesystem writers.
+The older source/runtime directory-lock owner-publication gap remains open;
+this checkpoint does not close the complete recovery or release matrix outcome.
+Packed fresh installation and 0.1.0 upgrade also passed for this activation
+checkpoint (`kujo-opencode-packed-a4xBRb`): 25 pinned sources, older project
+preserved, and packaged MCP fallback discovery verified.
