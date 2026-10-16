@@ -357,3 +357,16 @@ that approval. Native OpenCode 2.0.31 management acceptance passed in fixture
 grants, legacy known/unknown outcomes and late legacy records. Relocating a
 workspace creates a new namespace; old binaries retain their original behavior.
 This does not close all lost-response, mixed-version or release matrix cases.
+
+External gates rechecked during execution-state work: npm whoami still returns
+E401. GitHub run 38975403007 (commit 49233c6) completed with all seven jobs failed
+before any steps; the check annotation states account payments/spending limits
+prevented starting. This is not a code-test failure or platform verification.
+
+The first packed attempt, kujo-opencode-packed-DY41nR, stopped on ENOSPC while
+cloning Watchdog. Four exact prior task-created successful fixture workspaces
+were cleaned while retaining their tarballs; no broad temporary-directory sweep
+was performed. The test harness now removes only its own generated work folders
+after success, retaining tarballs and verification.json. An explicit
+KUJO_TEST_KEEP_FIXTURE=1 opt-out supports manual inspection; failed fixtures are
+retained. Retry acceptance is recorded separately below.

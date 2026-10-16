@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
-import {mkdtemp,mkdir,writeFile,readFile} from 'node:fs/promises';
+import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
@@ -71,4 +71,9 @@ const rpc=await new Promise((resolveResult,reject)=>{
  });
 });
 assert.equal(rpc.result.tools.length,5);
-console.log(JSON.stringify({ok:true,root,tarball,upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length}));
+const verification={ok:true,root,tarball,upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
+await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
+// Keep the immutable tarballs and verification record, not hundreds of MiB of
+// duplicate clones/caches after every successful run. Failures retain diagnosis.
+if(!verification.fixture_workdirs_retained)for(const path of [home,prefix,project,older,baseline,fresh])await rm(path,{recursive:true,force:true});
+console.log(JSON.stringify(verification));

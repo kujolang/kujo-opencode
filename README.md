@@ -242,3 +242,8 @@ retry blindly or delete state to bypass that check. Old state is preserved.
 Moving a workspace to a different canonical path creates a different execution
 namespace; automatic state relocation is not supported. Older installed versions
 retain their prior behavior until each project is upgraded.
+
+The packed fresh-install gate keeps its tarballs and `verification.json` after
+success and removes its own cloned sources/caches. Set
+`KUJO_TEST_KEEP_FIXTURE=1 npm run test:fresh` to retain a successful workspace for
+manual host inspection. Failed fixtures remain available for diagnosis.
