@@ -39,4 +39,3 @@ assert.equal(packageJson.homepage, "https://github.com/kujolang/kujo-opencode#re
 assert.equal(packageJson.bugs.url, "https://github.com/kujolang/kujo-opencode/issues");
 const { stdout: versionOutput } = await exec(process.execPath, ["bin/kujo-opencode.mjs", "--version"]);
 assert.equal(versionOutput.trim(), `kujo-opencode ${packageJson.version}`);
-

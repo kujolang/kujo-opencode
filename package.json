@@ -16,7 +16,10 @@
     "LICENSE",
     "SECURITY.md",
     "CHANGELOG.md",
-    "docs/PROVENANCE.md"
+    "docs/PROVENANCE.md",
+    "scripts/build-release.mjs",
+    "scripts/check-opencode-host.mjs",
+    "docs/VERIFICATION.md"
   ],
   "scripts": {
     "build": "node scripts/build-release.mjs",
