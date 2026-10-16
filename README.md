@@ -64,8 +64,8 @@ kujo-opencode abilities
 | `essentials` | 5 | Understand a repository and its changes |
 | `review` | 18 | Check architecture, contracts, context, and change footprint |
 | `ship` | 29 | Run verification and retain release evidence |
-| `build` | 9 | Check/lint source and preview formatting without changing files |
-| `full` | 40 | Add orchestration, RAG, and optional service tools |
+| `build` | 11 | Inspect source and run reviewed source/test snapshots |
+| `full` | 42 | Add orchestration, RAG, and optional service tools |
 
 `enable` and `disable` accept a product name, a tool name, or the canonical Ability
 ID. Product names select all of that product's supported operations. Canonical
@@ -247,3 +247,33 @@ The packed fresh-install gate keeps its tarballs and `verification.json` after
 success and removes its own cloned sources/caches. Set
 `KUJO_TEST_KEEP_FIXTURE=1 npm run test:fresh` to retain a successful workspace for
 manual host inspection. Failed fixtures remain available for diagnosis.
+
+## Run reviewed source and tests
+
+In Build, ask the agent to preview the files needed for your program or tests.
+`kujo_source_preview` accepts `mode: "run"`, an `entry` such as `main.kujo`,
+explicit project-relative `files`, and optional program `args`. For canonical
+fixture tests use `mode: "test"` and include top-level `tests/*.kujo`, their
+`.out` or `.interpreter.out` files,
+imports and resources. It returns the command, runtime/source SHA-256 values,
+bounded source excerpts and an `execution_input` for `kujo_source_execute`.
+
+Review the files and effects, then approve that exact execution input. Changed
+source or runtime bytes are refused. Execution runs a copy of the reviewed
+runtime and files under `.kujo/executions/<id>`, using canonical interpreter
+execution or `kujo test --runtime interpreter`. Every selected top-level fixture
+must include reviewed expected output; snapshot-update mode is unavailable.
+A suite with no runnable fixtures fails instead of reporting a successful test. Caller module paths and automatic project import fallback are disabled.
+Only selected files are copied, so include every required import and resource.
+
+These are trusted programs with your host permissions and inherited environment,
+not an OS sandbox. They can perform filesystem, process and network effects.
+Outputs stay in the snapshot unless the program writes elsewhere. The receipt
+records runtime/source digests, command, output and artifact location; nonzero
+exit is a failed receipt. Replaying a completed approved request returns its
+receipt without rerunning. Inspect evidence before retrying an uncertain outcome.
+
+Limits: 256 files, 4 MiB total source/resources, 32 KiB execution manifest,
+16 KiB preview excerpts, 32 KiB combined output and a 120-second process window.
+Cancellation and output/time limits terminate the supervised process tree;
+platform acceptance remains subject to the documented release matrix.

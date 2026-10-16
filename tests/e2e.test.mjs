@@ -137,6 +137,15 @@ for(const name of ["kujo_source_inspect","kujo_source_format"]){
  assert.match(reply.result.structuredContent.receipt.result.sha256,/^[a-f0-9]{64}$/);
 }
 assert.equal(await readFile(join(project,"source.kujo"),"utf8"),'x := 1\nprintln(x)\n');
+const previewReply=await rpc.request('tools/call',{name:'kujo_source_preview',arguments:{mode:'run',entry:'source.kujo',files:['source.kujo']}});
+assert.equal(previewReply.result.structuredContent.ok,true,JSON.stringify(previewReply));
+const sourceInput=previewReply.result.structuredContent.receipt.result.execution_input;
+const sourceControls={invocationId:'source-run-1',idempotencyKey:'source-run-key'};
+const sourcePending=await rpc.request('tools/call',{name:'kujo_source_execute',arguments:{...sourceInput,_kujo:sourceControls}});assert.equal(sourcePending.result.structuredContent.code,'ability_approval_required');
+const sourceApproval=JSON.parse((await exec(process.execPath,[cli,'approve','--project',project,'--ability','kujo.opencode.source.execute','--invocation',sourceControls.invocationId,'--input',JSON.stringify(sourceInput),'--json'],{env:{...process.env,...env}})).stdout);
+const sourceDone=await rpc.request('tools/call',{name:'kujo_source_execute',arguments:{...sourceInput,_kujo:{...sourceControls,approvalId:sourceApproval.approval_id}}});assert.equal(sourceDone.result.structuredContent.ok,true,JSON.stringify(sourceDone));assert.match(sourceDone.result.structuredContent.receipt.result.stdout,/1/);
+const sourceReplay=await rpc.request('tools/call',{name:'kujo_source_execute',arguments:{...sourceInput,_kujo:sourceControls}});assert.equal(sourceReplay.result.structuredContent.replayed,true);assert.equal(sourceReplay.result.structuredContent.receipt.receipt_id,sourceDone.result.structuredContent.receipt.receipt_id);
+
 rpc.close();
 
 // Two installed projects share receipts but never execution grants or keys.

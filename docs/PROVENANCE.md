@@ -43,3 +43,10 @@ the original shared writer and lock, preserving serialized rotation. The legacy
 key guard reads under that shared lock, permits only attributed same-project
 completed replay, ignores other attributed projects, and refuses unresolved or
 unscoped outcomes. Legacy approval records are never imported.
+
+Host-owned source.preview/source.execute definitions add explicit multi-file
+snapshots and canonical run/test commands. Execution binds both source and runtime
+SHA-256 values, copies the verified runtime before launch, and keeps canonical
+request-bound approvals/idempotency. Canonical test semantics and expected-output
+comparison are not reimplemented. Process-tree supervision is host adapter code;
+trusted source execution is not advertised as an OS sandbox.

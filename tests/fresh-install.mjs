@@ -61,6 +61,11 @@ const enabled=JSON.parse((await command(process.execPath,['--input-type=module',
 assert.ok(enabled.ids.includes('kujo.opencode.source.inspect'));assert.equal(enabled.ok,true);
 const exported=JSON.parse((await command(process.execPath,[projectedCli,'evidence','--project',fresh,'--receipt',enabled.receipt_id,'--json'])).stdout);assert.equal(exported.receipts[0].receipt_id,enabled.receipt_id);assert.ok(exported.receipts[0].metadata.project_root);
 await call(['disable','kujo.opencode.source.inspect'],fresh);
+for(const id of ['kujo.opencode.source.preview','kujo.opencode.source.execute'])await call(['enable',id],fresh);
+const executionProbe=`const {createApp}=await import(${JSON.stringify(appUrl)});const app=await createApp(${JSON.stringify(fresh)});const preview=await app.runtime.execute({abilityId:'kujo.opencode.source.preview',input:{mode:'run',entry:'override.kujo',files:['override.kujo']}});if(!preview.ok)throw Error(JSON.stringify(preview));const input=preview.receipt.result.execution_input;const controls={invocationId:'packed-source',idempotencyKey:'packed-source'};const pending=await app.runtime.execute({abilityId:'kujo.opencode.source.execute',input,controls});if(pending.code!=='ability_approval_required')throw Error('Expected approval');const approval=await app.runtime.requestApproval({abilityId:'kujo.opencode.source.execute',input,invocationId:controls.invocationId});const result=await app.runtime.execute({abilityId:'kujo.opencode.source.execute',input,controls:{...controls,approvalId:approval.approval_id}});console.log(JSON.stringify({ok:result.ok,stdout:result.receipt.result?.stdout,receipt:result.receipt.receipt_id}));`;
+const execution=JSON.parse((await command(process.execPath,['--input-type=module','-e',executionProbe])).stdout);assert.equal(execution.ok,true);assert.match(execution.stdout,/override works/);
+for(const id of ['kujo.opencode.source.preview','kujo.opencode.source.execute'])await call(['disable',id],fresh);
+
 const mcp=join(installed.projection_root,'bin/kujo-opencode-mcp.mjs');
 const rpc=await new Promise((resolveResult,reject)=>{
  import('node:child_process').then(({spawn})=>{
