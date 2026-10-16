@@ -17,7 +17,7 @@ test("setup, profiles, repair, and uninstall preserve unrelated host config", as
   await mkdir(join(project, ".opencode"));
   await writeFile(join(project, ".opencode", "opencode.json"), JSON.stringify({ model: "opencode/glm-5.3-flash-free", mcp: { servers: { existing: { type: "local", command: ["existing"] } } } }));
   const env = { ...process.env, KUJO_OPENCODE_HOME: home, KUJO_BIN: linkedRuntime };
-  let call = await exec(process.execPath, [cli, "setup", "--project", project, "--source-root", sources, "--json"], { env }); let result = JSON.parse(call.stdout); assert.equal(result.abilities, 5); assert.equal(result.hosted_service_required, false); assert.equal(result.host_assets, 4);
+  let call = await exec(process.execPath, [cli, "setup", "--project", project, "--source-root", sources, "--json"], { env }); let result = JSON.parse(call.stdout); assert.equal(result.abilities, 5); assert.equal(result.hosted_service_required, false); assert.equal(result.host_assets, 6);
   await assert.rejects(() => exec(process.execPath, [cli, "browser", "status", "--project", project, "--json"], { env }), (error) => { const status = JSON.parse(error.stdout); return status.ready === false && status.browser === "chromium"; });
   call = await exec(process.execPath, [cli, "profile", "review", "--project", project, "--json"], { env }); result = JSON.parse(call.stdout); assert.equal(result.abilities, 18);
   await exec(process.execPath, [cli, "disable", "fence", "--project", project, "--json"], { env });
@@ -41,8 +41,11 @@ test("setup, profiles, repair, and uninstall preserve unrelated host config", as
   const mcp = JSON.parse(await readFile(join(project, ".opencode", "opencode.json"), "utf8")); assert.ok(mcp.mcp.servers.existing); assert.equal(mcp.mcp.servers.kujo.type, "local");
   assert.equal(mcp.model, "opencode/glm-5.3-flash-free");
   assert.equal(mcp.mcp.servers.kujo.codemode, false);
+  assert.equal(mcp.mcp.servers.kujo.disabled,true);
+  assert.match(await readFile(join(project,".opencode/plugins/kujo/index.ts"),"utf8"),/setupPlugin/);
   await exec(process.execPath, [cli, "repair", "--project", project, "--json"], { env });
   await exec(process.execPath, [cli, "uninstall", "--project", project, "--json"], { env });
+  await assert.rejects(lstat(join(project,'.opencode/plugins/kujo')),{code:'ENOENT'});
   const after = JSON.parse(await readFile(join(project, ".opencode", "opencode.json"), "utf8")); assert.ok(after.mcp.servers.existing); assert.equal(after.mcp.servers.kujo, undefined); assert.ok(await readFile(join(home, "receipts.jsonl"), "utf8"));
   await assert.rejects(() => readFile(join(project, ".opencode", "skills", "kujo-opencode", "SKILL.md"), "utf8"), { code: "ENOENT" });
 });

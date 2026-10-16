@@ -71,10 +71,10 @@ async function setup(opts) {
   const paths = projectPaths(project); const config = { schema: "kujo.opencode.config/v1", version: VERSION, installation_version: VERSION, profile, enabled: previous?.enabled || [], disabled: previous?.disabled || [], installed_at: previous?.installed_at || installedAt };
   await writeJson(paths.config, config);
   const trustedConfig = { ...config, ...installation };
-  const skills = await projectSkills(catalog, trustedConfig, project); const hostAssets = await projectOpenCodeAssets(project); const mcp = await configureMcp(trustedConfig, project);
+  const skills = await projectSkills(catalog, trustedConfig, project); const hostAssets = await projectOpenCodeAssets(project, trustedConfig); const mcp = await configureMcp(trustedConfig, project);
   const app = await createApp(project); const smoke = await app.runtime.execute({ abilityId: "kujo.ability.catalog.list", input: {}, controls: { host: "opencode", surface: "mcp", invocationId: `setup-${Date.now()}` } });
   if (!smoke.ok) throw new Error("local Ability smoke test failed");
-  return output({ ok: true, message: "Kujo is configured. Run kujo-opencode demo, then open OpenCode and type /kujo.", project, profile, abilities: app.runtime.describe().length, skills: skills.length, host_assets: hostAssets.length, mcp, execution: "local-stdio", hosted_service_required: false }, opts.json);
+  return output({ ok: true, message: "Kujo is configured. Run kujo-opencode demo, then open OpenCode and type /kujo.", project, profile, abilities: app.runtime.describe().length, skills: skills.length, host_assets: hostAssets.length, mcp, execution: "native-plugin", hosted_service_required: false }, opts.json);
 }
 
 function profileId(name) { return name?.startsWith('kujo.profile.') ? name : name ? `kujo.profile.${name}` : null; }
@@ -115,7 +115,11 @@ async function doctor(opts) {
   }
   const hostReady = /^opencode v?2\./.test(hostVersion);
   checks.push({name:'opencode', ok:hostReady, version:hostVersion, ...(!hostReady ? {error:'Install OpenCode 2 and put opencode on PATH; see https://opencode.ai/v2/docs/'} : {})});
-  if (config) checks.push({name:"mcp-configuration", ok:Boolean((await hostDocument(project)).value.mcp?.servers?.kujo), error:undefined});
+  if (config) {
+    for (const file of ['index.ts','tui.ts','package.json']) checks.push({name:`native-plugin:${file}`,ok:await exists(join(project,'.opencode/plugins/kujo',file))});
+    const server=(await hostDocument(project)).value.mcp?.servers?.kujo;
+    checks.push({name:'mcp-fallback-disabled',ok:!server || server.disabled===true,error:server && !server.disabled?'Disable the Kujo MCP fallback to avoid duplicate tools; run repair.':undefined});
+  }
   if (config && profileAbilities(catalog, config.profile, config.enabled, config.disabled).some((ability) => ability.definition.id === "kujo.lens.page.check")) {
     const lens = config.sources.lens ? await lensBrowserStatus(config.sources.lens.path) : { ready: false };
     checks.push({ name: "lens-browser", ok: lens.ready, ...(lens.executable ? { executable: lens.executable } : {}), ...(!lens.ready ? { error: "run 'kujo-opencode browser install'" } : {}) });
@@ -216,7 +220,7 @@ async function watchdogProcessMatches(current) {
   return outcome.exitCode === 0 && outcome.stdout.includes(current.script);
 }
 
-async function repair(opts) { const project = resolve(opts.project || process.cwd()); const catalog = await loadCatalog(); const { config } = await loadProjectConfig(project, catalog); const skills = await projectSkills(catalog, config, project); const hostAssets = await projectOpenCodeAssets(project); const mcp = await configureMcp(config, project); output({ ok: true, message: "Kujo OpenCode projections repaired.", skills, host_assets: hostAssets, mcp }, opts.json); }
+async function repair(opts) { const project = resolve(opts.project || process.cwd()); const catalog = await loadCatalog(); const { config } = await loadProjectConfig(project, catalog); const skills = await projectSkills(catalog, config, project); const hostAssets = await projectOpenCodeAssets(project, config); const mcp = await configureMcp(config, project); output({ ok: true, message: "Kujo OpenCode projections repaired.", skills, host_assets: hostAssets, mcp }, opts.json); }
 
 async function update(opts) {
   const catalog = await loadCatalog();
@@ -234,7 +238,7 @@ async function update(opts) {
   const nextInstallation = await writeInstallation({ version: VERSION, sources, projection_root: projection.root, kujo_bin: projection.kujo, installed_at: installation.installed_at, updated_at: updatedAt });
   const nextProject = { ...projectConfig, version: VERSION, installation_version: VERSION, updated_at: updatedAt }; await writeJson(paths.config, nextProject);
   const config = { ...nextProject, ...nextInstallation };
-  const skills = await projectSkills(catalog, config, project); const hostAssets = await projectOpenCodeAssets(project); const mcp = await configureMcp(config, project);
+  const skills = await projectSkills(catalog, config, project); const hostAssets = await projectOpenCodeAssets(project, config); const mcp = await configureMcp(config, project);
   output({ ok: true, message: "Kujo OpenCode updated without changing profile exposure.", profile: config.profile, enabled: config.enabled, disabled: config.disabled, skills, host_assets: hostAssets, mcp }, opts.json);
 }
 

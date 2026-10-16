@@ -20,8 +20,8 @@ function fixture({choices=[],profileError,waitStatus}={}) {
  return {calls,alerts,toasts,cleanup,run:id=>commands.find(c=>c.id===id).run()};
 }
 test('native UI is idle until invoked and routes status and evidence to its workspace',async()=>{
- const f=fixture();assert.equal(f.calls.length,0);
- await f.run('kujo.status');assert.match(f.alerts[0].message,/check — Check repository/);
+ const f=fixture({choices:['check']});assert.equal(f.calls.length,0);
+ await f.run('kujo.status');assert.match(f.alerts[0].message,/Check repository/);
  await f.run('kujo.evidence');assert.match(f.alerts[1].message,/No receipts/);
  assert.deepEqual(f.calls.map(c=>c.method),['status','evidence']);
 });

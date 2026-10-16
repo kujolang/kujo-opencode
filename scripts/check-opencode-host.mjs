@@ -26,11 +26,15 @@ try {
    if(!response.ok) throw new Error('OpenCode MCP inspection failed: HTTP '+response.status);
    servers=(await response.json()).data;
    const kujo=servers.find(s=>s.name==='kujo'||s.id==='kujo');
-   if(kujo && (kujo.status==='connected'||kujo.status?.status==='connected'||kujo.status?.type==='connected')) {
+   if(kujo && (kujo.status==='connected'||kujo.status?.status==='connected'||kujo.status?.type==='connected'||kujo.status?.status==='disabled')) {
     const commandsResponse=await fetch(url+'/api/command',{headers:{Authorization:'Basic '+Buffer.from('opencode:'+password).toString('base64')},signal:AbortSignal.timeout(5000)});
     if(!commandsResponse.ok) throw new Error('OpenCode command discovery failed');
     const commands=(await commandsResponse.json()).data;
-    const expected=['kujo','kujo-review','kujo-doctor'];
+    const expected=['kujo-status','kujo-profile','kujo-evidence','kujo-review','kujo-doctor'];
+    const rpc=await fetch(url+'/api/rpc/kujo.control/status',{method:'POST',headers:{Authorization:'Basic '+Buffer.from('opencode:'+password).toString('base64'),'Content-Type':'application/json'},body:JSON.stringify({input:{}}),signal:AbortSignal.timeout(5000)});
+    if(!rpc.ok) throw new Error('Native Kujo status RPC failed');
+    const status=await rpc.json();
+    if(!status.output?.tools?.length) throw new Error('Native Kujo has no exposed tools');
     for(const name of expected) if(!commands.some(command=>command.name===name)) throw new Error('OpenCode did not discover /'+name);
     console.log(JSON.stringify({ok:true,version:version.trim(),project,server:kujo,commands:expected,model_call:false}));
     process.exitCode=0; break;

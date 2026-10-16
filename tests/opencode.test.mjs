@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, writeFile, readFile, symlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { preflightHost, configureMcp, removeMcp, projectSkills } from '../lib/install.mjs';
+import { preflightHost, configureMcp, removeMcp, projectSkills, projectOpenCodeAssets } from '../lib/install.mjs';
 import { packageRoot, homePaths } from '../lib/paths.mjs';
 import { VERSION } from '../lib/version.mjs';
 
@@ -69,4 +69,13 @@ test('multiple Kujo config definitions fail closed without changing either file'
  for (const name of ['opencode.json','.opencode/opencode.jsonc']) await writeFile(join(root,name),content);
  await assert.rejects(preflightHost(root),/multiple OpenCode files/);
  assert.equal(await readFile(join(root,'opencode.json'),'utf8'),content);
+});
+
+test('native projection rejects collisions before writing any host asset',async()=>{
+ const root=await fixture();const target=join(root,'.opencode/plugins/kujo');
+ await mkdir(target,{recursive:true});await writeFile(join(target,'tui.ts'),'user plugin');
+ await assert.rejects(projectOpenCodeAssets(root,{projection_root:packageRoot}),/unowned OpenCode asset/);
+ assert.equal(await readFile(join(target,'tui.ts'),'utf8'),'user plugin');
+ await assert.rejects(readFile(join(target,'index.ts')),{code:'ENOENT'});
+ await assert.rejects(readFile(join(root,'.opencode/skills/kujo-opencode/SKILL.md')),{code:'ENOENT'});
 });
