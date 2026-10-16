@@ -287,6 +287,9 @@ and an output directory (`output_dir`, default `.kujo/mcp-generated`). Its paren
 must exist and the destination must be new. Preview runs the canonical generator
 with `--no-ai --dry-run`; it writes no scaffold and executes no discovered command.
 Approve `kujo_mcp_make` to generate and validate the scaffold in that destination.
+Syntax and self-check commands use argument vectors, with no shell interpolation.
+The receipt includes their results; the upstream report marks its separate
+shell-based command checks skipped.
 Generation analyzes current repository contents again, so a preview is advisory,
 not a digest-bound source snapshot.
 
