@@ -12,10 +12,11 @@ const env={...process.env,KUJO_OPENCODE_HOME:join(root,'kujo')};
 await exec(process.execPath,[join(repo,'bin/kujo-opencode.mjs'),'setup','--project',project,'--source-root',resolve('..'),'--json'],{env,timeout:120000});
 const configPath=join(project,'.opencode/opencode.json');const config=JSON.parse(await readFile(configPath,'utf8'));
 const pluginDir=join(project,'.opencode/plugins/kujo-native'); await mkdir(pluginDir,{recursive:true});
-await writeFile(join(pluginDir,'index.ts'),`export { default } from ${JSON.stringify(pathToFileURL(join(repo,'lib/plugin.mjs')).href)};\n`);
+await writeFile(join(pluginDir,'index.ts'),`import { setupPlugin } from ${JSON.stringify(pathToFileURL(join(repo,'lib/plugin.mjs')).href)};\nexport default {id:"kujo.opencode",setup:ctx=>setupPlugin(ctx,{dataRoot:${JSON.stringify(env.KUJO_OPENCODE_HOME)}})};\n`);
 await writeFile(configPath,JSON.stringify(config));
 const host=process.env.OPENCODE_BIN||'opencode';
-const child=spawn(host,['serve','--hostname','127.0.0.1','--port','0'],{env,cwd:project,stdio:['ignore','pipe','pipe']});
+const hostEnv={...env}; delete hostEnv.KUJO_OPENCODE_HOME;
+const child=spawn(host,['serve','--hostname','127.0.0.1','--port','0'],{env:hostEnv,cwd:project,stdio:['ignore','pipe','pipe']});
 let output='';for(const stream of [child.stdout,child.stderr])stream.on('data',chunk=>output=(output+chunk).slice(-65536));
 let base,authorization;
 try {
@@ -34,6 +35,10 @@ try {
  let commands=[];
  for(let i=0;i<20;i++){commands=(await api('/api/command')).data;if(commands.some(c=>c.name==='kujo-status'))break;await delay(250);}
  if (!commands.some(c=>c.name==='kujo-status')) throw new Error('Native command did not load: '+JSON.stringify((await api('/api/plugin')).data.filter(p=>p.source.type!=='builtin')));
+ const nativeStatus=await api('/api/rpc/kujo.control/status',{input:{}});
+ assert.match(JSON.stringify(nativeStatus),/kujo.profile.essentials/);
+ const nativeEvidence=await api('/api/rpc/kujo.control/evidence',{input:{}});
+ assert.match(JSON.stringify(nativeEvidence),/receipts/);
  const session=(await api('/api/session',{title:'Kujo native acceptance',directory:project})).data;
  await api(`/api/session/${session.id}/command`,{name:'kujo-status',text:''});
  const inbox=await api(`/api/session/${session.id}/inbox`);
@@ -41,7 +46,7 @@ try {
  await api(`/api/session/${session.id}/command`,{name:'kujo-evidence',text:''});
  // Drive only this isolated fixture's human permission endpoint. No live user
  // session or production mutation is approved by this acceptance harness.
- const changing=api(`/api/session/${session.id}/command`,{name:'kujo-profile',text:'review'});
+ const changing=api('/api/rpc/kujo.control/profile',{input:{sessionID:session.id,profile:'review'}});
  let pending;
  for(let i=0;i<40;i++) {const list=(await api(`/api/session/${session.id}/permission`)).data;pending=list.find(p=>p.action==='kujo.profile.change');if(pending)break;await delay(100);}
  assert.ok(pending,'profile change must create a real host permission request');

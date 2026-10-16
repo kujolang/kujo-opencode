@@ -13,7 +13,7 @@ test('native host bridge requires a fresh decision, binds workspace, and dispose
  const runtime=new LocalAbilityRuntime({abilities:[{definition,tool:{name:'native_fixture',description:'fixture'},handler:async input=>{executions++;return input;}}],profiles,profileId:profiles[0].id,state:new FileAbilityState({statePath:join(project,'state'),receiptsPath:join(project,'receipts')})});
  const app={runtime,config:{profile:profiles[0].id},catalog:{profiles},paths:{root:project}};
  const registration=()=>({dispose:async()=>{disposed++;}});
- const ctx={location:{directory:project},session:{get:async()=>({location:{directory:project}}),synthetic:async()=>{}},permission:{hook:async (name,callback)=>{hook=callback;return registration();},assert:async input=>{const decision={...input,effect:'allow'};hook(decision);assert.equal(decision.effect,'ask');assert.deepEqual(input.save,[]);assert.equal(executions,grants);if(deny)throw Error('Human declined');grants++;}},tool:{transform:async fn=>{fn({add:tool=>tools.set(tool.name,tool)});return registration();}},command:{transform:async fn=>{fn({add:command=>commands.set(command.name,command)});return registration();}}};
+ const ctx={rpc:{register:async()=>registration()},location:{directory:project},session:{get:async()=>({location:{directory:project}}),synthetic:async()=>{}},permission:{hook:async (name,callback)=>{hook=callback;return registration();},assert:async input=>{const decision={...input,effect:'allow'};hook(decision);assert.equal(decision.effect,'ask');assert.deepEqual(input.save,[]);assert.equal(executions,grants);if(deny)throw Error('Human declined');grants++;}},tool:{transform:async fn=>{fn({add:tool=>tools.set(tool.name,tool)});return registration();}},command:{transform:async fn=>{fn({add:command=>commands.set(command.name,command)});return registration();}}};
  const cleanup=await setupPlugin(ctx,{openApp:async()=>app});
  const context={sessionID:'test-session',agent:'build',messageID:'message',id:'call',signal:new AbortController().signal};
  assert.equal(JSON.parse((await tools.get('native_fixture').execute({value:'first'},context)).content).ok,true);assert.equal(executions,1);
@@ -21,5 +21,5 @@ test('native host bridge requires a fresh decision, binds workspace, and dispose
  const controller=new AbortController();controller.abort();await assert.rejects(tools.get('native_fixture').execute({value:'cancelled'},{...context,signal:controller.signal}));assert.equal(executions,1);
  ctx.session.get=async()=>({location:{directory:tmpdir()}});await assert.rejects(tools.get('native_fixture').execute({value:'escape'},context),/different workspace/);assert.equal(executions,1);
  assert.deepEqual([...commands.keys()],['kujo-status','kujo-evidence','kujo-profile']);
- await cleanup();assert.equal(disposed,3);
+ await cleanup();assert.equal(disposed,4);
 });
