@@ -1,3 +1,4 @@
+import {verifySessionLedger} from './session-runledger-acceptance.mjs';
 import {verifyLifecycleDelivery} from './lifecycle-acceptance.mjs';
 import {verifyStarterServers} from './starter-runtime-acceptance.mjs';
 import assert from "node:assert/strict";
@@ -175,6 +176,9 @@ for(const kind of ['script','agent','api','mcp']){
 
 await verifyStarterServers(project,kujo);
 await verifyLifecycleDelivery(kujo,installation.sources.watchdog.path);
+for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish'])await exec(process.execPath,[cli,'enable',id,'--project',project,'--json'],{env:{...process.env,...env}});
+await verifySessionLedger({project,packageRoot:root,home});
+for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish'])await exec(process.execPath,[cli,'disable',id,'--project',project,'--json'],{env:{...process.env,...env}});
 
 rpc.close();
 
