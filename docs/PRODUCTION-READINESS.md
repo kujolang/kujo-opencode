@@ -573,3 +573,13 @@ RunLedger, bounded failure intervention, live specialist workflows, guided RAG/L
 readiness, remaining recovery/mixed-version acceptance and the immutable supported
 platform/host/public release matrix remain required. All seven broad outcomes
 remain open. Native permission acceptance is not live-model telemetry acceptance.
+
+Expanded real OpenCode native fixture Pnl7ZH passed activation rejection, stale
+configuration refusal, enable, retry, recovery, discard and disable without
+inference. Packed vzcDKv passed fresh install and 0.1.0 upgrade with 28 pinned
+sources, old-project preservation, starter execution and canonical Watchdog
+delivery/deduplication. Tarball SHA-256: d7a3a3f8729153c51f7265f8be331eb562d12a4e14e5654290d3d4a958e90a7c.
+This clears the previous download timeout for this retry. As noted above, the
+packed candidate predates two final plugin shutdown/queue-action refinements;
+final native Pnl7ZH and canonical E2E cover current local code, while immutable
+full-release certification remains open.
