@@ -104,3 +104,31 @@ acceptance also exercises status/evidence RPC and profile RPC with a real pendin
 host permission, verifies configuration remains unchanged before the decision,
 and verifies management produces no assistant messages. This does not close the
 seven product outcomes above.
+
+## Implementation checkpoint: native default setup
+
+Setup, update and repair now generate owned `index.ts`, `tui.ts` and package
+exports under `.opencode/plugins/kujo`, pointing at the installed runtime and
+explicit data root. The old prompt-only `/kujo` asset is removed on migration.
+The MCP entry is retained disabled to avoid duplicate tool exposure. Uninstall
+removes owned plugin files; conflict tests prove unowned files are preserved
+before writing any host assets. Full project transaction recovery is still open.
+
+OpenCode 2.0.31 loaded this normal setup projection without a test wrapper and
+passed status/evidence RPC and profile permission checks. The host discovery
+script now verifies native RPC and commands with the disabled fallback present.
+A real PTY session opened `/kujo`, selected status, searched `shipcheck`, and
+opened its detail dialog. That inspection found duplicate slash suggestions and
+an overflowing status alert; the corrected interface keeps one slash suggestion
+per command and uses a searchable capability selector with individual details.
+This is local macOS terminal evidence, not platform/version matrix acceptance.
+
+Checkpoint gates: 31 offline tests passed, followed by focused setup/security
+checks after empty-plugin-directory cleanup; real-product E2E passed. Packed
+fresh installation and 0.1.0 upgrade passed with 25 pinned sources, preserved
+older project, and five tools through the independently launched MCP fallback.
+Fixture: `kujo-opencode-packed-S4TrTR`. The packed test preceded the final
+uninstall-directory cleanup; final release certification still requires an
+immutable final candidate through all gates.
+Native RPC and command discovery also passed in real OpenCode 2.0.31 against
+that packed fresh project, without a custom wrapper or KUJO_OPENCODE_HOME.

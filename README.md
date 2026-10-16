@@ -43,7 +43,10 @@ Scout's deeper repository map writes artifacts and therefore needs approval.
 Setup safely merges the Kujo server into existing project JSON or JSONC,
 including root-level configs, preserving comments, models, permissions, and other
 servers. It refuses malformed configs, conflicting Kujo definitions, and unowned
-assets. It adds project skills, three commands, and `.kujo/opencode.json`.
+assets. It adds project skills, a native plugin with a `/kujo` menu, review and doctor commands, and `.kujo/opencode.json`.
+The native interface provides searchable capabilities, profile selection with a
+fresh host permission, and receipt history. The MCP entry is retained disabled
+to avoid duplicate tools. Restart OpenCode after setup, update, or repair.
 Repeated setup retains your selected profile and overrides.
 
 ## Choose what OpenCode can use
@@ -103,7 +106,7 @@ OpenCode's own permission checks remain independent.
   profiles, overrides, and receipts. Projects on 0.1.0 keep their prior projection.
 - `recover` restores a source/runtime transaction interrupted by process death.
   It refuses to take over a live installer. Retry setup/update afterward.
-- `repair` restores owned MCP, skill, and command projections.
+- `repair` restores owned native plugin, MCP fallback, skill, and command projections.
 - `uninstall` removes project integration and retains shared data. `--purge`
   deletes shared sources and receipts, affecting every configured project.
 - `browser install` installs optional Lens Chromium prerequisites.

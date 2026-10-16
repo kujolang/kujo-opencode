@@ -3,11 +3,11 @@ name: kujo-opencode
 description: Discover and run local Kujo ecosystem Abilities in OpenCode with policy decisions and receipts.
 ---
 
-Use the Kujo MCP catalog to discover currently exposed capabilities. Match the
+Use the Kujo Ability catalog to discover currently exposed capabilities. Match the
 operation to the task; do not invoke every tool automatically. Inspect each
 input schema and declared effect. Profiles control visibility, not permission.
 Use kujo-opencode profiles, profile, enable, and disable to change exposure;
-reload the OpenCode MCP connection afterward.
+restart OpenCode afterward, or use the native /kujo profile menu for an immediate refresh.
 
 Read-only operations run under local policy. For ability_approval_required,
 show the approval_request.command returned by the tool. The human runs

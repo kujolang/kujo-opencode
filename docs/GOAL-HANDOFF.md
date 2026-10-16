@@ -65,3 +65,26 @@ above and include this delta when Strata becomes available. Intended target:
 Agent Notes; local session ID local-kujo-opencode-native-management-20261016.
 Retrieval cue: OpenCode native management RPC workspace isolation. SignalBox:
 no captures warranted; these are existing goal commitments and resolved lessons.
+
+## Native default installation checkpoint 3
+
+Normal setup/update/repair now project the native server and TUI wrappers from
+the trusted installed runtime. MCP is retained disabled; native and MCP tools
+must not be enabled simultaneously. Doctor checks native files and fallback
+state. Host check verifies RPC plus native commands. Setup/uninstall and unowned
+file conflict tests cover the new assets. A real OpenCode 2.0.31 PTY verified
+menu, searchable capability list and detail dialog after removing duplicate slash
+suggestions and replacing an overflowing capability alert.
+
+Next: actual native Ability execution/approval acceptance (not just profile
+permission), opt-in lifecycle bridge, specialist workflows, capability parity,
+complete transactional recovery, platform/version certification and public
+release. See PRODUCTION-READINESS.md; none of those broad outcomes is closed by
+this checkpoint. Strata remains pending: same missing tsx dependency, no writes
+claimed. Include this state delta in the Agent Notes handoff when available.
+
+Checkpoint 3 verification: 31 offline tests, real-product E2E, normal-projection
+native host acceptance, and packed fresh/0.1.0 upgrade gates passed. Packed fixture
+kujo-opencode-packed-S4TrTR acquired 25 pinned sources and retained the old
+project. A final uninstall change removes the plugin directory only when empty,
+with focused setup/security tests passing; it postdates that packed candidate.
