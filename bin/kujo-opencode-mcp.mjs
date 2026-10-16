@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { executeWithApproval } from "../lib/approvals.mjs";
 import { createApp } from "../lib/app.mjs";
 import { VERSION } from "../lib/version.mjs";
 
@@ -44,7 +45,7 @@ async function handle(request) {
     const controller = new AbortController(); inflight.set(id, controller);
     try {
       const input = { ...(params.arguments || {}) }; const controls = input._kujo || {}; delete input._kujo;
-      const result = await app.runtime.execute({ abilityId: item.definition.id, input, controls: { ...controls, principal: { type: "workload", id: "opencode", tenant_id: "local", claims: {} }, host: "opencode", surface: "mcp" }, signal: controller.signal });
+      const result = await executeWithApproval(app, { abilityId: item.definition.id, input, controls: { ...controls, principal: { type: "workload", id: "opencode", tenant_id: "local", claims: {} }, host: "opencode", surface: "mcp" }, signal: controller.signal });
       return reply(id, mcpResult(result, !result.ok));
     } finally { inflight.delete(id); }
   }

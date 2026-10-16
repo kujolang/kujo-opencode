@@ -27,7 +27,12 @@ try {
    servers=(await response.json()).data;
    const kujo=servers.find(s=>s.name==='kujo'||s.id==='kujo');
    if(kujo && (kujo.status==='connected'||kujo.status?.status==='connected'||kujo.status?.type==='connected')) {
-    console.log(JSON.stringify({ok:true,version:version.trim(),project,server:kujo,model_call:false}));
+    const commandsResponse=await fetch(url+'/api/command',{headers:{Authorization:'Basic '+Buffer.from('opencode:'+password).toString('base64')},signal:AbortSignal.timeout(5000)});
+    if(!commandsResponse.ok) throw new Error('OpenCode command discovery failed');
+    const commands=(await commandsResponse.json()).data;
+    const expected=['kujo','kujo-review','kujo-doctor'];
+    for(const name of expected) if(!commands.some(command=>command.name===name)) throw new Error('OpenCode did not discover /'+name);
+    console.log(JSON.stringify({ok:true,version:version.trim(),project,server:kujo,commands:expected,model_call:false}));
     process.exitCode=0; break;
    }
   }

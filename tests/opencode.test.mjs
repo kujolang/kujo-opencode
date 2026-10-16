@@ -29,14 +29,14 @@ test('OpenCode V2 projection preserves settings and other servers through remova
  await removeMcp(root);
  assert.deepEqual(JSON.parse(await readFile(path)),existing);
 });
-test('setup refuses JSONC shadowing, unowned servers, malformed configs and symlinked roots',async()=>{
+test('setup refuses unowned servers, malformed configs and symlinked roots',async()=>{
  for (const content of ['null','[]','{"mcp":[]}','{"mcp":{"servers":[]}}','{"mcp":{"servers":{"kujo":{"command":["unrelated"]}}}}']) {
   const root=await fixture(); const path=join(root,'.opencode/opencode.json');
   await writeFile(path,content); await assert.rejects(preflightHost(root));
   assert.equal(await readFile(path,'utf8'),content);
  }
  const root=await fixture(); await writeFile(join(root,'.opencode/opencode.jsonc'),'{}');
- await assert.rejects(preflightHost(root),/manual merge/);
+ await preflightHost(root);
  const parent=await mkdtemp(join(tmpdir(),'kujo-opencode-symlink-')); const outside=await fixture();
  await symlink(outside,join(parent,'.opencode'));
  await assert.rejects(preflightHost(parent),/symbolic links/);
@@ -50,4 +50,23 @@ test('skills refuse unowned content and symlinked parent directories',async()=>{
  await writeFile(join(target,'SKILL.md'),'user content');
  await assert.rejects(projectSkills(catalog,{profile:'p',sources:{'kujo-skills':{path:sources,commit:'fixture'}}},root),/unowned/);
  assert.equal(await readFile(join(target,'SKILL.md'),'utf8'),'user content');
+});
+
+test('JSONC merge keeps comments and trailing commas, supports root config and upgrades', async () => {
+ const root=await fixture(); const path=join(root,'opencode.jsonc');
+ const original='{\n // keep my model\n "model":"custom",\n "mcp":{"servers":{"other":{"type":"remote","url":"http://localhost:99"}}},\n}\n';
+ await writeFile(path,original);
+ await configureMcp({projection_root:join(homePaths().root,'runtime','0.1.0')},root);
+ await configureMcp({projection_root:join(homePaths().root,'runtime',VERSION)},root);
+ const text=await readFile(path,'utf8'); assert.match(text,/keep my model/); assert.match(text,/custom/); assert.match(text,/localhost:99/);
+ await removeMcp(root); assert.match(await readFile(path,'utf8'),/keep my model/);
+ await assert.rejects(readFile(join(root,'.opencode/opencode.json')),{code:'ENOENT'});
+});
+
+test('multiple Kujo config definitions fail closed without changing either file', async()=> {
+ const root=await fixture();
+ const content=JSON.stringify({mcp:{servers:{kujo:{command:['other']}}}});
+ for (const name of ['opencode.json','.opencode/opencode.jsonc']) await writeFile(join(root,name),content);
+ await assert.rejects(preflightHost(root),/multiple OpenCode files/);
+ assert.equal(await readFile(join(root,'opencode.json'),'utf8'),content);
 });

@@ -83,3 +83,27 @@ test("bounded output and sharded idempotency state prevent unbounded hot files",
   assert.ok(stateSize < 4096);
   assert.equal((await readdir(`${statePath}.d/idempotency`, { recursive: true })).filter((name) => name.endsWith(".json")).length, 101);
 });
+
+test('friendly approval requests require consent, bind project and digest, and execute once', async () => {
+  const { executeWithApproval, readApprovalRequest, approveRequest } = await import('../lib/approvals.mjs');
+  const root = await mkdtemp(join(tmpdir(), 'kujo-opencode-human-'));
+  const previous = process.env.KUJO_OPENCODE_HOME; process.env.KUJO_OPENCODE_HOME = root;
+  try {
+    let executions = 0;
+    const runtime = new LocalAbilityRuntime({abilities:[{definition,tool:{name:'fixture'},handler:async input=>{executions++;return input;}}],profiles,profileId:profiles[0].id,state:new FileAbilityState({statePath:join(root,'state.json'),receiptsPath:join(root,'receipts.jsonl')})});
+    const app={runtime,paths:{root}};
+    const pending=await executeWithApproval(app,{abilityId:definition.id,input:{value:'human'}});
+    assert.equal(pending.code,'ability_approval_required'); assert.equal(executions,0);
+    const request=await readApprovalRequest(pending.approval_request.id);
+    assert.equal((await approveRequest(app,request,async()=>false)).ok,false); assert.equal(executions,0);
+    await assert.rejects(approveRequest({...app,paths:{root:join(root,'other')}},request,async()=>true),/another project/);
+    await assert.rejects(approveRequest(app,{...request,digest:'changed'},async()=>true),/changed/);
+    const result=await approveRequest(app,request,async details=>{assert.deepEqual(details.input,{value:'human'});assert.equal(details.effects[0].kind,'write');return true;});
+    assert.equal(result.ok,true); assert.equal(executions,1);
+    assert.equal((await approveRequest(app,request,async()=>true)).replayed,true); assert.equal(executions,1);
+    const {writeJson}=await import('../lib/io.mjs');
+    await writeJson(join(root,'requests',`${pending.approval_request.id}.json`),{...request,created_at:0});
+    await assert.rejects(readApprovalRequest(pending.approval_request.id),/expired/);
+    await assert.rejects(readApprovalRequest('../escape'),/Invalid/);
+  } finally { if(previous===undefined) delete process.env.KUJO_OPENCODE_HOME; else process.env.KUJO_OPENCODE_HOME=previous; }
+});

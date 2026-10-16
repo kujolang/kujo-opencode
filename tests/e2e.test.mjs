@@ -58,6 +58,7 @@ assert.equal(patchbrief.result.structuredContent.ok, true, JSON.stringify(patchb
 const scoutInput = { path: ".", quick: true, output_dir: ".kujo/scout" };
 message = await rpc.request("tools/call", { name: "kujo_scout_inspect", arguments: { ...scoutInput, _kujo: { invocationId: "scout-1", idempotencyKey: "scout-key" } } });
 assert.equal(message.result.structuredContent.code, "ability_approval_required");
+assert.match(message.result.structuredContent.approval_request.command, /^kujo-opencode approve [a-f0-9-]{36}$/);
 const approval = JSON.parse((await exec(process.execPath, [cli, "approve", "--project", project, "--ability", "kujo.scout.repository.inspect", "--invocation", "scout-1", "--input", JSON.stringify(scoutInput), "--json"], { env: { ...process.env, ...env } })).stdout);
 message = await rpc.request("tools/call", { name: "kujo_scout_inspect", arguments: { ...scoutInput, _kujo: { invocationId: "scout-1", idempotencyKey: "scout-key", approvalId: approval.approval_id } } });
 assert.equal(message.result.structuredContent.ok, true, JSON.stringify(message.result.structuredContent)); assert.equal(message.result.structuredContent.receipt.approval_id, approval.approval_id);
