@@ -1,3 +1,4 @@
+import {verifyLifecycleDelivery} from './lifecycle-acceptance.mjs';
 import {verifyAgentStarter} from './starter-agent-acceptance.mjs';
 import {verifyStarterServers} from './starter-runtime-acceptance.mjs';
 // Network gate: actual release tarballs, empty HOME/prefix, no sibling checkouts.
@@ -78,6 +79,7 @@ const starterProbe=`const {createApp}=await import(${JSON.stringify(appUrl)});co
 assert.match((await command(process.execPath,['--input-type=module','-e',starterProbe])).stdout,/passed/);
 await verifyStarterServers(fresh,installed.kujo_bin);
 await verifyAgentStarter(fresh,installed.kujo_bin,installed.sources.kennel.path);
+await verifyLifecycleDelivery(installed.kujo_bin,installed.sources.watchdog.path);
 for(const id of ['kujo.opencode.starter.preview','kujo.opencode.starter.create','kujo.opencode.starter.inspect'])await call(['disable',id],fresh);
 
 const mcp=join(installed.projection_root,'bin/kujo-opencode-mcp.mjs');

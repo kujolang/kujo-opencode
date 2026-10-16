@@ -508,3 +508,29 @@ starter_services_verified and agent_fixture_verified flags. Tarball SHA-256:
 b420e45c1cc033fbb4412eca78b51fc4f7b268d0c8303ab2b1f8ce8baa19f989. Only test coverage and verification documentation
 changed after packing; executable bytes match this checkpoint. This is local
 macOS acceptance, not the full supported-platform/live-specialist release gate.
+
+## Lifecycle delivery foundation checkpoint (2026-10-16)
+
+The opt-in lifecycle outbox is implemented as a standalone internal component,
+not yet connected to native hooks, configuration or management controls. Normal
+OpenCode use still sends no automatic telemetry. Jobs contain allowlisted IDs
+and status metadata only, with no prompts, tool inputs/outputs, error bodies or
+credentials. Delivery is limited to a loopback Watchdog origin; redirects are
+refused. Producer version and stable batch/record IDs survive restart and upgrade
+so a lost acknowledgement can retry the exact batch.
+
+Storage is project-scoped and bounded to 128 jobs/1 MiB, with five delivery
+attempts and a 24-hour expiry applied when the queue is next operated. Claims
+use durable leases; writes use the existing directory transaction. Interrupted
+transactions require explicit recovery. Closing aborts delivery; pending work
+remains recoverable. Endpoint changes hold old jobs instead of rerouting them.
+No periodic worker, host activation, optional RunLedger or failure intervention
+is claimed by this component.
+
+83 offline tests pass, including real process termination after claim and lock
+publication, concurrent delivery, bounded retry, cancellation, metadata omission
+and disabled behavior. Canonical local E2E passed. A real token-protected pinned
+Watchdog accepted a batch, then a simulated lost acknowledgement caused restart
+and retry: the server retained exactly one record with no private-content
+canaries. Final packed fresh/upgrade acceptance is pending below. All seven
+production outcomes remain open.

@@ -1,3 +1,4 @@
+import {verifyLifecycleDelivery} from './lifecycle-acceptance.mjs';
 import {verifyStarterServers} from './starter-runtime-acceptance.mjs';
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
@@ -173,6 +174,7 @@ for(const kind of ['script','agent','api','mcp']){
 }
 
 await verifyStarterServers(project,kujo);
+await verifyLifecycleDelivery(kujo,installation.sources.watchdog.path);
 
 rpc.close();
 

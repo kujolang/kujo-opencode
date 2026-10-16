@@ -343,3 +343,21 @@ starter_services_verified and agent_fixture_verified flags. Tarball SHA-256:
 b420e45c1cc033fbb4412eca78b51fc4f7b268d0c8303ab2b1f8ce8baa19f989. Only test coverage and verification documentation
 changed after packing; executable bytes match this checkpoint. This is local
 macOS acceptance, not the full supported-platform/live-specialist release gate.
+
+## Lifecycle delivery foundation (2026-10-16)
+
+lib/lifecycle-outbox.mjs and its nine regression tests provide bounded durable
+metadata-only Watchdog delivery, stable retry IDs and producer version, explicit
+recovery, abort-on-close and loopback-only endpoints. The component is not wired
+to OpenCode hooks or configuration; default behavior remains unchanged.
+83 offline tests and canonical E2E passed; packed 7XhEFJ is running.
+
+Next: explicit native activation/status/recovery controls with fresh human
+approval and stale-config checks; workspace-validated session/tool/model hooks;
+bounded background worker and unload/reconnect; optional canonical RunLedger
+and failure intervention. Extend plugin-scope callback binding for tool hooks
+and event subscriptions. Never capture request/response bodies or error text;
+HTTP response headers do not prove model completion. Pass canonical project
+paths to the outbox. Remaining specialist workflows, guided knowledge/browser
+readiness, service support boundaries, recovery matrix and public release retain
+their original scope. No new external release/provider checks in this checkpoint.
