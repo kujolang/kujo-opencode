@@ -5,6 +5,8 @@ import { lstat, mkdir, mkdtemp, readFile, symlink, writeFile } from "node:fs/pro
 import { promisify } from "node:util";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { createApp } from "../lib/app.mjs";
+import { withDataRoot } from "../lib/paths.mjs";
 import { loadCatalog } from "../lib/catalog.mjs";
 
 const exec = promisify(execFile); const cli = resolve("bin/kujo-opencode.mjs");
@@ -22,6 +24,12 @@ test("setup, profiles, repair, and uninstall preserve unrelated host config", as
   call = await exec(process.execPath, [cli, "profile", "review", "--project", project, "--json"], { env }); result = JSON.parse(call.stdout); assert.equal(result.abilities, 18);
   await exec(process.execPath, [cli, "disable", "fence", "--project", project, "--json"], { env });
   await exec(process.execPath, [cli, "enable", "kujo_eval_run", "--project", project, "--json"], { env });
+  const overridden=await withDataRoot(home,()=>createApp(project));
+  const visible=overridden.runtime.describe().map(item=>item.definition.id);
+  assert.ok(visible.includes('kujo.eval.suite.run'),'enabled outside-profile tools must reach runtime visibility');
+  assert.ok(!visible.includes('kujo.fence.architecture.check'),'disabled inherited tools must stay hidden');
+  const catalogResult=await overridden.runtime.execute({abilityId:'kujo.ability.catalog.list',input:{}});
+  assert.ok(catalogResult.receipt.result.abilities.some(item=>item.id==='kujo.eval.suite.run'));
   call = await exec(process.execPath, [cli, "update", "--project", project, "--source-root", sources, "--json"], { env }); result = JSON.parse(call.stdout);
   assert.equal(result.profile, "kujo.profile.review");
   assert.deepEqual(result.disabled, ["kujo.fence.architecture.check"]);

@@ -21,3 +21,10 @@ commands on bounded private source copies. They do not modify the generated
 Ability runtime, reuse Paperclip-specific identities, or implement a compiler
 or formatter. Runtime behavior is verified with the packaged native runtime
 and the local integration gate; full platform certification remains separate.
+
+At app construction, the adapter projects the selected profile's resolved
+Ability IDs plus explicit project enable/disable overrides into an in-memory
+profile for the canonical runtime. This prevents the runtime's independent
+profile filter from discarding an explicitly enabled out-of-profile Ability.
+Canonical catalog files, Ability identities and the generated runtime remain
+unchanged; override exposure does not change execution approval semantics.
