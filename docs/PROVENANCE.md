@@ -28,3 +28,10 @@ profile for the canonical runtime. This prevents the runtime's independent
 profile filter from discarding an explicitly enabled out-of-profile Ability.
 Canonical catalog files, Ability identities and the generated runtime remain
 unchanged; override exposure does not change execution approval semantics.
+
+The app's FileAbilityState subclass adds a host-owned metadata.project_root
+field before the canonical writer persists a receipt. It uses realpath of the
+configured workspace, never model-provided metadata. The same object is returned
+and retained for idempotent replay. Generated runtime bytes, receipt identity,
+approval binding and canonical storage/rotation remain unchanged. Native evidence
+management reads retained receipts without executing the receipt-list Ability.

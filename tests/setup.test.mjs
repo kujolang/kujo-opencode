@@ -29,6 +29,9 @@ test("setup, profiles, repair, and uninstall preserve unrelated host config", as
   assert.ok(visible.includes('kujo.eval.suite.run'),'enabled outside-profile tools must reach runtime visibility');
   assert.ok(!visible.includes('kujo.fence.architecture.check'),'disabled inherited tools must stay hidden');
   const catalogResult=await overridden.runtime.execute({abilityId:'kujo.ability.catalog.list',input:{}});
+  const exported=JSON.parse((await exec(process.execPath,[cli,'evidence','--project',project,'--receipt',catalogResult.receipt.receipt_id,'--json'],{env})).stdout);
+  assert.equal(exported.schema,'kujo.opencode.evidence/v1');assert.equal(exported.receipts.length,1);assert.equal(exported.receipts[0].receipt_id,catalogResult.receipt.receipt_id);
+  assert.equal(catalogResult.receipt.metadata.project_root,await (await import('node:fs/promises')).realpath(project));
   assert.ok(catalogResult.receipt.result.abilities.some(item=>item.id==='kujo.eval.suite.run'));
   call = await exec(process.execPath, [cli, "update", "--project", project, "--source-root", sources, "--json"], { env }); result = JSON.parse(call.stdout);
   assert.equal(result.profile, "kujo.profile.review");
