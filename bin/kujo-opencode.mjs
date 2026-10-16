@@ -2,7 +2,8 @@
 import { createInterface } from "node:readline/promises";
 import { approveRequest, readApprovalRequest } from "../lib/approvals.mjs";
 import { hostDocument } from "../lib/host-config.mjs";
-import { access, mkdir, rm } from "node:fs/promises";
+import { recoverDirectory } from "../lib/atomic-directory.mjs";
+import { access, mkdir, readdir, rm } from "node:fs/promises";
 import { closeSync, openSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { join, resolve } from "node:path";
@@ -237,6 +238,17 @@ async function update(opts) {
   output({ ok: true, message: "Kujo OpenCode updated without changing profile exposure.", profile: config.profile, enabled: config.enabled, disabled: config.disabled, skills, host_assets: hostAssets, mcp }, opts.json);
 }
 
+async function recover(opts) {
+  const home = homePaths(); const catalog = await loadCatalog();
+  const targets = catalog.sources.flatMap(source => [join(home.sources, source.id), join(home.sources, `${source.id}-${source.commit}`)]);
+  const runtimeRoot = join(home.root, 'runtime');
+  let names = []; try { names = await readdir(runtimeRoot); } catch (error) { if (error.code !== 'ENOENT') throw error; }
+  for (const name of names) if (/^\d+\.\d+\.\d+\.install-lock$/.test(name)) targets.push(join(runtimeRoot, name.replace(/\.install-lock$/, '')));
+  const recovered = [];
+  for (const target of targets) if ((await recoverDirectory(target)).recovered) recovered.push(target);
+  output({ok:true,message:'Interrupted installation recovery finished. Retry setup or update, then run doctor.',recovered}, opts.json);
+}
+
 async function uninstall(opts) {
   const project = resolve(opts.project || process.cwd()); const paths = projectPaths(project); const catalog = await loadCatalog();
   if (opts.purge) await loadInstallation(catalog);
@@ -245,9 +257,9 @@ async function uninstall(opts) {
   output({ ok: true, message: `Kujo OpenCode removed from ${project}.${opts.purge ? " Shared local sources and receipts were purged." : " Shared local sources and receipts were preserved."}` }, opts.json);
 }
 
-function help() { process.stdout.write(`Kujo OpenCode ${VERSION}\n\nUsage: kujo-opencode <command> [options]\n\nCommands:\n  setup       Install every supported Kujo source locally and configure OpenCode\n  demo        Run your first repository scan and show its receipt\n  doctor      Verify runtime, source, configuration, and host readiness\n  status      Show the active local installation\n  profiles    List portable Ability profiles\n  profile NAME Select the active profile\n  abilities   List installed and active Abilities\n  enable NAME Add a tool or product to the active exposure\n  disable NAME Hide a tool or product from the active exposure\n  approve ID  Review, confirm, and execute a pending operation\n  browser     status|install Lens Chromium dependencies\n  services    status|start|stop [watchdog]\n  update      Refresh all pinned local sources\n  repair      Restore MCP and skill projections\n  uninstall   Remove project projections; add --purge for shared data\n\nOptions:\n  --project DIR      Target project (default current directory)\n  --profile ID       Setup profile (default kujo.profile.essentials)\n  --source-root DIR  Use local Kujo checkouts (development/offline setup)\n  --force            Reacquire pinned sources\n  --json             Machine-readable output\n`); }
+function help() { process.stdout.write(`Kujo OpenCode ${VERSION}\n\nUsage: kujo-opencode <command> [options]\n\nCommands:\n  setup       Install every supported Kujo source locally and configure OpenCode\n  demo        Run your first repository scan and show its receipt\n  doctor      Verify runtime, source, configuration, and host readiness\n  status      Show the active local installation\n  profiles    List portable Ability profiles\n  profile NAME Select the active profile\n  abilities   List installed and active Abilities\n  enable NAME Add a tool or product to the active exposure\n  disable NAME Hide a tool or product from the active exposure\n  approve ID  Review, confirm, and execute a pending operation\n  browser     status|install Lens Chromium dependencies\n  services    status|start|stop [watchdog]\n  update      Refresh all pinned local sources\n  recover     Restore interrupted source/runtime installations\n  repair      Restore MCP and skill projections\n  uninstall   Remove project projections; add --purge for shared data\n\nOptions:\n  --project DIR      Target project (default current directory)\n  --profile ID       Setup profile (default kujo.profile.essentials)\n  --source-root DIR  Use local Kujo checkouts (development/offline setup)\n  --force            Reacquire pinned sources\n  --json             Machine-readable output\n`); }
 
 try {
   const opts = options(process.argv.slice(3));
-  if (command === "setup") await setup(opts); else if (command === "demo") await demo(opts); else if (command === "doctor") await doctor(opts); else if (command === "status") await status(opts); else if (command === "profiles") await profiles(opts); else if (command === "profile") await setProfile(opts); else if (command === "abilities") await abilities(opts); else if (command === "enable") await select(opts, true); else if (command === "disable") await select(opts, false); else if (command === "approve") await approve(opts); else if (command === "browser") await browser(opts); else if (command === "services") await services(opts); else if (command === "update") await update(opts); else if (command === "repair") await repair(opts); else if (command === "uninstall") await uninstall(opts); else if (["help", "--help", "-h"].includes(command)) help(); else if (["version", "--version", "-v"].includes(command)) process.stdout.write(`kujo-opencode ${VERSION}\n`); else throw new Error(`unknown command: ${command}`);
+  if (command === "setup") await setup(opts); else if (command === "demo") await demo(opts); else if (command === "doctor") await doctor(opts); else if (command === "status") await status(opts); else if (command === "profiles") await profiles(opts); else if (command === "profile") await setProfile(opts); else if (command === "abilities") await abilities(opts); else if (command === "enable") await select(opts, true); else if (command === "disable") await select(opts, false); else if (command === "approve") await approve(opts); else if (command === "browser") await browser(opts); else if (command === "services") await services(opts); else if (command === "update") await update(opts); else if (command === "recover") await recover(opts); else if (command === "repair") await repair(opts); else if (command === "uninstall") await uninstall(opts); else if (["help", "--help", "-h"].includes(command)) help(); else if (["version", "--version", "-v"].includes(command)) process.stdout.write(`kujo-opencode ${VERSION}\n`); else throw new Error(`unknown command: ${command}`);
 } catch (error) { process.stderr.write(`error: ${error.message}\n`); process.exitCode = 1; }

@@ -101,6 +101,8 @@ OpenCode's own permission checks remain independent.
 - `status` shows the active installation; `doctor` reports readiness and fixes.
 - Install the newer release package, then run `update` in each project. It keeps
   profiles, overrides, and receipts. Projects on 0.1.0 keep their prior projection.
+- `recover` restores a source/runtime transaction interrupted by process death.
+  It refuses to take over a live installer. Retry setup/update afterward.
 - `repair` restores owned MCP, skill, and command projections.
 - `uninstall` removes project integration and retains shared data. `--purge`
   deletes shared sources and receipts, affecting every configured project.
