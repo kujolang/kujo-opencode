@@ -594,5 +594,29 @@
     "receipt_ids": [
       "receipt-d9545dfc-37e9-4bba-ac2e-3e72ad672f23"
     ]
+  },
+  "gateway_latest": {
+    "ok": true,
+    "host": "opencode v2.0.32",
+    "terminal_backend": "posix",
+    "service_result_pages": 8,
+    "dimensions": [
+      80,
+      24
+    ],
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-9a63ey_o",
+    "initial_requested_session": "ses_kujo_terminal_157e2c660d7446cc8c180d5534ef915a",
+    "model_call": true,
+    "effects_approved": true,
+    "rendered_ledger": false,
+    "rendered_automatic_completion": false,
+    "rendered_completion_evidence": false,
+    "live_ship_specialist": false,
+    "rendered_leash": false,
+    "rendered_gateway": true,
+    "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+    "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+    "candidate_integrity": "sha512-2XDK3zMkBKARZ62PEsJZ7y0Jvh481yXytyWyPDbWx3d7CKSwZ+uUFrzY48z1x+GduEulnoYmU58CiFs16fXISw==",
+    "pinned_sources": true
   }
 }
