@@ -213,11 +213,26 @@ try {
   for(let i=0;i<60&&!dialogs.some(d=>d.title==='Review this tracked attempt');i++)await delay(100);
   assert.ok(dialogs.some(d=>d.title==='Review this tracked attempt'),'real native RPC event must drive the TUI completion flow');
   tuiCleanup();tuiCleanup=undefined;
-  assert.equal((await api('/api/rpc/kujo.control/completion',{input:{sessionID:auto.id}})).output.available,false);
+  await nativeClient.location.reload();
+  let reloaded;for(let i=0;i<60;i++){try{reloaded=(await api('/api/rpc/kujo.control/completion',{input:{sessionID:auto.id}})).output;break;}catch{await delay(100);}}
+  assert.ok(reloaded,'native plugin must reload and restore the completion control');assert.equal(reloaded.available,false,'presentation markers must survive host reload');
+  assert.equal((await api('/api/rpc/kujo.control/runledger',{input:{sessionID:auto.id,action:'status'}})).output.state,'in_progress');
   const finish=api('/api/rpc/kujo.control/runledger',{input:{sessionID:auto.id,action:'finish',status:'partial'}});
   let finishPermission;for(let i=0;i<60;i++){finishPermission=(await api(`/api/session/${auto.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(finishPermission)break;await delay(100);}
   assert.ok(finishPermission);assert.equal(finishPermission.metadata.input.status,'partial');assert.equal(finishPermission.metadata.ability,'kujo.runledger.runs.finish');assert.deepEqual(finishPermission.save,[]);
   await api(`/api/session/${auto.id}/permission/${finishPermission.id}/reply`,{decision:'once'});assert.equal((await finish).output.state,'partial');
+  const cancelled=(await api('/api/session',{title:'Automatic tracking cancellation acceptance',location:{directory:await realpath(project)},agent:'kujo-ship',model:{providerID:'opencode',id:'glm-5.3-flash-free'}})).data;
+  const cancelledPrompt=api(`/api/session/${cancelled.id}/prompt`,{text:'Reply OK. Do not use tools.'},180000).catch(()=>undefined);
+  let cancelledPermission;for(let i=0;i<60;i++){cancelledPermission=(await api(`/api/session/${cancelled.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(cancelledPermission)break;await delay(100);}
+  assert.ok(cancelledPermission);
+  const interrupted=nativeClient.session.interrupt({sessionID:cancelled.id,resume:false},{signal:AbortSignal.timeout(15000)}).catch(error=>({error}));
+  await delay(250);
+  // The host may dismiss this permission itself. Otherwise a late grant must
+  // not create a record after the session interruption was accepted.
+  const remaining=(await api(`/api/session/${cancelled.id}/permission`)).data;
+  if(remaining.some(p=>p.id===cancelledPermission.id))await api(`/api/session/${cancelled.id}/permission/${cancelledPermission.id}/reply`,{decision:'once'});
+  const interruption=await interrupted;assert.equal(interruption?.error,undefined,'host must acknowledge interruption');await cancelledPrompt;
+  assert.equal((await api('/api/rpc/kujo.control/runledger',{input:{sessionID:cancelled.id,action:'status'}})).output.state,'not_started','interrupted automatic start must not write after a late approval');
   await lifecycleChange('disable_tracking','once');
  }
  const {createApp}=await import('../lib/app.mjs');const {withDataRoot}=await import('../lib/paths.mjs');
