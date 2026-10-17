@@ -1,0 +1,99 @@
+{
+  "recorded": "2026-10-17",
+  "dependency_commit": "073221f",
+  "production_commit": "a6c20e6",
+  "harness_commit": "9f750ad",
+  "runtime": "1.8.1",
+  "dispatch_pin": "71ca927c65598ecfe7c1816068e047cf50b915e0",
+  "remote_main_verified": true,
+  "unit_tests": 211,
+  "canonical_e2e": "passed",
+  "knowledge_tests": 2,
+  "journeys": [
+    {
+      "ok": true,
+      "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-dispatch-checkpoint-kiYsoP",
+      "source": "/Users/robertdevore/2026/Kujolang/kujo-repos/dispatch",
+      "run_id": "run-1792219311699-9414",
+      "status": "paused",
+      "completed_run_id": "run-1792219313804-6494",
+      "checkpoint_auto_approved": false,
+      "live_specialist": false
+    },
+    {
+      "ok": true,
+      "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-workflow-specialist-d5aIDa",
+      "source": "/Users/robertdevore/2026/Kujolang/kujo-repos/dispatch",
+      "steps": 17,
+      "live_specialist": false,
+      "native_approval": false,
+      "native_cancellation": false
+    },
+    {
+      "ok": true,
+      "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-dispatch-lost-response-q5n3ho",
+      "source": "/Users/robertdevore/2026/Kujolang/kujo-repos/dispatch",
+      "run_id": "run-1792219332572-4304",
+      "execution_calls": 1,
+      "result_loss_injected": true,
+      "index_rebuilt": true,
+      "live_specialist": false,
+      "native_transport_loss": false
+    },
+    {
+      "ok": true,
+      "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-dispatch-continuation-vSqSUi",
+      "source": "/Users/robertdevore/2026/Kujolang/kujo-repos/dispatch",
+      "run_id": "run-1792219336292-8432",
+      "stale_decision_refused": true,
+      "later_checkpoint_remained_pending": true,
+      "completed": true,
+      "rejected_run_id": "run-1792219349312-6311",
+      "rejection_preserved": true,
+      "live_specialist": false,
+      "native_approval": false
+    },
+    {
+      "ok": true,
+      "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-ship-specialist-HnogHv",
+      "sources": {
+        "shipcheck": {
+          "path": "/Users/robertdevore/2026/Kujolang/kujo-repos/shipcheck"
+        },
+        "eval": {
+          "path": "/Users/robertdevore/2026/Kujolang/kujo-repos/eval"
+        },
+        "runledger": {
+          "path": "/Users/robertdevore/2026/Kujolang/kujo-repos/runledger"
+        }
+      },
+      "steps": 8,
+      "live_specialist": false,
+      "native_approval": false,
+      "published": false
+    }
+  ],
+  "semantics": [
+    "Native input binds exact revision/run/event/step/decision IDs and human-selected action/response.",
+    "Canonical control rechecked before submitting; canonical source checks revision under run lock.",
+    "Later checkpoints remain pending; stale inputs cannot advance them.",
+    "Canonical approval history retains pending entries and appends approved entries.",
+    "Explicit reject yields failed status with approval_rejected; later steps do not execute."
+  ],
+  "limitations": [
+    "No live native decision/continuation or transport-loss verification.",
+    "Experimental v2 intervention/assurance decisions remain canonical operator-only.",
+    "Dispatch 1.4 canonical support is Linux/macOS POSIX; Windows continuation not certified.",
+    "Historical 713fbe4 candidate superseded; replacement archive, platforms and release/registry acceptance remain."
+  ],
+  "cleanup": {
+    "fixture": "kujo-native-host-rIkdUO",
+    "removed": [
+      "kujo/sources",
+      "kujo/runtime",
+      "prefix/node_modules"
+    ],
+    "retained": "failure identity, receipts, configuration, project and cleanup-record.json",
+    "disk_free_after": "418 MiB"
+  }
+}
