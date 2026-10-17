@@ -7,11 +7,11 @@ import {spawn} from 'node:child_process';
 import {once} from 'node:events';
 import {installLensBrowser,lensBrowserStatus,recoverLensBrowser} from '../lib/lens.mjs';
 async function fixture(t,{fail=false,diagnostic=''}={}){
- const root=await mkdtemp(join(tmpdir(),'kujo-browser-recovery-'));t.after(()=>rm(root,{recursive:true,force:true}));const bridge=join(root,'bridge'),npm=join(root,'npm-fixture');
+ const root=await mkdtemp(join(tmpdir(),'kujo-browser-recovery-'));t.after(()=>rm(root,{recursive:true,force:true}));const bridge=join(root,'bridge'),npm=join(root,'npm-fixture.cjs');
  await mkdir(join(bridge,'node_modules'),{recursive:true});await writeFile(join(bridge,'node_modules/previous'),'old');
  for(const name of ['package.json','package-lock.json'])await writeFile(join(bridge,name),'{}');
  const moduleText=`module.exports={chromium:{executablePath(){return '/nonexistent/fixture-browser'},async launch(){return {async close(){}}}}}`;
- await writeFile(npm,`#!/usr/bin/env node\nconst fs=require('node:fs');if(process.env.PLAYWRIGHT_SKIP_BROWSER_GC!=='1')process.exit(12);if(process.argv[2]==='ci'){fs.mkdirSync('node_modules/playwright-core',{recursive:true});fs.writeFileSync('node_modules/playwright-core/index.js',${JSON.stringify(moduleText)})}else if(${fail}){console.error(${JSON.stringify(diagnostic)});process.exit(13);}`);await chmod(npm,0o755);return {root,bridge,npm};
+ await writeFile(npm,`#!/usr/bin/env node\nconst fs=require('node:fs');if(process.env.PLAYWRIGHT_SKIP_BROWSER_GC!=='1')process.exit(12);if(process.argv[2]==='ci'){fs.mkdirSync('node_modules/playwright-core',{recursive:true});fs.writeFileSync('node_modules/playwright-core/index.js',${JSON.stringify(moduleText)})}else if(${fail}){console.error(${JSON.stringify(diagnostic)});process.exit(13);}`);await chmod(npm,0o755);return {root,bridge,npm:[process.execPath,npm]};
 }
 test('physical bridge lock excludes aliases and refuses live recovery',async t=>{
  const {root,npm}=await fixture(t),alias=root+'-alias';await symlink(root,alias,'dir');t.after(()=>rm(alias,{force:true}));let release,entered;const held=new Promise(r=>release=r),ready=new Promise(r=>entered=r);

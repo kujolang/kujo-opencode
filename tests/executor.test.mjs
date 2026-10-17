@@ -39,11 +39,11 @@ test("Lens browser status requires both the bridge dependency and browser launch
 });
 
 test("Lens browser installer uses the locked bridge lifecycle and verifies Chromium", async () => {
-  const root = await mkdtemp(join(tmpdir(), "kujo-opencode-lens-install-")); const bridge = join(root, "bridge"); const fakeNpm = join(root, "npm-fixture"); const executable = join(root, "chromium");
+  const root = await mkdtemp(join(tmpdir(), "kujo-opencode-lens-install-")); const bridge = join(root, "bridge"); const fakeNpm = join(root, "npm-fixture.cjs"); const executable = join(root, "chromium");
   await mkdir(bridge, { recursive: true }); await writeFile(join(bridge, "package-lock.json"), "{}\n"); await writeFile(join(bridge,"package.json"),"{}\n");
   await writeFile(fakeNpm, `#!/usr/bin/env node\nconst fs=require('node:fs');const path=require('node:path');const root=process.cwd();const moduleRoot=path.join(root,'node_modules','playwright-core');fs.mkdirSync(moduleRoot,{recursive:true});fs.writeFileSync(${JSON.stringify(executable)},'fixture');fs.writeFileSync(path.join(moduleRoot,'index.js'),${JSON.stringify(`module.exports={chromium:{executablePath(){return ${JSON.stringify(executable)}},async launch(){return {async close(){}}}}};\n`)});\n`);
   await chmod(fakeNpm, 0o755);
-  const status = await installLensBrowser(root, { npmCommand: fakeNpm }); assert.equal(status.ready, true); assert.equal(status.executable, executable);
+  const status = await installLensBrowser(root, { npmCommand: [process.execPath,fakeNpm] }); assert.equal(status.ready, true); assert.equal(status.executable, executable);
 });
 
 test('Lens readiness accepts the installed headless-shell distribution', async () => {

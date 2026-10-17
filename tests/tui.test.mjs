@@ -1,3 +1,4 @@
+import {resolve} from 'node:path';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {approvalSections,reviewPages} from '../lib/approval-review.mjs';
@@ -55,7 +56,7 @@ test('overlapping host callbacks retain independent data roots without environme
   const scoped=scopedHostContext(ctx,fn=>(...args)=>withDataRoot(root,()=>fn(...args)));
   await scoped.rpc.register({}, {status:async()=>{await new Promise(resolve=>setTimeout(resolve,5));return homePaths().root;}});
  }
- assert.deepEqual(await Promise.all(callbacks.map(fn=>fn())),['/tmp/kujo-root-a','/tmp/kujo-root-b']);
+ assert.deepEqual(await Promise.all(callbacks.map(fn=>fn())),['/tmp/kujo-root-a','/tmp/kujo-root-b'].map(p=>resolve(p)));
  assert.equal(homePaths().root,original);
 });
 
