@@ -31,7 +31,8 @@
     "docs/HOST-MATRIX.md",
     "docs/CAPABILITY-PARITY.md",
     "docs/RECOVERY-ACCEPTANCE.md",
-    "docs/GOAL-HANDOFF.md"
+    "docs/GOAL-HANDOFF.md",
+    "docs/USER-GUIDE.md"
   ],
   "scripts": {
     "build": "node scripts/build-release.mjs",

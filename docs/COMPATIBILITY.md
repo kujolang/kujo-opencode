@@ -9,23 +9,27 @@ package or a green cross-platform certification exists.
 | Component | Requirement and current evidence |
 | --- | --- |
 | Node.js | 20 or newer; package declares this minimum |
-| OpenCode | Version 2 required; native host and terminal acceptance currently use 2.0.31 |
+| OpenCode | Version 2 required; local host checks use 2.0.31 and 2.0.32; the full matrix is pending |
 | OpenCode 1 | Unsupported |
 | macOS | Local installation, upgrade and terminal workflows verified on macOS 26.6.2 x86_64 |
-| Linux and Windows | CI targets exist; complete platform acceptance is pending |
+| Linux and Windows | Node 20/22 package CI passed; complete native/rendered platform acceptance is pending |
 | Models | OpenCode owns authentication, availability and billing. Kujo does not proxy inference or choose a paid fallback |
 | Kujo runtime | Adapter installs its pinned runtime; no global Kujo installation required |
 | Browser checks | Optional Chromium installation and operating-system dependencies required |
 
-A successful model listing does not prove that a provider permits every agent.
-The OpenCode free GLM model has executed ordinary Build workflows; scoped Ship
-attempts with the requested free providers have returned HTTP 403. Changing a
-Kujo profile does not repair provider authorization. Use OpenCode's model controls
-to select a model you are entitled to use, then retry deliberately.
+All six specialists passed with a connected ChatGPT account and
+`openai/gpt-5.6-sol` on OpenCode 2.0.32. OpenCode owns sign-in and allowance use.
+The [acceptance record](acceptance/2026-10-17-chatgpt-specialists.md) identifies
+49 operation checks, six reports and their exact candidate.
 
-No minimum/latest OpenCode version range beyond the tested version is certified
-yet. A new host release needs host discovery, permission, terminal and workflow
-acceptance before its support status changes.
+A model listing does not prove that a provider permits every agent. The requested
+free GLM and DeepSeek paths returned HTTP 403 for restricted specialists. Changing
+a Kujo profile does not repair provider authorization. Use an entitled provider;
+never weaken the specialist's permissions to work around an access refusal.
+
+The complete minimum/latest host and platform matrix remains pending. A new host
+release needs discovery, permission, terminal and workflow checks before we claim
+support.
 
 ## Upgrade and recovery
 
@@ -79,7 +83,7 @@ other projects; it is not a troubleshooting shortcut.
 
 ## Reporting a problem
 
-Use the repository issue tracker when you have access. Include adapter and
+Use the public repository issue tracker. Include adapter and
 OpenCode versions, OS/architecture, installation method, the exact failing action,
 expected/actual behavior and whether a fresh project reproduces it. Include a
 receipt ID or a redacted screenshot if useful. Do not attach tokens, credential

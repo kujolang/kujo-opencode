@@ -1,5 +1,31 @@
 # Kujo OpenCode 0.2.0 verification
 
+This document retains earlier evidence and its original scope. For current gates,
+read [release readiness](PRODUCTION-READINESS.md). All six specialists now have
+[macOS ChatGPT acceptance](acceptance/2026-10-17-chatgpt-specialists.md); older
+provider-blocked statements below describe earlier runs. The repository is public
+and CI runs. Historical passes do not certify a rebuilt archive.
+
+## Current verification commands
+
+```sh
+npm ci
+npm test
+npm run test:e2e
+```
+
+`npm test` covers the adapter and release contracts. The local E2E gate uses
+canonical sibling repositories; it does not replace a clean packaged install.
+Use [the candidate procedure](RELEASING.md) and [host matrix](HOST-MATRIX.md)
+for installation, upgrade and real OpenCode checks against one archive.
+
+Windows path and npm fixes passed the Node 20/22 Linux/macOS/Windows matrix and
+fresh installation in [run 39044492319](https://github.com/kujolang/kujo-opencode/actions/runs/39044492319).
+The local E2E gate also passed. These checks do not include a complete rendered
+platform matrix or a public-registry install.
+
+## Historical baseline
+
 Verified on macOS on 2026-10-16 with Node 26.7.0 and OpenCode 2.0.31.
 
 - `npm test`: 22 passing offline contracts covering policy, approvals, idempotency,
@@ -24,8 +50,8 @@ runs the network fresh/upgrade gate on Linux in addition to the existing offline
 Node 20/22 Linux/macOS/Windows matrix. Remote CI results are separate from these
 local results; the matrix was not run locally.
 
-The one-paste tarball installation is verified. Direct Git installation requires
-access to the private repository. Public npm publication is still blocked by
+The one-paste tarball installation is verified. At that checkpoint, direct Git installation required
+private repository access. The repository is now public. Public npm publication is still blocked by
 unavailable registry authentication; no published package or public release is
 claimed. No OpenCode 1 support or automatic host lifecycle hooks are claimed.
 
@@ -138,7 +164,7 @@ native approval acceptance. Retained evidence: /tmp/kujo-gateway-mutation.log.
 
 Rendered terminal onboarding also covers External services from home, including
 Leash JWT setup, gateway credentials, unchecked connection state and separate
-approval guidance. OpenCode2.0.31 at80x24 passed in324whuzy with no inference or
+approval guidance. OpenCode2.0.31 at 80×24 passed in324whuzy with no inference or
 approved effects. Screenshots are retained as leash-guidance.txt and
 gateway-guidance.txt in that fixture. This verifies setup guidance, not rendered
 service execution or notification delivery.

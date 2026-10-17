@@ -1,11 +1,13 @@
 # Provenance
 
-The local installer, catalog, executor, and test baseline are adapted under MIT
-from kujolang/kujo-cmd commit 7cedc7758cfd5214ec28c2ba62a20bd5cc3d8988.
-The canonical Ability definitions, profiles, and source pins are unchanged.
+The installer, catalog, executor and original tests derive from Kujo CMD under
+the MIT license, at commit 7cedc7758cfd5214ec28c2ba62a20bd5cc3d8988.
+The generated runtime retains the canonical approval and receipt contract.
+The catalog and source pins have since expanded; `catalog/` records the current
+definitions and pinned revisions.
 The generated runtime changes only the default host/principal and approval CLI
-strings for OpenCode. BUILD.json records both upstream and adapted SHA-256
-digests and the exact string substitutions. npm run build verifies the adapted
+strings for OpenCode. `.generated/BUILD.json` records both upstream and adapted SHA-256
+digests and the exact string substitutions. `npm run build` verifies the adapted
 digest and reverses those substitutions to verify the upstream digest.
 Ability identity, approval binding, policy, and receipt semantics are unchanged.
 

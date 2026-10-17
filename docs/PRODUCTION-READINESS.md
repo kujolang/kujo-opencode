@@ -36,57 +36,40 @@ proxy, automatic approval, hidden network telemetry, or duplicated product logic
 
 ## Current acceptance status — 2026-10-17
 
-The seven outcomes above remain open. Live lifecycle acceptance on candidate
-`2f80e13` exposed nine discarded records during a Watchdog outage. The retention
-correction preserves exhausted deliveries for explicit approved retry. Its
-replacement archive passed fresh installation and upgrade, but live recovery
-exposed a status request blocked behind a pending human approval. Commit
-`b23b2bc` fixes that serialization bug; 229 unit tests and the local E2E gate
-passed. Source-level live acceptance on OpenCode 2.0.31 now passes: outage
-recovery delivered 31 records without discards, and reload, opt-out, cancellation
-and failure intervention were verified. The expanded standard gate passes all
-264 tests. These results do not certify packed bytes. Earlier archive passes
-remain historical evidence; rebuild and repeat applicable exact-archive gates
-after verifying the correction. See [the failure record](acceptance/2026-10-17-lifecycle-retention.json).
+The repository is public and GitHub Actions now runs. ChatGPT authentication is
+connected through OpenCode's supported sign-in. All six scoped specialists passed
+49 operation checks and produced six model reports on macOS/OpenCode 2.0.32 with
+`openai/gpt-5.6-sol`. The [specialist record](acceptance/2026-10-17-chatgpt-specialists.md)
+identifies the exact tested archive, approvals, failures and receipts.
 
-Implementation and local acceptance are
-substantial; complete production parity is not yet certified. The table separates
-working behavior from the evidence still required to close each outcome.
+Those results apply to that archive. Changes to runtime or packaged documentation
+require a new candidate and the applicable checks. No candidate has passed the
+complete release contract yet.
 
-| Outcome | Established evidence | Still required |
+| Gate | Established | Still needed |
 | --- | --- | --- |
-| Native interaction and approvals | Native menu, profiles, capability controls, readable operation review and searchable receipts; local rendered rejection and separate one-time grants | Final-candidate user journeys across the supported host/platform matrix; retain clear error/decline distinction |
-| Lifecycle | Opt-in metadata delivery to canonical Watchdog, outage/reload recovery, human RunLedger verdict, bounded failure guard and cancellation with no effect | Repeat required lifecycle journeys against the final candidate on supported platforms |
-| Six specialists | Scoped definitions and tool access enforcement exist | Successful real Understand, Build, Review, Browser, Workflow and Ship journeys, including failure paths; ordinary Build evidence does not substitute |
-| Ecosystem capability parity | Canonical source/run/test, starters, Agents SDK, knowledge, browser, service adapters and evidence access | Complete specialist/platform workflow acceptance and confirm every comparison row against the release candidate |
-| Recovery | Local fault injection, process interruption, concurrent setup, failed upgrade, repair/uninstall and independent mixed-version execution | Final-candidate supported-platform recovery evidence; do not claim arbitrary downgrade or power-loss guarantees |
-| Package and host compatibility | Exact older candidate passed pinned-source native checks on macOS/OpenCode 2.0.31 and 2.0.32; rendered 2.0.32 onboarding/manual ledger passed | A new final archive through the complete minimum/latest Linux/macOS/Windows matrix, including Windows rendered interaction |
-| Public release | Protected release automation, artifact integrity and provenance checks are implemented | Successful CI, public distribution, matching tag/release, verified provenance and actual registry consumer install/upgrade |
+| Native UI and approvals | Local native and rendered management, rejection and one-time grants | Final archive through supported host/platform journeys |
+| Lifecycle | Opt-in delivery, outage/reload recovery, cancellation and human RunLedger verdicts | Final-archive lifecycle coverage on supported platforms |
+| Specialists | Understand, Build, Review, Browser, Workflow and Ship passed with ChatGPT | Revalidate affected behavior after candidate changes; retain release evidence |
+| Capabilities | Canonical source/test, starters, Agents SDK, knowledge, browser and service workflows | Confirm the comparison against the final archive and declared platform limits |
+| Recovery | Local interruption, rollback, concurrent setup, mixed versions, repair and uninstall | Supported-platform acceptance for the final archive |
+| CI and compatibility | Fresh-install and Node 20/22 package jobs passed on Linux, macOS and Windows ([run 39044492319](https://github.com/kujolang/kujo-opencode/actions/runs/39044492319)) | Run the full minimum/latest host matrix |
+| Publication | Public repository; protected `npm-release` environment and publication workflow | npm publisher setup, reviewed candidate, matching tag, provenance and registry consumer checks |
 
-## Immediate usability correction
+The release environment requires `robertdevore` to review and prevents self-review.
+A run initiated by that account needs another eligible reviewer, or a different
+maintainer must initiate the run. Do not disable the protection to publish.
 
-The profile rejection screen previously displayed “RPC call failed” after an
-intentional Reject. f465efb adds display-only request correlation to all six
-management surfaces. A matching native rejection displays “Request declined”; an
-unmatched error remains an error. Server assertions and model tool permissions
-remain unchanged. Navigation invalidates pending feedback. Final acceptance and
-exact candidate identifiers are recorded in [the handoff](GOAL-HANDOFF.md).
+The free-model restriction remains open: scoped requests to the requested free
+providers returned HTTP 403. ChatGPT acceptance supplies a working provider path;
+it does not establish that those free-provider requests now work.
 
-## External prerequisites (last recorded checks)
+## Before promotion
 
-- Scoped Ship requests using both requested free models returned provider.auth
-  HTTP 403 before tool execution; the latest recorded repeat used OpenCode
-  2.0.32. An entitled, user-authorized provider is needed for all six live specialist
-  journeys. Do not substitute a paid model or spoof agent/provider identity.
-- GitHub run 38999467760 started no jobs because of account billing/spending
-  restrictions. This supplies no Linux or Windows test evidence.
-- npm authentication returned E401. The package lookup returned E404, which can
-  mean absent or inaccessible; publication and registry acceptance are unproven.
-- Repository visibility and release-account setup still require completion.
-  Read-only preparation is not proof of a public release.
-
-Recheck these prerequisites before relying on them for a release attempt. They
-are dated observations, not permanent claims about provider or account state.
+A preview video may show the verified macOS + ChatGPT workflow and identify it as
+a candidate. The launch video should use the published npm package after its
+consumer checks pass. Show setup, one approved operation and its receipt. Keep
+platform, provider and optional-service claims within the recorded evidence.
 
 ## Evidence index and scope
 
@@ -102,10 +85,3 @@ are dated observations, not permanent claims about provider or account state.
   requirements. A locally installed tarball is not a registry consumer install.
 - [Historical checkpoints](ACCEPTANCE-HISTORY.md): chronological implementation
   evidence. Historical successes apply only to their recorded bytes and scope.
-
-The latest tested archive is candidate `7c5ebc5`, SHA-256
-`2b8073637d7995be5b52aefafffe8003667075560301a78148282ada77b573b6`.
-It passed fresh-install/upgrade, including mixed-version projects, starters,
-browser and knowledge checks. Extended live lifecycle acceptance exposed the
-pending-approval status bug fixed in `b23b2bc`, so this archive is superseded.
-No current candidate has full acceptance.

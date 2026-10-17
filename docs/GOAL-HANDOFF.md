@@ -1,4 +1,10 @@
-# Active Kujo OpenCode parity goal
+# Kujo OpenCode acceptance handoff
+
+This document retains earlier evidence and its original scope. For current gates,
+read [release readiness](PRODUCTION-READINESS.md). All six specialists now have
+[macOS ChatGPT acceptance](acceptance/2026-10-17-chatgpt-specialists.md); older
+provider-blocked statements below describe earlier runs. The repository is public
+and CI runs. Historical passes do not certify a rebuilt archive.
 
 The full seven-outcome contract in PRODUCTION-READINESS.md remains active.
 Do not substitute tool counts, fixture-only tests or local macOS acceptance for

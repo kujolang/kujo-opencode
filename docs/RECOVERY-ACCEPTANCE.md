@@ -20,6 +20,6 @@ retain their original scope.
 
 The checked-in tests and retained acceptance receipts support the local recovery
 contracts. The remaining release work is to carry those contracts through the
-supported OS/host matrix and public registry consumer flow, and to complete all
-six scoped specialist journeys. Do not turn the documented legacy-lock conflict,
+supported OS/host matrix and public registry consumer flow, and to revalidate affected specialist journeys after runtime changes. All six
+specialists passed on the recorded macOS candidate with ChatGPT. Do not turn the documented legacy-lock conflict,
 unsupported downgrade, or power-loss boundary into a passing claim.

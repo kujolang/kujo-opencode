@@ -56,12 +56,12 @@ input, early exit and cleanup before the OpenCode journey. Windows invokes npm's
 JavaScript entrypoint through node, avoiding shell interpolation of fixture paths.
 The transport follows the upstream [pywinpty 3.0.5 API](https://github.com/andfoy/pywinpty/blob/v3.0.5/winpty/ptyprocess.py).
 
-Windows rendered-terminal acceptance and all six live specialist model journeys
-remain separate gaps: adding the ConPTY transport and CI step is not evidence that
-Windows passed. Local POSIX tests cannot close that requirement. These records are
+Windows rendered-terminal acceptance remains open. All six specialists passed
+locally with ChatGPT on macOS/OpenCode 2.0.32; that result does not prove Windows
+support. Adding ConPTY transport and a CI step does not prove Windows passed. Local POSIX tests cannot close that requirement. These records are
 required in addition to native API checks before the release report can mark the
-full platform requirement passed. A CI billing failure before jobs start supplies
-no compatibility evidence.
+full platform requirement passed. CI now runs in the public repository. A job that never starts supplies no
+compatibility evidence.
 
 For local rendered acceptance after installing tests/requirements-tui.txt in
 a private Python environment (Windows requires its conditional pywinpty wheel):

@@ -13,12 +13,12 @@ validation.
 
 | Service task | OpenCode behavior | Verification and remaining scope |
 | --- | --- | --- |
-| Watchdog lifecycle | Explicitly enabled metadata delivery, bounded durable retry and canonical RunLedger correlation; loopback service only | Canonical delivery and lost-acknowledgement checks exist; remaining real lifecycle/platform scenarios remain in production readiness |
+| Watchdog lifecycle | Explicitly enabled metadata delivery, bounded durable retry and canonical RunLedger correlation; loopback service only | Canonical delivery and lost-acknowledgement checks exist; remaining lifecycle/platform checks are listed in production readiness |
 | Watchdog service management | Explicit local start/status/stop; no automatic start | CMD offers the same local service commands |
 | Configured Watchdog reads | Opt-in loopback HTTP or remote HTTPS API reads with query filters and separate credentials; no proxy routes | Canonical API-record/readiness and auth-rejection acceptance pass; this closes the telemetry-read comparison gap with Pi. Model proxy routes remain outside the adapter contract |
-| Leash intervention | Reviewed canonical event POST, destination-bound native approval, registered-device JWT; server owns routing and decisions | Actual daemon v2, duplicate, invalid event and invalid credential checks pass; actual80x24 Build-agent operation review, native rejection and once-approved delivery pass |
+| Leash intervention | Reviewed canonical event POST, destination-bound native approval, registered-device JWT; server owns routing and decisions | Actual daemon v2, duplicate, invalid event and invalid credential checks pass; actual 80×24 Build-agent operation review, native rejection and once-approved delivery pass |
 | Application discovery | Explicit configured gateway GET, canonical identities, schemas, effects and execution paths | Actual CMS six-tool discovery and invalid-auth rejection pass |
-| Application execution | Exact reviewed descriptor/input/origin, stable remote invocation/key, separate native approval and optional server-issued approval; validated canonical receipts | Actual CMS read, approval-required, granted SEO mutation, replay and changed-input refusal pass; actual80x24 native operation review, rejection without mutation and once-approved CMS mutation pass |
+| Application execution | Exact reviewed descriptor/input/origin, stable remote invocation/key, separate native approval and optional server-issued approval; validated canonical receipts | Actual CMS read, approval-required, granted SEO mutation, replay and changed-input refusal pass; actual 80×24 native operation review, rejection without mutation and once-approved CMS mutation pass |
 | Remote human decisions | Leash delivery and gateway execution receipts report only observed state | Delivery never means approval. The application issues its grants and owns workflow resumption; no adapter auto-approval or approval-issuing tool exists |
 
 The source comparison for service edges is Kujo Pi

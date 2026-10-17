@@ -36,6 +36,7 @@ for (const required of [
   "lib/version.mjs",
   "assets/opencode/skills/kujo-opencode/SKILL.md",
   "docs/PROVENANCE.md",
+  "docs/USER-GUIDE.md",
   "docs/SERVICE-SUPPORT.md",
   "docs/COMPATIBILITY.md",
   "docs/RELEASING.md",

@@ -10,7 +10,8 @@ source directories.
 The default profile is intentionally small. Profiles only control discovery;
 they do not grant permission. Read effects are allowed by the local Ability
 runtime. Write, delete, and external effects require a request-bound,
-short-lived, one-time approval issued with `kujo-opencode approve`. OpenCode's
+short-lived, one-time approval. The native plugin requests it through OpenCode;
+the MCP fallback uses `kujo-opencode approve` in a human terminal. OpenCode's
 own tool permission remains an independent outer boundary.
 
 Paths are resolved component-by-component beneath the configured project and

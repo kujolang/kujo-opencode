@@ -5,7 +5,10 @@ open-item statements may be superseded. Use [current readiness](PRODUCTION-READI
 for the completion contract and present evidence gaps. None of these checkpoints
 certifies a later archive automatically.
 
-## External gates (2026-10-16)
+## External gates (2026-10-16, superseded in part)
+
+The repository later became public, CI resumed, and all six specialists passed
+with ChatGPT on macOS. See [current readiness](PRODUCTION-READINESS.md).
 
 - npm authentication unavailable in prior check (E401); registry publication not
   done. Recheck before publishing. Never store credentials in evidence.

@@ -55,7 +55,7 @@ tests that archive's fresh install/0.1.0 upgrade on Linux, verifies it again and
 retains the candidate/evidence as a GitHub artifact. It has read-only repository
 permissions and no npm credentials, OIDC token or release-writing permissions.
 Artifact retention after failure preserves diagnosis; it is not a passing result.
-This workflow has not yet run successfully while account billing blocks CI.
+The repository is public and CI can run. A successful candidate run is still required for the final source commit.
 
 Publication remains a separate required gate: supported host/OS acceptance,
 all live specialist workflows, protected release approval, matching version/tag,
@@ -67,12 +67,13 @@ release is claimed by candidate preparation.
 ## Protected publication workflow
 
 `publish.yml` is a manually dispatched, tag-only publication path. It is prepared
-but has not run successfully. The repository is currently private and has no
-`npm-release` environment; those facts, CI billing, provider-rejected specialist
-acceptance and npm authorization remain release blockers.
+but has not published a release. The repository is public. The `npm-release`
+environment requires `robertdevore` to review, prevents self-review and permits
+only `v*` tags. npm authorization and complete candidate acceptance remain open.
 
-Before using it, the repository must be public, and an administrator must configure
-`npm-release` with required reviewers and prevention of self-review. Configure the
+Keep the release protections in place. A reviewer cannot approve a run they
+initiated: use a different maintainer to dispatch, or add another eligible reviewer.
+At the desk, configure the
 npm trusted publisher for `kujolang/kujo-opencode`, workflow `publish.yml`, and
 environment `npm-release`, permitting direct publishing. No npm token is stored in
 the workflow. npm requires Node 22.14+ and npm 11.5.1+ for trusted publishing;

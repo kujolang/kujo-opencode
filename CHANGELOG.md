@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.2.0
+## 0.2.0 — unreleased
+
+- Fix Windows project activation paths and invoke npm without a command shell.
+- Shorten the getting-started guide, add ChatGPT setup and separate daily-use documentation.
+- Verify all six specialists with ChatGPT on macOS; full release acceptance remains pending.
 
 - Keep lifecycle queue status readable while a management approval is pending, without releasing serialized mutations.
 
@@ -24,7 +28,7 @@
 - Accept friendly profile, product, and tool names; preserve overrides on repeated setup.
 - Review and execute pending approvals by request ID in a human terminal.
 - Keep canonical Ability policy, one-time approvals, receipts and idempotency unchanged.
-- Public npm publication remains pending registry authentication.
+- Public npm publication remains pending candidate acceptance and publisher setup.
 
 ## 0.1.0 — 2026-10-16
 
