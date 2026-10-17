@@ -16,7 +16,7 @@ export async function nativeBrowserAcceptance({api,project,dataRoot,model,interr
  }catch(error){await interrupt(session.id).catch(()=>{});throw error;}
 }
 
-export async function prepareBrowser({api,session}) {
+export async function prepareBrowser({api,session,pollMs=250,timeoutMs=960000}) {
  const status=async()=>(await api('/api/rpc/kujo.control/browser',{input:{sessionID:session.id,action:'status'}},20000)).output;
  const before=await status();let installed=false;
   if(!before.ready){
@@ -32,7 +32,9 @@ export async function prepareBrowser({api,session}) {
    await api(`/api/session/${session.id}/permission/${permission.id}/reply`,{decision:'once'});
    const outcome=await request;if(outcome.error)throw outcome.error;installed=true;
   }
-  const after=await status();assert.equal(after.ready,true);
+  let after=await status();const deadline=Date.now()+timeoutMs;
+  while(after.state==='installing'&&Date.now()<deadline){await delay(pollMs);after=await status();}
+  assert.equal(after.ready,true,`Browser setup did not become ready: ${JSON.stringify(after)}`);
   assert.equal((await api(`/api/session/${session.id}/permission`)).data.length,0);
  return {before,after,installed};
 }

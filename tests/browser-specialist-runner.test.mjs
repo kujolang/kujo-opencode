@@ -20,3 +20,9 @@ test('Browser setup grants only the exact isolated native installation once',asy
 for(const [name,permission] of Object.entries({persistent:{id:'owned-permission',action:'kujo.browser.setup',save:['*'],metadata:{operation:'install'}},wrongAction:{id:'owned-permission',action:'kujo.ability.approve',save:[],metadata:{operation:'install'}},wrongOperation:{id:'owned-permission',action:'kujo.browser.setup',save:[],metadata:{operation:'recover'}}}))test(`Browser setup refuses ${name} permission`,async()=>{const f=fixture({permission});await assert.rejects(prepareBrowser(f));assert.equal(f.calls.filter(c=>c.path.endsWith('/reply')).length,0);});
 test('Browser setup preserves installer failure',async()=>{await assert.rejects(prepareBrowser(fixture({installError:true})),/Installation failed/);});
 test('Browser setup requires a successful post-install launch probe',async()=>{await assert.rejects(prepareBrowser(fixture({afterReady:false})));});
+
+test('Browser setup waits for the asynchronous native job before checking readiness',async()=>{
+ const f=fixture();const api=f.api;let states=0;
+ f.api=async(path,body)=>{const result=await api(path,body);if(body?.input?.action==='status'&&states++===1)return {output:{ready:false,state:'installing',phase:'browser'}};return result;};
+ assert.equal((await prepareBrowser({...f,pollMs:0})).after.ready,true);assert.equal(states,3);
+});
