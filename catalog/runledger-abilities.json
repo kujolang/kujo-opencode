@@ -3,14 +3,13 @@
     "definition": {
       "schema": "kujo.ability/v1",
       "id": "kujo.opencode.runledger.correlate",
-      "version": "1.0.0",
-      "title": "Link session RunLedger to Watchdog",
-      "description": "Record an explicit Watchdog trace link in canonical RunLedger without copying telemetry or changing the verdict.",
+      "version": "1.1.0",
+      "title": "Link RunLedger evidence",
+      "description": "Record an explicit Watchdog trace or Eval run link in canonical RunLedger without copying evidence or changing the verdict. Supply at least one link.",
       "input_schema": {
         "type": "object",
         "required": [
-          "run_id",
-          "watchdog_trace_id"
+          "run_id"
         ],
         "properties": {
           "path": {
@@ -32,6 +31,12 @@
           "watchdog_trace_id": {
             "type": "string",
             "pattern": "^[a-f0-9]{32}$"
+          },
+          "eval_run_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
           }
         },
         "additionalProperties": false
@@ -56,7 +61,7 @@
     },
     "tool": {
       "name": "kujo_runledger_correlate",
-      "description": "Record an explicit Watchdog trace link in canonical RunLedger without copying telemetry or changing the verdict. Requires one-time approval."
+      "description": "Record an explicit Watchdog trace or Eval run link in canonical RunLedger without copying evidence or changing the verdict. Supply at least one link. Requires one-time approval."
     },
     "adapter": "runledger_correlate",
     "source": "runledger"

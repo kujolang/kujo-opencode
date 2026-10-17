@@ -67,3 +67,11 @@ test('Dispatch inspection rejects escaping identifiers and symlinked canonical s
  await mkdir(join(root,'runs/.dispatch'));await writeFile(join(root,'outside'),'private');await symlink(join(root,'outside'),join(root,'runs/.dispatch/state.db'));
  await assert.rejects(adapter({path:'.',run_id:'run-one',output_dir:'runs'},{}),{code:'ability_path_invalid'});
 });
+
+test('RunLedger correlation requires explicit bounded links and confined records',async()=>{
+ const {symlink}=await import('node:fs/promises');const root=await mkdtemp(join(tmpdir(),'kujo-ledger-link-'));await mkdir(join(root,'.runledger/runs'),{recursive:true});
+ const adapter=handlers({project:root,runtime:null,config:{kujo_bin:'must-not-execute',sources:{runledger:{path:root}}}}).runledger_correlate;
+ for(const input of [{run_id:'run-one'},{run_id:'../escape',eval_run_id:'eval-one'},{run_id:'run-one',eval_run_id:'--help'},{run_id:'run-one',watchdog_trace_id:'not-a-trace'}])await assert.rejects(adapter(input,{}),{code:'ability_input_invalid'});
+ await writeFile(join(root,'outside'),'{}');await symlink(join(root,'outside'),join(root,'.runledger/runs/run-one.json'));
+ await assert.rejects(adapter({run_id:'run-one',eval_run_id:'eval-one'},{}),{code:'ability_path_invalid'});
+});

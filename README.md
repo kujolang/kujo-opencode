@@ -288,7 +288,9 @@ allowlist and denies raw shell, edits, network tools and delegation by default.
 Normal approvals still apply to its declared effects. Selecting a specialist
 does not enable capabilities or start inference; the picker reports missing
 exposure. Change the profile separately when needed. Build supports reviewed
-run/test, starter creation, MCP generation and Agents SDK fixtures. Ship gathers evidence; it does not publish releases.
+run/test, starter creation, MCP generation and Agents SDK fixtures. Ship gathers evidence; it does not publish releases. RunLedger correlation accepts
+an explicit `watchdog_trace_id`, `eval_run_id`, or both. Linking requires approval
+and preserves the verdict; it does not turn a failed evaluation into success.
 
 ## Find and export evidence
 
