@@ -1093,3 +1093,42 @@ specialists, remaining lifecycle/recovery and final release/platform gates remai
 required. This checkpoint changes tests and documentation, not production code. The
 packaged service-support documentation changes package bytes, so a final exact
 candidate still requires its own certification.
+
+## Readable native operation review (2026-10-16)
+
+Commit842eb88 adds a read-only native review for pending Kujo Ability requests.
+It shows the friendly operation name/identity, destination when supplied, effects,
+exact input and approval identity. Long values are fully paged; control and bidi
+characters render as escaped data, and wide text fits the bounded pages. Returning
+to the native permission choice or closing the review grants nothing. OpenCode
+still owns Allow once/Reject; canonical approval follows the existing server-side
+revalidation. Review pending approval in /kujo or the command palette reopens
+the current host request. No permission-reply API is used by the review.
+
+Requests are scoped to the current session and canonical project. The supported
+host event location is optional; present locations must match the current or
+server-confirmed canonical workspace. Requests queue behind another Kujo dialog;
+replies, navigation and unload suppress stale displays. Reconnection can use the
+explicit review action to synchronize pending requests. Automatic replay of
+missed permission events is not claimed.
+
+160 offline tests, canonical E2E,30 focused UI tests and isolated OpenCode2.0.31
+host discovery pass. Actual80x24 terminal fixturepyu65jyh passed the visible
+free-model Leash task: readable operation/destination/effects/input pages, return
+to native rejection with no event, then a separate review and once-approved
+request with exactly one canonical event and successful receipt. Screenshots,
+verification.json and leash-delivery-evidence.json remain under
+/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-pyu65jyh.
+Logs: /tmp/kujo-readable-approval-{all-accepted,e2e-final,host-final,rendered4}.log.
+Earlier im1fnkmz and ejwlxq1f did not display the review and failed acceptance;
+qft8anua failed with ENOSPC before reaching the operation. None is passing evidence.
+
+The previously live packed gateXxNfoA ended with Chromium installation failure;
+/tmp/kujo-services-packed.log retains the terminal error. Its generic diagnostic
+does not establish whether download connectivity, disk space or another installer
+condition caused that failure. No final packed acceptance is claimed. Generated
+runtime/source/cache copies of explicitly identified completed fixtures were
+removed to recover disk space; snapshots, receipts, manifests, package archives
+and logs remain. Final immutable packaging, supported host/OS matrix, gateway
+rendered execution, all six live specialists and the remaining lifecycle/recovery
+and public release requirements retain their original scope.
