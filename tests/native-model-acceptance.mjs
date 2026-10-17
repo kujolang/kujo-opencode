@@ -53,3 +53,33 @@ export async function nativeModelAcceptance({api,project,dataRoot,model}) {
  }
  return evidence;
 }
+
+export async function nativeFailureGuardAcceptance({api,project,dataRoot,model}) {
+ const split=model.indexOf('/');assert.ok(split>0);
+ const modelRef={providerID:model.slice(0,split),id:model.slice(split+1)};
+ const session=(await api('/api/session',{title:'Kujo bounded failure guard acceptance',location:{directory:await realpath(project)},model:modelRef,agent:'build'})).data;
+ const input={path:'.kujo-acceptance-missing-directory'};
+ await assert.rejects(access(join(project,input.path)),{code:'ENOENT'});
+ const inference=api(`/api/session/${session.id}/prompt`,{text:`This is an isolated failure-handling test. Call kujo_shipcheck_scan exactly three times sequentially, each with ${JSON.stringify(input)}. The path intentionally does not exist. Do not fix it, use another tool, or make a fourth call. After the third call, stop.`},180000);
+ let inferenceError;inference.catch(error=>{inferenceError=error;});
+ let notification;
+ for(let attempt=0;attempt<240;attempt++){
+  assertProviderHealthy(await api(`/api/session/${session.id}/message?limit=10`));
+  const inbox=await api(`/api/session/${session.id}/inbox`);
+  if(JSON.stringify(inbox).includes('Kujo paused this session after three consecutive failures')){notification=true;break;}
+  if(inferenceError)throw inferenceError;
+  await delay(500);
+ }
+ assert.equal(notification,true,'Guard must acknowledge native interruption and deliver its non-resuming notice');
+ await inference;
+ const state=(await api('/api/rpc/kujo.control/lifecycle',{input:{sessionID:session.id,action:'status'}})).output;
+ assert.equal(state.enabled,false,'Guard-only acceptance must not enable telemetry');
+ assert.equal(state.intervention.interventions,1);assert.equal(state.intervention.attention,0);
+ const receipts=(await readFile(join(dataRoot,'receipts.jsonl'),'utf8')).trim().split('\n').filter(Boolean).map(line=>JSON.parse(line)).filter(r=>r.metadata?.session_id===session.id);
+ const failures=receipts.filter(r=>r.ability_id==='kujo.shipcheck.repository.scan'&&r.status==='failed');
+ assert.equal(failures.length,3,'Exactly three failed canonical scans, without automatic retries');
+ assert.ok(failures.every(r=>r.surface==='plugin'&&r.metadata.model_id===model&&r.metadata.agent_id==='build'&&!r.approval_id));
+ assert.equal(receipts.some(r=>r.status==='succeeded'),false);
+ assert.equal((await api(`/api/session/${session.id}/permission`)).data.length,0);
+ return {session_id:session.id,model,agent:'build',interventions:1,notification:true,telemetry_enabled:false,failed_receipts:failures.map(r=>r.receipt_id),approval_granted:false};
+}
