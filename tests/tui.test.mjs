@@ -4,10 +4,10 @@ import {setupTui} from '../lib/tui.mjs';
 import {scopedHostContext} from '../lib/plugin-scope.mjs';
 import {homePaths,withDataRoot} from '../lib/paths.mjs';
 
-function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[]}={}) {
- const calls=[],alerts=[],toasts=[];let commands,eventHandler,stopped=false;
+function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[],home=false,waitCreate}={}) {
+ const calls=[],alerts=[],toasts=[];let commands,eventHandler,stopped=false,route=home?{type:'home'}:{type:'session',sessionID:'fixture-session'};
  const location={directory:'/fixture/project'};
- const ctx={location,client:{rpc:definition=>{
+ const ctx={location,client:{session:{create:async input=>{calls.push({method:'createSession',input});if(waitCreate)await waitCreate;return {id:'new-session'};}},rpc:definition=>{
   assert.equal(definition.id,'kujo.control');
   return {events:{on:(_name,handler)=>{eventHandler=handler;return ()=>stopped=true;}},...Object.fromEntries(['completion','status','profile','evidence','specialist','capability','evidenceDetail','artifact','compare','lifecycle','runledger','browser','knowledge'].map(method=>[method,async(input,options)=>{
    calls.push({method,input,options});assert.deepEqual(options,{location});
@@ -24,9 +24,9 @@ function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts
    if(method==='compare')return {same_ability:true,notice:'Timing is informational'};
    return {receipts:evidenceReceipts,coverage:'Recent retained evidence'};
   }]))};
- }},ui:{router:{current:()=>({type:'session',sessionID:'fixture-session'})},dialog:{prompt:async()=>prompts.shift(),alert:async value=>alerts.push(value),select:async()=>choices.shift()},toast:{show:value=>toasts.push(value)}},keymap:{layer:factory=>{commands=factory().commands;}}};
+ }},ui:{router:{current:()=>route,navigate:next=>{route=next;}},dialog:{prompt:async()=>prompts.shift(),alert:async value=>alerts.push(value),select:async()=>choices.shift()},toast:{show:value=>toasts.push(value)}},keymap:{layer:factory=>{commands=factory().commands;}}};
  const cleanup=setupTui(ctx);
- return {calls,alerts,toasts,cleanup,event:async(sessionID='fixture-session',directory=location.directory)=>{if(!stopped)await eventHandler({location:{directory},data:{sessionID}});},run:id=>commands.find(c=>c.id===id).run()};
+ return {calls,alerts,toasts,cleanup,route:()=>route,event:async(sessionID='fixture-session',directory=location.directory)=>{if(!stopped)await eventHandler({location:{directory},data:{sessionID}});},run:id=>commands.find(c=>c.id===id).run()};
 }
 test('native UI is idle until invoked and routes status and evidence to its workspace',async()=>{
  const f=fixture({choices:['check','project']});assert.equal(f.calls.length,0);
@@ -123,3 +123,17 @@ test('knowledge menu requires explicit corpus review before indexing and retains
   for(const choices of [[],['later'],['finish']]){const f=fixture({choices});await f.event();assert.deepEqual(f.calls.map(c=>c.method),['completion']);}
   const denied=fixture({choices:['finish','pass'],profileError:'Human declined'});await denied.event();assert.match(denied.alerts[0].message,/Human declined/);assert.equal(denied.toasts.length,0);
  });
+
+test('home-screen setup creates a project session only after selection and continues without inference',async()=>{
+ const f=fixture({home:true,choices:['create','review']});await f.run('kujo.profile');
+ assert.deepEqual(f.calls.map(c=>c.method),['createSession','status','profile']);
+ assert.deepEqual(f.calls[0].input,{title:'Kujo workspace',location:{directory:'/fixture/project'}});
+ assert.deepEqual(f.route(),{type:'session',sessionID:'new-session'});
+ assert.equal(f.calls[2].input.sessionID,'new-session');
+ for(const choices of [[],['cancel']]){const cancel=fixture({home:true,choices});await cancel.run('kujo.profile');assert.equal(cancel.calls.length,0);assert.equal(cancel.route().type,'home');}
+});
+test('unload during session creation does not navigate or continue setup',async()=>{
+ let release;const f=fixture({home:true,choices:['create'],waitCreate:new Promise(r=>release=r)});
+ const pending=f.run('kujo.profile');await new Promise(r=>setImmediate(r));f.cleanup();release();await pending;
+ assert.deepEqual(f.calls.map(c=>c.method),['createSession']);assert.equal(f.route().type,'home');
+});

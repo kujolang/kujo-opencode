@@ -466,3 +466,11 @@ journal** handles a stopped writer and refuses live ownership. Disable tracking
 to stop new requests. Unload, disable and session cancellation prevent a late
 approval from starting a new record; inspect canonical state if a command had
 already begun. A host permission dialog may still require dismissal.
+
+### Starting from OpenCode’s home screen
+
+Open `/kujo` and choose the setup action you need. If no session is open, choose
+**Create a project session** to continue directly. This creates an empty session
+in the current workspace without sending a prompt or calling a model. Cancel
+leaves your workspace and session list unchanged. Capability changes and tool
+effects still require their normal approvals.
