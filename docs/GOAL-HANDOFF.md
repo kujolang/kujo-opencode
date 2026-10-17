@@ -4,7 +4,7 @@ The full seven-outcome contract in PRODUCTION-READINESS.md remains active.
 Do not substitute tool counts, fixture-only tests or local macOS acceptance for
 live specialist, supported host/platform and public release acceptance.
 
-## Current package evidence
+## Earlier package evidence
 
 Source candidate:752c40947d69f5f3419c6eb847e1ae5f72b43d67.
 Bundle:/tmp/kujo-release-snapshot-JGfXtD/candidate.
@@ -62,20 +62,65 @@ acknowledgement preceded tool execution; the harness now waits for the receipt
 and the documented host idle endpoint. R1hwDP established initial recovery;
 P0HmiB adds explicit post-opt-out assistant observation and source hashes.
 
+## Cancellation and mixed-version acceptance
+
+31346d9 clears only the exact owned native permission after tool cancellation,
+using a bounded reject-only cleanup. It never grants a permission. OpenCode
+2.0.31 with explicit opencode/glm-5.3-flash-free ordinary Build passed in PJMFOf:
+no effect, no approval, zero pending permissions, and one metadata-only canonical
+Watchdog cancellation event. 175 offline tests, canonical E2E and isolated host
+discovery pass. Logs: /tmp/kujo-cancellation-{all,e2e,host}.log and
+/tmp/kujo-native-cancellation-scoped.log. The fixture retains cancellation-evidence,
+verification and candidate-verification JSON. All 69 runtime payload files match
+new candidate /tmp/kujo-cancellation-candidate, source 31346d9,
+SHA256 22828c2a9efe33e714a4f1b95235b5e75544c7a6b7e9c8d02edb2509aa7cf884.
+This supersedes the earlier candidate for current executable bytes. The complete
+fresh-install/actual 0.1.0 upgrade gate passed in OcFOAs with 28 pinned sources,
+mixed-version repair/uninstall execution, four starters/services, Agents SDK,
+RunLedger, knowledge and real Chromium/Lens. /tmp/kujo-cancellation-fresh.log and
+OcFOAs/verification.json record the exact commit/hash/integrity. Its generated
+workdirs were cleaned by the successful gate; tarballs and proof remain. Prior
+candidate evidence remains historical. release:verify passed for the new bundle.
+
+The earlier XGHjhh check incorrectly rejected a successful native discovery call
+that preceded the pending write. The corrected assertion uses the exact pending
+tool-call ID. IzUkG8 exposed the real stale-permission defect before cleanup was
+implemented. Neither failed fixture counts as accepted cancellation evidence.
+
+1b34eaa adds real 0.1.0 and 0.2.0 MCP execution before and after a third project's
+repair and uninstall, with unchanged other-project configs and READMEs. The
+standalone check passed on retained packed fixture 6s1lnD; proof is
+mixed-version-verification.json and /tmp/kujo-mixed-version-integrated-check.log.
+It is now wired into the full fresh-install gate before switching data roots.
+The additional failed-upgrade case in d8ad6e0 uses the actual new CLI with an
+empty source root, then verifies both versions still execute and other configs
+remain unchanged. This also passed after installing the new candidate into the
+retained fixture's prefix: /tmp/kujo-mixed-candidate-final.log (uOWsWP). The full
+fresh gate started before this additional case; its mixed-version checks cover
+repair/uninstall, while this separate run supplies failed-upgrade evidence.
+
 ## Next acceptance work
 
-- Live cancellation telemetry while an Ability awaits permission. Delivery,
-  service outage, host reload, opt-out and the live failure guard now have actual
-  host evidence. Automatic-start cancellation and canonical lost-acknowledgement
-  reconciliation already have separate tests; retain their exact scopes.
+- Carry the new candidate through the remaining live specialist/platform/release
+  gates. Its full local install/upgrade gate has passed. Delivery,
+  service outage, host reload, opt-out, cancellation and live failure intervention
+  now have actual host evidence at their recorded payload revisions. Preserve
+  those scopes; earlier candidate bytes do not certify the cancellation fix.
 - All six scoped specialist workflows. Free-provider scoped Ship attempts fail
   with provider.auth403; ordinary Build succeeds. Do not spoof provider clients,
   rewrite agent identities to evade restrictions or silently use a paid fallback.
-- Remaining mixed-version/multiproject recovery scenarios, supported OS and
-  minimum/latest host matrix, protected publication, signed provenance and public
-  registry install/upgrade. The candidate workflow only prepares/tests artifacts.
-- npm authentication and GitHub billing/spending blocks were rechecked in the
-  preceding checkpoint. They do not prevent remaining local implementation work.
+- Complete the requirement-by-requirement recovery audit using the existing
+  crash/concurrency/rollback tests and the new actual multi-project/version
+  execution evidence. Do not repeat already-proved repair/uninstall scenarios
+  without a concrete uncovered case.
+- Supported OS/minimum-latest host matrix, protected publication, signed provenance
+  and public registry install/upgrade. The candidate workflow only prepares/tests
+  artifacts.
+- External blocks rechecked this pass: npm whoami E401; GitHub run 38999467760
+  (05ff64e) has no executed steps, annotation 117299127863 cites account payments
+  or spending limit. Scoped Ship with GLM free again fails provider.auth HTTP403
+  before execution (/tmp/kujo-specialist-ship-recheck.log). These do not prevent
+  remaining local release-workflow implementation.
 
 Strata Agent Notes handoff:1bca6881-719a-4e15-b140-12402af46564. Consult its latest
 revision for active process handles; historical logs and earlier failure fixtures
