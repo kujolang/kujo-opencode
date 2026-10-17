@@ -1,4 +1,3 @@
-import './native-specialist-runner.test.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {loadCatalog,profileAbilities} from '../lib/catalog.mjs';
@@ -50,6 +49,3 @@ test('Build specialist scenario exercises the real runtime and retained failures
  const evidence=JSON.parse(result.stdout.trim());assert.equal(evidence.ok,true);assert.equal(evidence.steps,8);assert.equal(evidence.live_specialist,false);assert.equal(evidence.native_approval,false);
 });
 
-import './browser-specialist-runner.test.mjs';
-import './native-specialist-report.test.mjs';
-import './lost-http-reply.test.mjs';

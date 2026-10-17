@@ -85,4 +85,3 @@ test('Dispatch discovery rejects index traversal and symlinked run state before 
  await assert.rejects(adapter({output_dir:'runs'},{}),{code:'ability_path_invalid'});
 });
 
-import './dispatch-decision.test.mjs';
