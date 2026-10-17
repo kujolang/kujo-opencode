@@ -2,9 +2,10 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
-import {readFile,writeFile,mkdir,lstat,readdir,realpath} from 'node:fs/promises';
+import {readFile,writeFile,mkdir,lstat,readdir,realpath,mkdtemp,rm} from 'node:fs/promises';
 import {resolve,join,relative,isAbsolute} from 'node:path';
 import {pathToFileURL} from 'node:url';
+import {tmpdir} from 'node:os';
 const exec=promisify(execFile);
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const json=async path=>JSON.parse(await readFile(path,'utf8'));
@@ -25,27 +26,33 @@ export async function buildCandidate(root,destination){
   assert.ok(rel.startsWith('..'+(process.platform==='win32'?'\\':'/'))||rel==='..'||isAbsolute(rel),'Candidate directory must be outside the repository');
   await clean(root);
   const commit=await git(['rev-parse','HEAD'],root),tree=await git(['rev-parse','HEAD^{tree}'],root);
-  const pkg=await json(join(root,'package.json'));
+  const snapshot=await mkdtemp(join(tmpdir(),'kujo-release-source-'));
+  try {
+  const source=join(snapshot,'source');await mkdir(source);
+  await git(['archive','--format=tar','--output='+join(snapshot,'source.tar'),commit],root);
+  await exec('tar',['-xf',join(snapshot,'source.tar'),'-C',source]);
+  const pkg=await json(join(source,'package.json'));
   await mkdir(destination); // Exclusive: never replace a prior candidate.
-  const packed=JSON.parse((await npm(['pack','--json','--pack-destination',destination],root)).stdout)[0];
+  const packed=JSON.parse((await npm(['pack','--json','--pack-destination',destination],source)).stdout)[0];
   assert.ok(filename(packed.filename)&&packed.filename.endsWith('.tgz'),'Invalid npm archive name');
   assert.equal(packed.name,pkg.name);assert.equal(packed.version,pkg.version);
   const tarball=await readFile(join(destination,packed.filename));
   const integrity='sha512-'+createHash('sha512').update(tarball).digest('base64');
   assert.equal(packed.integrity,integrity,'npm archive integrity mismatch');
-  const sbom=JSON.parse((await npm(['sbom','--package-lock-only','--omit=dev','--sbom-format=cyclonedx'],root)).stdout);
+  const sbom=JSON.parse((await npm(['sbom','--package-lock-only','--omit=dev','--sbom-format=cyclonedx'],source)).stdout);
   assert.equal(sbom.bomFormat,'CycloneDX');
-  const sources=await json(join(root,'catalog/sources.json'));
+  const sources=await json(join(source,'catalog/sources.json'));
   assert.ok(sources.sources.every(source=>/^[a-f0-9]{40}$/.test(source.commit)),'Unpinned source');
-  const provenance={schema:'kujo.opencode.build-record/v1',signed:false,commit,tree,node:process.version,npm:(await npm(['--version'],root)).stdout.trim(),platform:process.platform,arch:process.arch,runtime:await json(join(root,'.generated/BUILD.json')),gateway:await json(join(root,'.generated/GATEWAY-CONTRACT.json')),sbom_scope:'Production npm lockfile dependencies, including optional platforms; source repositories listed separately. Not an installed-machine inventory.'};
-  for(const [name,value] of Object.entries({'sbom.cdx.json':encode(sbom),'sources.json':encode(sources),'build-record.json':encode(provenance),'package-lock.json':await readFile(join(root,'package-lock.json'))}))await writeFile(join(destination,name),value,{flag:'wx'});
+  const provenance={schema:'kujo.opencode.build-record/v1',signed:false,commit,tree,node:process.version,npm:(await npm(['--version'],root)).stdout.trim(),platform:process.platform,arch:process.arch,runtime:await json(join(source,'.generated/BUILD.json')),gateway:await json(join(source,'.generated/GATEWAY-CONTRACT.json')),sbom_scope:'Production npm lockfile dependencies, including optional platforms; source repositories listed separately. Not an installed-machine inventory.'};
+  for(const [name,value] of Object.entries({'sbom.cdx.json':encode(sbom),'sources.json':encode(sources),'build-record.json':encode(provenance),'package-lock.json':await readFile(join(source,'package-lock.json'))}))await writeFile(join(destination,name),value,{flag:'wx'});
   await clean(root);assert.equal(await git(['rev-parse','HEAD'],root),commit,'Source changed during packing');
   const files={};for(const name of (await readdir(destination)).sort())files[name]=sha(await readFile(join(destination,name)));
   const candidate={schema:'kujo.opencode.candidate/v1',name:pkg.name,version:pkg.version,commit,tree,archive:packed.filename,integrity,files,acceptance:'pending',published:false};
   await writeFile(join(destination,'candidate.json'),encode(candidate),{flag:'wx'});
   const checksums={...files,'candidate.json':sha(await readFile(join(destination,'candidate.json')))};
   await writeFile(join(destination,'SHA256SUMS'),Object.entries(checksums).sort(([a],[b])=>a.localeCompare(b)).map(([name,digest])=>`${digest}  ${name}\n`).join(''),{flag:'wx'});
-  return verifyCandidate(destination);
+  return await verifyCandidate(destination);
+  } finally {await rm(snapshot,{recursive:true,force:true});}
 }
 export async function verifyCandidate(directory){
   directory=await realpath(directory);

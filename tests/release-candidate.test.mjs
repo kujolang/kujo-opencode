@@ -9,8 +9,9 @@ import {buildCandidate,verifyCandidate} from '../scripts/release-candidate.mjs';
 const exec=promisify(execFile);
 test('candidate packs committed bytes and refuses dirt, overwrite, mutation and redirected files',async t=>{
  const base=await mkdtemp(join(tmpdir(),'kujo-candidate-contract-'));t.after(()=>rm(base,{recursive:true,force:true}));const repo=join(base,'repo');await mkdir(repo);
- const pkg={name:'@fixture/candidate',version:'1.0.0',files:['index.mjs'],type:'module'};
+ const pkg={name:'@fixture/candidate',version:'1.0.0',files:['*.mjs'],type:'module'};
  await writeFile(join(repo,'package.json'),JSON.stringify(pkg));await writeFile(join(repo,'index.mjs'),'export const value=1;\n');
+ await writeFile(join(repo,'.gitignore'),'ignored.mjs\n');
  await writeFile(join(repo,'package-lock.json'),JSON.stringify({name:pkg.name,version:pkg.version,lockfileVersion:3,packages:{'':{name:pkg.name,version:pkg.version}}}));
  await mkdir(join(repo,'catalog'));await mkdir(join(repo,'.generated'));
  await writeFile(join(repo,'catalog/sources.json'),JSON.stringify({sources:[{id:'fixture',commit:'a'.repeat(40)}]}));
@@ -18,7 +19,10 @@ test('candidate packs committed bytes and refuses dirt, overwrite, mutation and 
  const git=async args=>exec('git',args,{cwd:repo});await git(['init','-q']);await git(['add','.']);await git(['-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','fixture']);
  await assert.rejects(buildCandidate(repo,join(repo,'candidate')),/outside/);
  await writeFile(join(repo,'untracked'),'private');await assert.rejects(buildCandidate(repo,join(base,'dirty')),/clean/);await rm(join(repo,'untracked'));
+ await writeFile(join(repo,'ignored.mjs'),'private ignored content');
  const directory=join(base,'candidate');const candidate=await buildCandidate(repo,directory);
+ const inventory=JSON.parse((await exec(process.execPath,[process.env.npm_execpath,'pack','--dry-run','--ignore-scripts','--json',join(directory,candidate.archive)],{cwd:base})).stdout)[0];
+ assert.ok(inventory.files.some(file=>file.path==='index.mjs'));assert.ok(!inventory.files.some(file=>file.path==='ignored.mjs'));
  assert.equal(candidate.name,pkg.name);assert.equal(candidate.version,pkg.version);assert.equal(candidate.acceptance,'pending');assert.equal(candidate.published,false);assert.equal(candidate.commit,(await git(['rev-parse','HEAD'])).stdout.trim());
  await assert.rejects(buildCandidate(repo,directory),{code:'EEXIST'});
  const archive=join(directory,candidate.archive),bytes=await readFile(archive);await writeFile(archive,Buffer.concat([bytes,Buffer.from('changed')]));await assert.rejects(verifyCandidate(directory),/Changed candidate file/);await writeFile(archive,bytes);

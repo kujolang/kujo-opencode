@@ -15,7 +15,8 @@ KUJO_TEST_RELEASE_DIR=/absolute/path/outside-the-repo/candidate npm run test:fre
 
 The parent directory must exist and the candidate directory must not exist.
 The builder refuses dirty tracked/untracked files and source changes during
-packing. It never overwrites a prior candidate. Failed preparation may leave an
+packing. It packs a temporary Git archive of the recorded commit, excluding
+ignored local files. Maintainers need Git and tar as well as Node/npm. It never overwrites a prior candidate. Failed preparation may leave an
 incomplete directory; only a successful `release:verify` establishes a complete
 bundle. Keep the failed directory for diagnosis and use a new destination.
 
