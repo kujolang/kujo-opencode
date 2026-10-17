@@ -89,6 +89,27 @@ jobs:
         run: |
           ARCHIVE=$(node -p "JSON.parse(require('fs').readFileSync(process.env.RUNNER_TEMP+'/kujo-candidate/candidate.json','utf8')).archive")
           python tests/candidate-provenance.py --tarball "$RUNNER_TEMP/kujo-candidate/$ARCHIVE" --fixture "$FIXTURE" --host "$OPENCODE_BIN"
+      - name: Verify rendered onboarding and ledger approvals on POSIX hosts
+        if: matrix.os != 'windows-2025'
+        id: rendered
+        env:
+          OPENCODE_BIN: ${{ steps.host.outputs.host }}
+        run: |
+          python -m venv "$RUNNER_TEMP/tui-venv"
+          "$RUNNER_TEMP/tui-venv/bin/python" -m pip install -r tests/requirements-tui.txt
+          "$RUNNER_TEMP/tui-venv/bin/python" tests/tui-terminal.py --candidate "$RUNNER_TEMP/kujo-candidate" --host "$OPENCODE_BIN" --ledger --columns 80 --rows 24
+      - name: Retain rendered evidence
+        if: always() && steps.rendered.outputs.fixture != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: rendered-${{ matrix.os }}-${{ matrix.bound }}-${{ matrix.version }}-${{ github.sha }}
+          path: |
+            ${{ steps.rendered.outputs.fixture }}/*.txt
+            ${{ steps.rendered.outputs.fixture }}/verification.json
+            ${{ steps.rendered.outputs.fixture }}/candidate-verification.json
+            ${{ steps.rendered.outputs.fixture }}/permission-focus.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Retain host identity
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

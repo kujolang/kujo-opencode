@@ -19,6 +19,8 @@ import pty
 import re
 import select
 import signal
+import shutil
+import sys
 import struct
 import subprocess
 import termios
@@ -31,6 +33,7 @@ from gateway_fixture import GatewayFixture
 from datetime import datetime, timezone
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--candidate', type=Path, help='Verify and install this immutable release-candidate bundle with pinned sources')
 parser.add_argument('--host', default=os.environ.get('OPENCODE_BIN', 'opencode'))
 parser.add_argument('--columns', type=int, default=80)
 parser.add_argument('--rows', type=int, default=24)
@@ -54,12 +57,32 @@ if args.columns < 80 or args.rows < 24:
     parser.error('Acceptance dimensions must be at least 80x24')
 repo = Path(__file__).resolve().parent.parent
 root = Path(tempfile.mkdtemp(prefix='kujo-rendered-tui-'))
+if os.environ.get('GITHUB_OUTPUT'):
+    with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+        output.write(f'fixture={root}\n')
 project = root / 'project'
 project.mkdir()
 (project / 'README.md').write_text('# Terminal acceptance fixture\n')
 subprocess.run(['git', 'init', '-q', str(project)], check=True)
 env = dict(os.environ, KUJO_OPENCODE_HOME=str(root / 'kujo'), TERM='xterm-256color')
-subprocess.run(['node', str(repo / 'bin/kujo-opencode.mjs'), 'setup', '--project', str(project), '--source-root', str(repo.parent), '--json'], env=env, check=True, stdout=subprocess.DEVNULL)
+candidate = None
+setup_cli = repo / 'bin/kujo-opencode.mjs'
+source_options = ['--source-root', str(repo.parent)]
+if args.candidate:
+    args.candidate = args.candidate.resolve()
+    subprocess.run(['npm', 'run', 'release:verify', '--', str(args.candidate)], cwd=repo, check=True, stdout=subprocess.DEVNULL, timeout=120)
+    candidate = json.loads((args.candidate / 'candidate.json').read_text())
+    for key in ['KUJO_BIN', 'KUJO_SOURCE_ROOT', 'KUJO_OPENCODE_PROJECT', 'NODE_PATH']:
+        env.pop(key, None)
+    prefix = root / 'prefix'
+    subprocess.run(['npm', 'install', '--prefix', str(prefix), str(args.candidate / candidate['archive'])], env=env, check=True, stdout=subprocess.DEVNULL, timeout=180)
+    setup_cli = prefix / 'node_modules/@kujolang/kujo-opencode/bin/kujo-opencode.mjs'
+    source_options = []
+subprocess.run(['node', str(setup_cli), 'setup', '--project', str(project), *source_options, '--json'], env=env, check=True, stdout=subprocess.DEVNULL, timeout=900)
+if candidate:
+    installation = json.loads((root / 'kujo/installation.json').read_text())
+    assert all(source['mode'] == 'pinned' for source in installation['sources'].values())
+
 leash=LeashFixture(root,os.environ['LEASH_TEST_BIN']) if args.leash else None
 if leash:
     env.update(KUJO_LEASH_URL=leash.origin,KUJO_LEASH_TOKEN=leash.token)
@@ -394,7 +417,17 @@ try:
         if gateway:
             assert int(page.group(1))>1, 'Search should reveal retained result beyond the first page'
     result = dict(ok=True, host=version, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=args.automatic or args.leash or args.gateway, effects_approved=args.ledger or args.automatic or args.leash or args.gateway, rendered_ledger=args.ledger, rendered_automatic_completion=args.automatic, rendered_completion_evidence=args.completion_evidence, live_ship_specialist=args.ship, rendered_leash=args.leash, rendered_gateway=args.gateway)
+    if candidate:
+        result.update(candidate_commit=candidate['commit'], candidate_sha256=candidate['files'][candidate['archive']], candidate_integrity=candidate['integrity'], pinned_sources=True)
+        subprocess.run(['npm', 'run', 'release:verify', '--', str(args.candidate)], cwd=repo, check=True, stdout=subprocess.DEVNULL, timeout=120)
     (root/'verification.json').write_text(json.dumps(result, indent=2)+'\n')
+    if candidate:
+        try:
+            subprocess.run([sys.executable, str(repo/'tests/candidate-provenance.py'), '--tarball', str(args.candidate/candidate['archive']), '--fixture', str(root), '--host', shutil.which(args.host) or args.host], check=True, stdout=subprocess.DEVNULL, timeout=120)
+        except Exception:
+            result['ok'] = False
+            (root/'verification.json').write_text(json.dumps(result, indent=2)+'\n')
+            raise
     print(json.dumps(result))
 finally:
     # Only the owned standalone terminal is stopped; never touch a user server.

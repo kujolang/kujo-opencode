@@ -43,7 +43,26 @@ Use `bin/opencode.exe` on Windows. For source-checkout testing without a candida
 than local siblings. Live-model flags remain explicit and require an entitled
 provider; no paid model is selected automatically.
 
-This workflow does not render a terminal or exercise six live specialist model
-journeys. Those acceptance records remain necessary, in addition to this host
-contract matrix, before the release report can mark the full platform requirement
-passed. A CI billing failure before jobs start supplies no compatibility evidence.
+The POSIX jobs also run the actual 80×24 terminal harness with the exact candidate,
+including onboarding, service guidance, visible profile rejection, and separate
+RunLedger start/finish approvals. Screens and payload proof are retained. This does
+not request inference. The harness uses a private Python environment with pinned
+terminal-parser dependencies.
+
+Windows rendered-terminal acceptance and all six live specialist model journeys
+remain separate gaps; the POSIX harness does not run on Windows. These records are
+required in addition to native API checks before the release report can mark the
+full platform requirement passed. A CI billing failure before jobs start supplies
+no compatibility evidence.
+
+For local POSIX rendered acceptance after installing tests/requirements-tui.txt in
+a private Python environment:
+
+```sh
+python tests/tui-terminal.py --candidate /absolute/candidate \
+  --host /absolute/host/bin/opencode --ledger --columns 80 --rows 24
+```
+
+Candidate mode verifies the bundle before installation and after UI acceptance,
+then compares the installed payload to the archive. A failed payload comparison
+marks verification as failed rather than leaving a passing candidate receipt.
