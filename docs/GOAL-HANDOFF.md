@@ -464,3 +464,12 @@ concurrency, process-death, rollback and retry contracts. All seven broad goal
 outcomes remain open; next independent work includes guided RAG freshness/index/
 query, optional automatic RunLedger correlation and remaining recovery acceptance.
 No new SignalBox capture is warranted for this resolved authorized scope.
+
+Final browser transaction acceptance: native GzUVDZ passed real OpenCode2.0.31
+recovery rejection/once approval and readiness without inference. Packed iomJa2
+passed fresh install, 0.1.0 upgrade, 28 sources, older-project preservation,
+starter services/agent execution, session-ledger and real Chromium/Lens checks.
+Candidate SHA-256: 9328df28b66a185db988794d9dfb9cb4319c6c91e540f79fd327aec9357d0057.
+Executable bytes (lib/bin/.generated) match f6e043c; only test/docs refinements
+postdate packing. This supersedes the pending status above. Full supported-host/OS
+certification, six live specialists and public distribution remain unverified.

@@ -695,3 +695,12 @@ process death after activation, explicit recovery/retry and cache-mode rejection
 Native permission/recovery acceptance and packed iomJa2 are pending. This closes
 the specific per-instance-only browser installer limitation above; broader
 mixed-version recovery, live specialists and immutable release matrix remain open.
+
+Final browser transaction acceptance: native GzUVDZ passed real OpenCode2.0.31
+recovery rejection/once approval and readiness without inference. Packed iomJa2
+passed fresh install, 0.1.0 upgrade, 28 sources, older-project preservation,
+starter services/agent execution, session-ledger and real Chromium/Lens checks.
+Candidate SHA-256: 9328df28b66a185db988794d9dfb9cb4319c6c91e540f79fd327aec9357d0057.
+Executable bytes (lib/bin/.generated) match f6e043c; only test/docs refinements
+postdate packing. This supersedes the pending status above. Full supported-host/OS
+certification, six live specialists and public distribution remain unverified.
