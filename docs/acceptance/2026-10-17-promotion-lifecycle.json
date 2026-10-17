@@ -1,0 +1,123 @@
+{
+  "schema": "kujo.opencode.promotion-lifecycle-acceptance/v1",
+  "date": "2026-10-17",
+  "scope": "Local macOS x64, OpenCode 2.0.32, user-authorized ChatGPT account. Not a cross-platform model test or complete release acceptance.",
+  "verification": {
+    "ok": true,
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-OzexFa",
+    "host": "opencode v2.0.32",
+    "platform": "darwin",
+    "arch": "x64",
+    "pinned_sources": true,
+    "rendered_tui": false,
+    "candidate_commit": "11f0130f46dff81003eb4ade9dc0ce1fa1d41e38",
+    "candidate_sha256": "baf69b7cc88982ff4eb95100b42715eea92176c7c9c2a0a6a9479dd6f3c244f5",
+    "candidate_integrity": "sha512-h+8irIIJ5pLM5p0lH/7oGAocvjnF1PbEpIg97IzFQRfGxMkXDz84NFyLu4AnfY9bnk6nfK72iljGK7VA9+dDzA==",
+    "live": {
+      "read_receipt": "receipt-5dab9760-3cd4-4bf9-94cf-063a402acf4c",
+      "denied_without_write": true,
+      "write_receipt": "receipt-64944d77-272c-4947-a7c3-d159932e6c6e"
+    },
+    "specialistJourney": null,
+    "specialistJourneys": [],
+    "dispatchTransport": null,
+    "failureGuard": {
+      "session_id": "ses_eb4a8e714ffejIk718A4rXKlMV",
+      "model": "openai/gpt-5.6-sol",
+      "agent": "build",
+      "interventions": 1,
+      "notification": true,
+      "telemetry_enabled": false,
+      "failed_receipts": [
+        "receipt-01734fbe-3b5e-459a-acdb-4679fce1d32f",
+        "receipt-6fbad42e-f450-4fc5-8a7c-69610f3930b5",
+        "receipt-38f08fe2-f223-4a58-ac3a-c9c5e0fb3b48"
+      ],
+      "approval_granted": false
+    },
+    "cancellation": {
+      "watchdog": {
+        "source_commit": "9e82e8f5b05edca948f6a432ae517031388296e6",
+        "source_clean": true,
+        "runtime_sha256": "cc811ce04910d68f6703f8717eb6dc4fcd05666a29f738dee88bf57d52f852c2"
+      },
+      "session_id": "ses_eb4a7198fffe17AMY3Xq9odUUq",
+      "model": "openai/gpt-5.6-sol",
+      "agent": "build",
+      "permission_requested": true,
+      "approval_granted": false,
+      "effect_absent": true,
+      "remaining_permissions": 0,
+      "cancellation_records": 1,
+      "receipt_ids": [
+        "receipt-e0663225-4052-4863-9624-8ac7b4ffb1e6"
+      ],
+      "metadata_only": true
+    },
+    "telemetry": {
+      "watchdog": {
+        "source_commit": "9e82e8f5b05edca948f6a432ae517031388296e6",
+        "source_clean": true,
+        "runtime_sha256": "cc811ce04910d68f6703f8717eb6dc4fcd05666a29f738dee88bf57d52f852c2"
+      },
+      "queue_delivered": 22,
+      "queue_discarded": 0,
+      "session_id": "ses_eb4a8b3a1ffeTjOvoGtZ7po07v",
+      "run_id": "2026-10-17-gpt-5-6-sol-opencode-session-ses-eb4a8b3a1ffetjovogtz7po07v-001",
+      "trace_id": "52d2f4697a705edf96b3248c963cb5fc",
+      "model": "openai/gpt-5.6-sol",
+      "agent": "build",
+      "receipt_ids": [
+        "receipt-bd516ffd-9887-4e50-91d7-63f28597a4bd",
+        "receipt-9029f17b-0b01-44f9-aaf9-6cbe46d4b82f"
+      ],
+      "record_count": 22,
+      "service_outage_recovered": true,
+      "explicit_retry_rearmed": 2,
+      "host_reload_recovered": true,
+      "metadata_only": true,
+      "opt_out_verified": true,
+      "opt_out_assistant_observed": true,
+      "record_still_in_progress": true
+    },
+    "commands": [
+      "kujo-status",
+      "kujo-evidence",
+      "kujo-profile",
+      "kujo-doctor",
+      "kujo-review"
+    ],
+    "native_status_recorded": true,
+    "native_evidence_recorded": true,
+    "native_profile_permission": true,
+    "native_capability_permissions": true,
+    "native_lifecycle_permissions": true,
+    "native_session_runledger": true,
+    "nativeTransportRecovery": {
+      "forwarded_requests": 1,
+      "upstream_status": 200,
+      "upstream_response_consumed": true,
+      "client_response_lost": true,
+      "scope": "session RunLedger start; no inference or Dispatch transport claim",
+      "run_id": "2026-10-17-glm-5-3-flash-free-opencode-session-ses-eb4a9443fffe6fsgrdsvz9g1vd-001"
+    },
+    "native_browser_readiness": true,
+    "native_knowledge_verified": true,
+    "native_automatic_tracking": true,
+    "browser_ready": false,
+    "model_call": true
+  },
+  "command_flags": [
+    "KUJO_TEST_GUARD=1",
+    "KUJO_TEST_TELEMETRY=1",
+    "KUJO_TEST_CANCEL_TELEMETRY=1",
+    "KUJO_TEST_AUTOTRACK=1"
+  ],
+  "log": "/tmp/kujo-promotion-lifecycle-retry.log",
+  "prior_attempt": {
+    "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-NG22Kk",
+    "stage": "setup",
+    "outcome": "ENOSPC before live acceptance",
+    "log": "/tmp/kujo-promotion-lifecycle.log"
+  }
+}

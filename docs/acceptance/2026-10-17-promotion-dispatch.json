@@ -1,0 +1,99 @@
+{
+  "schema": "kujo.opencode.promotion-dispatch-acceptance/v1",
+  "date": "2026-10-17",
+  "scope": "Local macOS x64 OpenCode 2.0.32 with authorized ChatGPT; exact candidate archive. No cross-platform live-model or full release claim.",
+  "verification": {
+    "ok": true,
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-5ZC4HE",
+    "host": "opencode v2.0.32",
+    "platform": "darwin",
+    "arch": "x64",
+    "pinned_sources": true,
+    "rendered_tui": false,
+    "candidate_commit": "11f0130f46dff81003eb4ade9dc0ce1fa1d41e38",
+    "candidate_sha256": "baf69b7cc88982ff4eb95100b42715eea92176c7c9c2a0a6a9479dd6f3c244f5",
+    "candidate_integrity": "sha512-h+8irIIJ5pLM5p0lH/7oGAocvjnF1PbEpIg97IzFQRfGxMkXDz84NFyLu4AnfY9bnk6nfK72iljGK7VA9+dDzA==",
+    "live": null,
+    "specialistJourney": null,
+    "specialistJourneys": [],
+    "dispatchTransport": {
+      "scope": "Native one-time approval HTTP reply lost; retained Dispatch run discovered and inspected without workflow retry",
+      "agent": "build",
+      "model": "openai/gpt-5.6-sol",
+      "session_id": "ses_eb4a4d635ffemxHAd0dVttL4M2",
+      "transport": {
+        "forwarded_requests": 1,
+        "upstream_status": 204,
+        "upstream_response_consumed": true,
+        "client_response_lost": true
+      },
+      "reviewed_inputs": [
+        {
+          "ability": "kujo.dispatch.workflow.run",
+          "input": {
+            "path": "dispatch-transport",
+            "topic": "Recover the retained run after an approval reply is lost",
+            "workflow_file": "workflow.json",
+            "input_json": "{\"recovery_case\":\"lost-native-approval-reply\"}",
+            "output_dir": "runs"
+          }
+        },
+        {
+          "ability": "kujo.dispatch.runs.list",
+          "input": {
+            "path": "dispatch-transport",
+            "output_dir": "runs",
+            "limit": 50,
+            "offset": 0
+          }
+        },
+        {
+          "ability": "kujo.dispatch.run.inspect",
+          "input": {
+            "path": "dispatch-transport",
+            "output_dir": "runs",
+            "run_id": "run-1792265635105-5788"
+          }
+        }
+      ],
+      "run_id": "run-1792265635105-5788",
+      "receipt_ids": [
+        "receipt-129e2458-5e3f-4c24-a468-1d2ed8aefa2b",
+        "receipt-c1bf49ae-378a-469a-9dc3-8d1d3ffbabe6",
+        "receipt-f6c2532c-8cc3-4393-8533-a8f8a253cd9c"
+      ],
+      "workflow_executions": 1,
+      "canonical_state_unchanged_by_reconciliation": true
+    },
+    "failureGuard": null,
+    "cancellation": null,
+    "telemetry": null,
+    "commands": [
+      "kujo-status",
+      "kujo-evidence",
+      "kujo-profile",
+      "kujo-doctor",
+      "kujo-review"
+    ],
+    "native_status_recorded": true,
+    "native_evidence_recorded": true,
+    "native_profile_permission": true,
+    "native_capability_permissions": true,
+    "native_lifecycle_permissions": true,
+    "native_session_runledger": true,
+    "nativeTransportRecovery": {
+      "forwarded_requests": 1,
+      "upstream_status": 200,
+      "upstream_response_consumed": true,
+      "client_response_lost": true,
+      "scope": "session RunLedger start; no inference or Dispatch transport claim",
+      "run_id": "2026-10-17-glm-5-3-flash-free-opencode-session-ses-eb4a4e70dffelrx30osxjbaaoq-001"
+    },
+    "native_browser_readiness": true,
+    "native_knowledge_verified": true,
+    "native_automatic_tracking": false,
+    "browser_ready": false,
+    "model_call": true
+  },
+  "log": "/tmp/kujo-promotion-dispatch.log"
+}
