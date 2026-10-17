@@ -1,0 +1,48 @@
+{
+  "recorded": "2026-10-17",
+  "harness_commit": "55a14c06a278836be8509d44636ceae6f62d2ef8",
+  "production_candidate_unchanged": true,
+  "offline_tests": 197,
+  "canonical_e2e": "passed including knowledge",
+  "build_preflight": {
+    "ok": true,
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-build-specialist-canonical-PUtymI",
+    "steps": 8,
+    "canonical_runtime": true,
+    "live_specialist": false,
+    "native_approval": false
+  },
+  "review_preflight": {
+    "ok": true,
+    "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-review-specialist-canonical-DNUY3F",
+    "steps": 4,
+    "canonical_tools": true,
+    "live_specialist": false
+  },
+  "review_sources": {
+    "patchbrief": {
+      "commit": "34000d62d6dd7d2422e40faecf65120af1a138dc",
+      "clean": true
+    },
+    "changebucket": {
+      "commit": "030eea63c60449f82c9ba2680227485d318fdb6d",
+      "clean": true
+    },
+    "spec": {
+      "commit": "1211f37a09314be7150734bf15a55e9b2ea6504d",
+      "clean": true
+    }
+  },
+  "live_build": "not executed; prior scoped Understand provider rejection remains unresolved",
+  "live_review": "not executed; prior scoped Understand provider rejection remains unresolved",
+  "limitations": [
+    "Preflights do not prove live model behavior, native permissions or pinned candidate acceptance",
+    "Build rejection preflight checks absence without executing; native rejection remains part of live journey",
+    "No real Linux/Windows or registry acceptance established",
+    "Browser, Workflow and Ship distinct journeys remain to implement"
+  ],
+  "notes": [
+    "Review preflight canonicalizes its temporary root to match native realpath behavior and Spec containment.",
+    "Review baseline commit disables signing and hooks inside its owned nested repository; measured tools do not stage or commit."
+  ]
+}
