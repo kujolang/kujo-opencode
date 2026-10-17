@@ -1,0 +1,70 @@
+{
+  "recorded": "2026-10-17",
+  "production_commit": "fd04ceb",
+  "harness_commit": "49cb4a6",
+  "candidate_status": "Historical 713fbe4 remains superseded; replacement exact archive required.",
+  "local_preflight": {
+    "ok": true,
+    "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-ship-specialist-skQOAG",
+    "sources": {
+      "shipcheck": {
+        "path": "/Users/robertdevore/2026/Kujolang/kujo-repos/shipcheck"
+      },
+      "eval": {
+        "path": "/Users/robertdevore/2026/Kujolang/kujo-repos/eval"
+      },
+      "runledger": {
+        "path": "/Users/robertdevore/2026/Kujolang/kujo-repos/runledger"
+      }
+    },
+    "steps": 8,
+    "live_specialist": false,
+    "native_approval": false,
+    "published": false
+  },
+  "pinned_preflight": {
+    "ok": true,
+    "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-ship-specialist-da9Q3z",
+    "sources": {
+      "shipcheck": {
+        "path": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-rIkdUO/kujo/sources/shipcheck-0a9f5795e9498f3698d5da6bb66642544251dd37",
+        "commit": "0a9f5795e9498f3698d5da6bb66642544251dd37",
+        "mode": "pinned"
+      },
+      "eval": {
+        "path": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-rIkdUO/kujo/sources/eval-6a5ab09e5c24cc1a842b374afccb64da40db2874",
+        "commit": "6a5ab09e5c24cc1a842b374afccb64da40db2874",
+        "mode": "pinned"
+      },
+      "runledger": {
+        "path": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-rIkdUO/kujo/sources/runledger-334ddd4d33c8cb2612c8edab971ee69170824133",
+        "commit": "334ddd4d33c8cb2612c8edab971ee69170824133",
+        "mode": "pinned"
+      }
+    },
+    "steps": 8,
+    "live_specialist": false,
+    "native_approval": false,
+    "published": false
+  },
+  "canonical_sources": {
+    "shipcheck": "ee4cfd052c0522eebedc0eead223cbb22490b357",
+    "eval": "71e66dff780d6930bcbe093c046bf31aa26411df",
+    "runledger": "334ddd4d33c8cb2612c8edab971ee69170824133"
+  },
+  "sources_clean": true,
+  "verification": {
+    "unit_tests": 206,
+    "canonical_e2e": "Passed including checkpoint, Workflow and Ship canonical journeys",
+    "knowledge_tests": 2,
+    "shipcheck": "scan against owned specialist-ship fixture: exit 0, error findings, gate_passed false; informational only",
+    "eval": "One pass and one fail; retained evidence hashes verified",
+    "ledger": "Failed Eval subject run ID linked while ledger remains in_progress; separate explicit finish fail; report inspected"
+  },
+  "limitations": [
+    "Native rejection only asserted by absence in canonical preflight; no live selected kujo-ship verification.",
+    "No provider entitlement, final live-model report, platform or registry acceptance certified.",
+    "No publication occurred.",
+    "Workflow lost-response injection, checkpoint continuation and failed decision handling remain incomplete."
+  ]
+}
