@@ -202,7 +202,9 @@
         "rendered_gateway": true,
         "rendered_leash": false
       },
-      "gateway_receipt_ids": []
+      "gateway_receipt_ids": [
+        "receipt-64a9c720-18f9-4081-95e7-95023fd9f338"
+      ]
     },
     "min-cms": {
       "verification": {
@@ -243,7 +245,9 @@
         "rendered_gateway": true,
         "rendered_leash": false
       },
-      "gateway_receipt_ids": []
+      "gateway_receipt_ids": [
+        "receipt-6dcbb454-d188-40a7-b4fc-0e05de77614d"
+      ]
     }
   },
   "excluded_attempts": [
