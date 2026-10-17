@@ -142,6 +142,7 @@ def choose(query, expected, name):
     send('\r')
     wait(expected, name)
 
+service_result_pages = None
 try:
     wait('commands', 'session')
     menu()
@@ -383,6 +384,7 @@ try:
             assert len(events)==1 and events[0]['id']==event['request_id']
             assert delivered[0]['result']['status']=='awaiting_decision'
             assert delivered[0]['result']['native_permissions']=='unchanged'
+            assert delivered[0]['result']['human_decision']=='not_observed'
             evidence={'receipt':delivered[0],'events':events}
         (root/(service+'-delivery-evidence.json')).write_text(json.dumps(evidence,indent=2))
         (root/(service+'-delivered.txt')).write_text(current(), encoding='utf-8')
@@ -405,17 +407,28 @@ try:
         choose('This session', 'Kujo evidence · session', service+'-result-list')
         choose('succeeded', 'Receipt details', service+'-result-details')
         choose('Recorded result', 'Recorded result · 1/', service+'-result-first')
-        send('\x1b')
-        wait('Recorded result pages', service+'-result-pages')
-        choose('Find text', 'Find text in this record', service+'-result-search')
-        send('Rendered gateway approved' if gateway else 'awaiting_decision')
-        send('\r')
-        wait('Recorded result ·', service+'-result-found')
-        page=re.search(r'Recorded result · (\d+)/(\d+)',current())
-        assert page, 'Search should return to a numbered result page'
-        if gateway:
-            assert int(page.group(1))>1, 'Search should reveal retained result beyond the first page'
-    result = dict(ok=True, host=version, terminal_backend=terminal.backend, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=args.automatic or args.leash or args.gateway, effects_approved=args.ledger or args.automatic or args.leash or args.gateway, rendered_ledger=args.ledger, rendered_automatic_completion=args.automatic, rendered_completion_evidence=args.completion_evidence, live_ship_specialist=args.ship, rendered_leash=args.leash, rendered_gateway=args.gateway)
+        first_page=re.search(r'Recorded result · 1/(\d+)',current())
+        assert first_page, 'Result must show its page count'
+        service_result_pages=int(first_page.group(1))
+        if service_result_pages==1:
+            assert not gateway, 'Gateway fixture must exercise multi-page result search'
+            wait('awaiting_decision', service+'-result-found')
+            wait('human_decision', service+'-result-decision-boundary')
+            send('\x1b')
+            wait('commands', service+'-result-closed')
+            assert 'Recorded result pages' not in current(), 'A complete single page needs no pager'
+        else:
+            send('\x1b')
+            wait('Recorded result pages', service+'-result-pages')
+            choose('Find text', 'Find text in this record', service+'-result-search')
+            send('Rendered gateway approved' if gateway else 'awaiting_decision')
+            send('\r')
+            wait('Recorded result ·', service+'-result-found')
+            page=re.search(r'Recorded result · (\d+)/(\d+)',current())
+            assert page, 'Search should return to a numbered result page'
+            if gateway:
+                assert int(page.group(1))>1, 'Search should reveal retained result beyond the first page'
+    result = dict(ok=True, host=version, terminal_backend=terminal.backend, service_result_pages=service_result_pages, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=args.automatic or args.leash or args.gateway, effects_approved=args.ledger or args.automatic or args.leash or args.gateway, rendered_ledger=args.ledger, rendered_automatic_completion=args.automatic, rendered_completion_evidence=args.completion_evidence, live_ship_specialist=args.ship, rendered_leash=args.leash, rendered_gateway=args.gateway)
     if candidate:
         result.update(candidate_commit=candidate['commit'], candidate_sha256=candidate['files'][candidate['archive']], candidate_integrity=candidate['integrity'], pinned_sources=True)
         subprocess.run([*npm, 'run', 'release:verify', '--', str(args.candidate)], cwd=repo, check=True, stdout=subprocess.DEVNULL, timeout=120)
