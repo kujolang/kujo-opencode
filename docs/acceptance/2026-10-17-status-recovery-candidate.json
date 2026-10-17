@@ -713,6 +713,13 @@
       "effect_absent": true,
       "correction_commit": "8743d2c",
       "correction": "Literal JSON field shown separately in model prompt; invalid escaped text remains rejected."
+    },
+    {
+      "fixture": "kujo-native-host-RsqkMa",
+      "log": "/tmp/kujo-status-dispatch-transport-literal-input.log",
+      "result": "refused_invalid_quoted_json_before_approval",
+      "effect_absent": true,
+      "next_step": "Same unchanged recovery case with requested free DeepSeek model; both free IDs confirmed via official OpenCode models --standalone"
     }
   ],
   "dispatch_controller_regressions": {
