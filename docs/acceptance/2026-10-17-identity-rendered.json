@@ -1,0 +1,277 @@
+{
+  "recorded": "2026-10-17",
+  "candidate_commit": "713fbe4dc10ae8c68aee4205d17da70ff67027bd",
+  "candidate_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f",
+  "checks": {
+    "min-completion": {
+      "verification": {
+        "ok": true,
+        "host": "opencode v2.0.31",
+        "terminal_backend": "posix",
+        "service_result_pages": null,
+        "dimensions": [
+          80,
+          24
+        ],
+        "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-9hptahx2",
+        "initial_requested_session": "ses_kujo_terminal_fb95e25b86374b438f8b13a0586d775d",
+        "model_call": true,
+        "effects_approved": true,
+        "rendered_ledger": false,
+        "rendered_automatic_completion": true,
+        "rendered_completion_evidence": true,
+        "live_ship_specialist": false,
+        "rendered_leash": false,
+        "rendered_gateway": false,
+        "candidate_commit": "713fbe4dc10ae8c68aee4205d17da70ff67027bd",
+        "candidate_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f",
+        "candidate_integrity": "sha512-hDnZ1aeCiTfQesXgaqM1bPIn0oq5zwOYsveBHGiNU7fck1qJgk7fvB50AgTcEi6m8YhSma9eVQ/01ahzmshATA==",
+        "pinned_sources": true
+      },
+      "provenance": {
+        "ok": true,
+        "fixture": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-9hptahx2",
+        "tarball": "/private/tmp/kujo-identity-candidate/kujolang-kujo-opencode-0.2.0.tgz",
+        "tarball_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f",
+        "host": "opencode v2.0.31",
+        "host_sha256": "b73356ad2368c54ea51b869032bc419c96faea18a41d0c0f427923bcf583f688",
+        "platform": "macOS-26.6.2-x86_64-i386-64bit",
+        "runtime_sha256": "979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5",
+        "payload_files_verified": 70,
+        "payload_manifest_sha256": "a565e191357440a3161f5de8768a5da81a54d0f10f843b159d179a21fa5d59b0",
+        "rendered_gateway": false,
+        "rendered_leash": false
+      }
+    },
+    "latest-completion": {
+      "verification": {
+        "ok": true,
+        "host": "opencode v2.0.32",
+        "terminal_backend": "posix",
+        "service_result_pages": null,
+        "dimensions": [
+          80,
+          24
+        ],
+        "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-vhk38ew7",
+        "initial_requested_session": "ses_kujo_terminal_b0c0571c6a724e4ebf8cd6ea8fba7246",
+        "model_call": true,
+        "effects_approved": true,
+        "rendered_ledger": false,
+        "rendered_automatic_completion": true,
+        "rendered_completion_evidence": true,
+        "live_ship_specialist": false,
+        "rendered_leash": false,
+        "rendered_gateway": false,
+        "candidate_commit": "713fbe4dc10ae8c68aee4205d17da70ff67027bd",
+        "candidate_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f",
+        "candidate_integrity": "sha512-hDnZ1aeCiTfQesXgaqM1bPIn0oq5zwOYsveBHGiNU7fck1qJgk7fvB50AgTcEi6m8YhSma9eVQ/01ahzmshATA==",
+        "pinned_sources": true
+      },
+      "provenance": {
+        "ok": true,
+        "fixture": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-vhk38ew7",
+        "tarball": "/private/tmp/kujo-identity-candidate/kujolang-kujo-opencode-0.2.0.tgz",
+        "tarball_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f",
+        "host": "opencode v2.0.32",
+        "host_sha256": "5de9ff73d2e46934371dd96c9f012be58b98fc0084f966e643fa89d3b6e69070",
+        "platform": "macOS-26.6.2-x86_64-i386-64bit",
+        "runtime_sha256": "979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5",
+        "payload_files_verified": 70,
+        "payload_manifest_sha256": "a565e191357440a3161f5de8768a5da81a54d0f10f843b159d179a21fa5d59b0",
+        "rendered_gateway": false,
+        "rendered_leash": false
+      }
+    },
+    "min-ledger": {
+      "verification": {
+        "ok": true,
+        "host": "opencode v2.0.31",
+        "terminal_backend": "posix",
+        "service_result_pages": null,
+        "dimensions": [
+          80,
+          24
+        ],
+        "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-eghwtxlw",
+        "initial_requested_session": "ses_kujo_terminal_ae2ab8d1a96f41688152326e1d464a38",
+        "model_call": false,
+        "effects_approved": true,
+        "rendered_ledger": true,
+        "rendered_automatic_completion": false,
+        "rendered_completion_evidence": false,
+        "live_ship_specialist": false,
+        "rendered_leash": false,
+        "rendered_gateway": false,
+        "candidate_commit": "713fbe4dc10ae8c68aee4205d17da70ff67027bd",
+        "candidate_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f",
+        "candidate_integrity": "sha512-hDnZ1aeCiTfQesXgaqM1bPIn0oq5zwOYsveBHGiNU7fck1qJgk7fvB50AgTcEi6m8YhSma9eVQ/01ahzmshATA==",
+        "pinned_sources": true
+      },
+      "provenance": {
+        "ok": true,
+        "fixture": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-eghwtxlw",
+        "tarball": "/private/tmp/kujo-identity-candidate/kujolang-kujo-opencode-0.2.0.tgz",
+        "tarball_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f",
+        "host": "opencode v2.0.31",
+        "host_sha256": "b73356ad2368c54ea51b869032bc419c96faea18a41d0c0f427923bcf583f688",
+        "platform": "macOS-26.6.2-x86_64-i386-64bit",
+        "runtime_sha256": "979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5",
+        "payload_files_verified": 70,
+        "payload_manifest_sha256": "a565e191357440a3161f5de8768a5da81a54d0f10f843b159d179a21fa5d59b0",
+        "rendered_gateway": false,
+        "rendered_leash": false
+      }
+    },
+    "latest-ledger": {
+      "verification": {
+        "ok": true,
+        "host": "opencode v2.0.32",
+        "terminal_backend": "posix",
+        "service_result_pages": null,
+        "dimensions": [
+          80,
+          24
+        ],
+        "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-n2zeqapf",
+        "initial_requested_session": "ses_kujo_terminal_610b11371e574b7b9d0bd634302a4089",
+        "model_call": false,
+        "effects_approved": true,
+        "rendered_ledger": true,
+        "rendered_automatic_completion": false,
+        "rendered_completion_evidence": false,
+        "live_ship_specialist": false,
+        "rendered_leash": false,
+        "rendered_gateway": false,
+        "candidate_commit": "713fbe4dc10ae8c68aee4205d17da70ff67027bd",
+        "candidate_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f",
+        "candidate_integrity": "sha512-hDnZ1aeCiTfQesXgaqM1bPIn0oq5zwOYsveBHGiNU7fck1qJgk7fvB50AgTcEi6m8YhSma9eVQ/01ahzmshATA==",
+        "pinned_sources": true
+      },
+      "provenance": {
+        "ok": true,
+        "fixture": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-n2zeqapf",
+        "tarball": "/private/tmp/kujo-identity-candidate/kujolang-kujo-opencode-0.2.0.tgz",
+        "tarball_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f",
+        "host": "opencode v2.0.32",
+        "host_sha256": "5de9ff73d2e46934371dd96c9f012be58b98fc0084f966e643fa89d3b6e69070",
+        "platform": "macOS-26.6.2-x86_64-i386-64bit",
+        "runtime_sha256": "979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5",
+        "payload_files_verified": 70,
+        "payload_manifest_sha256": "a565e191357440a3161f5de8768a5da81a54d0f10f843b159d179a21fa5d59b0",
+        "rendered_gateway": false,
+        "rendered_leash": false
+      }
+    },
+    "latest-cms-serial": {
+      "verification": {
+        "ok": true,
+        "host": "opencode v2.0.32",
+        "terminal_backend": "posix",
+        "service_result_pages": 8,
+        "dimensions": [
+          80,
+          24
+        ],
+        "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-7gzkv9r4",
+        "initial_requested_session": "ses_kujo_terminal_5e462803c08a4811b29d937686328ba7",
+        "model_call": true,
+        "effects_approved": true,
+        "rendered_ledger": false,
+        "rendered_automatic_completion": false,
+        "rendered_completion_evidence": false,
+        "live_ship_specialist": false,
+        "rendered_leash": false,
+        "rendered_gateway": true,
+        "candidate_commit": "713fbe4dc10ae8c68aee4205d17da70ff67027bd",
+        "candidate_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f",
+        "candidate_integrity": "sha512-hDnZ1aeCiTfQesXgaqM1bPIn0oq5zwOYsveBHGiNU7fck1qJgk7fvB50AgTcEi6m8YhSma9eVQ/01ahzmshATA==",
+        "pinned_sources": true
+      },
+      "provenance": {
+        "ok": true,
+        "fixture": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-7gzkv9r4",
+        "tarball": "/private/tmp/kujo-identity-candidate/kujolang-kujo-opencode-0.2.0.tgz",
+        "tarball_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f",
+        "host": "opencode v2.0.32",
+        "host_sha256": "5de9ff73d2e46934371dd96c9f012be58b98fc0084f966e643fa89d3b6e69070",
+        "platform": "macOS-26.6.2-x86_64-i386-64bit",
+        "runtime_sha256": "979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5",
+        "payload_files_verified": 70,
+        "payload_manifest_sha256": "a565e191357440a3161f5de8768a5da81a54d0f10f843b159d179a21fa5d59b0",
+        "rendered_gateway": true,
+        "rendered_leash": false
+      },
+      "gateway_receipt_ids": []
+    },
+    "min-cms": {
+      "verification": {
+        "ok": true,
+        "host": "opencode v2.0.31",
+        "terminal_backend": "posix",
+        "service_result_pages": 8,
+        "dimensions": [
+          80,
+          24
+        ],
+        "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-_x6f_5rq",
+        "initial_requested_session": "ses_kujo_terminal_b6dea6607c644ed1a63455bd4095f798",
+        "model_call": true,
+        "effects_approved": true,
+        "rendered_ledger": false,
+        "rendered_automatic_completion": false,
+        "rendered_completion_evidence": false,
+        "live_ship_specialist": false,
+        "rendered_leash": false,
+        "rendered_gateway": true,
+        "candidate_commit": "713fbe4dc10ae8c68aee4205d17da70ff67027bd",
+        "candidate_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f",
+        "candidate_integrity": "sha512-hDnZ1aeCiTfQesXgaqM1bPIn0oq5zwOYsveBHGiNU7fck1qJgk7fvB50AgTcEi6m8YhSma9eVQ/01ahzmshATA==",
+        "pinned_sources": true
+      },
+      "provenance": {
+        "ok": true,
+        "fixture": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-_x6f_5rq",
+        "tarball": "/private/tmp/kujo-identity-candidate/kujolang-kujo-opencode-0.2.0.tgz",
+        "tarball_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f",
+        "host": "opencode v2.0.31",
+        "host_sha256": "b73356ad2368c54ea51b869032bc419c96faea18a41d0c0f427923bcf583f688",
+        "platform": "macOS-26.6.2-x86_64-i386-64bit",
+        "runtime_sha256": "979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5",
+        "payload_files_verified": 70,
+        "payload_manifest_sha256": "a565e191357440a3161f5de8768a5da81a54d0f10f843b159d179a21fa5d59b0",
+        "rendered_gateway": true,
+        "rendered_leash": false
+      },
+      "gateway_receipt_ids": []
+    }
+  },
+  "excluded_attempts": [
+    {
+      "fixture": "kujo-rendered-tui-8g7w4vko",
+      "reason": "Initial CMS model request did not render operation review within 90 seconds. No gateway execution receipt or native grant; failed run retained, not counted as passing.",
+      "log": "/tmp/kujo-identity-latest-cms.log"
+    },
+    {
+      "fixture": "kujo-rendered-tui-934k4mje",
+      "reason": "ENOSPC during pinned Dispatch source clone; setup failed before host/model journey. Generated installation removed after terminal verification.",
+      "log": "/tmp/kujo-identity-latest-cms-retry.log"
+    }
+  ],
+  "limits": [
+    "macOS x64 80x24 POSIX terminal only",
+    "Ordinary Build free GLM model; not scoped specialist acceptance",
+    "CMS fixture uses separate application and native approval; no production server changed",
+    "No Linux/Windows or public registry acceptance implied"
+  ],
+  "external_checks": {
+    "github_run": 39006656688,
+    "head": "82c5e95320788e1b837d85cc8bc4af91c41ee3d8",
+    "jobs": 7,
+    "executed_steps": 0,
+    "billing_annotation": 117320395476,
+    "docker": "No local daemon socket; not Linux test evidence",
+    "checked": "2026-10-17"
+  },
+  "retention": "Completed fixture generated installations cleaned after terminal checks; verification, provenance, receipts, screens and service state retained. Earlier stopped generated installations 1sIE6o and aFUBIC also cleaned, retaining package metadata and evidence; XxNfoA was skipped because package identity was unavailable."
+}
