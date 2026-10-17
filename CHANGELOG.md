@@ -2,6 +2,8 @@
 
 ## 0.2.0
 
+- Add explicit Dispatch run inspection for reconciliation, with declared SQLite bookkeeping approval and contained storage paths.
+
 - Preserve pending Dispatch checkpoints instead of auto-approving them; resolve installed source fixtures and project-relative workflow/output paths.
 
 - Reject Leash events without their canonical identity before delivery and expose identity requirements in the tool schema.

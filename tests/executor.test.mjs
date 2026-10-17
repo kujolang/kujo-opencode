@@ -56,3 +56,14 @@ test('Lens readiness accepts the installed headless-shell distribution', async (
   assert.equal(result.mode,'headless-shell');
   assert.equal(result.executable,undefined);
 });
+
+test('Dispatch inspection rejects escaping identifiers and symlinked canonical storage',async()=>{
+ const {symlink}=await import('node:fs/promises');
+ const root=await mkdtemp(join(tmpdir(),'kujo-dispatch-inspect-'));
+ const adapter=handlers({project:root,runtime:null,config:{kujo_bin:'must-not-execute',sources:{dispatch:{path:root}}}}).dispatch_inspect;
+ await assert.rejects(adapter({path:'.',run_id:'../outside'},{}),{code:'ability_input_invalid'});
+ await assert.rejects(adapter({path:'.',run_id:'--help'},{}),{code:'ability_input_invalid'});
+ await mkdir(join(root,'runs/run-one'),{recursive:true});await writeFile(join(root,'runs/run-one/state.json'),'{}');
+ await mkdir(join(root,'runs/.dispatch'));await writeFile(join(root,'outside'),'private');await symlink(join(root,'outside'),join(root,'runs/.dispatch/state.db'));
+ await assert.rejects(adapter({path:'.',run_id:'run-one',output_dir:'runs'},{}),{code:'ability_path_invalid'});
+});

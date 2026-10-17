@@ -66,7 +66,7 @@ kujo-opencode abilities
 | `review` | 18 | Check architecture, contracts, context, and change footprint |
 | `ship` | 30 | Run verification and retain release evidence |
 | `build` | 17 | Inspect source and run reviewed source/test snapshots |
-| `full` | 59 | Add orchestration, RAG, and optional service tools |
+| `full` | 60 | Add orchestration, RAG, and optional service tools |
 
 `enable` and `disable` accept a product name, a tool name, or the canonical Ability
 ID. Product names select all of that product's supported operations. Canonical
@@ -274,6 +274,14 @@ Choose **Choose a specialist** in `/kujo`, or use OpenCode's agent selector:
 | `kujo-browser` | Lens flow/page verification and failure evidence | Ship |
 | `kujo-workflow` | Dispatch/Muzzle, offline knowledge, and run evidence | Full |
 | `kujo-ship` | Release scan, requested evaluation and run evidence | Ship |
+
+For Dispatch, validate before running. Native execution approval does not approve
+workflow checkpoints: those remain paused for a separate human decision. Use
+`kujo_dispatch_inspect` with the retained run ID and output directory before
+considering a retry. Inspection discloses possible canonical SQLite bookkeeping
+and requires its own approval; it never resumes the run or decides a checkpoint.
+Checkpoint continuation currently uses canonical Dispatch operator commands.
+
 
 Specialists inherit your model choice. Each has an enforced native Ability
 allowlist and denies raw shell, edits, network tools and delegation by default.
