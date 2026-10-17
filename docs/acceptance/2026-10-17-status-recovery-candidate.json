@@ -694,11 +694,22 @@
       "cause": "Model omitted supplied optional input_json empty object",
       "correction_commit": "51c03f2",
       "correction": "Required nonempty workflow input; exact approval comparison preserved"
+    },
+    {
+      "fixture": "kujo-native-host-GhLgac",
+      "log": "/tmp/kujo-status-dispatch-transport-required-input.log",
+      "result": "refused_json_whitespace_before_approval",
+      "receipt_ids": [
+        "receipt-5385f29e-f4f7-489d-9377-6dba41f97642"
+      ],
+      "effect_absent": true,
+      "correction_commit": "b9bda10",
+      "correction": "Narrow embedded-JSON review accepts whitespace only; duplicate/extra fields and changed values rejected; native request/approval binding untouched; actual reviewed inputs retained."
     }
   ],
   "dispatch_controller_regressions": {
     "log": "/tmp/kujo-dispatch-controller-check.log",
-    "passed": 17,
+    "passed": 18,
     "cases": "Existing transport/runner checks plus wrong ability, altered input, persistent permission and provider failure all refused before a grant"
   }
 }
