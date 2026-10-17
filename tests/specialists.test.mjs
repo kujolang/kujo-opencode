@@ -49,3 +49,5 @@ test('Build specialist scenario exercises the real runtime and retained failures
  const result=await promisify(execFile)(process.execPath,[script],{timeout:120000,maxBuffer:1024*1024});
  const evidence=JSON.parse(result.stdout.trim());assert.equal(evidence.ok,true);assert.equal(evidence.steps,8);assert.equal(evidence.live_specialist,false);assert.equal(evidence.native_approval,false);
 });
+
+import './browser-specialist-runner.test.mjs';

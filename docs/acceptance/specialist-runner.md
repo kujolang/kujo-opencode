@@ -71,10 +71,33 @@ reuse scenario assertions, but cannot substitute for actual scoped-agent runs.
 On macOS the Review preflight canonicalizes its disposable project path before
 calling Spec, matching the native journey's realpath boundary.
 
+## Browser journey
+
+`KUJO_TEST_JOURNEY=browser` selects `kujo-browser`. It probes native browser
+readiness and, only when missing, requests an isolated native install with an
+exact once-only approval. Persistent grants, other permission actions and other
+operations are refused. Installation errors and a failed post-install launch
+probe remain failures; seven contract tests cover these boundaries.
+
+The seven scenario steps validate a safe flow, reject an unsafe flow, reject a
+page check without output, approve a full desktop/mobile check, refuse an external
+URL without opt-in, reject an explicitly opted-in external request, and retain a
+failed check against an owned HTTP 503 fixture. Successful checks must retain
+valid PNG screenshots, HTML and structured reports, and reach the owned server.
+The scenario never contacts an external endpoint. It validates a flow but does
+not claim to execute an interactive flow through the page-check Ability.
+
+`node tests/browser-specialist-canonical.mjs` uses the actual local canonical Lens
+adapter and an already installed browser. It shares artifact assertions with the
+live journey, but rejected steps only check absence without invoking the adapter:
+**native approval and live specialist behavior remain unverified**. This explicit
+integration gate is separate from ordinary unit tests because it requires Lens
+and browser dependencies. No sibling source or production payload is changed.
+
 ## Still required
 
-Distinct Browser, Workflow and Ship journeys remain to implement,
+Distinct Workflow and Ship journeys remain to implement,
 following `2026-10-17-completion-audit.md`. The generic ShipCheck/RunLedger helper
-must not be presented as these workflows. The full Understand, Build and Review live journeys
+must not be presented as these workflows. The full Understand, Build, Review and Browser live journeys
 remain unverified until a complete native run succeeds. Required platform
 coverage and retained release acceptance evidence remain separate gates.
