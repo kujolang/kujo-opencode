@@ -57,12 +57,11 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Select native Windows tar without changing the Bash interpreter
+      - name: Treat Windows archive paths as local files
         if: runner.os == 'Windows'
-        run: |
-          mkdir -p "$RUNNER_TEMP/native-tools"
-          cp "$SYSTEMROOT/System32/tar.exe" "$RUNNER_TEMP/native-tools/tar.exe"
-          echo "$RUNNER_TEMP/native-tools" >> "$GITHUB_PATH"
+        # Git Bash places GNU tar ahead of system tar when the shell starts.
+        # A drive letter must not be interpreted as a remote archive hostname.
+        run: echo "TAR_OPTIONS=--force-local" >> "$GITHUB_ENV"
       - run: npm ci
       - name: Download the exact candidate bundle
         env:
