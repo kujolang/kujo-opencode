@@ -179,3 +179,16 @@ of every prose claim; live report quality still requires review alongside receip
 Focused adversarial tests cover fabricated/unrelated citations, concealed failures
 and rejection, omissions, unexpected effects and successful report extraction.
 This gate is acceptance infrastructure, not a completed live-provider result.
+
+### Native HTTP reply loss
+
+The base native-host gate also exercises session RunLedger recovery without
+inference. An owned loopback fault relay forwards one exact start request to the
+real host, consumes its successful response, and closes the caller socket without
+returning the response. The fixture separately checks and grants the exact native
+permission once. A fresh status request must recover the retained run; an explicit
+repeated start must return that same run without another successful start receipt
+or permission. The usual separate correlation and human finish approvals follow.
+`nativeTransportRecovery` records the fault and recovered run in verification.json.
+This tests session tracking transport recovery, not Dispatch transport loss or
+live specialist reasoning. The relay is test-only and never forwards inference.

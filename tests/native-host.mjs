@@ -218,10 +218,24 @@ try {
  }
  await sessionLedgerChange('start','reject');
  assert.equal((await ledgerStatus()).output.state,'not_started');
- await sessionLedgerChange('start','once');
+ const {lostHttpReply}=await import('./lost-http-reply.mjs');
+ const lostStart=lostHttpReply({url:base+'/api/rpc/kujo.control/runledger',authorization,body:{input:{sessionID:ledgerSession.id,action:'start'}}}).then(value=>({value}),error=>({error}));
+ let lostPermission;
+ for(let i=0;i<50;i++){lostPermission=(await api(`/api/session/${ledgerSession.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(lostPermission)break;await delay(100);}
+ assert.ok(lostPermission);assert.equal(lostPermission.metadata.ability,'kujo.runledger.runs.start');assert.deepEqual(lostPermission.save,[]);
+ const lostBefore=(await ledgerStatus()).output;assert.equal(lostBefore.state,'not_started');
+ assert.deepEqual(lostPermission.metadata.input,{path:'.',provider:'opencode',model:'glm-5.3-flash-free',task:`OpenCode session ${ledgerSession.id}`,ledger_dir:lostBefore.ledger_dir});
+ await api(`/api/session/${ledgerSession.id}/permission/${lostPermission.id}/reply`,{decision:'once'});
+ const lostOutcome=await lostStart;if(lostOutcome.error)throw lostOutcome.error;
+ const nativeTransportRecovery={...lostOutcome.value,scope:'session RunLedger start; no inference or Dispatch transport claim'};
+ const recovered=(await ledgerStatus()).output;assert.equal(recovered.state,'in_progress');assert.ok(recovered.run_id);
+ const startReceipts=()=>readFile(join(env.KUJO_OPENCODE_HOME,'receipts.jsonl'),'utf8').then(text=>text.split('\n').filter(Boolean).map(line=>JSON.parse(line)).filter(r=>r.metadata?.session_id===ledgerSession.id&&r.ability_id==='kujo.runledger.runs.start'&&r.status==='succeeded'));
+ assert.equal((await startReceipts()).length,1,'Lost reply must not replay execution');
+ nativeTransportRecovery.run_id=recovered.run_id;
  const beforeRepeat=(await ledgerStatus()).output;
  const repeated=(await api('/api/rpc/kujo.control/runledger',{input:{sessionID:ledgerSession.id,action:'start'}})).output;
  assert.equal(repeated.run_id,beforeRepeat.run_id);
+ assert.equal((await startReceipts()).length,1,'Explicit repeated start must reconcile retained state');
  assert.equal((await api(`/api/session/${ledgerSession.id}/permission`)).data.length,0);
  await sessionLedgerChange('correlate','reject');
  await sessionLedgerChange('correlate','once');
@@ -328,7 +342,7 @@ try {
   await writeFile(join(root,'cancellation-evidence.json'),JSON.stringify(cancellation,null,2)+'\n');
   await lifecycleChange('disable','once');
  }
- const verification={ok:true,root,host:hostVersion,platform:process.platform,arch:process.arch,pinned_sources:pinned,rendered_tui:false,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),live,specialistJourney,failureGuard,cancellation:cancellation?{...cancellation,events:undefined}:null,telemetry:telemetry?{...telemetry,events:undefined}:null,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||Boolean(specialistJourney)||process.env.KUJO_TEST_AUTOTRACK==='1'};
+ const verification={ok:true,root,host:hostVersion,platform:process.platform,arch:process.arch,pinned_sources:pinned,rendered_tui:false,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),live,specialistJourney,failureGuard,cancellation:cancellation?{...cancellation,events:undefined}:null,telemetry:telemetry?{...telemetry,events:undefined}:null,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,nativeTransportRecovery,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||Boolean(specialistJourney)||process.env.KUJO_TEST_AUTOTRACK==='1'};
  if(candidate)await verifyCandidate(candidate.directory);
  await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
  console.log(JSON.stringify(verification));
