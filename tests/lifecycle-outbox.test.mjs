@@ -21,13 +21,13 @@ test('uncertain delivery survives restart and reuses canonical deduplication ide
 });
 test('retry count, retention, queue size and endpoint changes are bounded',async()=>{
  const opts=await options();let now=100000,requests=0;const box=new LifecycleOutbox({...opts,now:()=>now,fetchImpl:async()=>{requests++;return new Response('retry',{status:503});}});await box.capture(event);
- for(let i=0;i<6;i++){await box.flush();now+=60001;}assert.equal(requests,5);assert.equal((await box.status()).discarded,1);
+ for(let i=0;i<6;i++){await box.flush();now+=60001;}assert.equal(requests,5);assert.equal((await box.status()).discarded,0);assert.equal((await box.status()).held_for_retry,1);await box.discard();
  for(let i=0;i<128;i++)assert.equal((await box.capture(event)).queued,true);assert.equal((await box.capture(event)).reason,'queue_full');assert.equal((await box.status()).pending,128);
  const changed=new LifecycleOutbox({...opts,url:'http://127.0.0.1:7701',now:()=>now,fetchImpl:async()=>{throw Error('must not send');}});assert.equal((await changed.flush()).reason,'idle');assert.equal((await changed.status()).held_for_other_endpoint,128);
  now+=86400001;await box.flush();assert.equal((await box.status()).pending,0);
 });
 test('permanent rejection is not retried and unload cancels delivery without losing the queued job',async()=>{
- const opts=await options();const denied=new LifecycleOutbox({...opts,fetchImpl:async()=>new Response('SECRET',{status:401})});await denied.capture(event);await denied.flush();assert.equal((await denied.status()).pending,0);assert.equal((await denied.status()).last_code,'http_401');
+ const opts=await options();const denied=new LifecycleOutbox({...opts,fetchImpl:async()=>new Response('SECRET',{status:401})});await denied.capture(event);await denied.flush();assert.equal((await denied.status()).pending,1);assert.equal((await denied.status()).held_for_retry,1);assert.equal((await denied.status()).discarded,0);assert.equal((await denied.status()).last_code,'http_401');await denied.discard();
  let started;const ready=new Promise(resolve=>started=resolve);const box=new LifecycleOutbox({...opts,fetchImpl:async(_url,request)=>new Promise((resolve,reject)=>{started();request.signal.addEventListener('abort',()=>reject(Error('cancelled')),{once:true});})});await box.capture(event);const pending=box.flush();await ready;await box.close();await pending;assert.equal((await box.status()).pending,1);assert.equal((await box.capture(event)).reason,'disabled');
 });
 test('parallel workers deliver a claim once and malformed state never reaches the network',async()=>{
@@ -51,4 +51,25 @@ test('interrupted queue transaction requires explicit recovery and preserves que
  const script=`import {replaceDirectory} from ${JSON.stringify(pathToFileURL(resolve('lib/atomic-directory.mjs')).href)};await replaceDirectory(${JSON.stringify(box.root)},async()=>{}, {checkpoint:async phase=>{if(phase==='locked')process.exit(25)}});`;
  await assert.rejects(promisify(execFile)(process.execPath,['--input-type=module','-e',script]),error=>error.code===25);
  assert.equal((await box.flush()).reason,'queue_unavailable');assert.equal((await box.recover()).recovered,true);assert.equal((await box.status()).pending,1);assert.equal((await box.flush()).sent,true);
+});
+test('exhausted outage survives reload and retries only with explicit recovery preserving identity',async()=>{
+ const opts=await options();let now=100000,requests=0;const bodies=[];
+ const box=new LifecycleOutbox({...opts,now:()=>now,fetchImpl:async(_url,request)=>{requests++;bodies.push(request.body);return new Response('',{status:503});}});
+ const queued=await box.capture(event);
+ for(let i=0;i<5;i++){await box.flush();now+=60001;}
+ await box.close();assert.equal(requests,5);
+ const restored=new LifecycleOutbox({...opts,now:()=>now,fetchImpl:async(_url,request)=>{requests++;bodies.push(request.body);return new Response('{}');}});
+ assert.equal((await restored.status()).held_for_retry,1);assert.equal((await restored.status()).discarded,0);
+ assert.equal((await restored.flush()).reason,'idle');assert.equal(requests,5);
+ const result=await restored.retry();assert.equal(result.rearmed,1);assert.equal(result.sent,true);assert.equal(requests,6);
+ assert.equal(new Set(bodies).size,1);assert.equal(JSON.parse(bodies[5]).records[0].record_id,queued.id);
+ assert.equal((await restored.status()).pending,0);assert.equal((await restored.status()).discarded,0);
+});
+test('manual retry does not release other endpoints or extend retention',async()=>{
+ const opts=await options();let now=100000,requests=0;
+ const original=new LifecycleOutbox({...opts,now:()=>now,fetchImpl:async()=>{requests++;return new Response('',{status:401});}});
+ await original.capture(event);await original.flush();assert.equal((await original.status()).held_for_retry,1);
+ const changed=new LifecycleOutbox({...opts,url:'http://127.0.0.1:7701',now:()=>now,fetchImpl:async()=>assert.fail('Wrong endpoint')});
+ assert.equal((await changed.retry()).rearmed,0);assert.equal((await original.status()).pending,1);
+ now+=86400001;assert.equal((await original.retry()).rearmed,0);assert.equal(requests,1);assert.equal((await original.status()).discarded,1);
 });

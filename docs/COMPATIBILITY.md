@@ -72,6 +72,7 @@ other projects; it is not a troubleshooting shortcut.
 | Provider returns 401/403 | Check that provider's authentication/access in OpenCode; Kujo cannot grant model access |
 | Browser setup fails | Open `/kujo` → Browser readiness → Why installation failed; address the reported cause and retry |
 | Browser setup was interrupted | Once its owner stops, run `kujo-opencode browser recover`, then `kujo-opencode browser status` |
+| Lifecycle deliveries need attention | Fix the Watchdog service or token, then open Lifecycle delivery → Retry delivery now and approve resuming retained events; original 24-hour expiry still applies |
 | Installation reports disk full | Free space, recover after the installer stops, then retry; retain the original failure evidence |
 | A write's response was lost | Inspect Evidence history and the target's state before retrying; do not create a new invocation merely to bypass an uncertain outcome |
 | A tool succeeded but the task is incomplete | Inspect the outcome, input/provenance and result; a tool receipt does not determine your session verdict |

@@ -25,9 +25,17 @@ export async function nativeTelemetryAcceptance({api,project,dataRoot,model,watc
  await wait(async()=> (await records()).some(r=>r.name==='opencode.tool.completed'),'first canonical delivery');
  await watchdog.stop();await scan();const scans=await receipts();assert.equal(scans.length,2);assert.ok(scans.every(r=>r.status==='succeeded'));
  assert.ok((await control('status')).pending>0,'Delivery outage must retain queued metadata');
+ await wait(async()=> (await control('status')).held_for_retry>0,'outage retry budget held for human recovery');
  await reload();await wait(async()=>{try{return (await control('status')).enabled;}catch{return false;}},'plugin reload');
  assert.ok((await control('status')).pending>0,'Queue must survive host plugin unload/reload');assert.equal((await ledger()).run_id,linked.run_id);
  await watchdog.start();
+ const held=(await control('status')).held_for_retry;assert.ok(held>0,'Retry exhaustion must survive reload');
+ const retrying=api('/api/rpc/kujo.control/lifecycle',{input:{sessionID:session.id,action:'retry'}}).then(value=>({value}),error=>({error}));
+ const retryPermission=await wait(async()=> (await api(`/api/session/${session.id}/permission`)).data.find(p=>p.action==='kujo.lifecycle.change'),'explicit retained delivery retry approval');
+ assert.equal(retryPermission.metadata.action,'retry');assert.deepEqual(retryPermission.save,[]);
+ assert.ok((await control('status')).held_for_retry>=held,'Held events cannot resume before approval');
+ await api(`/api/session/${session.id}/permission/${retryPermission.id}/reply`,{decision:'once'});
+ const retryResult=await retrying;if(retryResult.error)throw retryResult.error;assert.ok(retryResult.value.output.rearmed>=held);
  await wait(async()=>{const events=await records();return scans.every(scan=>events.some(e=>e.attributes['kujo.receipt.id']===scan.receipt_id));},'delivery recovery');
  await wait(async()=> (await control('status')).pending===0,'queue drain');
  const queue=await control('status');assert.equal(queue.discarded,0,'Fixture outage should recover without losing queued metadata');
@@ -43,5 +51,5 @@ export async function nativeTelemetryAcceptance({api,project,dataRoot,model,watc
  const seen=new Set((await api(`/api/session/${session.id}/message?limit=100`)).data.filter(m=>m.type==='assistant').map(m=>m.id));
  await api(`/api/session/${session.id}/prompt`,{text:'Reply OK. Do not use tools.'},180000);await wait(async()=>{const messages=await api(`/api/session/${session.id}/message?limit=100`);assertProviderHealthy(messages);return messages.data.some(m=>m.type==='assistant'&&!seen.has(m.id));},'real model response after opt-out');await api(`/api/experimental/session/${session.id}/wait`,{},180000);assertProviderHealthy(await api(`/api/session/${session.id}/message?limit=10`));await delay(1200);
  assert.equal((await records()).length,afterDisable.length,'Opt-out must suppress subsequent model/session delivery');
- return {watchdog:watchdog.provenance,queue_delivered:queue.delivered,queue_discarded:queue.discarded,session_id:session.id,run_id:linked.run_id,trace_id:trace,model,agent:'build',receipt_ids:scans.map(r=>r.receipt_id),record_count:events.length,service_outage_recovered:true,host_reload_recovered:true,metadata_only:true,opt_out_verified:true,opt_out_assistant_observed:true,record_still_in_progress:true,events};
+ return {watchdog:watchdog.provenance,queue_delivered:queue.delivered,queue_discarded:queue.discarded,session_id:session.id,run_id:linked.run_id,trace_id:trace,model,agent:'build',receipt_ids:scans.map(r=>r.receipt_id),record_count:events.length,service_outage_recovered:true,explicit_retry_rearmed:retryResult.value.output.rearmed,host_reload_recovered:true,metadata_only:true,opt_out_verified:true,opt_out_assistant_observed:true,record_still_in_progress:true,events};
 }

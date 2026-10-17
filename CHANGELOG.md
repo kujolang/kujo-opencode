@@ -2,6 +2,8 @@
 
 ## 0.2.0
 
+- Retain exhausted or rejected lifecycle deliveries for explicit approved retry instead of deleting them; preserve event IDs, endpoint boundaries and original expiry.
+
 - Pin Dispatch 1.4 and Kujo runtime 1.8.1 for authoritative checkpoint control views.
 - Submit separately approved checkpoint decisions bound to the inspected revision and IDs; stale decisions fail and later checkpoints remain pending.
 

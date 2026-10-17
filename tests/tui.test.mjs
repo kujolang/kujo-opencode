@@ -6,7 +6,7 @@ import {setupTui} from '../lib/tui.mjs';
 import {scopedHostContext} from '../lib/plugin-scope.mjs';
 import {homePaths,withDataRoot} from '../lib/paths.mjs';
 
-function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[],home=false,waitCreate,selectedModel,ledgerState='in_progress',services=[],pendingPermissions=[],waitSelect,canonicalProject,browserState,waitDetail,waitAlert,onRPC}={}) {
+function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[],home=false,waitCreate,selectedModel,ledgerState='in_progress',services=[],pendingPermissions=[],waitSelect,canonicalProject,browserState,lifecycleState,waitDetail,waitAlert,onRPC}={}) {
  const calls=[],alerts=[],toasts=[],selections=[],handlers=new Map();let clears=0;let commands,eventHandler,stopped=false,route=home?{type:'home'}:{type:'session',sessionID:'fixture-session'};
  const location={directory:'/fixture/project'};
  const ctx={location,data:{on:(name,handler)=>{handlers.set(name,handler);return ()=>handlers.delete(name);},session:{status:()=> 'idle',sync:async()=>{},permission:{sync:async()=>{},list:()=>pendingPermissions}}},client:{session:{create:async input=>{calls.push({method:'createSession',input});if(waitCreate)await waitCreate;return {id:'new-session'};},switchModel:async input=>calls.push({method:'switchModel',input})},rpc:definition=>{
@@ -19,7 +19,7 @@ function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts
    if(method==='status'){if(waitStatus)await waitStatus;return {services,capabilities:[{id:'kujo.test.check',name:'check',description:'Check repository',active:true,inherited:true,mode:'profile'}],project:canonicalProject||location.directory,version:'0.2.0',profile:'kujo.profile.essentials',specialists:[{id:'kujo-browser',title:'Browser verification',profile:'ship',description:'Verify pages',abilities:['kujo.lens.page.check'],available:[],missing:['kujo.lens.page.check']}],profiles:[{id:'kujo.profile.review',label:'Review',description:'Review repository'}],tools:[{name:'check',description:'Check repository'}]};}
    if(method==='browser'){if(['status','refresh'].includes(input.action))return browserState||{ready:false,state:'dependencies_missing',capabilities:[]};if(profileError)throw Error(profileError);return {ready:false,state:'installing'};}
    if(method==='runledger'){if(input.action==='status')return {state:ledgerState,run_id:ledgerState==='not_started'?undefined:'fixture'};if(profileError)throw Error(profileError);return {state:input.status};}
-   if(method==='lifecycle'){if(input.action==='status')return {enabled:false,pending:0};if(profileError)throw Error(profileError);return {enabled:input.action==='enable'};}
+   if(method==='lifecycle'){if(input.action==='status')return lifecycleState||{enabled:false,pending:0};if(profileError)throw Error(profileError);return {enabled:input.action==='enable'};}
    if(method==='capability'){if(profileError)throw Error(profileError);return {active:input.mode!=='disabled'};}
    if(method==='profile'){if(profileError)throw Error(profileError);return {abilities:18};}
    if(method==='evidenceDetail'){if(waitDetail)await waitDetail;return {receipt:evidenceReceipts.find(item=>item.receipt_id===input.receiptID),artifacts:['/fixture/project/report.txt']};}
@@ -361,4 +361,9 @@ test('navigation during a management request suppresses late success and failure
   f.navigate({type:'session',sessionID:'fixture-session'});release();await running;
   assert.equal(f.toasts.length,0);assert.equal(f.alerts.length,0);f.cleanup();
  }
+});
+
+test('lifecycle queue makes retained delivery recovery visible and deliberate',async()=>{
+ const f=fixture({lifecycleState:{enabled:true,pending:9,held_for_retry:9},choices:[]});await f.run('kujo.lifecycle');
+ const options=f.selections[0].options;assert.match(options.find(o=>o.value==='status').description,/9 deliveries need attention/);assert.match(options.find(o=>o.value==='retry').description,/new five-attempt/);assert.equal(f.calls.length,1);
 });

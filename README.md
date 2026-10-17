@@ -180,12 +180,14 @@ in OpenCode's environment. The bridge never starts the service or changes model
 providers. It sends only session/tool/model IDs and status metadata, never prompts,
 tool inputs/outputs, response bodies or credentials.
 
-The same menu shows queue status and requests approval to retry one pending event,
+The same menu shows queue status and requests approval to resume retained deliveries,
 recover an interrupted queue, discard pending events or disable delivery. Disabling
 stops observers and delivery; pending events remain on disk for re-enabling. Retry
-is bounded to five attempts, 128 events and 24 hours (expiry is applied on the next
-queue operation). Authentication failures discard the affected event; fix the token
-before enabling new work. An endpoint change holds existing events for the original
+is bounded to five automatic attempts, 128 events and 24 hours (expiry is applied
+on the next queue operation). Exhausted retries and authentication failures retain
+the affected events and show that they need attention. Fix the service or token,
+then choose Retry delivery now and approve a fresh five-attempt budget. No event
+expiry is extended by retrying. An endpoint change holds existing events for the original
 endpoint. Shutdown aborts delivery; stable IDs let Watchdog deduplicate a retry if
 its acknowledgement was lost. Failed telemetry does not fail the user's tool call.
 
