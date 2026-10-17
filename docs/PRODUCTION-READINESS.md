@@ -1132,3 +1132,58 @@ removed to recover disk space; snapshots, receipts, manifests, package archives
 and logs remain. Final immutable packaging, supported host/OS matrix, gateway
 rendered execution, all six live specialists and the remaining lifecycle/recovery
 and public release requirements retain their original scope.
+
+## Browser diagnostics, packed install and native gateway acceptance (2026-10-16)
+
+9044492 adds a fixed vocabulary of safe browser-install failure messages for
+storage/quota, permissions, missing npm, certificate, authentication, connection,
+interruption and output-limit failures. Unknown failures remain uncertain. CLI
+and native background status preserve these messages without raw installer output;
+Browser readiness offers Why installation failed.165 offline tests,45 focused
+rollback/UI tests, canonical E2E, native hostG1adz3 and isolated host discovery pass.
+
+Packed fixtureTpLitB passed fresh install and actual0.1.0 upgrade,28 pinned
+sources, older-project retention, all four starters/services, the agent fixture,
+RunLedger, offline knowledge, real Chromium launch and canonical Lens page check.
+Candidate archive SHA256:
+2aa02591851432fc35298947946a4f7a0bfbfff6a5b1ff850678d73329221cde.
+The archive and verification.json remain under
+/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-opencode-packed-TpLitB.
+Logs: /tmp/kujo-browser-diagnostics-{all,e2e,native,host,packed-retry}.log.
+Earlier xyDNAH failed on a GitHub receive timeout fetching baseline Scent; its
+archives, hashes and failure-summary.json remain. A subsequent connectivity
+check succeeded before the new run. This is local macOS evidence, not the
+supported OS/minimum-latest host matrix or registry installation.
+
+635d7b3 adds canonical CMS terminal acceptance and immutable payload comparison.
+Fixturemdkuwyed on actual OpenCode2.0.31 at80x24 with the visible GLM free model
+passed operation/destination/effects/input review, native rejection with unchanged
+CMS state, then a separate once-approved request that changed only its private
+draft SEO title. Canonical receipts contain local and separate application grants.
+Application approval alone leaves the draft unchanged. No external connectors
+or production CMS database are involved. CMS177f2a016861eb20ac46ba152b03d38b27d41732
+and runtime979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5
+are recorded in gateway-delivery-evidence.json. candidate-verification.json matches
+all67 installed payload files to the exact TpLitB archive and records host/runtime
+hashes and macOS26.6.2 x86_64. Logs: /tmp/kujo-gateway-rendered-accepted.log and
+/tmp/kujo-gateway-candidate-proof.log. Long inputs can leave the interruption
+footer offscreen; rejection checks the returned composer and unchanged canonical
+state, rather than expecting a new model response. Earlier harness/type/ENOSPC
+failures are retained and are not accepted runs.
+
+Real ENOSPC fixturel8o0gjyp subsequently passed recover, setup retry and status
+with its README preserved; recovery found no journal requiring restoration.
+Its space-recovery-verification.json and /tmp/kujo-real-space-recovery.log prove
+that specific failure path, not every storage/upgrade scenario. Generated payload
+copies from explicitly identified completed fixtures were removed to free space;
+logs, receipts, screenshots, manifests and immutable package archives were kept.
+
+The installed host catalog lists both requested free models. A new scoped Ship
+run with opencode/deepseek-v4.1-flash-free also failed provider.auth HTTP403
+before a successful native read (/tmp/kujo-ship-deepseek-native.log). No agent
+identity, scope or provider client was changed to evade the restriction. All six
+scoped specialist workflows remain unaccepted. Next UI acceptance should inspect
+actual large receipt browsing: evidence dialogs still pass full JSON to fixed
+alerts. Remaining lifecycle/recovery, supported host/OS and public release gates
+stay open. The service-support documentation update following this record changes
+packaged documentation; the executable payload remains the certified9044492 bytes.
