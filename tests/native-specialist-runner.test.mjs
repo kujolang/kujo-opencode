@@ -51,3 +51,19 @@ test('an empty completed model response cannot pass a receipt-required step',asy
 test('ordinary Build cannot be supplied directly as a specialist session',async()=>{
  const f=fixture();f.session.agent='build';await assert.rejects(specialistStep({...f,step:step()}),/Kujo specialist session/);assert.deepEqual(f.state().replies,[]);
 });
+
+test('decline evidence is read with a bounded query and never grants an effect',async()=>{
+ const f=fixture();f.session.inspectDeclineEvidence=true;
+ const original=f.api;let evidence=false;const prompts=[];
+ const listed={receipt_id:'list-receipt',ability_id:'kujo.ability.receipts.list',status:'succeeded',surface:'plugin',metadata:{session_id:'owned',agent_id:f.session.agent,model_id:f.session.model,project_root:f.session.project}};
+ const api=async(path,body)=>{
+  if(path.endsWith('/prompt')){
+   prompts.push(body.text);
+   if(body.text.includes('Call kujo_ability_receipts exactly once')){assert.ok(body.text.includes('{"limit":1,"include_result":false}'));evidence=true;return {};}
+  }
+  return original(path,body);
+ };
+ const result=await specialistStep({...f,api,receipts:async()=>[...f.state().rows,...(evidence?[listed]:[])],step:step('reject'),pollMs:0});
+ assert.deepEqual(f.state().replies,['reject']);assert.equal(evidence,true);assert.equal(prompts.length,2);
+ assert.deepEqual(result.receipt_ids,['pending']);assert.equal(result.terminal_receipt,null);
+});

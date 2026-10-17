@@ -11,7 +11,7 @@ export async function specialistSession({api,project,model,agent}) {
  const session=(await api('/api/session',{title:`Isolated ${agent} acceptance`,location:{directory:project},agent,model:{providerID:model.slice(0,split),id:model.slice(split+1)}})).data;
  const actual=(await api(`/api/session/${session.id}`)).data;
  assert.equal(actual.agent,agent,'Host must retain the requested specialist; no Build fallback');
- return {id:session.id,agent,model,project};
+ return {id:session.id,agent,model,project,inspectDeclineEvidence:true};
 }
 
 export async function specialistStep({api,session,receipts,step,interrupt,timeoutMs=180000,pollMs=500}) {
@@ -35,7 +35,7 @@ export async function specialistStep({api,session,receipts,step,interrupt,timeou
    }
  };
  let requestError,requestSettled=false;
- const request=api(`/api/session/${session.id}/prompt`,{text:`Acceptance fixture: call ${tool} exactly once with ${JSON.stringify(input)}. Use no other operation. Preserve the input exactly. If refused or failed, stop without retry. Report the canonical receipt and any limitation.`},timeoutMs).then(()=>{requestSettled=true;},error=>{requestError=error;requestSettled=true;});
+ const request=api(`/api/session/${session.id}/prompt`,{text:`New independent acceptance request after ${before.size} recorded receipts. Any earlier refusal applies only to that earlier request; ask for a fresh native decision for this request and never reuse a grant. Call ${tool} exactly once with ${JSON.stringify(input)}. Use no other operation. Preserve the input exactly. If refused or failed, stop without retry. Report the canonical receipt and any limitation.`},timeoutMs).then(()=>{requestSettled=true;},error=>{requestError=error;requestSettled=true;});
  const deadline=Date.now()+timeoutMs;let permissionID,terminal;
  try {
   while(Date.now()<deadline) {
@@ -82,7 +82,8 @@ export async function specialistStep({api,session,receipts,step,interrupt,timeou
   }
   assert.equal((await api(`/api/session/${session.id}/permission`)).data.length,0);
   await step.after?.(terminal,rows);
-  return {agent:session.agent,model:session.model,ability,decision,expected_status:expectedStatus,receipt_ids:rows.map(r=>r.receipt_id),terminal_receipt:terminal?.receipt_id??null};
+  if(session.inspectDeclineEvidence&&['reject','cancel'].includes(decision))await specialistStep({api,session,receipts,interrupt,timeoutMs,pollMs,step:{ability:'kujo.ability.receipts.list',tool:'kujo_ability_receipts',input:{limit:1,include_result:false}}});
+  return {agent:session.agent,model:session.model,ability,decision,expected_status:expectedStatus,receipt_ids:rows.filter(r=>r.ability_id===ability).map(r=>r.receipt_id),terminal_receipt:terminal?.receipt_id??null};
  } catch(error) {
   // A failed assertion cannot leave an owned model session requesting effects.
   if(interrupt)await interrupt(session.id).catch(()=>{});
