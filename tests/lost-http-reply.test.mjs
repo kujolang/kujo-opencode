@@ -26,7 +26,7 @@ for(const mismatch of ['ability','input','persistent','provider'])test(`Dispatch
  await mkdir(project);await mkdir(dataRoot);await writeFile(join(dataRoot,'receipts.jsonl'),'');
  const {realpath}=await import('node:fs/promises');const canonical=await realpath(project);
  let interrupted=0,granted=0;
- const input={path:'dispatch-transport',workflow_file:'workflow.json',topic:'Recover the retained run after an approval reply is lost',input_json:'{}',output_dir:'runs'};
+ const input={path:'dispatch-transport',workflow_file:'workflow.json',topic:'Recover the retained run after an approval reply is lost',input_json:'{"recovery_case":"lost-native-approval-reply"}',output_dir:'runs'};
  const api=async(path,body)=>{
   if(path==='/api/session')return {data:{id:'owned'}};
   if(path==='/api/session/owned')return {data:{id:'owned',agent:'build'}};

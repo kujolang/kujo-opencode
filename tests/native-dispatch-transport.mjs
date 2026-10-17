@@ -9,7 +9,7 @@ import {assertProviderHealthy} from './native-model-acceptance.mjs';
 export async function nativeDispatchTransport({api,project,dataRoot,model,loseApprovalReply,interrupt}) {
  project=await realpath(project);
  const path='dispatch-transport',root=join(project,path);await mkdir(root);
- await writeFile(join(root,'workflow.json'),JSON.stringify({id:'transport',name:'Native transport recovery',input_schema:{type:'dict'},tools:['timestamp_tool'],output_schema:{type:'dict'},default_retry_policy:{max_attempts:1,base_delay_ms:0,max_delay_ms:0},steps:[{id:'stamp',name:'stamp',type:'tool',tool_name:'timestamp_tool',input_from:['input'],output_key:'stamp'}]}),{flag:'wx'});
+ await writeFile(join(root,'workflow.json'),JSON.stringify({id:'transport',name:'Native transport recovery',input_schema:{type:'dict',required:['recovery_case']},tools:['timestamp_tool'],output_schema:{type:'dict'},default_retry_policy:{max_attempts:1,base_delay_ms:0,max_delay_ms:0},steps:[{id:'stamp',name:'stamp',type:'tool',tool_name:'timestamp_tool',input_from:['input'],output_key:'stamp'}]}),{flag:'wx'});
  const split=model.indexOf('/');assert.ok(split>0);
  const session=(await api('/api/session',{title:'Dispatch approval transport recovery',location:{directory:project},agent:'build',model:{providerID:model.slice(0,split),id:model.slice(split+1)}})).data;
  assert.equal((await api(`/api/session/${session.id}`)).data.agent,'build');
@@ -19,7 +19,7 @@ export async function nativeDispatchTransport({api,project,dataRoot,model,loseAp
   const before=new Set((await rows()).map(r=>r.receipt_id));
   const fresh=async()=> (await rows()).filter(r=>!before.has(r.receipt_id));
   let failure,permissionID;
-  const request=api(`/api/session/${session.id}/prompt`,{text:`Please use ${tool} with ${JSON.stringify(input)} for this isolated Dispatch recovery check. Report its receipt and stop after this operation. Do not rerun the workflow to discover its result.`},180000).catch(error=>{failure=error;});
+  const request=api(`/api/session/${session.id}/prompt`,{text:`Please use ${tool} with ${JSON.stringify(input)} for this isolated Dispatch recovery check. Preserve every supplied input field exactly. Report its receipt and stop after this operation. Do not rerun the workflow to discover its result.`},180000).catch(error=>{failure=error;});
   try {
    const deadline=Date.now()+180000;let terminal;
    while(Date.now()<deadline){
@@ -49,7 +49,7 @@ export async function nativeDispatchTransport({api,project,dataRoot,model,loseAp
  }
  console.log('Dispatch transport: run with lost approval reply');
  const output=join(root,'runs');const absent=()=>assert.rejects(access(output),{code:'ENOENT'});
- const run=await operation('kujo_dispatch_run','kujo.dispatch.workflow.run',{path,workflow_file:'workflow.json',topic:'Recover the retained run after an approval reply is lost',input_json:'{}',output_dir:'runs'},absent,true);
+ const run=await operation('kujo_dispatch_run','kujo.dispatch.workflow.run',{path,workflow_file:'workflow.json',topic:'Recover the retained run after an approval reply is lost',input_json:'{"recovery_case":"lost-native-approval-reply"}',output_dir:'runs'},absent,true);
  assert.equal(transport.forwarded_requests,1);assert.equal(transport.client_response_lost,true);
  const dirs=(await readdir(output,{withFileTypes:true})).filter(x=>x.isDirectory()&&!x.name.startsWith('.'));assert.equal(dirs.length,1);
  const runID=dirs[0].name,statePath=join(output,runID,'state.json'),bytes=await readFile(statePath,'utf8'),state=JSON.parse(bytes);
