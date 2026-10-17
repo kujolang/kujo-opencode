@@ -88,7 +88,21 @@ for supported operations. This is not every feature of every Kujo product.
 
 ## Approve an operation
 
-When an operation needs approval, OpenCode gives you a request ID. In your terminal:
+With the native plugin, **Review Kujo operation** opens before the permission
+choice. Inspect the operation, destination (when supplied), effects, exact input,
+and approval identity. Long values have pages so you can inspect the whole input.
+Choose **Return to permission choice**, then **Allow once** or **Reject** in
+OpenCode. Closing the review does not grant permission. A plain rejection ends
+that model step; ask again only if you want a separate new request.
+
+You can reopen the details through `/kujo` → **Review pending approval** or the
+command palette while a request is pending. The review stays within the current
+project and session. OpenCode owns the decision; Kujo issues the request-bound
+canonical approval only after the host grants permission and the capability is
+revalidated.
+
+If you explicitly use the MCP fallback, an operation returns a request ID. Review
+and decide that request in your terminal:
 
 ```sh
 kujo-opencode approve REQUEST_ID

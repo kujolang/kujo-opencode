@@ -252,7 +252,26 @@ try:
         payload=json.dumps({'origin':leash.origin,'event':event},separators=(',',':'))
         send('Call kujo_leash_deliver exactly once with '+payload+'. Do not use other tools or retry.')
         send('\r')
-        wait('kujo.ability.approve', 'leash-reject-permission', seconds=90)
+        wait('Review Kujo operation', 'leash-operation-review', seconds=90)
+        assert leash.events()==[], 'Review itself cannot deliver'
+        choose('Operation', 'Operation · 1/1', 'leash-operation-detail')
+        wait('Submit a Leash intervention', 'leash-operation-detail')
+        send('\x1b')
+        wait('Review Kujo operation', 'leash-review-return')
+        choose('Destination', 'Destination · 1/1', 'leash-destination-detail')
+        wait(leash.origin, 'leash-destination-detail')
+        send('\x1b')
+        wait('Review Kujo operation', 'leash-review-return')
+        choose('Effects', 'Effects · 1/1', 'leash-effects-detail')
+        wait('external', 'leash-effects-detail')
+        send('\x1b')
+        wait('Review Kujo operation', 'leash-review-return')
+        choose('Exact input', 'Exact input · 1/', 'leash-input-detail')
+        wait('origin', 'leash-input-detail')
+        send('\x1b')
+        wait('Exact input pages', 'leash-input-pages')
+        choose('Back to operation', 'Review Kujo operation', 'leash-input-back')
+        choose('Return to permission choice', 'kujo.ability.approve', 'leash-reject-permission')
         assert leash.events()==[], 'No canonical event before native approval'
         send('\x1b[C')
         assert choice_style('Reject')==selected and choice_style('Allow once')!=selected
@@ -262,7 +281,8 @@ try:
         assert leash.events()==[], 'Rejected native permission must not deliver'
         send('Now explicitly request kujo_leash_deliver once with the same exact input. I will approve this separate request. Do not use other tools or retry.')
         send('\r')
-        wait('kujo.ability.approve', 'leash-allow-permission', seconds=90)
+        wait('Review Kujo operation', 'leash-second-review', seconds=90)
+        choose('Return to permission choice', 'kujo.ability.approve', 'leash-allow-permission')
         assert leash.events()==[], 'Still no canonical event before the separate grant'
         assert choice_style('Allow once')==selected and choice_style('Reject')!=selected
         send('\r')
