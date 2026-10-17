@@ -3,12 +3,12 @@
     {
       "id": "s01",
       "start": 3,
-      "end": 19,
-      "duration": 16,
+      "end": 15,
+      "duration": 12,
       "purpose": "The task",
       "visual": "Live project and task fixture",
-      "voiceover": "Let's build a small Koo-joe script in OpenCode. It reads check results from a JSON file, counts passes and failures, and lists the failed checks. We'll follow the code through inspection, execution, tests, and review.",
-      "audio": "Unchanged Brian ElevenLabs v4 narration; short reading pause after speech",
+      "voiceover": "Let's build a Koo-joe script in OpenCode. We'll give it a JSON file with a few check results and have it count the passes, count the failures, and tell us what failed.",
+      "audio": "Siren / ElevenLabs V4; original rate; short reading pause",
       "onscreen_text": "Kujo OpenCode 0.2.0 release candidate",
       "asset_requirement_ids": [
         "capture-main",
@@ -17,17 +17,18 @@
       "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
       "transition_in": "hard cut",
       "transition_out": "hard cut",
-      "priority": "required"
+      "priority": "required",
+      "speech_offset": 0.5
     },
     {
       "id": "s02",
-      "start": 19,
-      "end": 40,
-      "duration": 21,
+      "start": 15,
+      "end": 29,
+      "duration": 14,
       "purpose": "Understand the input",
       "visual": "Real Understand Scout map and Scent dry-run selection; do not imply fixture content was inspected",
-      "voiceover": "We start with the Understand specialist. Scout maps the project, and Scent previews which files would fit a context pack. These results describe the project and file selection. They do not establish the contents of our input fixture. That distinction matters when we decide what the agent actually knows.",
-      "audio": "Unchanged Brian ElevenLabs v4 narration; short reading pause after speech",
+      "voiceover": "First, let's get a look at the project. Scout maps out the files, and Scent shows what would go into a context pack. That gives us a starting point before we ask OpenCode to write the script.",
+      "audio": "Siren / ElevenLabs V4; original rate; short reading pause",
       "onscreen_text": null,
       "asset_requirement_ids": [
         "capture-main",
@@ -36,17 +37,18 @@
       "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
       "transition_in": "hard cut",
       "transition_out": "hard cut",
-      "priority": "required"
+      "priority": "required",
+      "speech_offset": 0.5
     },
     {
       "id": "s03",
-      "start": 40,
-      "end": 67.0,
-      "duration": 27.0,
+      "start": 29,
+      "end": 50,
+      "duration": 21,
       "purpose": "Write the custom program",
       "visual": "Actual ordinary OpenCode Build editing main.kujo, summary.kujo and tests",
-      "voiceover": "Now we switch to OpenCode's regular Build agent to write the custom code. It separates the summary logic from the command-line entry point and adds tests. The input has four checks. Three pass; docs fails. We want those totals and the failed name in a short, predictable report. This editing step uses OpenCode's normal tools.",
-      "audio": "Unchanged Brian ElevenLabs v4 narration; short reading pause after speech",
+      "voiceover": "Now we switch to OpenCode's Build agent and ask it to write the code. It puts the summary logic in one file and the command-line entry point in another, then adds the tests. Our sample has four checks: three pass, and docs fails. That's what we should see when we run it.",
+      "audio": "Siren / ElevenLabs V4; original rate; short reading pause",
       "onscreen_text": null,
       "asset_requirement_ids": [
         "capture-main",
@@ -55,17 +57,18 @@
       "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
       "transition_in": "hard cut",
       "transition_out": "hard cut",
-      "priority": "required"
+      "priority": "required",
+      "speech_offset": 0.5
     },
     {
       "id": "s04",
-      "start": 67.0,
-      "end": 84.0,
-      "duration": 17.0,
+      "start": 50,
+      "end": 63,
+      "duration": 13,
       "purpose": "Inspect before running",
       "visual": "Kujo Build source diagnostics and formatting preview",
-      "voiceover": "Koo-joe Build takes over for verification. Source inspection passes for the entry point and its helper. The formatting preview proposes no changes. These are source checks. We still need to run the program and compare its output with the input.",
-      "audio": "Unchanged Brian ElevenLabs v4 narration; short reading pause after speech",
+      "voiceover": "The code's written. Let's check it with Koo-joe Build. Both source files pass inspection, and the formatting preview has nothing to change. Next, we'll run it against our sample data.",
+      "audio": "Siren / ElevenLabs V4; original rate; short reading pause",
       "onscreen_text": null,
       "asset_requirement_ids": [
         "capture-main",
@@ -74,17 +77,18 @@
       "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
       "transition_in": "hard cut",
       "transition_out": "hard cut",
-      "priority": "required"
+      "priority": "required",
+      "speech_offset": 0.5
     },
     {
       "id": "s05",
-      "start": 84.0,
-      "end": 111.0,
-      "duration": 27.0,
+      "start": 63,
+      "end": 83,
+      "duration": 20,
       "purpose": "Approve the exact run",
       "visual": "Actual preview manifest, approval, result",
-      "voiceover": "The run preview includes both source files and the JSON input. We review the exact files, command, and effects before approving execution. The program then runs from that reviewed snapshot. The result matches: four checks, three passed, one failed, and docs named below. The snapshot records what ran; it is not an operating-system sandbox.",
-      "audio": "Unchanged Brian ElevenLabs v4 narration; short reading pause after speech",
+      "voiceover": "Before anything runs, we can see the source files, the input, and the command we're approving. Everything looks right, so let's run it. And there it is: four checks, three passed, one failed. Docs is the one that failed, just as we expected.",
+      "audio": "Siren / ElevenLabs V4; original rate; short reading pause",
       "onscreen_text": null,
       "asset_requirement_ids": [
         "capture-main",
@@ -93,17 +97,18 @@
       "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
       "transition_in": "hard cut",
       "transition_out": "hard cut",
-      "priority": "required"
+      "priority": "required",
+      "speech_offset": 2
     },
     {
       "id": "s06",
-      "start": 111.0,
-      "end": 134.0,
-      "duration": 23.0,
+      "start": 83,
+      "end": 102,
+      "duration": 19,
       "purpose": "Test the behavior",
       "visual": "Actual test preview, approval and test output",
-      "voiceover": "Next, we preview and approve the interpreter tests, including their expected output. All five fixtures pass, with no expected-output updates. They cover mixed results, all-pass and empty inputs, plus malformed and invalid data through the summary helper. That gives us useful evidence, while leaving one gap for review.",
-      "audio": "Unchanged Brian ElevenLabs v4 narration; short reading pause after speech",
+      "voiceover": "Let's run the tests, too. We preview the files and expected output, then approve the run. All five pass. They cover mixed results, all passes, empty input, and bad data in the summary helper. None of the expected outputs needed to change.",
+      "audio": "Siren / ElevenLabs V4; original rate; short reading pause",
       "onscreen_text": null,
       "asset_requirement_ids": [
         "capture-main",
@@ -112,17 +117,18 @@
       "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
       "transition_in": "hard cut",
       "transition_out": "hard cut",
-      "priority": "required"
+      "priority": "required",
+      "speech_offset": 0.5
     },
     {
       "id": "s07",
-      "start": 134.0,
-      "end": 160.0,
-      "duration": 26.0,
+      "start": 102,
+      "end": 123,
+      "duration": 21,
       "purpose": "Review the change",
       "visual": "Disclose operator git add -N preparation; real PatchBrief/ChangeBucket output and open CLI coverage finding",
-      "voiceover": "Before review, I mark the new files for Git's diff view outside OpenCode. PatchBrief summarizes the change; ChangeBucket counts twelve files, one hundred twenty-four additions, and two deletions. The reviewer spots the gap: helper tests cover bad input, but no command-line test proves the error message and nonzero exit code. We keep that finding open.",
-      "audio": "Unchanged Brian ElevenLabs v4 narration; short reading pause after speech",
+      "voiceover": "Before the review, I mark the new files so Git includes them in the diff. PatchBrief summarizes the changes, and ChangeBucket counts them. The review catches something we still need: a command-line test for bad input. The helper tests pass, but we haven't checked the error message and exit code through the command line yet.",
+      "audio": "Siren / ElevenLabs V4; original rate; short reading pause",
       "onscreen_text": null,
       "asset_requirement_ids": [
         "capture-main",
@@ -131,17 +137,18 @@
       "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
       "transition_in": "hard cut",
       "transition_out": "hard cut",
-      "priority": "required"
+      "priority": "required",
+      "speech_offset": 0.5
     },
     {
       "id": "s08",
-      "start": 160.0,
-      "end": 182.0,
-      "duration": 22.0,
+      "start": 123,
+      "end": 140,
+      "duration": 17,
       "purpose": "Inspect retained evidence",
       "visual": "Real receipt tool result; close with visible remaining CLI error/exit-code test gap",
-      "voiceover": "Finally, we inspect the receipts for the successful run and tests. They retain the results and artifact locations. This is Koo-joe OpenCode's release candidate, shown in a real session: code written, checks run, and a remaining test gap made visible. The full recording preserves the workflow behind this walkthrough.",
-      "audio": "Unchanged Brian ElevenLabs v4 narration; short reading pause after speech",
+      "voiceover": "We can also open the receipts to see what ran and where the results were saved. That's the walkthrough: write the script, check it, run the tests, and review the changes. We've got a working report and a clear next step from the review.",
+      "audio": "Siren / ElevenLabs V4; original rate; short reading pause",
       "onscreen_text": "Kujo OpenCode 0.2.0 release candidate",
       "asset_requirement_ids": [
         "capture-main",
@@ -150,22 +157,26 @@
       "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
       "transition_in": "hard cut",
       "transition_out": "hard cut",
-      "priority": "required"
+      "priority": "required",
+      "speech_offset": 0.5
     }
   ],
-  "duration": 185,
+  "duration": 145,
   "bumpers": [
     {
       "start": 0,
       "duration": 3,
-      "title": "Kujo \u00d7 OpenCode intro"
+      "title": "Kujo \u00d7 OpenCode intro",
+      "onscreen_text": "Trust at the Speed of AI"
     },
     {
-      "start": 182,
-      "duration": 3,
-      "title": "Kujo \u00d7 OpenCode outro"
+      "start": 140,
+      "duration": 5,
+      "title": "Kujo \u00d7 OpenCode outro",
+      "voiceover": "Kujo, trust at the speed of AI.",
+      "onscreen_text": "Kujo, trust at the speed of AI."
     }
   ],
   "timing_authority": "production/edit-plan.json",
-  "duration_seconds": 187
+  "duration_seconds": 145
 }
