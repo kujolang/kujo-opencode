@@ -12,8 +12,8 @@ Archive SHA256:0a32d8ccf90ebaadc0c9d4462e84f9f899f1b3cd5d626793b3198abf2e1cffca.
 
 Fixture6s1lnD passed the exact archive's fresh installation and real0.1.0 upgrade,
 older-project retention,28pinned sources, four starters/services, Agents SDK
-fixture, RunLedger, knowledge and real Chromium/Lens checks. The fixture remains
-installed under /var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-opencode-packed-6s1lnD.
+fixture, RunLedger, knowledge and real Chromium/Lens checks. The fixture evidence remains
+under /var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-opencode-packed-6s1lnD.
 OpenCode2.0.31 discovery passed against its fresh project. Logs:
 /tmp/kujo-release-snapshot-{fresh,host}.log. Its verification.json records the
 candidate commit/hash/integrity. The candidate's manifest remains immutable and
@@ -208,9 +208,48 @@ A separate pinned-candidate scoped Ship GLM-free test on2.0.32 still failed with
 provider.auth HTTP403 before tool execution (/tmp/kujo-pinned-ship-latest.log).
 Do not retry this unchanged provider/host combination without new evidence.
 The user question about another already-authorized provider remains pending.
-Next local acceptance opportunity: adapt the rendered PTY harness to consume the
-exact candidate and check actual2.0.32 UI, preserving its POSIX scope. Continue
+The following checkpoint completes exact-candidate rendered2.0.32 acceptance
+for the onboarding/manual-ledger scope. Other rendered modes retain prior evidence. Continue
 public release account setup and real CI/platform/specialist evidence when their
 external prerequisites become available. The current new package metadata/test
 installer are not identical to4feac59; final release still needs a newly built,
 fully accepted immutable candidate. All test processes are terminal.
+
+## Exact-candidate rendered POSIX acceptance (2026-10-17)
+
+tests/tui-terminal.py now accepts --candidate, verifies the bundle before/after
+acceptance, installs the archive with pinned sources, and automatically compares
+the installed payload. A failed comparison leaves verification.ok=false. The
+POSIX host-matrix jobs run this at80x24 with --ledger and retain rendered screens,
+permission focus, verification and payload proof; Windows rendered UI remains open.
+Python syntax and actionlint1.7.12 pass (/tmp/kujo-rendered-matrix-lint.log).
+
+Actual macOS/OpenCode2.0.32 fixture1ipx7542 passed against exact4feac59 candidate
+SHA256e8937c2c1bd9971dbac327e171e940cc02ae794529e67229b1a20e1163a0ee25:
+rendered onboarding, service guidance, visibly selected Reject, unchanged profile,
+manual RunLedger start and separate partial-finish approvals. No inference was
+requested. All69payloadfiles match, manifestSHA256
+b0ba144fac730640cd891f9461abdccca88e188dee026facadd46faec3b141a4.
+Log:/tmp/kujo-rendered-candidate-latest.log. Fixture under
+/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-1ipx7542
+retains screens, canonical records, verification.json and candidate-verification.json.
+The optional pinned Python environment is recorded in /tmp/kujo-rendered-python-path.
+This scope does not include live specialist, automatic completion, gateway or Leash
+execution on2.0.32; prior records for those modes keep their original versions.
+
+Review of profile-denied.txt identifies a remaining usability issue: native Reject
+currently produces “Kujo needs attention / RPC call failed” with conditional
+permission guidance. It safely preserves configuration, but presents an intentional
+decline as a technical failure. Next local work should distinguish confirmed native
+rejection from genuine/unconfirmed RPC failures using supported request correlation;
+do not mask all RPC failures as cancellation or infer a rejection from generic text.
+The SDK permission.assert contract says plain rejection ends the current step and
+must be rethrown for tools; preserve that behavior and never auto-approve.
+
+Disk dropped to139MiB during setup. Generated copies from completed6s1lnD were
+removed (npm cache, prefix node_modules, both runtime/source trees); its archives,
+receipts and verification files remain, with cleanup-record.json. It is no longer
+an installed executable fixture despite historical retention flags. Space recovered
+to roughly576MiB. No user repository or active fixture was removed. All test and
+cleanup processes are terminal. Provider-selection question remains unanswered;
+full specialist/platform/publication gates remain open. No workflow was dispatched.
