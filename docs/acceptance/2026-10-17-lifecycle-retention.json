@@ -58,5 +58,19 @@
     "published": false,
     "sha256": "2b8073637d7995be5b52aefafffe8003667075560301a78148282ada77b573b6",
     "directory": "/tmp/kujo-retention-candidate"
+  },
+  "first_replacement_live_attempt": {
+    "result": "failed_timeout",
+    "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-krM6aC",
+    "log": "/tmp/kujo-retention-lifecycle-minimum.log",
+    "final_queue": {
+      "pending": 8,
+      "held": 8,
+      "discarded": 0,
+      "delivered": 31,
+      "last_code": "http_200"
+    },
+    "full_lifecycle_passed": false,
+    "diagnostic_rerun_log": "/tmp/kujo-retention-lifecycle-minimum-diagnostic.log"
   }
 }
