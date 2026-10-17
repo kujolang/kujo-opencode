@@ -9,6 +9,8 @@ import {join,resolve} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 const exec=promisify(execFile),repo=resolve('.');
 const journey=process.env.KUJO_TEST_JOURNEY;
+const dispatchTransportEnabled=process.env.KUJO_TEST_DISPATCH_TRANSPORT==='1';
+if(dispatchTransportEnabled){assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT&&!journey,'Dispatch transport requires an explicit model and its own Build session');for(const flag of ['KUJO_TEST_GUARD','KUJO_TEST_TELEMETRY','KUJO_TEST_CANCEL_TELEMETRY','KUJO_TEST_AUTOTRACK'])assert.notEqual(process.env[flag],'1','Run transport and lifecycle checks separately');}
 if(journey){assert.ok(['understand','build','review','browser','workflow','ship'].includes(journey),'Only implemented specialist journeys may run');assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Journey needs an explicit model and owns its specialist identity');for(const flag of ['KUJO_TEST_GUARD','KUJO_TEST_TELEMETRY','KUJO_TEST_CANCEL_TELEMETRY','KUJO_TEST_AUTOTRACK'])assert.notEqual(process.env[flag],'1','Run specialist and lifecycle acceptance separately');}
 if(process.env.KUJO_TEST_TELEMETRY==='1'||process.env.KUJO_TEST_CANCEL_TELEMETRY==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Telemetry acceptance needs an explicit model and ordinary Build agent');
 if(process.env.KUJO_TEST_GUARD==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Guard acceptance needs an explicit model and ordinary Build agent');
@@ -84,7 +86,7 @@ try {
  await api(`/api/session/${session.id}/command`,{name:'kujo-evidence',text:''});
  // Drive only this isolated fixture's human permission endpoint. No live user
  // session or production mutation is approved by this acceptance harness.
- const selectedProfile=process.env.KUJO_TEST_MODEL?'ship':'build';
+ const selectedProfile=dispatchTransportEnabled?'full':process.env.KUJO_TEST_MODEL?'ship':'build';
  const changing=api('/api/rpc/kujo.control/profile',{input:{sessionID:session.id,profile:selectedProfile}});
  let pending;
  for(let i=0;i<40;i++) {const list=(await api(`/api/session/${session.id}/permission`)).data;pending=list.find(p=>p.action==='kujo.profile.change');if(pending)break;await delay(100);}
@@ -299,7 +301,7 @@ try {
  const detail=(await api('/api/rpc/kujo.control/evidenceDetail',{input:{receiptID:projectEvidence.receipts[0].receipt_id}})).output;
  assert.equal(detail.receipt.metadata.project_root,await realpath(project));
  await assert.rejects(api('/api/rpc/kujo.control/artifact',{input:{receiptID:'not-retained',index:0}}));
- const live=process.env.KUJO_TEST_MODEL&&!journey ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
+ const live=process.env.KUJO_TEST_MODEL&&!journey&&!dispatchTransportEnabled ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
  let specialistJourney=null;
  if(journey){
   const changingFull=api('/api/rpc/kujo.control/profile',{input:{sessionID:session.id,profile:'full'}});
@@ -344,7 +346,13 @@ try {
   await writeFile(join(root,'cancellation-evidence.json'),JSON.stringify(cancellation,null,2)+'\n');
   await lifecycleChange('disable','once');
  }
- const verification={ok:true,root,host:hostVersion,platform:process.platform,arch:process.arch,pinned_sources:pinned,rendered_tui:false,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),live,specialistJourney,failureGuard,cancellation:cancellation?{...cancellation,events:undefined}:null,telemetry:telemetry?{...telemetry,events:undefined}:null,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,nativeTransportRecovery,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||Boolean(specialistJourney)||process.env.KUJO_TEST_AUTOTRACK==='1'};
+ let dispatchTransport=null;
+ if(dispatchTransportEnabled){
+  const {OpenCode}=await import('@opencode/client');const nativeClient=OpenCode.make({baseUrl:base,headers:{Authorization:authorization}});
+  dispatchTransport=await (await import('./native-dispatch-transport.mjs')).nativeDispatchTransport({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL,loseApprovalReply:(sessionID,permissionID)=>lostHttpReply({url:base+`/api/session/${sessionID}/permission/${permissionID}/reply`,authorization,body:{decision:'once'},timeoutMs:180000}),interrupt:sessionID=>nativeClient.session.interrupt({sessionID,resume:false},{signal:AbortSignal.timeout(15000)})});
+  await writeFile(join(root,'dispatch-transport-evidence.json'),JSON.stringify(dispatchTransport,null,2)+'\n');
+ }
+ const verification={ok:true,root,host:hostVersion,platform:process.platform,arch:process.arch,pinned_sources:pinned,rendered_tui:false,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),live,specialistJourney,dispatchTransport,failureGuard,cancellation:cancellation?{...cancellation,events:undefined}:null,telemetry:telemetry?{...telemetry,events:undefined}:null,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,nativeTransportRecovery,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||Boolean(specialistJourney)||Boolean(dispatchTransport)||process.env.KUJO_TEST_AUTOTRACK==='1'};
  if(candidate)await verifyCandidate(candidate.directory);
  await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
  console.log(JSON.stringify(verification));
