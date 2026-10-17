@@ -220,8 +220,10 @@ try {
  const ledgerStatus=()=>api('/api/rpc/kujo.control/runledger',{input:{sessionID:ledgerSession.id,action:'status'}});
  assert.equal((await ledgerStatus()).output.state,'not_started');
  async function sessionLedgerChange(action,decision,status){
-  const outcome=api('/api/rpc/kujo.control/runledger',{input:{sessionID:ledgerSession.id,action,...(status?{status}:{})}}).then(value=>({value}),error=>({error}));
-  let permission;for(let i=0;i<50;i++){permission=(await api(`/api/session/${ledgerSession.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(permission)break;await delay(100);}
+  let settled;const outcome=api('/api/rpc/kujo.control/runledger',{input:{sessionID:ledgerSession.id,action,...(status?{status}:{})}}).then(value=>(settled={value}),error=>(settled={error}));
+  let permission;for(let i=0;i<50;i++){permission=(await api(`/api/session/${ledgerSession.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(permission||settled)break;await delay(100);}
+  if(!permission&&settled?.error)throw settled.error;
+
   assert.ok(permission,'session ledger mutation requires approval');assert.deepEqual(permission.save,[]);
   assert.equal((await ledgerStatus()).output.state,action==='start'?'not_started':'in_progress');
   await api(`/api/session/${ledgerSession.id}/permission/${permission.id}/reply`,{decision});
