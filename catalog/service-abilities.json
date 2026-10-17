@@ -186,5 +186,46 @@
     },
     "adapter": "gateway_call",
     "source": "gateway"
+  },
+  {
+    "definition": {
+      "schema": "kujo.ability/v1",
+      "id": "kujo.opencode.watchdog.read",
+      "version": "1.0.0",
+      "title": "Read configured Watchdog telemetry",
+      "description": "Read a bounded API response from an explicitly configured local or HTTPS Watchdog service. Does not enable lifecycle delivery or proxy model calls.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "default": "/healthz",
+            "description": "/api/* path with optional query filters, /healthz or /readyz."
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "effects": [
+        {
+          "kind": "read",
+          "resource": "kujo.watchdog.telemetry"
+        }
+      ],
+      "idempotency": {
+        "mode": "intrinsic"
+      }
+    },
+    "tool": {
+      "name": "kujo_watchdog_read",
+      "description": "Read telemetry from KUJO_WATCHDOG_URL using optional KUJO_WATCHDOG_TOKEN. GET only; bounded output; no model proxy or lifecycle changes."
+    },
+    "adapter": "watchdog_read",
+    "source": "watchdog"
   }
 ]

@@ -65,7 +65,7 @@ kujo-opencode abilities
 | `review` | 18 | Check architecture, contracts, context, and change footprint |
 | `ship` | 30 | Run verification and retain release evidence |
 | `build` | 17 | Inspect source and run reviewed source/test snapshots |
-| `full` | 58 | Add orchestration, RAG, and optional service tools |
+| `full` | 59 | Add orchestration, RAG, and optional service tools |
 
 `enable` and `disable` accept a product name, a tool name, or the canonical Ability
 ID. Product names select all of that product's supported operations. Canonical
@@ -541,3 +541,26 @@ ID, version, definition digest and invocation. The receipt and its result appear
 in local evidence alongside the adapter receipt. There are no automatic retries.
 After cancellation or a lost response, inspect the invocation in the application
 before deciding whether to retry with the same identifiers.
+
+
+### Read a configured Watchdog service
+
+Choose **Full**, or enable `kujo_watchdog_read` in the capability picker or CLI.
+Set `KUJO_WATCHDOG_URL` and, for a protected API, `KUJO_WATCHDOG_TOKEN` in the
+environment that launches OpenCode. `/kujo` → External services → Watchdog reads
+shows configuration guidance without connecting. Remote origins require HTTPS;
+loopback HTTP is supported. Optional `KUJO_WATCHDOG_AUDIENCE` is forwarded as
+`x-kujo-audience`. The tool does not reuse `WDG_API_AUTH_TOKEN` automatically: an
+explicitly configured remote reader should not receive another service's token.
+
+Ask the Workflow specialist to read `/api/stats`, `/api/traces?limit=10`, or
+`/api/telemetry/v2/records?producer=kujo-opencode`. Query filters are preserved.
+Only GET requests under `/api/*`, `/healthz` and `/readyz` are supported; model
+proxy routes are excluded. Responses are bounded to 256 KiB with a 15-second timeout,
+and redirects are refused. Narrow filters when a response exceeds the bound.
+The result reflects what the service returns and its access policy; it is not
+limited to the metadata emitted by OpenCode's lifecycle observer.
+
+This reader does not start a service, enable telemetry, mutate lifecycle settings
+or proxy model calls. Existing local Watchdog health and lifecycle-delivery
+controls retain their own configuration and credentials.

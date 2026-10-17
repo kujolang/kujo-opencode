@@ -11,7 +11,7 @@ test("portable profiles expose a growing catalog without changing installation",
   const review = profileAbilities(catalog, "kujo.profile.review");
   const ship = profileAbilities(catalog, "kujo.profile.ship");
   const full = profileAbilities(catalog, "kujo.profile.full");
-  assert.deepEqual([essentials.length, review.length, ship.length, full.length], [5, 18, 30, 58]);
+  assert.deepEqual([essentials.length, review.length, ship.length, full.length], [5, 18, 30, 59]);
   assert.equal(new Set(catalog.abilities.map((item) => item.definition.id)).size, catalog.abilities.length);
   for (const item of catalog.abilities) {
     assert.equal(validateDefinition(item.definition), item.definition);
