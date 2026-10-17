@@ -61,7 +61,7 @@ try {
    if(expected)assert.equal(permission.metadata.ui_request_id,expected,'management permission echoes its exact display correlation');
   }
   return result;
-  }finally{if(marker&&pendingManagement.get(key)===marker)pendingManagement.delete(key);}
+  }catch(error){if(error?.name==='TimeoutError')throw new Error(`Host request timed out: ${path}`,{cause:error});throw error;}finally{if(marker&&pendingManagement.get(key)===marker)pendingManagement.delete(key);}
  }
  let commands=[];
  for(let i=0;i<20;i++){commands=(await api('/api/command')).data;if(commands.some(c=>c.name==='kujo-status'))break;await delay(250);}
