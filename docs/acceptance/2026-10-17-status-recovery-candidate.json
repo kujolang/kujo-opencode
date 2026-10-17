@@ -201,5 +201,132 @@
       "profile-denied.txt",
       "ledger-finished.txt"
     ]
+  },
+  "native_minimum": {
+    "ok": true,
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-REGM3N",
+    "host": "opencode v2.0.31",
+    "platform": "darwin",
+    "arch": "x64",
+    "pinned_sources": true,
+    "rendered_tui": false,
+    "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+    "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+    "candidate_integrity": "sha512-2XDK3zMkBKARZ62PEsJZ7y0Jvh481yXytyWyPDbWx3d7CKSwZ+uUFrzY48z1x+GduEulnoYmU58CiFs16fXISw==",
+    "live": {
+      "read_receipt": "receipt-cd51b5e3-ce2a-4054-88b9-c1853f9788c3",
+      "denied_without_write": true,
+      "write_receipt": "receipt-94a2a52f-8d3d-4c1e-92df-5a369388e618"
+    },
+    "specialistJourney": null,
+    "failureGuard": {
+      "session_id": "ses_eb71a1fa5ffecUBb3T4yGxlc1Y",
+      "model": "opencode/glm-5.3-flash-free",
+      "agent": "build",
+      "interventions": 1,
+      "notification": true,
+      "telemetry_enabled": false,
+      "failed_receipts": [
+        "receipt-9cc5c832-c926-443c-ac5a-6cae5fad9807",
+        "receipt-28bd7adc-c6dc-415d-ac9e-089558b55ba3",
+        "receipt-a0750574-2a97-4cf4-b3cd-39aecd9f2d50"
+      ],
+      "approval_granted": false
+    },
+    "cancellation": {
+      "watchdog": {
+        "source_commit": "9e82e8f5b05edca948f6a432ae517031388296e6",
+        "source_clean": true,
+        "runtime_sha256": "cc811ce04910d68f6703f8717eb6dc4fcd05666a29f738dee88bf57d52f852c2"
+      },
+      "session_id": "ses_eb7181a89ffeN1QU96EEVILEny",
+      "model": "opencode/glm-5.3-flash-free",
+      "agent": "build",
+      "permission_requested": true,
+      "approval_granted": false,
+      "effect_absent": true,
+      "remaining_permissions": 0,
+      "cancellation_records": 1,
+      "receipt_ids": [
+        "receipt-9cf6ac35-c398-4024-9277-93c65739a6b1"
+      ],
+      "metadata_only": true
+    },
+    "telemetry": {
+      "watchdog": {
+        "source_commit": "9e82e8f5b05edca948f6a432ae517031388296e6",
+        "source_clean": true,
+        "runtime_sha256": "cc811ce04910d68f6703f8717eb6dc4fcd05666a29f738dee88bf57d52f852c2"
+      },
+      "queue_delivered": 33,
+      "queue_discarded": 0,
+      "session_id": "ses_eb71a03d8ffeIUpp3kQXKl4tH1",
+      "run_id": "2026-10-17-glm-5-3-flash-free-opencode-session-ses-eb71a03d8ffeiupp3kqxkl4th1-001",
+      "trace_id": "b6917aa8e9d875f2a7b42f6bb0ec9a8b",
+      "model": "opencode/glm-5.3-flash-free",
+      "agent": "build",
+      "receipt_ids": [
+        "receipt-0a4277e8-c7b4-4e8e-a5bc-afbd4fc07b6d",
+        "receipt-12ee514c-8b9d-4d95-acbe-481149710910"
+      ],
+      "record_count": 33,
+      "service_outage_recovered": true,
+      "explicit_retry_rearmed": 10,
+      "host_reload_recovered": true,
+      "metadata_only": true,
+      "opt_out_verified": true,
+      "opt_out_assistant_observed": true,
+      "record_still_in_progress": true
+    },
+    "commands": [
+      "kujo-status",
+      "kujo-evidence",
+      "kujo-profile",
+      "kujo-doctor",
+      "kujo-review"
+    ],
+    "native_status_recorded": true,
+    "native_evidence_recorded": true,
+    "native_profile_permission": true,
+    "native_capability_permissions": true,
+    "native_lifecycle_permissions": true,
+    "native_session_runledger": true,
+    "nativeTransportRecovery": {
+      "forwarded_requests": 1,
+      "upstream_status": 200,
+      "upstream_response_consumed": true,
+      "client_response_lost": true,
+      "scope": "session RunLedger start; no inference or Dispatch transport claim",
+      "run_id": "2026-10-17-glm-5-3-flash-free-opencode-session-ses-eb71a9727ffe0jvxdnzi6scwim-001"
+    },
+    "native_browser_readiness": true,
+    "native_knowledge_verified": true,
+    "native_automatic_tracking": true,
+    "browser_ready": false,
+    "model_call": true
+  },
+  "rendered_latest": {
+    "ok": true,
+    "host": "opencode v2.0.32",
+    "terminal_backend": "posix",
+    "service_result_pages": null,
+    "dimensions": [
+      80,
+      24
+    ],
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-v7yy0yj0",
+    "initial_requested_session": "ses_kujo_terminal_354533bcf655495189932f381f3d445e",
+    "model_call": false,
+    "effects_approved": true,
+    "rendered_ledger": true,
+    "rendered_automatic_completion": false,
+    "rendered_completion_evidence": false,
+    "live_ship_specialist": false,
+    "rendered_leash": false,
+    "rendered_gateway": false,
+    "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+    "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+    "candidate_integrity": "sha512-2XDK3zMkBKARZ62PEsJZ7y0Jvh481yXytyWyPDbWx3d7CKSwZ+uUFrzY48z1x+GduEulnoYmU58CiFs16fXISw==",
+    "pinned_sources": true
   }
 }
