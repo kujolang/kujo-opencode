@@ -13,6 +13,10 @@ permissions:
   actions: read
 jobs:
   windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ['2.0.31', '2.0.32']
     runs-on: windows-2025
     timeout-minutes: 30
     defaults:
@@ -43,7 +47,9 @@ jobs:
           JS
       - name: Install the official host
         id: host
-        run: npm run test:host-install -- 2.0.32 "$RUNNER_TEMP/host"
+        env:
+          HOST_VERSION: ${{ matrix.version }}
+        run: npm run test:host-install -- "$HOST_VERSION" "$RUNNER_TEMP/host"
       - name: Native permissions and management
         id: native
         env:
@@ -63,7 +69,7 @@ jobs:
         if: always() && steps.native.outputs.fixture != ''
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: windows-native-diagnostics-${{ github.sha }}
+          name: windows-native-diagnostics-${{ matrix.version }}-${{ github.sha }}
           path: |
             ${{ steps.native.outputs.fixture }}/host-failure.json
             ${{ steps.native.outputs.fixture }}/verification.json
@@ -73,7 +79,7 @@ jobs:
         if: always() && steps.rendered.outputs.fixture != ''
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: windows-rendered-diagnostics-${{ github.sha }}
+          name: windows-rendered-diagnostics-${{ matrix.version }}-${{ github.sha }}
           path: |
             ${{ steps.rendered.outputs.fixture }}/*.txt
             ${{ steps.rendered.outputs.fixture }}/verification.json
