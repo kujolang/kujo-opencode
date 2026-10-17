@@ -127,6 +127,8 @@ CMD and Pi state remain separate. Six scoped specialists are available through
 
 ### Browser readiness
 
+Shared browser setup uses an exclusive installer lock and stages dependencies before activation. Failed or cancelled setup restores the prior dependency tree. After an installer process stops unexpectedly, choose **Recover interrupted setup** in Browser readiness, or run `kujo-opencode browser recover`, then check readiness again. Recovery refuses a live installer. Browser downloads use an external cache and retain prior versions for rollback; unset `PLAYWRIGHT_BROWSERS_PATH=0` before setup. Recovery alone does not establish browser readiness.
+
 Open `/kujo` → Browser readiness to launch and close Chromium without visiting a
 website. If dependencies are missing or launch fails, choose Install browser
 dependencies and review the native permission request. Setup installs the pinned

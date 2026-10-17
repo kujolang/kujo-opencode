@@ -130,6 +130,13 @@ try {
  let browserPermission;for(let i=0;i<40;i++){browserPermission=(await api(`/api/session/${session.id}/permission`)).data.find(p=>p.action==='kujo.browser.setup');if(browserPermission)break;await delay(100);}
  assert.ok(browserPermission);assert.deepEqual(browserPermission.save,[]);assert.equal(browserPermission.metadata.operation,'install');
  await api(`/api/session/${session.id}/permission/${browserPermission.id}/reply`,{decision:'reject'});assert.ok((await installing).error);
+ for(const decision of ['reject','once']){
+  const recovering=api('/api/rpc/kujo.control/browser',{input:{sessionID:session.id,action:'recover'}}).then(value=>({value}),error=>({error}));
+  let permission;for(let i=0;i<40;i++){permission=(await api(`/api/session/${session.id}/permission`)).data.find(p=>p.action==='kujo.browser.setup');if(permission)break;await delay(100);}
+  assert.ok(permission);assert.deepEqual(permission.save,[]);assert.equal(permission.metadata.operation,'recover');
+  await api(`/api/session/${session.id}/permission/${permission.id}/reply`,{decision});const result=await recovering;
+  if(decision==='reject')assert.ok(result.error);else{if(result.error)throw result.error;assert.equal(result.value.output.recovered,false);}
+ }
  const browserAfter=(await api('/api/rpc/kujo.control/browser',{input:{sessionID:session.id,action:'status'}},20000)).output;assert.equal(browserAfter.ready,browserBefore.ready);assert.notEqual(browserAfter.state,'installing');
  const hostConfig=JSON.parse(await readFile(join(project,'.opencode/opencode.json'),'utf8'));
  assert.match(hostConfig.mcp.servers.kujo.command[0],/(?:^|[/\\])node(?:\.exe)?$/i,'native projection must retain a Node interpreter');

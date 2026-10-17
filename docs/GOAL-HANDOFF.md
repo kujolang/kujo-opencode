@@ -448,3 +448,19 @@ Tarball SHA-256: 61bb86edb927c2b8eadbe1d2ac3092829761217acf976dfe1dc36045476d1c0
 only bin/kujo-opencode.mjs differs, for the final diagnostic-state text refinement.
 That CLI refinement passed the final nine focused checks; full immutable matrix
 certification remains required. Live specialist provider HTTP403 remains open.
+
+## Shared browser transaction checkpoint (2026-10-16)
+
+lens.mjs now stages npm dependencies under the canonical bridge directory lock,
+then installs/verifies Chromium before committing activation. Failure/cancellation
+rolls back dependencies. BrowserSetup/RPC/TUI/CLI expose explicit recovery, with
+fresh native human permission and live-owner refusal. Keep external browser cache
+versions (PLAYWRIGHT_SKIP_BROWSER_GC=1); reject hermetic cache mode (=0). Recovery
+requires a fresh readiness probe, and is not a power-loss guarantee.
+
+110 offline tests and canonical E2E passed. Native recovery approval/rejection and
+packed iomJa2 are in progress. See tests/browser-recovery.test.mjs for alias,
+concurrency, process-death, rollback and retry contracts. All seven broad goal
+outcomes remain open; next independent work includes guided RAG freshness/index/
+query, optional automatic RunLedger correlation and remaining recovery acceptance.
+No new SignalBox capture is warranted for this resolved authorized scope.

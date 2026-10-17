@@ -17,7 +17,7 @@ import { readJson, writeJson } from "../lib/io.mjs";
 import { assertSafePurgeRoot, homePaths, packageRoot, projectPaths } from "../lib/paths.mjs";
 import { run } from "../lib/process.mjs";
 import { VERSION } from "../lib/version.mjs";
-import { installLensBrowser, lensBrowserStatus } from "../lib/lens.mjs";
+import { installLensBrowser, lensBrowserStatus, recoverLensBrowser } from "../lib/lens.mjs";
 
 process.stdout.on("error", error => { if (error.code === "EPIPE") process.exit(0); else throw error; });
 
@@ -143,11 +143,12 @@ async function doctor(opts) {
 async function commandAvailable(name) { const path = (process.env.PATH || "").split(process.platform === "win32" ? ";" : ":"); return (await Promise.all(path.map((part) => exists(join(part, process.platform === "win32" ? `${name}.exe` : name))))).some(Boolean); }
 
 async function browser(opts) {
-  const action = opts._[0] || "status"; if (!["status", "install"].includes(action)) throw new Error("browser action must be status or install");
+  const action = opts._[0] || "status"; if (!["status", "install", "recover"].includes(action)) throw new Error("browser action must be status, install or recover");
   const project = resolve(opts.project || process.cwd()); const { config } = await loadProjectConfig(project); const lens = config.sources.lens;
   if (!lens) throw new Error("Lens source is not installed");
+  if(action === "recover"){output({ok:true,...await recoverLensBrowser(lens.path),message:"Browser setup recovery finished. Run browser status before retrying installation."},opts.json);return;}
   const status = action === "install" ? await installLensBrowser(lens.path) : await lensBrowserStatus(lens.path);
-  output({ ok: status.ready, message: status.ready ? "Lens browser launched successfully." : status.state === "dependencies_missing" ? "Lens bridge dependencies are missing; run 'kujo-opencode browser install'." : status.state === "launch_failed" ? "Chromium could not launch; run 'kujo-opencode browser install', then check operating-system browser dependencies if the problem persists." : "Browser readiness probe failed; verify Node is available and retry.", browser: "chromium", ready: status.ready, state:status.state, ...(status.executable ? { executable: status.executable } : {}) }, opts.json);
+  output({ ok: status.ready, message: status.ready ? "Lens browser launched successfully." : status.state === "setup_busy_or_interrupted" ? "Browser setup is active or interrupted. Wait for its owner, or run 'kujo-opencode browser recover' after it stops." : status.state === "dependencies_missing" ? "Lens bridge dependencies are missing; run 'kujo-opencode browser install'." : status.state === "launch_failed" ? "Chromium could not launch; run 'kujo-opencode browser install', then check operating-system browser dependencies if the problem persists." : "Browser readiness probe failed; verify Node is available and retry.", browser: "chromium", ready: status.ready, state:status.state, ...(status.executable ? { executable: status.executable } : {}) }, opts.json);
   if (!status.ready) process.exitCode = 1;
 }
 
@@ -275,7 +276,7 @@ async function uninstall(opts) {
   output({ ok: true, message: `Kujo OpenCode removed from ${project}.${opts.purge ? " Shared local sources and receipts were purged." : " Shared local sources and receipts were preserved."}` }, opts.json);
 }
 
-function help() { process.stdout.write(`Kujo OpenCode ${VERSION}\n\nUsage: kujo-opencode <command> [options]\n\nCommands:\n  setup       Install every supported Kujo source locally and configure OpenCode\n  evidence    Export retained receipts as JSON (--scope project|session|legacy, --session ID, --receipt ID)\n  demo        Run your first repository scan and show its receipt\n  doctor      Verify runtime, source, configuration, and host readiness\n  status      Show the active local installation\n  profiles    List portable Ability profiles\n  profile NAME Select the active profile\n  abilities   List installed and active Abilities\n  enable NAME Add a tool or product to the active exposure\n  disable NAME Hide a tool or product from the active exposure\n  approve ID  Review, confirm, and execute a pending operation\n  browser     status|install Lens Chromium dependencies\n  services    status|start|stop [watchdog]\n  update      Refresh all pinned local sources\n  recover     Restore interrupted source/runtime installations\n  repair      Restore MCP and skill projections\n  uninstall   Remove project projections; add --purge for shared data\n\nOptions:\n  --project DIR      Target project (default current directory)\n  --profile ID       Setup profile (default kujo.profile.essentials)\n  --source-root DIR  Use local Kujo checkouts (development/offline setup)\n  --force            Reacquire pinned sources\n  --json             Machine-readable output\n`); }
+function help() { process.stdout.write(`Kujo OpenCode ${VERSION}\n\nUsage: kujo-opencode <command> [options]\n\nCommands:\n  setup       Install every supported Kujo source locally and configure OpenCode\n  evidence    Export retained receipts as JSON (--scope project|session|legacy, --session ID, --receipt ID)\n  demo        Run your first repository scan and show its receipt\n  doctor      Verify runtime, source, configuration, and host readiness\n  status      Show the active local installation\n  profiles    List portable Ability profiles\n  profile NAME Select the active profile\n  abilities   List installed and active Abilities\n  enable NAME Add a tool or product to the active exposure\n  disable NAME Hide a tool or product from the active exposure\n  approve ID  Review, confirm, and execute a pending operation\n  browser     status|install|recover Lens Chromium dependencies\n  services    status|start|stop [watchdog]\n  update      Refresh all pinned local sources\n  recover     Restore interrupted source/runtime installations\n  repair      Restore MCP and skill projections\n  uninstall   Remove project projections; add --purge for shared data\n\nOptions:\n  --project DIR      Target project (default current directory)\n  --profile ID       Setup profile (default kujo.profile.essentials)\n  --source-root DIR  Use local Kujo checkouts (development/offline setup)\n  --force            Reacquire pinned sources\n  --json             Machine-readable output\n`); }
 
 try {
   const opts = options(process.argv.slice(3));

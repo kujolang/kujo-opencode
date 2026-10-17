@@ -25,3 +25,8 @@ test('completed installation is re-probed only when requested; failures omit raw
 test('host executables are never used as Node interpreters',()=>{
  assert.equal(nodeCommand('/usr/local/bin/node'),'/usr/local/bin/node');assert.equal(nodeCommand('/Applications/OpenCode/opencode'),process.platform==='win32'?'node.exe':'node');
 });
+
+test('browser recovery refuses active background work and clears stale status',async()=>{
+ let recovered;const setup=new BrowserSetup({recover:async root=>{recovered=root;return {recovered:true};},install:async(_root,{signal})=>new Promise((resolve,reject)=>signal.addEventListener('abort',()=>reject(Error('cancelled')),{once:true}))});
+ setup.start('/fixture');await Promise.resolve();await assert.rejects(setup.recover('/fixture'),/Cancel/);await setup.cancel();assert.deepEqual(await setup.recover('/fixture'),{recovered:true});assert.equal(recovered,'/fixture');assert.equal(setup.job,null);await setup.close();
+});

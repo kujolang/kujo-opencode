@@ -676,3 +676,22 @@ Tarball SHA-256: 61bb86edb927c2b8eadbe1d2ac3092829761217acf976dfe1dc36045476d1c0
 only bin/kujo-opencode.mjs differs, for the final diagnostic-state text refinement.
 That CLI refinement passed the final nine focused checks; full immutable matrix
 certification remains required. Live specialist provider HTTP403 remains open.
+
+## Shared browser installation recovery (2026-10-16)
+
+Browser installation now uses the existing exclusive directory transaction on the
+canonical physical Lens bridge/node_modules path. npm ci runs in a unique staging
+workspace; activation remains reversible until the canonical Chromium installer
+and actual launch check succeed. Failure/cancellation restores prior dependencies.
+Explicit native/CLI recovery rejects live owners; status refuses readiness while
+an installation journal exists. Browser cache garbage collection is disabled for
+installation so older browser versions survive rollback. Hermetic browser cache
+mode PLAYWRIGHT_BROWSERS_PATH=0 is rejected before mutation. This does not claim
+power-loss durability or certify a recovered browser without a new launch check.
+
+110 offline tests and canonical E2E passed. New tests cover physical-path aliases,
+concurrent ownership, live recovery refusal, download failure, cancellation,
+process death after activation, explicit recovery/retry and cache-mode rejection.
+Native permission/recovery acceptance and packed iomJa2 are pending. This closes
+the specific per-instance-only browser installer limitation above; broader
+mixed-version recovery, live specialists and immutable release matrix remain open.
