@@ -666,3 +666,13 @@ Canonical workspace routing is fixed; this remains a provider gate, not evidence
 of a tool execution or approval failure. No provider spoofing/proxy was used.
 All seven broad readiness outcomes remain open, including six specialist tasks,
 automatic lifecycle tracking, guided RAG, recovery/platform matrix and public release.
+
+Final native fixture OefqYm passed with browser_ready:true and agreement between
+the bundled host and Node. Packed2yPB0j passed fresh install, 0.1.0 upgrade, 28
+sources, older-project preservation, starter/runtime/Watchdog/session-ledger gates
+and actual empty-HOME Chromium installation plus approved loopback Lens check.
+verification.json records browser_launch_verified:true and browser_check_verified:true.
+Tarball SHA-256: 61bb86edb927c2b8eadbe1d2ac3092829761217acf976dfe1dc36045476d1c08. Executable comparison confirms
+only bin/kujo-opencode.mjs differs, for the final diagnostic-state text refinement.
+That CLI refinement passed the final nine focused checks; full immutable matrix
+certification remains required. Live specialist provider HTTP403 remains open.
