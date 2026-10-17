@@ -57,11 +57,6 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Treat Windows archive paths as local files
-        if: runner.os == 'Windows'
-        # Git Bash places GNU tar ahead of system tar when the shell starts.
-        # A drive letter must not be interpreted as a remote archive hostname.
-        run: echo "TAR_OPTIONS=--force-local" >> "$GITHUB_ENV"
       - run: npm ci
       - name: Download the exact candidate bundle
         env:

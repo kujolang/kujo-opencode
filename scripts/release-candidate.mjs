@@ -30,7 +30,7 @@ export async function buildCandidate(root,destination){
   try {
   const source=join(snapshot,'source');await mkdir(source);
   await git(['archive','--format=tar','--output='+join(snapshot,'source.tar'),commit],root);
-  await exec('tar',['-xf',join(snapshot,'source.tar'),'-C',source]);
+  await exec('tar',['-xf','source.tar','-C','source'],{cwd:snapshot});
   const pkg=await json(join(source,'package.json'));
   await mkdir(destination); // Exclusive: never replace a prior candidate.
   const packed=JSON.parse((await npm(['pack','--json','--pack-destination',destination],source)).stdout)[0];

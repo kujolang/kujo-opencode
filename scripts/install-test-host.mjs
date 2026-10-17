@@ -22,7 +22,7 @@ export async function installTestHost(version,directory){
  const archive=await readFile(join(directory,packed.filename));assert.equal('sha512-'+createHash('sha512').update(archive).digest('base64'),expected);
  const binary=process.platform==='win32'?'bin/opencode.exe':'bin/opencode';
  assert.ok(packed.files.some(file=>file.path===binary),'Native binary missing from official package');
- await exec('tar',['-xzf',join(directory,packed.filename),'-C',directory,'--strip-components=1','package/'+binary]);
+ await exec('tar',['-xzf',packed.filename,'--strip-components=1','package/'+binary],{cwd:directory});
  const host=join(directory,binary);assert.ok((await lstat(host)).isFile(),'Native binary must be a regular file');
  if(process.platform!=='win32')await chmod(host,0o755);
  const reported=(await exec(host,['--version'],{timeout:30000})).stdout.trim();assert.equal(reported,'opencode v'+version);

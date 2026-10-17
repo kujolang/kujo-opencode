@@ -49,7 +49,7 @@ if(registry){
 // Real previous release, not a synthetic version field mutation.
 const baseline=join(root,'baseline'); await mkdir(baseline);
 await command('git',['archive','855524a5da804ae43088aa204350230e62616ab3','--format=tar','-o',join(root,'baseline.tar')]);
-await command('tar',['-xf',join(root,'baseline.tar'),'-C',baseline]);
+await command('tar',['-xf','baseline.tar','-C','baseline'],{cwd:root});
 const oldPack=JSON.parse((await command('npm',['pack','--json','--pack-destination',root],{cwd:baseline})).stdout)[0];
 await command('npm',['install','--prefix',prefix,join(root,oldPack.filename)]);
 const cli=join(prefix,'node_modules/@kujolang/kujo-opencode/bin/kujo-opencode.mjs');
