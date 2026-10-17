@@ -1,0 +1,109 @@
+name: Exact candidate host matrix
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_run_id:
+        description: Successful Release candidate run for this exact source commit
+        required: true
+        type: string
+      candidate_sha256:
+        description: Immutable candidate archive SHA-256
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+jobs:
+  resolve:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.versions.outputs.matrix }}
+    steps:
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22
+      - name: Resolve the v2 channel once for every runner
+        id: versions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+          CANDIDATE_SHA256: ${{ inputs.candidate_sha256 }}
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';import {appendFile} from 'node:fs/promises';import {execFileSync} from 'node:child_process';
+          const {CANDIDATE_RUN_ID:id,CANDIDATE_SHA256:digest,GITHUB_SHA:sha}=process.env;
+          assert.match(id,/^[1-9][0-9]*$/);assert.match(digest,/^[a-f0-9]{64}$/);assert.equal(process.env.GITHUB_REPOSITORY,'kujolang/kujo-opencode');
+          const run=JSON.parse(execFileSync('gh',['api',`repos/kujolang/kujo-opencode/actions/runs/${id}`],{encoding:'utf8'}));
+          assert.equal(run.repository.full_name,'kujolang/kujo-opencode');assert.equal(run.path,'.github/workflows/release-candidate.yml');assert.equal(run.event,'workflow_dispatch');assert.equal(run.status,'completed');assert.equal(run.conclusion,'success');assert.equal(run.head_sha,sha);
+          const latest=JSON.parse(execFileSync('npm',['view','@opencode/cli@latest','version','--json','--registry=https://registry.npmjs.org/'],{encoding:'utf8'}));assert.match(latest,/^2\.\d+\.\d+$/);
+          const include=['ubuntu-24.04','macos-15','windows-2025'].flatMap(os=>[{os,bound:'minimum',version:'2.0.31'},{os,bound:'latest',version:latest}]);
+          await appendFile(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify({include})+'\n');
+          JS
+  native:
+    needs: resolve
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.resolve.outputs.matrix) }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Download the exact candidate bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+        run: gh run download "$CANDIDATE_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "kujo-candidate-$GITHUB_SHA" --dir "$RUNNER_TEMP/kujo-candidate"
+      - name: Verify archive identity before installing it
+        env:
+          EXPECTED_SHA256: ${{ inputs.candidate_sha256 }}
+        run: |
+          npm run release:verify -- "$RUNNER_TEMP/kujo-candidate"
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';
+          const candidate=JSON.parse(await readFile(process.env.RUNNER_TEMP+'/kujo-candidate/candidate.json','utf8'));
+          assert.equal(candidate.commit,process.env.GITHUB_SHA);assert.equal(candidate.files[candidate.archive],process.env.EXPECTED_SHA256);
+          JS
+      - name: Install the official standalone host in an isolated directory
+        id: host
+        env:
+          HOST_VERSION: ${{ matrix.version }}
+        run: npm run test:host-install -- "$HOST_VERSION" "$RUNNER_TEMP/opencode-host"
+      - name: Exercise native permissions, management and canonical operations
+        id: native
+        run: npm run test:native
+        env:
+          OPENCODE_BIN: ${{ steps.host.outputs.host }}
+          KUJO_TEST_RELEASE_DIR: ${{ runner.temp }}/kujo-candidate
+      - name: Bind accepted installed payload to the candidate
+        env:
+          OPENCODE_BIN: ${{ steps.host.outputs.host }}
+          FIXTURE: ${{ steps.native.outputs.fixture }}
+        run: |
+          ARCHIVE=$(node -p "JSON.parse(require('fs').readFileSync(process.env.RUNNER_TEMP+'/kujo-candidate/candidate.json','utf8')).archive")
+          python tests/candidate-provenance.py --tarball "$RUNNER_TEMP/kujo-candidate/$ARCHIVE" --fixture "$FIXTURE" --host "$OPENCODE_BIN"
+      - name: Retain host identity
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: host-${{ matrix.os }}-${{ matrix.bound }}-${{ matrix.version }}-${{ github.sha }}
+          path: ${{ runner.temp }}/opencode-host/host-provenance.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Retain native acceptance evidence
+        if: always() && steps.native.outputs.fixture != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-${{ matrix.os }}-${{ matrix.bound }}-${{ matrix.version }}-${{ github.sha }}
+          path: |
+            ${{ steps.native.outputs.fixture }}/verification.json
+            ${{ steps.native.outputs.fixture }}/candidate-verification.json
+          if-no-files-found: warn
+          retention-days: 30

@@ -1,3 +1,4 @@
+import {verifyCandidate} from '../scripts/release-candidate.mjs';
 import assert from 'node:assert/strict';
 import {execFile,spawn} from 'node:child_process';
 import {promisify} from 'node:util';
@@ -9,9 +10,23 @@ const exec=promisify(execFile),repo=resolve('.');
 if(process.env.KUJO_TEST_TELEMETRY==='1'||process.env.KUJO_TEST_CANCEL_TELEMETRY==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Telemetry acceptance needs an explicit model and ordinary Build agent');
 if(process.env.KUJO_TEST_GUARD==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Guard acceptance needs an explicit model and ordinary Build agent');
 const root=await mkdtemp(join(tmpdir(),'kujo-native-host-'));const project=join(root,'project');await mkdir(project);
+if(process.env.GITHUB_OUTPUT)await (await import('node:fs/promises')).appendFile(process.env.GITHUB_OUTPUT,`fixture=${root}\n`);
 await exec('git',['init',project]);
 const env={...process.env,KUJO_OPENCODE_HOME:join(root,'kujo')};
-await exec(process.execPath,[join(repo,'bin/kujo-opencode.mjs'),'setup','--project',project,'--source-root',resolve('..'),'--json'],{env,timeout:120000});
+const candidate=process.env.KUJO_TEST_RELEASE_DIR?await verifyCandidate(process.env.KUJO_TEST_RELEASE_DIR):null;
+const pinned=Boolean(candidate)||process.env.KUJO_TEST_PINNED==='1';
+let setupCLI=join(repo,'bin/kujo-opencode.mjs');
+if(pinned)for(const key of ['KUJO_BIN','KUJO_SOURCE_ROOT','KUJO_OPENCODE_PROJECT','NODE_PATH'])delete env[key];
+if(candidate){
+ assert.ok(process.env.npm_execpath,'Candidate host acceptance must run through npm');
+ const prefix=join(root,'prefix');
+ await exec(process.execPath,[process.env.npm_execpath,'install','--prefix',prefix,join(candidate.directory,candidate.archive)],{env,timeout:180000,maxBuffer:4*1024*1024});
+ setupCLI=join(prefix,'node_modules/@kujolang/kujo-opencode/bin/kujo-opencode.mjs');
+}
+await exec(process.execPath,[setupCLI,'setup','--project',project,...(pinned?[]:['--source-root',resolve('..')]),'--json'],{env,timeout:pinned?900000:120000,maxBuffer:4*1024*1024});
+const installation=JSON.parse(await readFile(join(env.KUJO_OPENCODE_HOME,'installation.json'),'utf8'));
+if(pinned)assert.ok(Object.values(installation.sources).every(source=>source.mode==='pinned'));
+const hostVersion=(await exec(process.env.OPENCODE_BIN||'opencode',['--version'],{timeout:30000})).stdout.trim();
 const watchdog=(process.env.KUJO_TEST_TELEMETRY==='1'||process.env.KUJO_TEST_CANCEL_TELEMETRY==='1')?await (await import('./watchdog-host-fixture.mjs')).watchdogHostFixture(root,JSON.parse(await readFile(join(env.KUJO_OPENCODE_HOME,'installation.json'),'utf8'))):null;
 if(watchdog)env.WDG_API_AUTH_TOKEN=watchdog.token;
 const host=process.env.OPENCODE_BIN||'opencode';
@@ -275,5 +290,8 @@ try {
   await writeFile(join(root,'cancellation-evidence.json'),JSON.stringify(cancellation,null,2)+'\n');
   await lifecycleChange('disable','once');
  }
- console.log(JSON.stringify({ok:true,root,live,failureGuard,cancellation:cancellation?{...cancellation,events:undefined}:null,telemetry:telemetry?{...telemetry,events:undefined}:null,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||process.env.KUJO_TEST_AUTOTRACK==='1'}));
+ const verification={ok:true,root,host:hostVersion,platform:process.platform,arch:process.arch,pinned_sources:pinned,rendered_tui:false,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),live,failureGuard,cancellation:cancellation?{...cancellation,events:undefined}:null,telemetry:telemetry?{...telemetry,events:undefined}:null,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||process.env.KUJO_TEST_AUTOTRACK==='1'};
+ if(candidate)await verifyCandidate(candidate.directory);
+ await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
+ console.log(JSON.stringify(verification));
 } finally {tuiCleanup?.();child.kill('SIGTERM');await watchdog?.stop();}
