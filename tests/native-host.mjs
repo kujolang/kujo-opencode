@@ -138,6 +138,8 @@ try {
   for(let i=0;i<40;i++){permission=(await api(`/api/session/${session.id}/permission`)).data.find(p=>p.action==='kujo.lifecycle.change');if(permission)break;await delay(100);}
   assert.ok(permission,'lifecycle requires native permission');assert.deepEqual(permission.save,[]);
   assert.equal(await readFile(configPath,'utf8'),before,'no lifecycle write before approval');
+  const waitingStatus=(await api('/api/rpc/kujo.control/lifecycle',{input:{sessionID:session.id,action:'status'}})).output;
+  assert.equal(waitingStatus.enabled,JSON.parse(before).lifecycle?.enabled===true,'Status stays readable without applying the pending change');
   if(stale)await writeFile(configPath,JSON.stringify({...JSON.parse(before),updated_at:'lifecycle-stale-fixture'}));
   await api(`/api/session/${session.id}/permission/${permission.id}/reply`,{decision});
   const result=await outcome;
