@@ -25,7 +25,7 @@ Reference revisions inspected locally:
 | Agents SDK fixtures | Pinned canonical offline fixture runner with approval and per-example acceptance checks | Live specialist and supported host/OS acceptance |
 | Package declarations/dependencies | Kennel validation/install adapters | Distinguish declaration validity from resolved bytes and compatibility |
 | Workflow operation | Dispatch validate/run and Muzzle adapters | Scoped Workflow agent projected; checkpoints, cancellation and lost-response reconciliation remain |
-| Project knowledge | RAG query/ingest adapters | Guided index/query workflow, freshness and citations, retained-index management |
+| Project knowledge | Native reviewed offline index/query, freshness, canonical citations and transactional recovery; existing provider-configured adapters | Live specialist acceptance and final packed/platform certification |
 | Evidence | Canonical receipts, native project/session/legacy filtering, details/comparison, contained artifact previews and JSON export | Retention limits are explicit; immutable artifact snapshots and full directory browsing are not provided |
 | Browser verification | Canonical Lens checks; native launch readiness, approved background install/cancel/recheck, capability enablement and specialist selection | Real specialist workflow and supported host/OS acceptance; concurrent cross-process browser setup recovery |
 | Session lifecycle | Native opt-in metadata observers, durable Watchdog delivery, session-linked canonical RunLedger controls and bounded opt-in failure guard | Automatic session tracking/finalization with truthful human verdicts; live-model guard/telemetry and platform acceptance |

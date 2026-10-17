@@ -473,3 +473,25 @@ Candidate SHA-256: 9328df28b66a185db988794d9dfb9cb4319c6c91e540f79fd327aec9357d0
 Executable bytes (lib/bin/.generated) match f6e043c; only test/docs refinements
 postdate packing. This supersedes the pending status above. Full supported-host/OS
 certification, six live specialists and public distribution remain unverified.
+
+## Guided local knowledge checkpoint (2026-10-16)
+
+knowledge.mjs/knowledge-control.mjs and knowledge-abilities.json implement native
+preview/index/status/query/recover. Canonical RAG owns index and retrieval logic;
+managed snapshots use offline hash/local_json with isolated imports/configuration.
+Full53, Build17; Workflow specialist supports all five new tools. UI presents human
+answers/citations, exact corpus review, separate approval and actionable freshness.
+See README Local knowledge and PRODUCTION-READINESS for bounds and limitations.
+
+113 offline tests, canonical E2E,16 focused tests and native wVQuk0 passed. RPC
+patterns are unsupported by OpenCode; use length validation there and retain full
+validation in Ability/handler. Native denial created no index, approval indexed,
+query returned citations, then file edits made status stale and query refused.
+Fresh fAKpsw stopped with ENOSPC during acquisition; tarballs/log retained, owned
+failed test workdirs cleaned to free disk. Retry handle24088 is running; inspect
+/tmp/kujo-knowledge-fresh-retry.log and terminal result before claiming pass.
+
+Next: optional automatic RunLedger lifecycle/correlation, remaining mixed-version
+recovery and real specialist tasks, exact supported-host/OS release matrix and
+public release. All seven broad requirements retain scope. No new external
+provider/npm/CI checks this checkpoint. No new SignalBox finding is warranted.

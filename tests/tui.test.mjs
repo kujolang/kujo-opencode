@@ -4,13 +4,14 @@ import {setupTui} from '../lib/tui.mjs';
 import {scopedHostContext} from '../lib/plugin-scope.mjs';
 import {homePaths,withDataRoot} from '../lib/paths.mjs';
 
-function fixture({choices=[],profileError,waitStatus,evidenceReceipts=[]}={}) {
+function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[]}={}) {
  const calls=[],alerts=[],toasts=[];let commands;
  const location={directory:'/fixture/project'};
  const ctx={location,client:{rpc:definition=>{
   assert.equal(definition.id,'kujo.control');
-  return Object.fromEntries(['status','profile','evidence','specialist','capability','evidenceDetail','artifact','compare','lifecycle','runledger','browser'].map(method=>[method,async(input,options)=>{
+  return Object.fromEntries(['status','profile','evidence','specialist','capability','evidenceDetail','artifact','compare','lifecycle','runledger','browser','knowledge'].map(method=>[method,async(input,options)=>{
    calls.push({method,input,options});assert.deepEqual(options,{location});
+   if(method==='knowledge')return input.action==='preview'?{files:[{path:'guide.md'}],bytes:12,digest:'a'.repeat(64),exclusions:['dotfiles'],index_input:{name:input.name,path:input.path,digest:'a'.repeat(64)}}:{state:'current'};
    if(method==='status'){if(waitStatus)await waitStatus;return {capabilities:[{id:'kujo.test.check',name:'check',description:'Check repository',active:true,inherited:true,mode:'profile'}],project:location.directory,version:'0.2.0',profile:'kujo.profile.essentials',specialists:[{id:'kujo-browser',title:'Browser verification',profile:'ship',description:'Verify pages',abilities:['kujo.lens.page.check'],available:[],missing:['kujo.lens.page.check']}],profiles:[{id:'kujo.profile.review',label:'Review',description:'Review repository'}],tools:[{name:'check',description:'Check repository'}]};}
    if(method==='browser'){if(['status','refresh'].includes(input.action))return {ready:false,state:'dependencies_missing',capabilities:[]};if(profileError)throw Error(profileError);return {ready:false,state:'installing'};}
    if(method==='runledger'){if(input.action==='status')return {state:'in_progress',run_id:'fixture'};if(profileError)throw Error(profileError);return {state:input.status};}
@@ -22,7 +23,7 @@ function fixture({choices=[],profileError,waitStatus,evidenceReceipts=[]}={}) {
    if(method==='compare')return {same_ability:true,notice:'Timing is informational'};
    return {receipts:evidenceReceipts,coverage:'Recent retained evidence'};
   }]));
- }},ui:{router:{current:()=>({type:'session',sessionID:'fixture-session'})},dialog:{alert:async value=>alerts.push(value),select:async()=>choices.shift()},toast:{show:value=>toasts.push(value)}},keymap:{layer:factory=>{commands=factory().commands;}}};
+ }},ui:{router:{current:()=>({type:'session',sessionID:'fixture-session'})},dialog:{prompt:async()=>prompts.shift(),alert:async value=>alerts.push(value),select:async()=>choices.shift()},toast:{show:value=>toasts.push(value)}},keymap:{layer:factory=>{commands=factory().commands;}}};
  const cleanup=setupTui(ctx);
  return {calls,alerts,toasts,cleanup,run:id=>commands.find(c=>c.id===id).run()};
 }
@@ -100,4 +101,10 @@ test('browser readiness offers explicit background installation and handles deni
  const f=fixture({choices:['install']});await f.run('kujo.browser');assert.deepEqual(f.calls.map(call=>call.input.action),['status','install']);assert.match(f.alerts[0].message,/Reopen Browser readiness/);
  const cancel=fixture();await cancel.run('kujo.browser');assert.equal(cancel.calls.length,1);
  const denied=fixture({choices:['install'],profileError:'Human declined'});await denied.run('kujo.browser');assert.match(denied.alerts[0].message,/declined/);
+});
+
+test('knowledge menu requires explicit corpus review before indexing and retains session scope',async()=>{
+ const f=fixture({prompts:['manual','docs'],choices:['preview','index']});await f.run('kujo.knowledge');assert.deepEqual(f.calls.map(c=>c.input.action),['preview','index']);assert.deepEqual(f.calls[1].input,{sessionID:'fixture-session',action:'index',name:'manual',path:'docs',digest:'a'.repeat(64)});assert.match(f.alerts[0].message,/guide.md/);
+ const cancel=fixture({prompts:['manual','docs'],choices:['preview','cancel']});await cancel.run('kujo.knowledge');assert.equal(cancel.calls.length,1);
+ const question=fixture({prompts:['manual','How do modules work?'],choices:['query']});await question.run('kujo.knowledge');assert.equal(question.calls[0].input.question,'How do modules work?');
 });

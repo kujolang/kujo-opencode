@@ -65,7 +65,7 @@ kujo-opencode abilities
 | `review` | 18 | Check architecture, contracts, context, and change footprint |
 | `ship` | 29 | Run verification and retain release evidence |
 | `build` | 17 | Inspect source and run reviewed source/test snapshots |
-| `full` | 48 | Add orchestration, RAG, and optional service tools |
+| `full` | 53 | Add orchestration, RAG, and optional service tools |
 
 `enable` and `disable` accept a product name, a tool name, or the canonical Ability
 ID. Product names select all of that product's supported operations. Canonical
@@ -246,7 +246,7 @@ Choose **Choose a specialist** in `/kujo`, or use OpenCode's agent selector:
 | `kujo-build` | Source checks, reviewed execution, MCP generation and SDK fixtures | Build |
 | `kujo-review` | Change footprint, architecture and artifact review | Review |
 | `kujo-browser` | Lens flow/page verification and failure evidence | Ship |
-| `kujo-workflow` | Explicit Dispatch/Muzzle operation and run evidence | Full |
+| `kujo-workflow` | Dispatch/Muzzle, offline knowledge, and run evidence | Full |
 | `kujo-ship` | Release scan, requested evaluation and run evidence | Ship |
 
 Specialists inherit your model choice. Each has an enforced native Ability
@@ -397,3 +397,28 @@ new inventory: use the original preview receipt to review the retained files.
 Limits: 64 files, 128 directories, 64 KiB per file, 256 KiB total UTF-8 content, depth eight and
 300 KB serialized preview. Full live specialist and platform acceptance remain
 tracked in the production-readiness document.
+
+### Local knowledge
+
+Choose Full, then `/kujo` → Local knowledge. Give the index a name, choose
+**Preview and rebuild**, and select a project directory (default `docs`). Review
+the listed files before granting the separate indexing permission. The guided
+workflow uses canonical RAG with offline hash embeddings and local JSON storage;
+it does not inherit the project's `.env` or RAG provider settings.
+
+**Check freshness** compares file hashes and configured provenance. **Ask a
+question** refuses missing or stale indexes, so changed documents require a new
+preview and approved rebuild. Results retain canonical citations; `corpus/`
+paths map to the selected corpus directory. Indexing reads a reviewed snapshot,
+so freshness describes the last inspection, not a continuously watched folder.
+
+Each named index lives under `.kujo/knowledge/`. The corpus supports Markdown,
+plain text and Kujo source, at most 128 files totaling 8 MiB (256 KiB per file).
+Hidden entries, node_modules, dist, vendor and other extensions are excluded;
+symlinks are refused. This is a bounded project workflow, not the whole RAG
+product: existing RAG capabilities retain custom-provider and larger-corpus use.
+
+Failed builds preserve the previous index. After an interrupted installer has
+stopped, choose **Recover interrupted indexing**, approve recovery, then check
+freshness. Recovery never takes over a live owner. Keep retained evidence after
+an uncertain response before deciding whether to rebuild.

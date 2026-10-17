@@ -85,6 +85,10 @@ await verifyLifecycleDelivery(installed.kujo_bin,installed.sources.watchdog.path
 for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish'])await call(['enable',id],fresh);
 await verifySessionLedger({project:fresh,packageRoot:installed.projection_root,home:freshHome});
 for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish'])await call(['disable',id],fresh);
+// Execute the managed offline knowledge workflow from installed package bytes.
+await mkdir(join(fresh,'knowledge-docs'),{recursive:true});await writeFile(join(fresh,'knowledge-docs/guide.md'),'# Modules\nKujo modules organize reusable functions using explicit imports.\n');
+const knowledgeProbe=`const {createApp}=await import(${JSON.stringify(appUrl)});const app=await createApp(${JSON.stringify(fresh)});const preview=await app.runtime.execute({abilityId:'kujo.opencode.knowledge.preview',input:{path:'knowledge-docs'}});if(!preview.ok)throw Error(JSON.stringify(preview));const input=preview.receipt.result.index_input;const abilityId='kujo.opencode.knowledge.index';const controls={invocationId:'packed-knowledge',idempotencyKey:'packed-knowledge'};const pending=await app.runtime.execute({abilityId,input,controls});if(pending.code!=='ability_approval_required')throw Error('Expected approval');const grant=await app.runtime.requestApproval({abilityId,input,invocationId:controls.invocationId});const indexed=await app.runtime.execute({abilityId,input,controls:{...controls,approvalId:grant.approval_id}});if(!indexed.ok)throw Error(JSON.stringify(indexed));const query=await app.runtime.execute({abilityId:'kujo.opencode.knowledge.query',input:{question:'How do modules organize functions?'}});if(!query.ok||!JSON.stringify(query.receipt.result).includes('guide.md'))throw Error(JSON.stringify(query));console.log('passed');`;
+assert.match((await command(process.execPath,['--input-type=module','-e',knowledgeProbe])).stdout,/passed/);
 // Install optional browser dependencies in the isolated HOME, then execute the
 // canonical Lens Ability against a real loopback page from installed bytes.
 const browserReady=await call(['browser','install'],fresh);assert.equal(browserReady.ready,true);
@@ -110,7 +114,7 @@ const rpc=await new Promise((resolveResult,reject)=>{
  });
 });
 assert.equal(rpc.result.tools.length,5);
-const verification={ok:true,root,tarball,upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,starter_kinds:['script','agent','api','mcp'],starter_services_verified:true,agent_fixture_verified:true,session_runledger_verified:true,browser_launch_verified:true,browser_check_verified:true,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
+const verification={ok:true,root,tarball,upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,starter_kinds:['script','agent','api','mcp'],starter_services_verified:true,agent_fixture_verified:true,session_runledger_verified:true,browser_launch_verified:true,browser_check_verified:true,knowledge_verified:true,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
 await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
 // Keep the immutable tarballs and verification record, not hundreds of MiB of
 // duplicate clones/caches after every successful run. Failures retain diagnosis.

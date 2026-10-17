@@ -123,6 +123,22 @@ try {
  assert.equal(JSON.parse(await readFile(configPath,'utf8')).lifecycle.enabled,false);
  assert.ok((await api(`/api/session/${session.id}/message?limit=100`)).data.every(message=>message.type!=='assistant'),'lifecycle management must not trigger inference');
  // Probe in the actual bundled host; reject setup without touching dependencies.
+ // Guided knowledge: real canonical indexing and fresh human host permission.
+ for(const operation of ['preview','index','status','query','recover']){ability=`kujo.opencode.knowledge.${operation}`;await capabilityChange('enabled','once');}
+ await mkdir(join(project,'knowledge-docs'),{recursive:true});await writeFile(join(project,'knowledge-docs/guide.md'),'# Modules\nKujo modules organize reusable functions with explicit imports.\n');
+ const knowledgeInput={sessionID:session.id,name:'native'};
+ const knowledgePreview=(await api('/api/rpc/kujo.control/knowledge',{input:{...knowledgeInput,action:'preview',path:'knowledge-docs'}})).output;
+ for(const decision of ['reject','once']){
+  const pending=api('/api/rpc/kujo.control/knowledge',{input:{sessionID:session.id,action:'index',...knowledgePreview.index_input}},30000).then(value=>({value}),error=>({error}));
+  let permission;for(let i=0;i<40;i++){permission=(await api(`/api/session/${session.id}/permission`)).data.find(p=>p.action==='kujo.ability.approve');if(permission)break;await delay(100);}
+  assert.ok(permission);assert.deepEqual(permission.save,[]);assert.equal(permission.metadata.ability,'kujo.opencode.knowledge.index');
+  await api(`/api/session/${session.id}/permission/${permission.id}/reply`,{decision});const result=await pending;
+  if(decision==='reject'){assert.ok(result.error);assert.equal((await api('/api/rpc/kujo.control/knowledge',{input:{...knowledgeInput,action:'status'}})).output.state,'missing');}else{if(result.error)throw result.error;assert.equal(result.value.output.state,'indexed');}
+ }
+ assert.equal((await api('/api/rpc/kujo.control/knowledge',{input:{...knowledgeInput,action:'status'}})).output.state,'current');
+ const answer=(await api('/api/rpc/kujo.control/knowledge',{input:{...knowledgeInput,action:'query',question:'How do modules organize functions?'}})).output;assert.match(JSON.stringify(answer),/guide.md/);
+ await writeFile(join(project,'knowledge-docs/guide.md'),'Changed');assert.equal((await api('/api/rpc/kujo.control/knowledge',{input:{...knowledgeInput,action:'status'}})).output.state,'stale');
+ await assert.rejects(api('/api/rpc/kujo.control/knowledge',{input:{...knowledgeInput,action:'query',question:'Modules?'}}));
  const browserBefore=(await api('/api/rpc/kujo.control/browser',{input:{sessionID:session.id,action:'status'}},20000)).output;
  const {lensBrowserStatus}=await import('../lib/lens.mjs');const browserInstallation=JSON.parse(await readFile(join(env.KUJO_OPENCODE_HOME,'installation.json'),'utf8'));const expectedBrowser=await lensBrowserStatus(browserInstallation.sources.lens.path);assert.equal(browserBefore.ready,expectedBrowser.ready,'bundled host and Node must agree about actual launch readiness');
  assert.equal(typeof browserBefore.ready,'boolean');assert.ok(['ready','dependencies_missing','launch_failed','probe_failed'].includes(browserBefore.state));
@@ -181,5 +197,5 @@ try {
  assert.equal(detail.receipt.metadata.project_root,await realpath(project));
  await assert.rejects(api('/api/rpc/kujo.control/artifact',{input:{receiptID:'not-retained',index:0}}));
  const live=process.env.KUJO_TEST_MODEL ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
- console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,native_browser_readiness:true,browser_ready:browserBefore.ready,model_call:Boolean(live)}));
+ console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,native_browser_readiness:true,native_knowledge_verified:true,browser_ready:browserBefore.ready,model_call:Boolean(live)}));
 } finally {child.kill('SIGTERM');}

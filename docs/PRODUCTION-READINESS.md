@@ -704,3 +704,34 @@ Candidate SHA-256: 9328df28b66a185db988794d9dfb9cb4319c6c91e540f79fd327aec9357d0
 Executable bytes (lib/bin/.generated) match f6e043c; only test/docs refinements
 postdate packing. This supersedes the pending status above. Full supported-host/OS
 certification, six live specialists and public distribution remain unverified.
+
+## Guided offline knowledge checkpoint (2026-10-16)
+
+Native Local knowledge now offers corpus preview, separately approved indexing,
+freshness, questions with canonical citations and explicit interrupted-install
+recovery. Five host-owned Abilities delegate indexing/retrieval to canonical RAG;
+Full exposes53 tools, Build remains17. Workflow specialist access includes the
+same operations. Existing provider-configured RAG adapters retain their behavior.
+
+The managed workflow snapshots up to128 Markdown/text/Kujo files (8MiB total,
+256KiB each), excluding hidden/generated/dependency entries and rejecting symlinks.
+It runs canonical hash/local_json RAG in a private workspace without inheriting
+project .env or KUJO_RAG_* settings. A digest binds the reviewed inventory and
+configured source/runtime provenance. Staged replacement retains the old index
+on failure; explicit recovery refuses live owners. Stored index hash validation
+and fresh corpus comparison precede queries. Citations retain corpus-relative
+paths mapped to the selected directory. This is inspection-time freshness, not
+continuous monitoring, and does not certify custom provider configurations.
+
+113 offline tests, canonical E2E,16 focused tests and real OpenCode2.0.31 native
+fixture wVQuk0 passed. Native checks cover missing state after denial, approved
+canonical indexing, citations, current/stale states and stale query refusal.
+OpenCode RPC schemas reject regex patterns; RPC uses length limits while Ability
+schemas and handlers retain name/digest validation. Final answer-dialog formatting
+passed focused UI tests. Packed fAKpsw failed during acquisition with ENOSPC before
+knowledge acceptance. Its tarballs and failure log are retained; only owned test
+workdirs were removed. The retry is in /tmp/kujo-knowledge-fresh-retry.log.
+
+Remaining scope includes real specialist knowledge tasks and supported host/OS
+acceptance, automatic RunLedger lifecycle/correlation, remaining recovery matrix
+and public release. No broad parity checkbox is closed by this local checkpoint.
