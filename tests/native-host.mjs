@@ -219,9 +219,11 @@ try {
  await api(`/api/session/${ledgerSession.id}/command`,{name:'kujo-status',text:''});
  const ledgerStatus=()=>api('/api/rpc/kujo.control/runledger',{input:{sessionID:ledgerSession.id,action:'status'}});
  assert.equal((await ledgerStatus()).output.state,'not_started');
+ // Cold Windows source verification can exceed five seconds before permission.
+ // Keep a bounded wait and require the same native approval and unchanged state.
  async function sessionLedgerChange(action,decision,status){
-  let settled;const outcome=api('/api/rpc/kujo.control/runledger',{input:{sessionID:ledgerSession.id,action,...(status?{status}:{})}}).then(value=>(settled={value}),error=>(settled={error}));
-  let permission;for(let i=0;i<50;i++){permission=(await api(`/api/session/${ledgerSession.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(permission||settled)break;await delay(100);}
+  let settled;const outcome=api('/api/rpc/kujo.control/runledger',{input:{sessionID:ledgerSession.id,action,...(status?{status}:{})}},60000).then(value=>(settled={value}),error=>(settled={error}));
+  let permission;for(let i=0;i<300;i++){permission=(await api(`/api/session/${ledgerSession.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(permission||settled)break;await delay(100);}
   if(!permission&&settled?.error)throw settled.error;
 
   assert.ok(permission,`session ledger mutation requires approval; response=${JSON.stringify(settled?.value ?? null)}; session=${JSON.stringify((await api(`/api/session/${ledgerSession.id}`)).data.model ?? null)}`);assert.deepEqual(permission.save,[]);
@@ -232,9 +234,9 @@ try {
  await sessionLedgerChange('start','reject');
  assert.equal((await ledgerStatus()).output.state,'not_started');
  const {lostHttpReply}=await import('./lost-http-reply.mjs');
- const lostStart=lostHttpReply({url:base+'/api/rpc/kujo.control/runledger',authorization,body:{input:{sessionID:ledgerSession.id,action:'start'}}}).then(value=>({value}),error=>({error}));
+ const lostStart=lostHttpReply({url:base+'/api/rpc/kujo.control/runledger',authorization,body:{input:{sessionID:ledgerSession.id,action:'start'}},timeoutMs:60000}).then(value=>({value}),error=>({error}));
  let lostPermission;
- for(let i=0;i<50;i++){lostPermission=(await api(`/api/session/${ledgerSession.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(lostPermission)break;await delay(100);}
+ for(let i=0;i<300;i++){lostPermission=(await api(`/api/session/${ledgerSession.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(lostPermission)break;await delay(100);}
  assert.ok(lostPermission);assert.equal(lostPermission.metadata.ability,'kujo.runledger.runs.start');assert.deepEqual(lostPermission.save,[]);
  const lostBefore=(await ledgerStatus()).output;assert.equal(lostBefore.state,'not_started');
  assert.deepEqual(lostPermission.metadata.input,{path:'.',provider:'opencode',model:'glm-5.3-flash-free',task:`OpenCode session ${ledgerSession.id}`,ledger_dir:lostBefore.ledger_dir});
