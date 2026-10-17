@@ -1,0 +1,47 @@
+import assert from 'node:assert/strict';
+import {readFile,realpath} from 'node:fs/promises';
+import {join} from 'node:path';
+import {setTimeout as delay} from 'node:timers/promises';
+import {assertProviderHealthy} from './native-model-acceptance.mjs';
+export async function nativeTelemetryAcceptance({api,project,dataRoot,model,watchdog,reload,disable}){
+ const split=model.indexOf('/'),modelRef={providerID:model.slice(0,split),id:model.slice(split+1)};
+ const session=(await api('/api/session',{title:'Private native telemetry acceptance',location:{directory:await realpath(project)},agent:'build',model:modelRef})).data;
+ const control=async(action)=> (await api('/api/rpc/kujo.control/lifecycle',{input:{sessionID:session.id,action}})).output;
+ const ledger=async()=> (await api('/api/rpc/kujo.control/runledger',{input:{sessionID:session.id,action:'status'}})).output;
+ const wait=async(fn,label)=>{for(let i=0;i<180;i++){const result=await fn();if(result)return result;await delay(500);}throw Error('Timed out: '+label);};
+ for(const action of ['start','correlate']){
+  const before=await ledger();const pending=api('/api/rpc/kujo.control/runledger',{input:{sessionID:session.id,action}}).then(value=>({value}),error=>({error}));
+  const permission=await wait(async()=> (await api(`/api/session/${session.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session'),'tracking approval');
+  assert.deepEqual(permission.save,[]);assert.equal((await ledger()).state,before.state);
+  await api(`/api/session/${session.id}/permission/${permission.id}/reply`,{decision:'once'});
+  const result=await pending;if(result.error)throw result.error;assert.equal(result.value.output.state,'in_progress');
+ }
+ const linked=await ledger(),trace=linked.record.correlation.watchdog_trace_id;
+ assert.ok(trace&&linked.run_id);
+ const receipts=async()=> (await readFile(join(dataRoot,'receipts.jsonl'),'utf8')).trim().split('\n').filter(Boolean).map(line=>JSON.parse(line)).filter(r=>r.metadata?.session_id===session.id&&r.ability_id==='kujo.shipcheck.repository.scan');
+ const records=async()=> (await watchdog.records()).filter(record=>record.references.some(ref=>ref.type==='session'&&ref.id===session.id));
+ const scan=async()=>{const expected=(await receipts()).length+1;await api(`/api/session/${session.id}/prompt`,{text:'PRIVATE_TELEMETRY_SENTINEL: Call kujo_shipcheck_scan exactly once with {"path":"."}. Use no other tools. Report its receipt ID.'},180000);await wait(async()=>{assertProviderHealthy(await api(`/api/session/${session.id}/message?limit=10`));return (await receipts()).length===expected;},'native scan receipt');await api(`/api/experimental/session/${session.id}/wait`,{},180000);assertProviderHealthy(await api(`/api/session/${session.id}/message?limit=10`));};
+ await scan();assert.equal((await receipts()).length,1);
+ await wait(async()=> (await records()).some(r=>r.name==='opencode.tool.completed'),'first canonical delivery');
+ await watchdog.stop();await scan();const scans=await receipts();assert.equal(scans.length,2);assert.ok(scans.every(r=>r.status==='succeeded'));
+ assert.ok((await control('status')).pending>0,'Delivery outage must retain queued metadata');
+ await reload();await wait(async()=>{try{return (await control('status')).enabled;}catch{return false;}},'plugin reload');
+ assert.ok((await control('status')).pending>0,'Queue must survive host plugin unload/reload');assert.equal((await ledger()).run_id,linked.run_id);
+ await watchdog.start();
+ await wait(async()=>{const events=await records();return scans.every(scan=>events.some(e=>e.attributes['kujo.receipt.id']===scan.receipt_id));},'delivery recovery');
+ await wait(async()=> (await control('status')).pending===0,'queue drain');
+ const queue=await control('status');assert.equal(queue.discarded,0,'Fixture outage should recover without losing queued metadata');
+ const events=await records();
+ assert.ok(events.some(r=>r.name==='opencode.model.request'&&r.attributes['gen_ai.request.model']===modelRef.id&&r.attributes['gen_ai.provider.name']===modelRef.providerID));
+ assert.ok(events.some(r=>r.name==='opencode.model.response'&&r.attributes['http.response.status_code']===200));
+ for(const scan of scans){const matches=events.filter(r=>r.name==='opencode.tool.completed'&&r.attributes['kujo.receipt.id']===scan.receipt_id);assert.equal(matches.length,1,'Reload must not duplicate tool delivery');const event=matches[0];assert.equal(event.trace_id,trace);assert.ok(event.references.some(r=>r.type==='run'&&r.id===linked.run_id));assert.ok(event.references.some(r=>r.type==='tool_call'&&r.id));assert.ok(event.references.some(r=>r.type==='agent'&&r.id==='build'));}
+ assert.equal(new Set(events.map(r=>r.record_id)).size,events.length);
+ assert.ok(events.every(r=>r.content.length===0&&r.privacy.content_mode==='off'));
+ assert.ok(!JSON.stringify(events).includes('PRIVATE_TELEMETRY_SENTINEL'),'Prompt content must not be delivered');
+ assert.equal((await ledger()).state,'in_progress','Telemetry must not choose a run verdict');
+ await disable();await delay(1200);const afterDisable=await records();
+ const seen=new Set((await api(`/api/session/${session.id}/message?limit=100`)).data.filter(m=>m.type==='assistant').map(m=>m.id));
+ await api(`/api/session/${session.id}/prompt`,{text:'Reply OK. Do not use tools.'},180000);await wait(async()=>{const messages=await api(`/api/session/${session.id}/message?limit=100`);assertProviderHealthy(messages);return messages.data.some(m=>m.type==='assistant'&&!seen.has(m.id));},'real model response after opt-out');await api(`/api/experimental/session/${session.id}/wait`,{},180000);assertProviderHealthy(await api(`/api/session/${session.id}/message?limit=10`));await delay(1200);
+ assert.equal((await records()).length,afterDisable.length,'Opt-out must suppress subsequent model/session delivery');
+ return {watchdog:watchdog.provenance,queue_delivered:queue.delivered,queue_discarded:queue.discarded,session_id:session.id,run_id:linked.run_id,trace_id:trace,model,agent:'build',receipt_ids:scans.map(r=>r.receipt_id),record_count:events.length,service_outage_recovered:true,host_reload_recovered:true,metadata_only:true,opt_out_verified:true,opt_out_assistant_observed:true,record_still_in_progress:true,events};
+}

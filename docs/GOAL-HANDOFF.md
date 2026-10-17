@@ -37,12 +37,37 @@ runtime hashes are recorded; this was macOS26.6.2 x86_64/OpenCode2.0.31.
 Logs:/tmp/kujo-native-live-guard.log, /tmp/kujo-native-guard-candidate-proof.log
 and /tmp/kujo-native-guard-discovery.log.
 
+## Live telemetry, service recovery and opt-out
+
+`KUJO_TEST_TELEMETRY=1` with the same explicit free model passed inP0HmiB.
+A separately approved session RunLedger start and correlation link preceded two
+real ShipCheck calls. Canonical Watchdog received session/agent/tool-call/receipt,
+model/provider and run/trace metadata, with empty content. The second call ran
+while the private Watchdog service was down. Queued events survived a real host
+plugin unload/reload and arrived after service restart with no duplicate tool
+records and zero discarded events. The queue delivered32records;31belonged to
+the target session. Explicitly disabling telemetry suppressed delivery during a
+subsequent observed model response. The run remained in_progress throughout.
+
+Canonical Watchdog source9e82e8f5b05edca948f6a432ae517031388296e6 was clean;
+exporters were disabled, credentials stayed in memory, and DB/config paths were
+private fixture files. telemetry-evidence.json, verification.json and
+candidate-verification.json remain under
+/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-P0HmiB.
+All68runtime payload files match the same candidate. Logs:
+/tmp/kujo-native-live-telemetry-final.log, /tmp/kujo-telemetry-candidate-proof.log,
+/tmp/kujo-native-telemetry-host.log and /tmp/kujo-native-telemetry-{all,e2e}.log.
+172offline tests and canonicalE2E passed. Earlier6VeFi2 failed because prompt
+acknowledgement preceded tool execution; the harness now waits for the receipt
+and the documented host idle endpoint. R1hwDP established initial recovery;
+P0HmiB adds explicit post-opt-out assistant observation and source hashes.
+
 ## Next acceptance work
 
-- Real-model metadata delivery to canonical Watchdog, with actual session/tool/
-  model/run correlation and interruption/reconnect evidence. Unit reconnect and
-  canonical outbox lost-acknowledgement tests already exist; do not call them a
-  complete live host journey.
+- Live cancellation telemetry while an Ability awaits permission. Delivery,
+  service outage, host reload, opt-out and the live failure guard now have actual
+  host evidence. Automatic-start cancellation and canonical lost-acknowledgement
+  reconciliation already have separate tests; retain their exact scopes.
 - All six scoped specialist workflows. Free-provider scoped Ship attempts fail
   with provider.auth403; ordinary Build succeeds. Do not spoof provider clients,
   rewrite agent identities to evade restrictions or silently use a paid fallback.
