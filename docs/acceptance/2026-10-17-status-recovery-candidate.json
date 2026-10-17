@@ -705,6 +705,14 @@
       "effect_absent": true,
       "correction_commit": "b9bda10",
       "correction": "Narrow embedded-JSON review accepts whitespace only; duplicate/extra fields and changed values rejected; native request/approval binding untouched; actual reviewed inputs retained."
+    },
+    {
+      "fixture": "kujo-native-host-UsZQh7",
+      "log": "/tmp/kujo-status-dispatch-transport-reviewed-json.log",
+      "result": "refused_invalid_escaped_json_before_approval",
+      "effect_absent": true,
+      "correction_commit": "8743d2c",
+      "correction": "Literal JSON field shown separately in model prompt; invalid escaped text remains rejected."
     }
   ],
   "dispatch_controller_regressions": {
