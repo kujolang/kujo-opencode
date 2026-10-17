@@ -18,3 +18,9 @@ if (actual !== manifest.sha256) throw new Error(`generated Ability runtime diges
 let upstream = body.toString("utf8");
 for (const [before, after] of Object.entries(manifest.host_transformations)) upstream = upstream.replaceAll(after, before);
 if (createHash("sha256").update(upstream).digest("hex") !== manifest.source_sha256) throw new Error("upstream runtime provenance mismatch");
+
+const gatewayManifest=JSON.parse(await readFile(join(root,'.generated/GATEWAY-CONTRACT.json'),'utf8'));
+for(const [file,expected] of [['gateway-contract.ts',gatewayManifest.source_sha256],['gateway-contract.mjs',gatewayManifest.sha256]]) {
+ const bytes=await readFile(join(root,'.generated',file));
+ if(createHash('sha256').update(bytes).digest('hex')!==expected)throw new Error('canonical gateway contract provenance mismatch: '+file);
+}

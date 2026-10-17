@@ -65,7 +65,7 @@ kujo-opencode abilities
 | `review` | 18 | Check architecture, contracts, context, and change footprint |
 | `ship` | 30 | Run verification and retain release evidence |
 | `build` | 17 | Inspect source and run reviewed source/test snapshots |
-| `full` | 56 | Add orchestration, RAG, and optional service tools |
+| `full` | 58 | Add orchestration, RAG, and optional service tools |
 
 `enable` and `disable` accept a product name, a tool name, or the canonical Ability
 ID. Product names select all of that product's supported operations. Canonical
@@ -506,3 +506,34 @@ OpenCode permissions changed. The adapter does not poll for decisions, resume
 workflows, register devices, start Leash or automatically retry submissions. If
 a response is lost, inspect the stable request/event ID in Leash before retrying.
 Keep that ID when reconciling; a new ID could create another intervention.
+
+
+### Application Ability gateway
+
+Select **Full**, or enable `gateway` using the capability picker or
+`kujo-opencode enable gateway`. Set `KUJO_ABILITY_GATEWAY_URL` to the application
+origin and `KUJO_ABILITY_GATEWAY_TOKEN` to its scoped bearer credential in the
+environment that launches OpenCode. Optional `KUJO_ABILITY_GATEWAY_AUDIENCE` is
+sent as `x-kujo-audience`. Remote origins require HTTPS. Setup does not contact
+the service or configure its accounts.
+
+Ask the Workflow specialist to call `kujo_gateway_list`. Discovery returns the
+application's tool descriptors, including canonical identity, schemas, effects
+and execution path. For execution, `kujo_gateway_call` takes the exact reviewed
+`tool` descriptor, `origin`, operation `input`, and stable `invocation_id` and
+`idempotency_key`. Native approval binds all those values. The adapter fetches
+the catalog again and refuses changed descriptors before sending execution.
+The application remains authoritative if its state changes during the request;
+a preflight catalog check is not an atomic server-side version lock.
+
+If the application requires its own approval, obtain that through its normal
+human approval interface and supply the resulting `approval_id`. OpenCode does
+not issue application approvals, infer tenant permissions or reuse native
+approval IDs as remote grants. Rejection and `approval_required` remain failed
+execution results with validated remote receipts when available.
+
+A successful result requires a canonical receipt matching the reviewed Ability
+ID, version, definition digest and invocation. The receipt and its result appear
+in local evidence alongside the adapter receipt. There are no automatic retries.
+After cancellation or a lost response, inspect the invocation in the application
+before deciding whether to retry with the same identifiers.

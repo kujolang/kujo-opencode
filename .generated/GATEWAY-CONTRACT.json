@@ -1,0 +1,9 @@
+{
+  "source_repo": "kujolang/ability",
+  "source_commit": "bcbecb49b147023877e83d5f2ea647dfede030b5",
+  "source_path": "sdk/typescript/index.ts",
+  "source_sha256": "6577dda6be4afb78b8294f88b00e65a72da462ec3fa6959183233ac398eb5c04",
+  "sha256": "f87d3d4d2dd95820dd0d63117af9872bbd06b66b4d3e64fa7f1877d55dfc1a09",
+  "transformation": "node:module stripTypeScriptTypes mode=strip",
+  "generator_node": "v26.7.0"
+}
