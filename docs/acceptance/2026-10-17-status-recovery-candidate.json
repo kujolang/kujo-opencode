@@ -678,5 +678,27 @@
     "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
     "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-iD2dQC",
     "log": "/tmp/kujo-status-understand-latest.log"
+  },
+  "dispatch_transport_attempts": [
+    {
+      "fixture": "kujo-native-host-upZXUE",
+      "log": "/tmp/kujo-status-dispatch-transport.log",
+      "result": "failed_before_inference",
+      "cause": "Full profile activated before the hidden-capability baseline check",
+      "correction_commit": "5cca123"
+    },
+    {
+      "fixture": "kujo-native-host-n091ZW",
+      "log": "/tmp/kujo-status-dispatch-transport-retry.log",
+      "result": "refused_mismatched_input_before_approval",
+      "cause": "Model omitted supplied optional input_json empty object",
+      "correction_commit": "51c03f2",
+      "correction": "Required nonempty workflow input; exact approval comparison preserved"
+    }
+  ],
+  "dispatch_controller_regressions": {
+    "log": "/tmp/kujo-dispatch-controller-check.log",
+    "passed": 17,
+    "cases": "Existing transport/runner checks plus wrong ability, altered input, persistent permission and provider failure all refused before a grant"
   }
 }
