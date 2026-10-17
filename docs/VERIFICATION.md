@@ -86,3 +86,23 @@ passed at 80x24 in fixture r4g_9szc. The scoped Ship run in 0m4capoi failed with
 the provider's free-tier client restriction and produced no successful scan
 receipt. Ordinary Build inference succeeded; this is not evidence that all
 OpenCode inference is unavailable. Six-specialist acceptance remains open.
+
+
+## Canonical Leash acceptance
+
+Build the canonical Leash Rust daemon separately, then run
+`LEASH_TEST_BIN=/absolute/path/to/leashd node tests/leash-canonical.mjs`. This
+starts a private loopback daemon with a disposable database, ephemeral credentials,
+and notification providers and Dispatch callbacks disabled. It registers a fixture
+device through the daemon API and checks canonical v2 ingestion, duplicate-event
+reconciliation, invalid authentication and invalid-event rejection. No live
+notification service is contacted. The process is stopped and credential config
+removed; verification.json retains the binary digest without credentials.
+
+Local daemon source56c59c90b81433482683e72a411748ca82a61b24 passed in TfrWT2;
+binary SHA256 b79889ca39229684b7262e46f2382388b30191b26e4497989bc99100cb8758a9.
+Transport tests separately verify canonical native approval binding, no network
+before approval, idempotency replay, origin change refusal, cancellation, size
+limits, redirect rejection and sanitised acknowledgements. This is not proof of
+provider notification delivery, native rendered Leash approval or remote human
+decision handling. Those operations are outside this local acceptance evidence.

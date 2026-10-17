@@ -5,6 +5,8 @@ import { setTimeout as delay } from 'node:timers/promises';
 const exec = promisify(execFile);
 const args = process.argv.slice(2);
 const project = resolve(args[0] === '--project' && args[1] ? args[1] : process.cwd());
+const expectedTools=args.flatMap((value,index)=>value==='--expect-tool'?[args[index+1]]:[]);
+if(expectedTools.some(name=>typeof name!=='string'||!/^kujo_[a-z0-9_]+$/.test(name)))throw new Error('--expect-tool requires a Kujo tool name');
 const host = process.env.OPENCODE_BIN || 'opencode';
 const {stdout:version} = await exec(host,['--version']);
 if (!/^opencode v?2\./.test(version.trim())) throw new Error('OpenCode 2 is required');
@@ -35,8 +37,9 @@ try {
     if(!rpc.ok) throw new Error('Native Kujo status RPC failed');
     const status=await rpc.json();
     if(!status.output?.tools?.length) throw new Error('Native Kujo has no exposed tools');
+    for(const name of expectedTools)if(!status.output.tools.some(tool=>tool.name===name))throw new Error('Native Kujo did not expose '+name);
     for(const name of expected) if(!commands.some(command=>command.name===name)) throw new Error('OpenCode did not discover /'+name);
-    console.log(JSON.stringify({ok:true,version:version.trim(),project,server:kujo,commands:expected,model_call:false}));
+    console.log(JSON.stringify({ok:true,version:version.trim(),project,server:kujo,commands:expected,expected_tools:expectedTools,model_call:false}));
     process.exitCode=0; break;
    }
   }

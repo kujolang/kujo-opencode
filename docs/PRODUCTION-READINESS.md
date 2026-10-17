@@ -955,3 +955,38 @@ on the presence of a tracking popup. No specialist permissions or provider
 identity were altered. All six specialist workflows, remaining lifecycle and
 recovery/service boundaries, supported host/OS matrix and exact final packed
 public release remain required.
+
+
+## Canonical Leash submission (2026-10-16)
+
+Full now includes56 tools, adding Leash configuration inspection and explicitly
+approved intervention submission; the Workflow specialist permits these two
+capabilities. No service is started and no request sent on setup/status. The
+submission binds its destination to the native approved input and current trusted
+environment, forwards the canonical event unchanged, bounds request/response
+size, refuses redirects and performs no automatic retry. Results retain only
+event ID, delivery status and origin; remote diagnostics and credentials are
+not copied into receipts. Human decisions and native permissions remain separate.
+
+The canonical Rust daemon at56c59c90 passed a private local v2 intervention,
+duplicate reconciliation, invalid-event rejection and invalid-authentication gate
+(TfrWT2). Providers and Dispatch callbacks were disabled. An initial run with
+the bootstrap token failed401; the corrected fixture enrolls its own device and
+uses the returned JWT. Product guidance now makes this prerequisite explicit.
+Transport/runtime tests cover approval binding, withheld effects, replay, origin
+changes, cancellation, bounded bodies and malformed/redirected acknowledgements.
+
+Application Ability gateway discovery/execution remains outstanding. This
+checkpoint does not claim remote notification delivery, observation of Leash
+decisions, automatic workflow resume or native rendered submission acceptance.
+Remaining lifecycle/recovery, six live specialists, host/OS and final immutable
+package/public-release requirements retain their original scope.
+
+Final local checkpoint:140 offline tests, canonical E2E and9 focused service/
+specialist tests passed. Updated isolated setup exposes56 Full tools; actual
+OpenCode2.0.31 status discovery explicitly verified both Leash tool names. Final
+canonical daemon fixture hBSP2C repeats the successful v2/duplicate/auth/invalid
+contract gate. Logs: /tmp/kujo-leash-final-{all,e2e}.log,
+/tmp/kujo-leash-focused-final.log, /tmp/kujo-leash-canonical-final.log and
+/tmp/kujo-leash-host-tools.log. These checks do not close the full service or
+release gates above.
