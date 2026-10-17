@@ -43,6 +43,14 @@ export async function* workflowScenario(project) {
    const unchanged=async()=>assert.equal(await readFile(statePath,'utf8'),stateBytes);
    yield {...decision,input,decision:'reject',beforeDecision:unchanged,after:unchanged};
    yield {...decision,input:{...input,expected_revision:input.expected_revision+1},decision:'once',expectedStatus:'failed',beforeDecision:unchanged,after:async receipt=>{assert.equal(receipt.error.code,'dispatch_checkpoint_changed');await unchanged();}};
+   // A stale decision requires a fresh canonical inspection before resubmission.
+   // Give the model that evidence too, rather than asking it to ignore recovery guidance.
+   yield {ability:'kujo.dispatch.run.inspect',tool:'kujo_dispatch_inspect',input:{path,output_dir:output,run_id:runID},decision:'once',beforeDecision:unchanged,after:async receipt=>{
+    const refreshed=receipt.result.structured.control;assert.equal(refreshed.available,true);assert.equal(refreshed.run_status,'paused');
+    const pending=refreshed.human_intervention;
+    Object.assign(input,{step_id:pending.run.step_id,event_id:pending.event_id,decision_id:pending.security.decision_id,expected_revision:refreshed.state_revision});
+    await unchanged();
+   }};
    yield {...decision,input,decision:'once',beforeDecision:unchanged,after:async receipt=>{assert.equal(receipt.result.exit_code,0);const completed=JSON.parse(await readFile(statePath,'utf8'));assert.equal(completed.status,'completed');assert.equal(completed.steps.at(-1).attempts,1);stateBytes=await readFile(statePath,'utf8');}};
    yield {ability:'kujo.dispatch.run.inspect',tool:'kujo_dispatch_inspect',input:{path,output_dir:output,run_id:runID},decision:'once',beforeDecision:unchanged,after:async receipt=>{assert.equal(receipt.result.structured.control.run_status,'completed');await unchanged();}};
   }

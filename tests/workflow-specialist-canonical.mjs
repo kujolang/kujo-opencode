@@ -16,5 +16,5 @@ for await(const step of workflowScenario(root)){
  if(step.expectedStatus==='failed')assert.ok(error);else if(error)throw error;
  await step.after(error?{error}:{result});
 }
-assert.equal(steps,17);
+assert.equal(steps,18);
 console.log(JSON.stringify({ok:true,root,source,steps,live_specialist:false,native_approval:false,native_cancellation:false}));
