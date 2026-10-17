@@ -421,3 +421,20 @@ Candidate SHA-256: 70c8dde715187007ed9e0215b3e46f87f8e959373eded1f016ba9a579b8bf
 acceptance documentation changed after packing; shipped executable bytes match
 this checkpoint. This remains local macOS evidence, not the full immutable
 supported-platform/live-specialist/public-release certification.
+
+## Guided browser readiness (2026-10-16)
+
+BrowserSetup + lens.mjs now provide native readiness/install/progress/cancel/recheck,
+actual Chromium launch checks and correct Node interpreter selection in a bundled
+OpenCode host. The native menu links capability enablement and Browser specialist
+selection. 104 offline tests and E2E passed; native EPKiW1 passed management and
+denial. Final native launch comparison and packed 2yPB0j are pending below. Packed
+gate now installs browser dependencies in empty HOME and runs canonical Lens.
+
+Live Ship specialist recheck still failed provider.auth HTTP403 before execution.
+Keep the gate open; do not spoof provider identity. Remaining browser scope includes
+real specialist/platform acceptance and cross-process shared-source installation
+recovery (current background job single-flight is per plugin). Next independent
+work can address guided RAG/index freshness, automatic session RunLedger tracking
+and correlation or the remaining recovery matrix while provider/release gates
+remain unavailable. Preserve the full seven-area objective.

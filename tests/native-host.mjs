@@ -122,6 +122,17 @@ try {
  await lifecycleChange('disable_guard','once');
  assert.equal(JSON.parse(await readFile(configPath,'utf8')).lifecycle.enabled,false);
  assert.ok((await api(`/api/session/${session.id}/message?limit=100`)).data.every(message=>message.type!=='assistant'),'lifecycle management must not trigger inference');
+ // Probe in the actual bundled host; reject setup without touching dependencies.
+ const browserBefore=(await api('/api/rpc/kujo.control/browser',{input:{sessionID:session.id,action:'status'}},20000)).output;
+ const {lensBrowserStatus}=await import('../lib/lens.mjs');const browserInstallation=JSON.parse(await readFile(join(env.KUJO_OPENCODE_HOME,'installation.json'),'utf8'));const expectedBrowser=await lensBrowserStatus(browserInstallation.sources.lens.path);assert.equal(browserBefore.ready,expectedBrowser.ready,'bundled host and Node must agree about actual launch readiness');
+ assert.equal(typeof browserBefore.ready,'boolean');assert.ok(['ready','dependencies_missing','launch_failed','probe_failed'].includes(browserBefore.state));
+ const installing=api('/api/rpc/kujo.control/browser',{input:{sessionID:session.id,action:'install'}}).then(value=>({value}),error=>({error}));
+ let browserPermission;for(let i=0;i<40;i++){browserPermission=(await api(`/api/session/${session.id}/permission`)).data.find(p=>p.action==='kujo.browser.setup');if(browserPermission)break;await delay(100);}
+ assert.ok(browserPermission);assert.deepEqual(browserPermission.save,[]);assert.equal(browserPermission.metadata.operation,'install');
+ await api(`/api/session/${session.id}/permission/${browserPermission.id}/reply`,{decision:'reject'});assert.ok((await installing).error);
+ const browserAfter=(await api('/api/rpc/kujo.control/browser',{input:{sessionID:session.id,action:'status'}},20000)).output;assert.equal(browserAfter.ready,browserBefore.ready);assert.notEqual(browserAfter.state,'installing');
+ const hostConfig=JSON.parse(await readFile(join(project,'.opencode/opencode.json'),'utf8'));
+ assert.match(hostConfig.mcp.servers.kujo.command[0],/(?:^|[/\\])node(?:\.exe)?$/i,'native projection must retain a Node interpreter');
  // Session RunLedger uses canonical records and exact native Ability grants.
  for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish']){
   const state=(await api('/api/rpc/kujo.control/status',{input:{}})).output;
@@ -163,5 +174,5 @@ try {
  assert.equal(detail.receipt.metadata.project_root,await realpath(project));
  await assert.rejects(api('/api/rpc/kujo.control/artifact',{input:{receiptID:'not-retained',index:0}}));
  const live=process.env.KUJO_TEST_MODEL ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
- console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,model_call:Boolean(live)}));
+ console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,native_browser_readiness:true,browser_ready:browserBefore.ready,model_call:Boolean(live)}));
 } finally {child.kill('SIGTERM');}

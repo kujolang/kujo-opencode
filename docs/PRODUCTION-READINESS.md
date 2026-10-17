@@ -631,3 +631,38 @@ Candidate SHA-256: 70c8dde715187007ed9e0215b3e46f87f8e959373eded1f016ba9a579b8bf
 acceptance documentation changed after packing; shipped executable bytes match
 this checkpoint. This remains local macOS evidence, not the full immutable
 supported-platform/live-specialist/public-release certification.
+
+## Guided browser readiness checkpoint (2026-10-16)
+
+Native /kujo now provides Browser readiness: actual Chromium launch/close, explicit
+approved background installation, phase/status inspection, cancellation/recheck,
+page-check capability enablement and Browser specialist selection. No website is
+opened by readiness, no install starts from viewing the menu and no model call is
+used for management. Install uses canonical locked npm dependencies and Lens's
+install-browser script, with bounded commands and process-tree cancellation.
+The job is single-flight within one plugin instance; cross-process shared-source
+installation and interrupted-install recovery remain acceptance work.
+
+The old probe returned ready when an executable path existed without launching it.
+It now requires successful Chromium launch/close, supports the canonical headless
+shell distribution, and distinguishes missing dependencies, launch failure and
+probe failure without returning raw command output. CLI diagnostics reflect those
+states. OpenCode's bundled executable is not a Node CLI: node-command.mjs selects
+Node for native probes and regenerated MCP fallback commands while preserving the
+current Node executable for CLI users. This fixes native-host interpreter routing
+without changing the generated Ability runtime.
+
+104 offline tests and canonical E2E passed. Native OpenCode2.0.31 fixture EPKiW1
+passed readiness RPC and installation denial, preserving separate capability and
+normal tool approvals. Final native check additionally compares launch readiness
+against Node. Packed 2yPB0j is running an expanded empty-HOME gate that installs
+Chromium and executes a real loopback Lens check from installed bytes; terminal
+evidence is required before claiming that gate passed. Its tarball predates only
+the final CLI diagnostic-text refinement, not the browser execution implementation.
+
+Live specialist gate rechecked with opencode/glm-5.3-flash-free and kujo-ship:
+provider.auth HTTP403 again rejected inference before native tool execution.
+Canonical workspace routing is fixed; this remains a provider gate, not evidence
+of a tool execution or approval failure. No provider spoofing/proxy was used.
+All seven broad readiness outcomes remain open, including six specialist tasks,
+automatic lifecycle tracking, guided RAG, recovery/platform matrix and public release.

@@ -27,7 +27,7 @@ Reference revisions inspected locally:
 | Workflow operation | Dispatch validate/run and Muzzle adapters | Scoped Workflow agent projected; checkpoints, cancellation and lost-response reconciliation remain |
 | Project knowledge | RAG query/ingest adapters | Guided index/query workflow, freshness and citations, retained-index management |
 | Evidence | Canonical receipts, native project/session/legacy filtering, details/comparison, contained artifact previews and JSON export | Retention limits are explicit; immutable artifact snapshots and full directory browsing are not provided |
-| Browser verification | Lens adapters and explicit browser install | Native readiness/remediation workflow and real supported-host acceptance |
+| Browser verification | Canonical Lens checks; native launch readiness, approved background install/cancel/recheck, capability enablement and specialist selection | Real specialist workflow and supported host/OS acceptance; concurrent cross-process browser setup recovery |
 | Session lifecycle | Native opt-in metadata observers, durable Watchdog delivery, session-linked canonical RunLedger controls and bounded opt-in failure guard | Automatic session tracking/finalization with truthful human verdicts; live-model guard/telemetry and platform acceptance |
 | External approval/service integrations | Local native one-time approvals | Explicitly scoped service support matrix including Leash; never imply remote gateway capability from a local catalog |
 | Recovery and distribution | Transactional project activation and staged source/runtime replacement with complete lock publication; packed local install/upgrade | Lost-response reconciliation, multiple-project/version cases, supported OS/host matrix, public release/provenance |

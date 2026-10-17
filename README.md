@@ -125,6 +125,23 @@ Shared data lives in `~/.local/share/kujo/opencode`, or `KUJO_OPENCODE_HOME`.
 CMD and Pi state remain separate. Six scoped specialists are available through
 `/kujo` → Choose a specialist. Tool exposure still follows the selected profile.
 
+### Browser readiness
+
+Open `/kujo` → Browser readiness to launch and close Chromium without visiting a
+website. If dependencies are missing or launch fails, choose Install browser
+dependencies and review the native permission request. Setup installs the pinned
+Lens bridge packages and Chromium; it does not verify your application. It runs
+as a bounded background job. Reopen the menu to see progress, cancel or recheck.
+Closing OpenCode stops its active installation; recheck disk readiness after restart.
+
+When Chromium is ready, the menu can enable page verification and select the
+Browser specialist. Provide a running local URL and the behavior to verify. The
+Ship profile also exposes flow validation and failure evidence. External URLs
+still need explicit permission. If repair completes but Chromium cannot launch,
+check the operating system's browser dependencies rather than treating an existing
+executable path as a passing check. Browser dependencies are shared by projects
+using the same installed Lens source.
+
 ### Optional lifecycle delivery
 
 In a project session, choose `/kujo` → Lifecycle delivery → Enable local Watchdog
