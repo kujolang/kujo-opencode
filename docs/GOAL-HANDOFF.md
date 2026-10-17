@@ -109,19 +109,61 @@ repair/uninstall, while this separate run supplies failed-upgrade evidence.
 - All six scoped specialist workflows. Free-provider scoped Ship attempts fail
   with provider.auth403; ordinary Build succeeds. Do not spoof provider clients,
   rewrite agent identities to evade restrictions or silently use a paid fallback.
-- Complete the requirement-by-requirement recovery audit using the existing
-  crash/concurrency/rollback tests and the new actual multi-project/version
-  execution evidence. Do not repeat already-proved repair/uninstall scenarios
-  without a concrete uncovered case.
-- Supported OS/minimum-latest host matrix, protected publication, signed provenance
-  and public registry install/upgrade. The candidate workflow only prepares/tests
-  artifacts.
+- Local recovery requirement audit is in RECOVERY-ACCEPTANCE.md. Preserve its
+  scoped evidence and boundaries; remaining platform certification is separate.
+- Supported OS/minimum-latest host matrix, protected publication execution,
+  signed provenance and public registry install/upgrade. The new publish workflow
+  is implemented but has not executed or certified any release.
 - External blocks rechecked this pass: npm whoami E401; GitHub run 38999467760
   (05ff64e) has no executed steps, annotation 117299127863 cites account payments
   or spending limit. Scoped Ship with GLM free again fails provider.auth HTTP403
   before execution (/tmp/kujo-specialist-ship-recheck.log). These do not prevent
-  remaining local release-workflow implementation.
+  remaining evidence collection; release-workflow implementation is now prepared.
 
 Strata Agent Notes handoff:1bca6881-719a-4e15-b140-12402af46564. Consult its latest
 revision for active process handles; historical logs and earlier failure fixtures
 are not passing evidence. No subagents have been authorized.
+
+## Protected publication preparation (2026-10-17)
+
+1202163 adds release identity/evidence validation; 4feac59 adds a tag-only manual
+publication workflow and registry consumer mode. The gate binds a successful
+candidate workflow, exact source/tag/archive, public repository, protected
+npm-release environment, six product requirements, six specialists and all
+minimum/latest host-platform entries. Evidence URLs are human-review pointers,
+not automatic proof of their contents. No passing report has been invented.
+The workflow repeats checks after environment approval, publishes the same archive
+with OIDC provenance, verifies registry integrity/provenance/signatures, runs the
+registry consumer fresh-install/upgrade gate, then creates the matching release.
+An existing identical npm version can resume verification without republishing.
+Candidate artifacts and acceptance evidence now upload separately.
+
+178 offline tests pass; actionlint v1.7.12, embedded JavaScript and shell syntax
+checks pass. Logs /tmp/kujo-publication-all-final.log and
+/tmp/kujo-publication-actionlint-final.log. There are no adapter/executor changes.
+The new archive includes release scripts/documentation and changed package metadata,
+so prior candidate digest must not be represented as its complete identity.
+Current candidate /tmp/kujo-publication-candidate, source4feac59,
+SHA256 e8937c2c1bd9971dbac327e171e940cc02ae794529e67229b1a20e1163a0ee25.
+release:verify passed. The exact packed fresh-install/actual 0.1.0 upgrade gate
+passed in QTRucG, including the newly integrated failed-upgrade, repair and uninstall
+execution checks for both versions. It also passed 28 source pins, all four starter
+services, Agents SDK, RunLedger, knowledge and actual Chromium/Lens acceptance.
+/tmp/kujo-publication-fresh.log, QTRucG/verification.json and
+mixed-version-verification.json retain proof; the test cleaned generated workdirs.
+registry_consumer=false explicitly records that this was tarball acceptance,
+not publication or registry consumer acceptance.
+
+Authoritative repository API reports private=true and zero environments. Public
+npm lookup returns E404 (not publicly available; it does not distinguish absent
+from inaccessible private state). No repository visibility, environment, npm
+trust, tag, release or publication was changed. Account setup, CI billing and
+remaining actual specialist/OS/host evidence still block end-to-end publication.
+See RELEASING.md for the exact acceptance report and workflow contracts. No
+workflow dispatch or registry consumer success is claimed by local structural tests.
+
+Local Linux alternative checked: Docker CLI exists but docker info fails because
+its daemon socket is absent; no container matrix was run. A user question is pending
+about another already-authorized OpenCode provider for scoped specialist acceptance.
+Do not choose a paid fallback without the user's answer. All local test processes
+are terminal. No candidate/publish workflow was dispatched.
