@@ -66,7 +66,7 @@ kujo-opencode abilities
 | `review` | 18 | Check architecture, contracts, context, and change footprint |
 | `ship` | 30 | Run verification and retain release evidence |
 | `build` | 17 | Inspect source and run reviewed source/test snapshots |
-| `full` | 61 | Add orchestration, RAG, and optional service tools |
+| `full` | 62 | Add orchestration, RAG, and optional service tools |
 
 `enable` and `disable` accept a product name, a tool name, or the canonical Ability
 ID. Product names select all of that product's supported operations. Canonical
@@ -282,7 +282,13 @@ that identifier and output directory before considering a retry. Listing require
 approval for possible canonical index repair. Discovery accepts up to 10,000 output
 entries and a 2 MiB index; results are paginated (up to 200 per call). Inspection discloses possible canonical SQLite bookkeeping
 and requires its own approval; it never resumes the run or decides a checkpoint.
-Checkpoint continuation currently uses canonical Dispatch operator commands.
+For an ordinary human approval checkpoint, inspect its canonical control view,
+choose `approve`, `reject`, or `request_changes`, then use `kujo_dispatch_decide`
+with those exact identifiers and revision. Its separate native review includes
+the decision and response. A changed checkpoint is refused; later checkpoints
+remain pending. Experimental v2 intervention/assurance decisions still use their
+canonical Dispatch operator surface. Dispatch 1.4 requires Kujo 1.8.1; its runtime
+support is Linux/macOS (POSIX), so Windows continuation is not certified.
 
 
 Specialists inherit your model choice. Each has an enforced native Ability

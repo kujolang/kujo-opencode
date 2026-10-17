@@ -87,3 +87,16 @@ files, private prompts or an entire data directory. There is no response-time SL
 The maintained acceptance record is [PRODUCTION-READINESS.md](PRODUCTION-READINESS.md).
 It distinguishes verified behavior from pending work. Security reporting follows
 [SECURITY.md](../SECURITY.md).
+
+### Dispatch checkpoint continuation
+
+The catalog pins Dispatch 1.4 (`71ca927c65598ecfe7c1816068e047cf50b915e0`)
+and the package uses Kujo runtime 1.8.1, as required by its canonical release.
+Ordinary human checkpoint continuation requires the authoritative
+`kujo.control-view/v1` projection. Older installed sources without this view fail
+closed and need an explicit installation upgrade. Native approval binds the exact
+revision, identifiers, decision and review response; canonical Dispatch also
+validates the revision under its run lock. Later checkpoints require new review.
+Experimental v2 intervention/assurance decisions retain their canonical operator
+surface. Canonical Dispatch 1.4 supports Linux/macOS POSIX runtimes; Windows
+continuation and the broader host matrix remain unverified.

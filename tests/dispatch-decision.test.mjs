@@ -1,0 +1,9 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {dispatchDecision} from '../lib/dispatch-decision.mjs';
+const input={run_id:'run-one',step_id:'first',event_id:'event-one',decision_id:'decision-one',expected_revision:5,decision:'approve',response:'Reviewed'};
+const control={schema:'kujo.control-view/v1',available:true,run_id:'run-one',state_revision:5,run_status:'paused',human_intervention:{event_id:'event-one',run:{run_id:'run-one',step_id:'first'},security:{decision_id:'decision-one'},allowed_actions:['approve','reject']}};
+test('checkpoint decision preserves exact native-reviewed fields without automatic approval flags',()=>{assert.deepEqual(dispatchDecision(input,control),{run_id:'run-one',step_id:'first',event_id:'event-one',decision_id:'decision-one',expected_state_revision:5,decision:'approve',response:'Reviewed'});});
+test('every stale checkpoint binding is refused before submission',()=>{for(const patch of [{run_id:'run-two'},{step_id:'second'},{event_id:'event-two'},{decision_id:'decision-two'},{expected_revision:6},{decision:'request_changes'}])assert.throws(()=>dispatchDecision({...input,...patch},control),{code:'dispatch_checkpoint_changed'});});
+test('missing or terminal canonical control cannot authorize continuation',()=>{assert.throws(()=>dispatchDecision(input,{available:false}),{code:'ability_dependency_missing'});assert.throws(()=>dispatchDecision(input,{...control,run_status:'completed'}),{code:'dispatch_checkpoint_changed'});});
+test('malformed decision fields are refused rather than coerced',()=>{for(const patch of [{run_id:'../escape'},{decision_id:'--yes'},{expected_revision:5.1},{response:null},{response:'x'.repeat(4001)},{decision:'yes'}])assert.throws(()=>dispatchDecision({...input,...patch},control),{code:'ability_input_invalid'});});

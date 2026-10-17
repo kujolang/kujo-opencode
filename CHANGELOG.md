@@ -2,6 +2,9 @@
 
 ## 0.2.0
 
+- Pin Dispatch 1.4 and Kujo runtime 1.8.1 for authoritative checkpoint control views.
+- Submit separately approved checkpoint decisions bound to the inspected revision and IDs; stale decisions fail and later checkpoints remain pending.
+
 - Discover retained Dispatch run IDs after a lost response, with explicit index-repair approval and path validation.
 
 - Link explicit Eval run IDs through RunLedger correlation without changing verdicts; retain existing Watchdog trace linking.

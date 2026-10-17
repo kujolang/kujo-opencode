@@ -84,3 +84,5 @@ test('Dispatch discovery rejects index traversal and symlinked run state before 
  await mkdir(join(root,'runs/run-one'));await writeFile(join(root,'outside'),'{}');await symlink(join(root,'outside'),join(root,'runs/run-one/state.json'));
  await assert.rejects(adapter({output_dir:'runs'},{}),{code:'ability_path_invalid'});
 });
+
+import './dispatch-decision.test.mjs';
