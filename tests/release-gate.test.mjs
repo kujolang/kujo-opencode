@@ -33,7 +33,7 @@ test('publication metadata uses canonical GitHub endpoints, including repository
  const {join}=await import('node:path');
  const {execFile}=await import('node:child_process');
  const {promisify}=await import('node:util');
- const action=await readFile(new URL('../.github/actions/verify-release/action.yml',import.meta.url),'utf8');
+ const action=(await readFile(new URL('../.github/actions/verify-release/action.yml',import.meta.url),'utf8')).replace(/\r\n/g,'\n');
  const source=action.split("node --input-type=module <<'JS'\n")[1].split('\n        JS')[0];
  const directory=await mkdtemp(join(tmpdir(),'kujo-release-metadata-'));
  const mock=`
