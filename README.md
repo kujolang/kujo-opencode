@@ -484,6 +484,10 @@ the canonical JSON file, and **Evidence history** exposes operation receipts.
 
 ### Leash intervention delivery
 
+Open `/kujo` → External services for local configuration and capability status.
+This screen does not contact a service or verify credentials. See the
+[service support matrix](docs/SERVICE-SUPPORT.md) for verified behavior and limits.
+
 Select **Full**, or enable the two Leash capabilities under `/kujo` → Capabilities
 (`kujo-opencode enable leash` also enables both). Start and configure your canonical
 Leash service separately. In the environment that launches OpenCode, set

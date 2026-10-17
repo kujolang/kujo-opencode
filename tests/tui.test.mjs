@@ -4,7 +4,7 @@ import {setupTui} from '../lib/tui.mjs';
 import {scopedHostContext} from '../lib/plugin-scope.mjs';
 import {homePaths,withDataRoot} from '../lib/paths.mjs';
 
-function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[],home=false,waitCreate,selectedModel,ledgerState='in_progress'}={}) {
+function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[],home=false,waitCreate,selectedModel,ledgerState='in_progress',services=[]}={}) {
  const calls=[],alerts=[],toasts=[];let commands,eventHandler,stopped=false,route=home?{type:'home'}:{type:'session',sessionID:'fixture-session'};
  const location={directory:'/fixture/project'};
  const ctx={location,client:{session:{create:async input=>{calls.push({method:'createSession',input});if(waitCreate)await waitCreate;return {id:'new-session'};},switchModel:async input=>calls.push({method:'switchModel',input})},rpc:definition=>{
@@ -13,7 +13,7 @@ function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts
    calls.push({method,input,options});assert.deepEqual(options,{location});
    if(method==='completion')return {available:true,run_id:'fixture'};
    if(method==='knowledge')return input.action==='preview'?{files:[{path:'guide.md'}],bytes:12,digest:'a'.repeat(64),exclusions:['dotfiles'],index_input:{name:input.name,path:input.path,digest:'a'.repeat(64)}}:{state:'current'};
-   if(method==='status'){if(waitStatus)await waitStatus;return {capabilities:[{id:'kujo.test.check',name:'check',description:'Check repository',active:true,inherited:true,mode:'profile'}],project:location.directory,version:'0.2.0',profile:'kujo.profile.essentials',specialists:[{id:'kujo-browser',title:'Browser verification',profile:'ship',description:'Verify pages',abilities:['kujo.lens.page.check'],available:[],missing:['kujo.lens.page.check']}],profiles:[{id:'kujo.profile.review',label:'Review',description:'Review repository'}],tools:[{name:'check',description:'Check repository'}]};}
+   if(method==='status'){if(waitStatus)await waitStatus;return {services,capabilities:[{id:'kujo.test.check',name:'check',description:'Check repository',active:true,inherited:true,mode:'profile'}],project:location.directory,version:'0.2.0',profile:'kujo.profile.essentials',specialists:[{id:'kujo-browser',title:'Browser verification',profile:'ship',description:'Verify pages',abilities:['kujo.lens.page.check'],available:[],missing:['kujo.lens.page.check']}],profiles:[{id:'kujo.profile.review',label:'Review',description:'Review repository'}],tools:[{name:'check',description:'Check repository'}]};}
    if(method==='browser'){if(['status','refresh'].includes(input.action))return {ready:false,state:'dependencies_missing',capabilities:[]};if(profileError)throw Error(profileError);return {ready:false,state:'installing'};}
    if(method==='runledger'){if(input.action==='status')return {state:ledgerState,run_id:ledgerState==='not_started'?undefined:'fixture'};if(profileError)throw Error(profileError);return {state:input.status};}
    if(method==='lifecycle'){if(input.action==='status')return {enabled:false,pending:0};if(profileError)throw Error(profileError);return {enabled:input.action==='enable'};}
@@ -163,4 +163,9 @@ test('queued completion cannot follow the user into another session or survive u
   if(unload)f.cleanup();else f.navigate({type:'session',sessionID:'other'});
   release();await status;assert.deepEqual(f.calls.map(c=>c.method),['status']);
  }
+});
+
+test('service setup is readable from home without creating a session or invoking a service',async()=>{
+ const f=fixture({home:true,choices:['services','leash'],services:[{id:'leash',title:'Leash',configured:false,enabled:false,reason:'No service configured',setup:'Set KUJO_LEASH_URL and KUJO_LEASH_TOKEN',use:'Delivery requires approval'}]});
+ await f.run('kujo.menu');assert.deepEqual(f.calls.map(c=>c.method),['status']);assert.match(f.alerts[0].message,/connection not checked/);assert.match(f.alerts[0].message,/KUJO_LEASH_TOKEN/);assert.match(f.alerts[0].message,/select Full/);
 });

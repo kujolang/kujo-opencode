@@ -43,3 +43,6 @@ test('redirects, rejection, malformed, oversized and mismatched acknowledgements
   await assert.rejects(deliverLeash({origin:f.origin,event},{env:f.env}),e=>e.code.startsWith('leash_')&&!e.message.includes('fixture-secret'));assert.equal(f.requests.length,1);
  }
 });
+
+import {serviceStatus} from '../lib/service-status.mjs';
+test('local service diagnostics tolerate invalid origins and never expose supplied credentials',()=>{const state=serviceStatus([],{KUJO_LEASH_URL:'https://user:secret@example.com',KUJO_LEASH_TOKEN:'private-token',KUJO_ABILITY_GATEWAY_URL:'http://127.0.0.1:4200',KUJO_ABILITY_GATEWAY_TOKEN:'private-token'});assert.equal(state[0].configured,false);assert.equal(state[1].configured,true);assert.ok(state.every(s=>s.network_requested===false&&!s.enabled));assert.ok(!JSON.stringify(state).includes('private-token'));assert.ok(!JSON.stringify(state).includes('secret'));});

@@ -114,7 +114,9 @@ canonical CMS with a private database, an ephemeral fixture-only bootstrap token
 all connectors unconfigured and all writable application paths inside its temp
 root. It executes the read-only site-info Ability and verifies its canonical
 receipt. An attempted SEO operation remains `approval_required` even with its
-legacy `confirmed` input set; no application approval is issued. Invalid bearer
+legacy `confirmed` input set. The harness provisions a disposable draft, proves
+its SEO is unchanged, issues a fixture-only application grant, then executes the
+approved mutation. It verifies idempotent replay and changed-input rejection. Invalid bearer
 authentication is rejected. The harness stops its own CMS process and retains
 verification.json and the read receipt without the token.
 
@@ -124,3 +126,19 @@ SHA256979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5.
 and actual OpenCode2.0.31 discovery of both gateway tools passed. These checks do
 not establish a granted application mutation, rendered native gateway approval,
 multitenant deployment certification or a supported OS/host release matrix.
+
+
+Granted application mutation passed in canonical CMS fixture b91A5w. Before
+approval and after grant issuance alone, SEO remained identical. The approved
+call changed the fixture title; replay returned the same canonical receipt and
+unchanged state. Different input could not reuse that key/grant. This supersedes
+the earlier absence of granted application mutation evidence, not rendered
+native approval acceptance. Retained evidence: /tmp/kujo-gateway-mutation.log.
+
+
+Rendered terminal onboarding also covers External services from home, including
+Leash JWT setup, gateway credentials, unchecked connection state and separate
+approval guidance. OpenCode2.0.31 at80x24 passed in324whuzy with no inference or
+approved effects. Screenshots are retained as leash-guidance.txt and
+gateway-guidance.txt in that fixture. This verifies setup guidance, not rendered
+service execution or notification delivery.

@@ -1016,3 +1016,28 @@ This supersedes the missing gateway implementation, not complete service parity.
 Granted remote mutation and real native rendered service approvals remain to be
 accepted. Six live specialist workflows, remaining lifecycle/recovery scenarios,
 immutable final packaging, supported host/OS and public release remain required.
+
+
+## Granted application mutation and service setup UI (2026-10-16)
+
+Canonical CMS fixture b91A5w verifies a real approved SEO mutation against a
+disposable draft: state stays unchanged after the approval-required response and
+after grant issuance alone, changes only on approved execution, remains unchanged
+on idempotent replay, and rejects changed input using the same grant/key. No
+production application, notification provider or external connector is involved.
+This closes the missing granted-mutation evidence from the previous checkpoint.
+
+The native External services menu shows configuration/capability state and setup
+guidance for Leash and the application gateway. It works from home without a
+session or inference, tolerates invalid origins without breaking status, does
+not return credentials, and makes no network calls. It explicitly labels the
+connection unchecked and distinguishes delivery, native approval and application
+approval. SERVICE-SUPPORT.md records verified behavior and remaining differences,
+including Pi's wider configured Watchdog read surface.
+
+147 offline tests, canonical E2E and31 focused tests passed. Actual rendered
+OpenCode2.0.31 at80x24 passed both service guidance screens as part of the
+onboarding/rejection gate (324whuzy; /tmp/kujo-service-rendered.log), with no model
+request or granted effect. This is setup guidance acceptance, not native rendered
+Leash/gateway execution approval. Remaining full lifecycle/recovery, live
+specialists, supported host/OS and final packed/public-release gates stay open.
