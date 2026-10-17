@@ -1,0 +1,4 @@
+from summary import summarize_checks
+
+let result := summarize_checks("[{\"name\":")
+print("Error: " + result["error"])

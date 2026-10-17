@@ -1,0 +1,47 @@
+export func summarize_checks(raw) {
+    mut checks := null
+    try {
+        checks := parse_json(raw)
+    } except err {
+        return {"ok": false, "error": "checks.json contains malformed JSON"}
+    }
+
+    if type(checks) == "Error" || type(checks) == "error" {
+        return {"ok": false, "error": "checks.json contains malformed JSON"}
+    }
+    if is_array(checks) == false {
+        return {"ok": false, "error": "checks.json must contain a JSON array"}
+    }
+
+    mut passed := 0
+    mut failed_names := []
+    mut index := 0
+    while index < len(checks) {
+        let row := checks[index]
+        let row_number := to_string(index + 1)
+        if is_dict(row) == false {
+            return {"ok": false, "error": "row " + row_number + " must be an object"}
+        }
+        if has_key(row, "name") != 1 || is_string(row["name"]) == false || trim(row["name"]) == "" {
+            return {"ok": false, "error": "row " + row_number + " must have a nonempty name"}
+        }
+        if has_key(row, "status") != 1 || is_string(row["status"]) == false || (row["status"] != "pass" && row["status"] != "fail") {
+            return {"ok": false, "error": "row " + row_number + " status must be pass or fail"}
+        }
+
+        if row["status"] == "pass" {
+            passed := passed + 1
+        } else {
+            failed_names := push(failed_names, row["name"])
+        }
+        index := index + 1
+    }
+
+    return {
+        "ok": true,
+        "checks": len(checks),
+        "passed": passed,
+        "failed": len(failed_names),
+        "failed_names": failed_names
+    }
+}

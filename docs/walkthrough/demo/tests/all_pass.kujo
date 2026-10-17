@@ -1,0 +1,6 @@
+from summary import summarize_checks
+
+let result := summarize_checks("[{\"name\":\"lint\",\"status\":\"pass\"},{\"name\":\"tests\",\"status\":\"pass\"}]")
+print("Checks: " + to_string(result["checks"]))
+print("Passed: " + to_string(result["passed"]))
+print("Failed: " + to_string(result["failed"]))

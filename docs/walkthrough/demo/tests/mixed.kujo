@@ -1,0 +1,11 @@
+from summary import summarize_checks
+
+let result := summarize_checks("[{\"name\":\"lint\",\"status\":\"fail\"},{\"name\":\"tests\",\"status\":\"pass\"},{\"name\":\"docs\",\"status\":\"fail\"}]")
+print("Checks: " + to_string(result["checks"]))
+print("Passed: " + to_string(result["passed"]))
+print("Failed: " + to_string(result["failed"]))
+mut index := 0
+while index < len(result["failed_names"]) {
+    print("FAIL: " + result["failed_names"][index])
+    index := index + 1
+}

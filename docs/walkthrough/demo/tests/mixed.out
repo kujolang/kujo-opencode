@@ -1,0 +1,5 @@
+Checks: 3
+Passed: 1
+Failed: 2
+FAIL: lint
+FAIL: docs

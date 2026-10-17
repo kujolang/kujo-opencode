@@ -1,0 +1,13 @@
+from summary import summarize_checks
+
+let not_array := summarize_checks("{}")
+assert_equal(not_array["ok"], false)
+
+let not_object := summarize_checks("[1]")
+assert_equal(not_object["error"], "row 1 must be an object")
+
+let empty_name := summarize_checks("[{\"name\":\"  \",\"status\":\"pass\"}]")
+assert_equal(empty_name["error"], "row 1 must have a nonempty name")
+
+let bad_status := summarize_checks("[{\"name\":\"lint\",\"status\":\"skip\"}]")
+assert_equal(bad_status["error"], "row 1 status must be pass or fail")
