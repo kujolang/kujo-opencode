@@ -1,0 +1,36 @@
+{
+  "recorded": "2026-10-17",
+  "harness_commit": "b1703aa",
+  "production_candidate_unchanged": true,
+  "verification": {
+    "existing_unit_suite": 197,
+    "browser_permission_contracts": 7,
+    "specialist_suite_including_browser": 23,
+    "syntax_and_diff": "passed"
+  },
+  "browser_preflight": {
+    "ok": true,
+    "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-browser-specialist-canonical-D2gWic",
+    "steps": 7,
+    "canonical_tools": true,
+    "real_browser": true,
+    "live_specialist": false,
+    "native_approval": false
+  },
+  "lens_source": {
+    "commit": "852cb91928cfa0ab5dbdaecb3fb8fc51aa69db6b",
+    "clean": true
+  },
+  "live_browser": "Not executed; prior scoped provider HTTP403 remains unresolved, not retried this turn.",
+  "limitations": [
+    "Local sibling Lens preflight is not pinned candidate or live model acceptance.",
+    "Rejected preflight steps inspect absence without execution; native rejection requires the live journey.",
+    "External opt-in is reviewed then rejected; no external endpoint contacted.",
+    "Flow validation is not interactive flow execution.",
+    "Workflow and Ship distinct journeys still require implementation; six live journeys, platform and registry acceptance remain incomplete."
+  ],
+  "excluded_attempt": {
+    "root": "kujo-browser-specialist-canonical-Y4WZgr",
+    "reason": "Closed-loopback failure arrived as HTTP502; brittle connection-refused assertion replaced by owned deterministic HTTP503 response."
+  }
+}
