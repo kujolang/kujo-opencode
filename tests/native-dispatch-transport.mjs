@@ -31,7 +31,9 @@ export async function nativeDispatchTransport({api,project,dataRoot,model,loseAp
   const before=new Set((await rows()).map(r=>r.receipt_id));
   const fresh=async()=> (await rows()).filter(r=>!before.has(r.receipt_id));
   let failure,permissionID;
-  const request=api(`/api/session/${session.id}/prompt`,{text:`Please use ${tool} with ${JSON.stringify(input)} for this isolated Dispatch recovery check. Preserve every supplied input field exactly. Report its receipt and stop after this operation. Do not rerun the workflow to discover its result.`},180000).catch(error=>{failure=error;});
+  const fields={...input};delete fields.input_json;
+  const details=JSON.stringify(fields)+(Object.hasOwn(input,'input_json')?'\nThe input_json field must contain this literal JSON text (not backslash-escaped text):\n'+input.input_json:'');
+  const request=api(`/api/session/${session.id}/prompt`,{text:`Please use ${tool} for this isolated Dispatch recovery check. Inputs: ${details}\nPreserve every supplied input field. Report its receipt and stop after this operation. Do not rerun the workflow to discover its result.`},180000).catch(error=>{failure=error;});
   try {
    const deadline=Date.now()+180000;let terminal;
    while(Date.now()<deadline){
