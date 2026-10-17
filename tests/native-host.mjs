@@ -9,9 +9,11 @@ import {join,resolve} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 const exec=promisify(execFile),repo=resolve('.');
 const journey=process.env.KUJO_TEST_JOURNEY;
+const specialistNames=['understand','build','review','browser','workflow','ship'];
+const selectedJourneys=journey==='all'?specialistNames:journey?journey.split(','):[];
 const dispatchTransportEnabled=process.env.KUJO_TEST_DISPATCH_TRANSPORT==='1';
 if(dispatchTransportEnabled){assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT&&!journey,'Dispatch transport requires an explicit model and its own Build session');for(const flag of ['KUJO_TEST_GUARD','KUJO_TEST_TELEMETRY','KUJO_TEST_CANCEL_TELEMETRY','KUJO_TEST_AUTOTRACK'])assert.notEqual(process.env[flag],'1','Run transport and lifecycle checks separately');}
-if(journey){assert.ok(['all','understand','build','review','browser','workflow','ship'].includes(journey),'Only implemented specialist journeys may run');assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Journey needs an explicit model and owns its specialist identity');for(const flag of ['KUJO_TEST_GUARD','KUJO_TEST_TELEMETRY','KUJO_TEST_CANCEL_TELEMETRY','KUJO_TEST_AUTOTRACK'])assert.notEqual(process.env[flag],'1','Run specialist and lifecycle acceptance separately');}
+if(journey){assert.ok(selectedJourneys.length>0&&selectedJourneys.length<=6&&new Set(selectedJourneys).size===selectedJourneys.length&&selectedJourneys.every(name=>specialistNames.includes(name)),'Only unique implemented specialist journeys may run');assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Journey needs an explicit model and owns its specialist identity');for(const flag of ['KUJO_TEST_GUARD','KUJO_TEST_TELEMETRY','KUJO_TEST_CANCEL_TELEMETRY','KUJO_TEST_AUTOTRACK'])assert.notEqual(process.env[flag],'1','Run specialist and lifecycle acceptance separately');}
 if(process.env.KUJO_TEST_TELEMETRY==='1'||process.env.KUJO_TEST_CANCEL_TELEMETRY==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Telemetry acceptance needs an explicit model and ordinary Build agent');
 if(process.env.KUJO_TEST_GUARD==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Guard acceptance needs an explicit model and ordinary Build agent');
 const root=await mkdtemp(join(tmpdir(),'kujo-native-host-'));console.log(`Native fixture: ${root}`);const project=join(root,'project');await mkdir(project);
@@ -318,9 +320,8 @@ try {
  }
  if(journey){
   const {OpenCode}=await import('@opencode/client');const nativeClient=OpenCode.make({baseUrl:base,headers:{Authorization:authorization}});
-  const selectedJourneys=journey==='all'?['understand','build','review','browser','workflow','ship']:[journey];
   for(const selectedJourney of selectedJourneys){
-  const suffix=journey==='all'?'-'+selectedJourney:'';
+  const suffix=selectedJourneys.length>1?'-'+selectedJourney:'';
   try {
   const runJourney={understand:()=>import('./native-understand-acceptance.mjs').then(m=>m.nativeUnderstandAcceptance),build:()=>import('./native-build-acceptance.mjs').then(m=>m.nativeBuildAcceptance),review:()=>import('./native-review-acceptance.mjs').then(m=>m.nativeReviewAcceptance),browser:()=>import('./native-browser-acceptance.mjs').then(m=>m.nativeBrowserAcceptance),workflow:()=>import('./native-workflow-acceptance.mjs').then(m=>m.nativeWorkflowAcceptance),ship:()=>import('./native-ship-acceptance.mjs').then(m=>m.nativeShipAcceptance)};
   const executeJourney=await runJourney[selectedJourney]();

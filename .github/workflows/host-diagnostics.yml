@@ -31,7 +31,7 @@ jobs:
           CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
           EXPECTED_SHA256: ${{ inputs.candidate_sha256 }}
         run: |
-          node --input-type=module <<'JS'
+          npm exec -- node --input-type=module <<'JS'
           import assert from 'node:assert/strict';import {execFileSync} from 'node:child_process';import {verifyCandidate} from './scripts/release-candidate.mjs';
           const id=process.env.CANDIDATE_RUN_ID;assert.match(id,/^[1-9][0-9]*$/);assert.match(process.env.EXPECTED_SHA256,/^[a-f0-9]{64}$/);
           const repo='kujolang/kujo-opencode';assert.equal(process.env.GITHUB_REPOSITORY,repo);
