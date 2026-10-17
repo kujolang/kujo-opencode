@@ -117,10 +117,29 @@ A paused checkpoint is not completion. Human decision/resumption still uses the
 canonical Dispatch operator surface; this harness does not certify that path or
 an actual lost-response injection.
 
+## Ship journey
+
+`KUJO_TEST_JOURNEY=ship` selects `kujo-ship` and preserves the real provider/model
+identity in its fixture ledger. Eight steps inspect informational ShipCheck output,
+start a ledger, reject an Eval request without output, run passing and failing
+file-check suites, link the actual failed Eval subject run ID, explicitly finish
+the fixture ledger as failed, and inspect its report. Eval evidence file hashes
+must match canonical references. Linking evidence must leave status/verdict
+unchanged; finishing uses a separately approved, explicit verdict.
+
+`node tests/ship-specialist-canonical.mjs` uses local canonical sources.
+`KUJO_TEST_INSTALLATION=/absolute/installation.json` selects retained installed
+sources for pinned preflight. The harness does not publish, invent telemetry,
+or treat informational scan exit zero as passing release checks. It marks live
+specialist/native approvals false; rejected canonical steps only check absence.
+
 ## Still required
 
-The distinct Ship journey remains to implement,
-following `2026-10-17-completion-audit.md`. The generic ShipCheck/RunLedger helper
-must not be presented as these workflows. The full Understand, Build, Review, Browser and Workflow live journeys
-remain unverified until a complete native run succeeds. Required platform
-coverage and retained release acceptance evidence remain separate gates.
+All six distinct harnesses now exist. None is certified as a complete live
+specialist journey. Run the actual selected agents with an authorized provider,
+verify final evidence-backed reports, and retain exact-candidate host identity.
+Workflow still needs actual lost-response injection and checkpoint decision/
+continuation acceptance, including failed decision handling. Native cancellation
+is specified by the runner but not established by canonical preflights. Required
+platform coverage, replacement candidate and retained release acceptance evidence
+remain separate gates. The generic ShipCheck/RunLedger helper is insufficient.

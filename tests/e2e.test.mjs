@@ -202,4 +202,5 @@ assert.equal(config.sources, undefined);
 assert.equal(Object.keys(installation.sources).length, 28);
 await import('./dispatch-checkpoint-canonical.mjs');
 await import('./workflow-specialist-canonical.mjs');
+await import('./ship-specialist-canonical.mjs');
 console.log("OpenCode local package compatibility: setup, discovery, schema metadata, canonical invocation, approvals, receipts, cross-project isolation, concurrency, and restart passed");
