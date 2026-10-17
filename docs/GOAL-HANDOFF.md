@@ -495,3 +495,10 @@ Next: optional automatic RunLedger lifecycle/correlation, remaining mixed-versio
 recovery and real specialist tasks, exact supported-host/OS release matrix and
 public release. All seven broad requirements retain scope. No new external
 provider/npm/CI checks this checkpoint. No new SignalBox finding is warranted.
+
+Packed blmhIp reached knowledge testing but the harness had not enabled its new
+Abilities in the restricted fixture profile. The runtime correctly refused with
+ability_not_exposed. tests/fresh-install now explicitly enables all five tools.
+A further retry is running in /tmp/kujo-knowledge-fresh-final.log (handle70369).
+Managed manifest read limit is1MiB to fit the full allowed file inventory with
+long paths; focused canonical tests pass. Earlier candidates predate this limit.

@@ -13,3 +13,8 @@ test('knowledge preview excludes hidden and unsupported content and refuses syml
 test('knowledge validates names and corpus boundaries before mutation',async t=>{
  const project=await fixture(t);await assert.rejects(previewKnowledge({project,config,input:{name:'../escape'}}),/lowercase/);await assert.rejects(previewKnowledge({project,config,input:{path:'..'}}),/within/);
 });
+
+test('cancelled preview and oversized corpora fail before creating an index',async t=>{
+ const project=await fixture(t);const controller=new AbortController();controller.abort();await assert.rejects(previewKnowledge({project,config,input:{},signal:controller.signal}));
+ await writeFile(join(project,'docs/large.txt'),Buffer.alloc(256*1024+1));await assert.rejects(previewKnowledge({project,config,input:{}}),/limit/);assert.equal((await knowledgeStatus({project,config,input:{}})).state,'missing');
+});
