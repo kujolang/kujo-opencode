@@ -13,8 +13,8 @@ Provider errors, missing receipts, retries, out-of-scope execution and changed
 inputs fail the journey and interrupt only its owned session. Final receipts are
 checked again after the host finishes, including late tool execution.
 
-The ten runner contract tests are included through `tests/specialists.test.mjs`
-in `npm test`. Fake-host tests verify orchestration/refusal behavior only.
+The runner contract tests are part of `npm test`. Fake-host tests verify request
+handling and refusal behavior; they do not prove a live specialist passed.
 
 ## Understand journey
 
@@ -77,7 +77,7 @@ calling Spec, matching the native journey's realpath boundary.
 readiness and, only when missing, requests an isolated native install with an
 exact once-only approval. Persistent grants, other permission actions and other
 operations are refused. Installation errors and a failed post-install launch
-probe remain failures; seven contract tests cover these boundaries.
+probe remain failures; contract tests cover these boundaries.
 
 The seven scenario steps validate a safe flow, reject an unsafe flow, reject a
 page check without output, approve a full desktop/mobile check, refuse an external
