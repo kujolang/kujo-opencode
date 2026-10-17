@@ -1,6 +1,6 @@
 # Kujo host capability parity
 
-Evidence snapshot: 2026-10-16. This compares behavior, not tool counts. All
+Comparison references: 2026-10-16; acceptance wording reconciled 2026-10-17. This compares behavior, not tool counts. All
 missing rows remain required work under PRODUCTION-READINESS.md. A similar name
 does not establish equivalent execution, recovery, or evidence semantics.
 
@@ -14,7 +14,7 @@ Reference revisions inspected locally:
 
 | User task | Current OpenCode evidence | Remaining parity work |
 | --- | --- | --- |
-| Discover and select capabilities | Native menu, profiles, individual capability enable/disable/default controls, catalog; 38/38 CMD IDs plus ten host-owned source/build/starter projections | Rendered home-to-session setup and profile rejection pass at 80x24/120x40; complete specialist and remaining UI acceptance |
+| Discover and select capabilities | Native menu, profiles, individual capability enable/disable/default controls, catalog; 38/38 CMD IDs plus ten host-owned source/build/starter projections | Rendered home-to-session setup and profile rejection pass at 80x24/120x40; complete specialist and final-candidate platform UI acceptance; confirmed management rejection feedback now has local rendered acceptance |
 | Understand repository | Scout, Scent, PatchBrief canonical adapters | Scoped Understand agent projected with evidence/coverage instructions; complete workflow acceptance remains |
 | Review and release scan | ChangeBucket, Fence, Spec, Concord, ShipCheck, Eval adapters | Workflow acceptance and clear distinction between metadata scan and executing checks |
 | Inspect Kujo source | Build profile: canonical check/lint and non-writing format preview on bounded private copies, source digest, diagnostics; runtime tests and receipt E2E pass | Supported OS/host matrix and immutable candidate verification |
@@ -24,13 +24,13 @@ Reference revisions inspected locally:
 | Generate repository MCP | Canonical offline preview and approved MCP generation with no-overwrite destinations and review artifacts | Live specialist and supported host/OS acceptance |
 | Agents SDK fixtures | Pinned canonical offline fixture runner with approval and per-example acceptance checks | Live specialist and supported host/OS acceptance |
 | Package declarations/dependencies | Kennel validation/install adapters | Distinguish declaration validity from resolved bytes and compatibility |
-| Workflow operation | Dispatch validate/run and Muzzle adapters | Scoped Workflow agent projected; checkpoints, cancellation and lost-response reconciliation remain |
+| Workflow operation | Dispatch validate/run and Muzzle adapters | Scoped Workflow agent projected; complete live specialist checkpoint, cancellation and reconciliation journeys; adapter recovery evidence alone does not prove the specialist journey |
 | Project knowledge | Native reviewed offline index/query, freshness, canonical citations and transactional recovery; existing provider-configured adapters | Live specialist acceptance and supported host/OS certification |
 | Evidence | Canonical receipts, native project/session/legacy filtering, readable summaries, searchable paged details/comparison, contained artifact previews and JSON export | Retention limits are explicit; immutable artifact snapshots and full directory browsing are not provided |
 | Browser verification | Canonical Lens checks; native launch readiness, approved background install/cancel/recheck, capability enablement and specialist selection | Real specialist workflow and supported host/OS acceptance; shared installation recovery passes local fault-injection and native approval checks |
 | Session lifecycle | Native opt-in metadata observers, durable Watchdog delivery, session-linked canonical RunLedger controls and bounded opt-in failure guard | Opt-in automatic start requests and durable finish reminders pass local/native/packed gates; native evidence/verdict presentation passes local/native adapter checks; manual start and separate partial-finish approvals pass rendered 80x24/120x40 checks; live-model guard now pauses once after three failed scans with exact candidate payload evidence; live-model metadata delivery, service outage/host reload recovery and opt-out now pass against canonical Watchdog; live cancellation now clears the exact pending permission without an effect and emits one canonical cancellation record; platform acceptance remains |
 | External approval/service integrations | Local native one-time approvals; opt-in, destination-bound Leash intervention delivery and configuration status, canonical daemon v2/duplicate/auth/error acceptance | Rendered native Leash and CMS gateway rejection/once-approved execution pass locally; configured Watchdog reads have canonical acceptance. Remote deployment and supported host/OS acceptance remain (see SERVICE-SUPPORT.md); Leash delivery does not grant native permissions |
-| Recovery and distribution | Transactional project activation and staged source/runtime replacement with complete lock publication; packed local install/upgrade | Standalone mixed-version execution after another project repair/uninstall passes and is wired into the fresh gate; remaining recovery audit, supported OS/host matrix, public release/provenance |
+| Recovery and distribution | Transactional project activation and staged source/runtime replacement with complete lock publication; packed local install/upgrade | Standalone mixed-version execution after another project repair/uninstall passes and is wired into the fresh gate; final-candidate recovery on the supported OS/host matrix, public release/provenance |
 
 ## Boundaries to preserve
 

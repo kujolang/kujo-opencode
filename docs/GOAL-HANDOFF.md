@@ -253,3 +253,37 @@ an installed executable fixture despite historical retention flags. Space recove
 to roughly576MiB. No user repository or active fixture was removed. All test and
 cleanup processes are terminal. Provider-selection question remains unanswered;
 full specialist/platform/publication gates remain open. No workflow was dispatched.
+
+## Confirmed rejection feedback and current readiness (2026-10-17)
+
+f465efb binds management feedback to a unique UI request marker, native permission
+ID, session, action and workspace. A confirmed Reject displays Request declined;
+unknown RPC failures remain failures. Profile, capability, lifecycle, session
+RunLedger, browser and knowledge management preserve native assertions. No model
+tool approval behavior changes. Navigation/unload invalidate feedback; delayed
+permission events have a bounded 250ms reconciliation window. The marker is
+correlation only, never a grant or idempotency key. The host rejects JSON Schema
+patterns by default, so the optional marker uses supported string length bounds.
+
+184 offline tests, canonical E2E and OpenCode2.0.32 discovery passed. Native fixture
+BN2giV checks exact marker echo in actual management permissions; W0On0E passed
+before that additional harness assertion. Actual 80x24 terminal fixture s7d2clh1
+passed the explicit decline screen, unchanged rejected profile, onboarding and
+separate manual RunLedger start/partial-finish approvals. No inference was requested.
+Logs: /tmp/kujo-decline-all-accepted.log, /tmp/kujo-decline-e2e.log,
+/tmp/kujo-decline-discovery.log, /tmp/kujo-decline-correlated-native.log and
+/tmp/kujo-decline-rendered-corrected.log. Fixtures remain under the usual macOS
+/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T directory.
+
+Earlier qweh2if4 displayed the decline correctly but failed later evidence browsing
+because an overly broad edit referenced an undefined navigation epoch. Corrected
+before f465efb; the full corrected test passed. The first native attempt rejected
+the unsupported schema pattern. Neither failed attempt is accepted evidence.
+
+PRODUCTION-READINESS.md now separates the unchanged seven-outcome completion
+contract from current evidence gaps; chronological records moved to
+ACCEPTANCE-HISTORY.md without deletion. Referenced evidence documents are included
+in the package. Final candidate/platform/specialist/public-release gates remain
+open. Prior completed 1ipx7542 and mtXUxm fixtures had only generated prefix modules,
+runtime and source copies removed to recover disk space. Their receipts, screens,
+verification and cleanup-record.json remain; they are evidence-only fixtures now.

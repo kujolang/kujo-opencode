@@ -26,7 +26,12 @@
     "scripts/release-candidate.mjs",
     "docs/PRODUCTION-READINESS.md",
     "scripts/release-gate.mjs",
-    "scripts/install-test-host.mjs"
+    "scripts/install-test-host.mjs",
+    "docs/ACCEPTANCE-HISTORY.md",
+    "docs/HOST-MATRIX.md",
+    "docs/CAPABILITY-PARITY.md",
+    "docs/RECOVERY-ACCEPTANCE.md",
+    "docs/GOAL-HANDOFF.md"
   ],
   "scripts": {
     "build": "node scripts/build-release.mjs",
