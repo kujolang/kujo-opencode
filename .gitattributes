@@ -1,0 +1,3 @@
+# Generated artifacts are verified byte-for-byte against upstream provenance.
+# Preserve their bytes even when a Windows checkout enables core.autocrlf.
+.generated/** -text
