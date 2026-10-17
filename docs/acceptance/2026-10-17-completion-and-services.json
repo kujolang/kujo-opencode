@@ -1,0 +1,177 @@
+{
+  "date": "2026-10-17",
+  "scope": "Local macOS/OpenCode2.0.32 exact-candidate ordinary Build/free-GLM rendered acceptance",
+  "candidate_sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+  "completion": {
+    "verification": {
+      "ok": true,
+      "host": "opencode v2.0.32",
+      "terminal_backend": "posix",
+      "dimensions": [
+        80,
+        24
+      ],
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-zr02mg1a",
+      "initial_requested_session": "ses_kujo_terminal_fa422634cb34495f8ac8b78ce26f8c86",
+      "model_call": true,
+      "effects_approved": true,
+      "rendered_ledger": false,
+      "rendered_automatic_completion": true,
+      "rendered_completion_evidence": true,
+      "live_ship_specialist": false,
+      "rendered_leash": false,
+      "rendered_gateway": false,
+      "candidate_commit": "c3a256a99609bb2b0dfbaef46133673cbb2a2192",
+      "candidate_sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+      "candidate_integrity": "sha512-AOF4KrOvsFAjSnLLAXbR8MlYDTdW2bwMHNvZF164B4i8Hqs7T1SYnYcrAyHY20V7JTpfkK73sf+NoJr1NVsAmQ==",
+      "pinned_sources": true
+    },
+    "payload_proof": {
+      "ok": true,
+      "fixture": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-zr02mg1a",
+      "tarball": "/private/tmp/kujo-decline-candidate/kujolang-kujo-opencode-0.2.0.tgz",
+      "tarball_sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+      "host": "opencode v2.0.32",
+      "host_sha256": "5de9ff73d2e46934371dd96c9f012be58b98fc0084f966e643fa89d3b6e69070",
+      "platform": "macOS-26.6.2-x86_64-i386-64bit",
+      "runtime_sha256": "979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5",
+      "payload_files_verified": 70,
+      "payload_manifest_sha256": "95512c0b4705a9f44b1b1a3db8974e4fc3c3e64539a2f107136c4537a0acde61",
+      "rendered_gateway": false,
+      "rendered_leash": false
+    },
+    "receipts": [
+      {
+        "id": "receipt-cb098537-1aa3-486b-be50-988c0da8279c",
+        "ability": "kujo.shipcheck.repository.scan",
+        "status": "succeeded",
+        "agent": "build",
+        "model": "opencode/glm-5.3-flash-free"
+      }
+    ],
+    "verified_behavior": "Automatic approved start; evidence paging/search leaves run in progress; selecting Partial leaves run in progress until separately approved finish; final canonical status partial without prompt_file."
+  },
+  "gateway": {
+    "verification": {
+      "ok": true,
+      "host": "opencode v2.0.32",
+      "terminal_backend": "posix",
+      "dimensions": [
+        80,
+        24
+      ],
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-sz8t7k_q",
+      "initial_requested_session": "ses_kujo_terminal_89698d790b4f46f99aa5ea0064d7f794",
+      "model_call": true,
+      "effects_approved": true,
+      "rendered_ledger": false,
+      "rendered_automatic_completion": false,
+      "rendered_completion_evidence": false,
+      "live_ship_specialist": false,
+      "rendered_leash": false,
+      "rendered_gateway": true,
+      "candidate_commit": "c3a256a99609bb2b0dfbaef46133673cbb2a2192",
+      "candidate_sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+      "candidate_integrity": "sha512-AOF4KrOvsFAjSnLLAXbR8MlYDTdW2bwMHNvZF164B4i8Hqs7T1SYnYcrAyHY20V7JTpfkK73sf+NoJr1NVsAmQ==",
+      "pinned_sources": true
+    },
+    "payload_proof": {
+      "ok": true,
+      "fixture": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-sz8t7k_q",
+      "tarball": "/private/tmp/kujo-decline-candidate/kujolang-kujo-opencode-0.2.0.tgz",
+      "tarball_sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+      "host": "opencode v2.0.32",
+      "host_sha256": "5de9ff73d2e46934371dd96c9f012be58b98fc0084f966e643fa89d3b6e69070",
+      "platform": "macOS-26.6.2-x86_64-i386-64bit",
+      "runtime_sha256": "979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5",
+      "payload_files_verified": 70,
+      "payload_manifest_sha256": "95512c0b4705a9f44b1b1a3db8974e4fc3c3e64539a2f107136c4537a0acde61",
+      "rendered_gateway": true,
+      "rendered_leash": false
+    },
+    "receipt": {
+      "id": "receipt-2434efd5-8156-4f88-a66b-528ba9dd0447",
+      "ability": "kujo.opencode.gateway.call",
+      "status": "succeeded",
+      "agent": "build",
+      "model": "opencode/glm-5.3-flash-free",
+      "local_approval_id": "approval-b566cc91-89ed-4522-9eac-a5aaade9808d"
+    },
+    "provenance": {
+      "source_commit": "177f2a016861eb20ac46ba152b03d38b27d41732",
+      "runtime_sha256": "979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5"
+    },
+    "remote_approval_id": "approval-a46c4821791bbbfda6d766e7e0fa9559",
+    "verified_behavior": "Application approval alone and native rejection leave fixture unchanged; separate native one-time grant updates the fixture SEO title; history summary and multi-page result search rendered."
+  },
+  "leash": {
+    "verification": {
+      "ok": true,
+      "host": "opencode v2.0.32",
+      "terminal_backend": "posix",
+      "service_result_pages": 1,
+      "dimensions": [
+        80,
+        24
+      ],
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-zj_3f5m_",
+      "initial_requested_session": "ses_kujo_terminal_b84fa04a69e149879acb5605fb47ebdc",
+      "model_call": true,
+      "effects_approved": true,
+      "rendered_ledger": false,
+      "rendered_automatic_completion": false,
+      "rendered_completion_evidence": false,
+      "live_ship_specialist": false,
+      "rendered_leash": true,
+      "rendered_gateway": false,
+      "candidate_commit": "c3a256a99609bb2b0dfbaef46133673cbb2a2192",
+      "candidate_sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+      "candidate_integrity": "sha512-AOF4KrOvsFAjSnLLAXbR8MlYDTdW2bwMHNvZF164B4i8Hqs7T1SYnYcrAyHY20V7JTpfkK73sf+NoJr1NVsAmQ==",
+      "pinned_sources": true
+    },
+    "payload_proof": {
+      "ok": true,
+      "fixture": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-zj_3f5m_",
+      "tarball": "/private/tmp/kujo-decline-candidate/kujolang-kujo-opencode-0.2.0.tgz",
+      "tarball_sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+      "host": "opencode v2.0.32",
+      "host_sha256": "5de9ff73d2e46934371dd96c9f012be58b98fc0084f966e643fa89d3b6e69070",
+      "platform": "macOS-26.6.2-x86_64-i386-64bit",
+      "runtime_sha256": "979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5",
+      "payload_files_verified": 70,
+      "payload_manifest_sha256": "95512c0b4705a9f44b1b1a3db8974e4fc3c3e64539a2f107136c4537a0acde61",
+      "rendered_gateway": false,
+      "rendered_leash": true
+    },
+    "receipt": {
+      "id": "receipt-9009cd15-1299-4424-bf5b-25177eb3d0cf",
+      "ability": "kujo.opencode.leash.deliver",
+      "status": "succeeded",
+      "agent": "build",
+      "model": "opencode/glm-5.3-flash-free",
+      "local_approval_id": "approval-5d670646-0880-48a0-803f-aa747c60c441"
+    },
+    "daemon": {
+      "source_commit": "56c59c90b81433482683e72a411748ca82a61b24",
+      "binary_sha256": "b79889ca39229684b7262e46f2382388b30191b26e4497989bc99100cb8758a9"
+    },
+    "verified_behavior": "Readable operation review; rejection leaves zero events; separate once-approved delivery creates exactly one awaiting-decision event; native permissions unchanged; full single-page result and human-decision boundary visible. Notifications and callbacks disabled."
+  },
+  "failed_attempt": {
+    "fixture": "kujo-rendered-tui-7zt2owa6",
+    "reason": "Delivery succeeded, but harness incorrectly required a pager for the complete one-page Leash result. Excluded from accepted evidence; corrected and fully rerun."
+  },
+  "external_prerequisites": {
+    "ci_run": 39003963708,
+    "ci_executed_steps": 0,
+    "ci_blocker": "GitHub billing/spending restriction",
+    "npm_authentication": "E401",
+    "repository": "private"
+  },
+  "remaining": [
+    "Six scoped specialist journeys still unaccepted; ordinary Build does not substitute",
+    "Linux and Windows actual acceptance, including ConPTY execution",
+    "Exact-candidate minimum-host model-driven journeys",
+    "Public release, provenance and registry consumer installation"
+  ]
+}
