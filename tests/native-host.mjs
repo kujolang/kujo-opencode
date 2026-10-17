@@ -85,6 +85,7 @@ try {
  assert.ok(nativeEvidence.output.receipts.every(receipt=>receipt.metadata.project_root===nativeStatus.output.project));
  assert.match(JSON.stringify(nativeEvidence),/receipts/);
  const session=(await api('/api/session',{title:'Kujo native acceptance',directory:project})).data;
+ const hostLocation=session.location;assert.equal(await realpath(hostLocation.directory),await realpath(project),'host location must identify the isolated fixture');
  await api('/api/rpc/kujo.control/specialist',{input:{sessionID:session.id,agent:'kujo-build'}});
  assert.equal((await api(`/api/session/${session.id}`)).data.agent,'kujo-build');
  await api(`/api/session/${session.id}/command`,{name:'kujo-status',text:''});
@@ -215,7 +216,7 @@ try {
   const state=(await api('/api/rpc/kujo.control/status',{input:{}})).output;
   if(!state.capabilities.find(item=>item.id===id).active){ability=id;inherited=false;await capabilityChange('enabled','once');}
  }
- const ledgerSession=(await api('/api/session',{title:'Session ledger fixture',location:{directory:await realpath(project)},agent:'kujo-ship',model:{providerID:'opencode',id:'glm-5.3-flash-free'}})).data;
+ const ledgerSession=(await api('/api/session',{title:'Session ledger fixture',location:hostLocation,agent:'kujo-ship',model:{providerID:'opencode',id:'glm-5.3-flash-free'}})).data;
  await api(`/api/session/${ledgerSession.id}/command`,{name:'kujo-status',text:''});
  const ledgerStatus=()=>api('/api/rpc/kujo.control/runledger',{input:{sessionID:ledgerSession.id,action:'status'}});
  assert.equal((await ledgerStatus()).output.state,'not_started');
@@ -261,10 +262,10 @@ try {
  assert.ok((await api(`/api/session/${ledgerSession.id}/message?limit=100`)).data.every(message=>message.type!=='assistant'));
  if(process.env.KUJO_TEST_AUTOTRACK==='1'){
   await lifecycleChange('enable_tracking','once');
-  const auto=(await api('/api/session',{title:'Automatic ledger hook acceptance',location:{directory:await realpath(project)},agent:'kujo-ship',model:{providerID:'opencode',id:'glm-5.3-flash-free'}})).data;
+  const auto=(await api('/api/session',{title:'Automatic ledger hook acceptance',location:hostLocation,agent:'kujo-ship',model:{providerID:'opencode',id:'glm-5.3-flash-free'}})).data;
   const {OpenCode}=await import('@opencode/client');const {setupTui}=await import('../lib/tui.mjs');
   const dialogs=[];const nativeClient=OpenCode.make({baseUrl:base,headers:{Authorization:authorization}});
-  tuiCleanup=setupTui({location:{directory:await realpath(project)},client:nativeClient,keymap:{layer:()=>{}},ui:{router:{current:()=>({type:'session',sessionID:auto.id})},dialog:{select:async dialog=>{dialogs.push(dialog);return 'later';},alert:async dialog=>dialogs.push(dialog)},toast:{show:()=>{}}}});
+  tuiCleanup=setupTui({location:hostLocation,client:nativeClient,keymap:{layer:()=>{}},ui:{router:{current:()=>({type:'session',sessionID:auto.id})},dialog:{select:async dialog=>{dialogs.push(dialog);return 'later';},alert:async dialog=>dialogs.push(dialog)},toast:{show:()=>{}}}});
   await delay(200);
   const inference=api(`/api/session/${auto.id}/prompt`,{text:'Reply OK. Do not use any tools.'},180000).then(value=>({value}),error=>({error}));
   let permission;for(let i=0;i<60;i++){permission=(await api(`/api/session/${auto.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(permission)break;await delay(200);}
@@ -286,7 +287,7 @@ try {
   let finishPermission;for(let i=0;i<60;i++){finishPermission=(await api(`/api/session/${auto.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(finishPermission)break;await delay(100);}
   assert.ok(finishPermission);assert.equal(finishPermission.metadata.input.status,'partial');assert.equal(finishPermission.metadata.ability,'kujo.runledger.runs.finish');assert.deepEqual(finishPermission.save,[]);
   await api(`/api/session/${auto.id}/permission/${finishPermission.id}/reply`,{decision:'once'});assert.equal((await finish).output.state,'partial');
-  const cancelled=(await api('/api/session',{title:'Automatic tracking cancellation acceptance',location:{directory:await realpath(project)},agent:'kujo-ship',model:{providerID:'opencode',id:'glm-5.3-flash-free'}})).data;
+  const cancelled=(await api('/api/session',{title:'Automatic tracking cancellation acceptance',location:hostLocation,agent:'kujo-ship',model:{providerID:'opencode',id:'glm-5.3-flash-free'}})).data;
   const cancelledPrompt=api(`/api/session/${cancelled.id}/prompt`,{text:'Reply OK. Do not use tools.'},180000).catch(()=>undefined);
   let cancelledPermission;for(let i=0;i<60;i++){cancelledPermission=(await api(`/api/session/${cancelled.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(cancelledPermission)break;await delay(100);}
   assert.ok(cancelledPermission);
