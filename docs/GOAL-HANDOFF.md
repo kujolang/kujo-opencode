@@ -502,3 +502,16 @@ ability_not_exposed. tests/fresh-install now explicitly enables all five tools.
 A further retry is running in /tmp/kujo-knowledge-fresh-final.log (handle70369).
 Managed manifest read limit is1MiB to fit the full allowed file inventory with
 long paths; focused canonical tests pass. Earlier candidates predate this limit.
+
+Final guided knowledge acceptance: packed85CdY6 passed the complete fresh-install/
+0.1.0 upgrade gate,28sources, old-project preservation, starter services/agent
+execution, session-ledger, real Chromium/Lens and managed knowledge index/query.
+verification.json records knowledge_verified:true and packed_mcp_tools:10, with
+all five knowledge tools checked by name. Candidate SHA256:
+61431091101690cd1a68052a7e942cd9182bed91bc34c902be3716e173fdb57d.
+Executable/catalog bytes matchfb82c42/dba6cda. Tarballs and verification.json are
+retained; successful fixture workdirs cleaned. This supersedes pending statuses
+and failed harness attempts above.114 offline tests and native wVQuk0 remain the
+local evidence; six real specialist tasks and full host/OS/public release gates
+are still open. Next implementation: optional automatic RunLedger lifecycle and
+correlation, followed by remaining recovery/acceptance. Preserve the full goal.
