@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-"""Real OpenCode PTY acceptance; no mocked dialogs, inference or standing grants.
+"""Real OpenCode PTY acceptance; no mocked dialogs or standing grants.
+Default and --ledger modes do not request inference.
 --ledger explicitly approves only this disposable fixture’s profile/start/finish.
+--automatic sends a real prompt using the visible OpenCode free model; --ship
+also requires a successful scoped specialist receipt.
 Requires the optional pinned tests/requirements-tui.txt environment (POSIX only).
 """
 import argparse
@@ -24,8 +27,13 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--host', default=os.environ.get('OPENCODE_BIN', 'opencode'))
 parser.add_argument('--columns', type=int, default=80)
 parser.add_argument('--rows', type=int, default=24)
-parser.add_argument('--ledger', action='store_true', help='Approve fixture-only profile/start/finish operations through the rendered UI')
+parser.add_argument('--ship', action='store_true', help='With --automatic, execute a real Ship specialist scan')
+mode=parser.add_mutually_exclusive_group()
+mode.add_argument('--ledger', action='store_true', help='Approve fixture-only profile/start/finish operations through the rendered UI')
+mode.add_argument('--automatic', action='store_true', help='Exercise the automatic popup with the visible GLM-5.3-Flash Free model')
 args = parser.parse_args()
+if args.ship and not args.automatic:
+    parser.error('--ship requires --automatic')
 if args.columns < 80 or args.rows < 24:
     parser.error('Acceptance dimensions must be at least 80x24')
 repo = Path(__file__).resolve().parent.parent
@@ -133,7 +141,7 @@ try:
     menu()
     choose('Evidence history', 'Kujo evidence scope', 'evidence-scope')
     choose('This session', 'No receipts in this scope', 'empty-evidence')
-    if args.ledger:
+    if args.ledger or args.automatic:
         def allow(name):
             wait('Allow once', name)
             assert choice_style('Allow once')==selected and choice_style('Reject')!=selected, 'Allow once must be visibly selected before Enter'
@@ -149,18 +157,46 @@ try:
         allow('ship-approval')
         wait('tools ready', 'ship-active')
         assert json.loads((project/'.kujo/opencode.json').read_text())['profile']=='kujo.profile.ship'
-        menu()
-        choose('Session RunLedger', 'Start tracking this session', 'ledger-start-menu')
-        choose('Start tracking', 'Allow once', 'ledger-start-permission')
-        assert not list(project.glob('.kujo/opencode-runledger/*/runs/*.json')), 'No record before human approval'
-        allow('ledger-start-permission')
-        wait('Status: in progress', 'ledger-start-result')
-        wait('Use Record location', 'ledger-start-result')
-        assert record()['status']=='in_progress'
-        send('\x1b')
-        menu()
-        choose('Session RunLedger', 'Finish this session run', 'ledger-finish-menu')
-        choose('Finish this session run', 'Your verdict for this session', 'human-verdict')
+        if args.automatic:
+            if args.ship:
+                menu()
+                choose('Choose a specialist', 'Ship readiness', 'specialist-picker')
+                choose('Ship readiness', 'Ship readiness selected', 'specialist-selected')
+            menu()
+            choose('Lifecycle delivery', 'Enable automatic tracking', 'automatic-controls')
+            choose('Enable automatic tracking', 'Allow once', 'automatic-enable-permission')
+            allow('automatic-enable-permission')
+            wait('Lifecycle delivery', 'automatic-enabled')
+            assert json.loads((project/'.kujo/opencode.json').read_text())['lifecycle']['runledger'] is True
+            send('\x1b')
+            wait('GLM-5.3-Flash Free', 'automatic-visible-model')
+            assert any('GLM-5.3-Flash Free' in line and 'OpenCode' in line for line in screen.display), 'Only the visible OpenCode free model is permitted for this gate'
+            send('Use kujo_shipcheck_scan exactly once with {"path":"."}. Do not use shell or other tools. Report the receipt ID.' if args.ship else 'Reply OK. Do not use tools.')
+            send('\r')
+            wait('kujo.runledger.session', 'automatic-start-permission', seconds=60)
+            assert not list(project.glob('.kujo/opencode-runledger/*/runs/*.json'))
+            allow('automatic-start-permission')
+            wait('Review this tracked attempt', 'automatic-completion', seconds=90)
+            assert record()['status']=='in_progress'
+            if args.ship:
+                receipts=[json.loads(line) for line in (root/'kujo/receipts.jsonl').read_text().splitlines() if line.strip()]
+                scans=[r for r in receipts if r.get('ability_id')=='kujo.shipcheck.repository.scan' and r.get('status')=='succeeded' and r.get('metadata',{}).get('agent_id')=='kujo-ship']
+                (root/'specialist-evidence.json').write_text(json.dumps(scans,indent=2))
+                assert scans, 'Ship specialist did not produce a successful native scan receipt'
+            choose('Choose a verdict and finish', 'Your verdict for this session', 'automatic-verdict')
+        else:
+            menu()
+            choose('Session RunLedger', 'Start tracking this session', 'ledger-start-menu')
+            choose('Start tracking', 'Allow once', 'ledger-start-permission')
+            assert not list(project.glob('.kujo/opencode-runledger/*/runs/*.json')), 'No record before human approval'
+            allow('ledger-start-permission')
+            wait('Status: in progress', 'ledger-start-result')
+            wait('Use Record location', 'ledger-start-result')
+            assert record()['status']=='in_progress'
+            send('\x1b')
+            menu()
+            choose('Session RunLedger', 'Finish this session run', 'ledger-finish-menu')
+            choose('Finish this session run', 'Your verdict for this session', 'human-verdict')
         choose('Partial', 'Allow once', 'ledger-finish-permission')
         assert record()['status']=='in_progress', 'Choosing a verdict alone must not finalize'
         allow('ledger-finish-permission')
@@ -173,7 +209,7 @@ try:
         choose('Session RunLedger', 'Record location', 'finished-record-menu')
         choose('Record location', 'Canonical RunLedger record', 'record-location')
         wait('.json', 'record-location')
-    result = dict(ok=True, host=version, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=False, effects_approved=args.ledger, rendered_ledger=args.ledger)
+    result = dict(ok=True, host=version, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=args.automatic, effects_approved=args.ledger or args.automatic, rendered_ledger=args.ledger, rendered_automatic_completion=args.automatic, live_ship_specialist=args.ship)
     (root/'verification.json').write_text(json.dumps(result, indent=2)+'\n')
     print(json.dumps(result))
 finally:

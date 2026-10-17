@@ -934,3 +934,24 @@ stopped after exact PID/cwd identification; the harness now has bounded cleanup.
 The final wide retry passed. Automatic completion popup rendering, remaining
 lifecycle/recovery/service boundaries, six live specialists, supported host/OS
 and exact final packed/public-release certification remain open.
+
+
+## Queued and rendered automatic completion (2026-10-16)
+
+Completion arriving while another Kujo dialog is open is now coalesced and
+presented after it closes, provided the same session/workspace remains active.
+Navigation and unload discard pending offers; events during the current review
+do not produce duplicate dialogs. A disconnect after a claimed presentation
+can still require manual Session RunLedger review.
+
+136 offline tests and canonical E2E pass. Actual OpenCode2.0.31 at80x24 passed
+automatic tracking with real ordinary Build inference, native start approval,
+automatic completion popup and separately approved partial finish (r4g_9szc;
+/tmp/kujo-rendered-automatic.log). This supersedes the missing rendered automatic
+popup evidence above. The real scoped Ship run (0m4capoi) failed the provider's
+free-tier restriction and produced no successful ShipCheck receipt; it is not
+specialist acceptance. The harness preserves that failure rather than passing
+on the presence of a tracking popup. No specialist permissions or provider
+identity were altered. All six specialist workflows, remaining lifecycle and
+recovery/service boundaries, supported host/OS matrix and exact final packed
+public release remain required.

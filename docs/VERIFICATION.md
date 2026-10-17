@@ -37,12 +37,12 @@ https://opencode.ai/v2/docs/commands/
 
 This optional gate launches a private OpenCode TUI in a real PTY, drives keyboard
 navigation, and uses pyte to inspect the rendered screen. It creates its own Git
-project and Kujo data root, using sibling canonical source checkouts. It does not
+project and Kujo data root, using sibling canonical source checkouts. Default and --ledger modes do not
 send a model prompt. By default it rejects the profile request; --ledger also
 explicitly approves only the disposable fixture’s Ship profile, session start
 and human-selected partial finish through the real keyboard permission UI. It retains text screen snapshots and
 verification.json in its printed temporary directory, and stops its own terminal.
-It does not certify Windows, all terminal emulators or automatic completion presentation.
+It does not certify Windows or all terminal emulators.
 
 ```sh
 python3 -m venv /tmp/kujo-tui-env
@@ -56,8 +56,7 @@ creation, profile selection and keyboard rejection (with unchanged configuration
 session RunLedger, lifecycle controls and session-scoped empty evidence. Host
 approval and completion interactions remain covered separately by test:native;
 the --ledger variant verifies rendered manual start/finish approval and canonical
-record state before and after each grant. Automatic completion presentation is
-not exercised by this no-inference gate.
+record state before and after each grant. Use the explicit --automatic mode below for real-model automatic completion.
 
 ```sh
 OPENCODE_BIN=/path/to/opencode /tmp/kujo-tui-env/bin/python tests/tui-terminal.py --ledger
@@ -67,3 +66,23 @@ OPENCODE_BIN=/path/to/opencode /tmp/kujo-tui-env/bin/python tests/tui-terminal.p
 Before pressing Enter on a permission, the harness verifies the selected choice's
 rendered styling. It checks that choosing a verdict alone leaves the canonical
 record in progress, and that the separate final grant produces `partial`.
+
+
+The `--automatic` mode enables tracking through a separate native approval, sends
+a real prompt using the visibly selected OpenCode GLM-5.3-Flash Free model, and
+checks the automatic review popup, human verdict and separate final approval.
+It refuses to send the prompt when that provider/model is not visibly selected.
+`--ship` additionally switches to Ship readiness and requires a succeeded
+canonical ShipCheck receipt attributed to that specialist. Provider rejection is
+a failed specialist gate, even when the tracking popup itself works.
+
+```sh
+OPENCODE_BIN=/path/to/opencode /tmp/kujo-tui-env/bin/python tests/tui-terminal.py --automatic
+OPENCODE_BIN=/path/to/opencode /tmp/kujo-tui-env/bin/python tests/tui-terminal.py --automatic --ship
+```
+
+Local OpenCode 2.0.31 evidence: automatic review and approved partial finish
+passed at 80x24 in fixture r4g_9szc. The scoped Ship run in 0m4capoi failed with
+the provider's free-tier client restriction and produced no successful scan
+receipt. Ordinary Build inference succeeded; this is not evidence that all
+OpenCode inference is unavailable. Six-specialist acceptance remains open.
