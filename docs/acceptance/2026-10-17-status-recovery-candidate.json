@@ -172,5 +172,34 @@
     "native_automatic_tracking": true,
     "browser_ready": false,
     "model_call": true
+  },
+  "rendered_minimum": {
+    "ok": true,
+    "host": "opencode v2.0.31",
+    "terminal_backend": "posix",
+    "service_result_pages": null,
+    "dimensions": [
+      80,
+      24
+    ],
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-jl97bz1x",
+    "initial_requested_session": "ses_kujo_terminal_a67138385bf744bfb37f5f173aa2ac3f",
+    "model_call": false,
+    "effects_approved": true,
+    "rendered_ledger": true,
+    "rendered_automatic_completion": false,
+    "rendered_completion_evidence": false,
+    "live_ship_specialist": false,
+    "rendered_leash": false,
+    "rendered_gateway": false,
+    "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+    "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+    "candidate_integrity": "sha512-2XDK3zMkBKARZ62PEsJZ7y0Jvh481yXytyWyPDbWx3d7CKSwZ+uUFrzY48z1x+GduEulnoYmU58CiFs16fXISw==",
+    "pinned_sources": true,
+    "inspected_screens": [
+      "onboarding.txt",
+      "profile-denied.txt",
+      "ledger-finished.txt"
+    ]
   }
 }
