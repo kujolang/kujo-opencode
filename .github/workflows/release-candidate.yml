@@ -1,0 +1,44 @@
+name: Release candidate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-candidate-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Build the immutable candidate
+        run: npm run release:candidate -- "$RUNNER_TEMP/kujo-candidate"
+      - name: Fresh install and upgrade the same archive
+        run: npm run test:fresh
+        env:
+          KUJO_TEST_RELEASE_DIR: ${{ runner.temp }}/kujo-candidate
+      - name: Verify the candidate remained unchanged
+        run: npm run release:verify -- "$RUNNER_TEMP/kujo-candidate"
+      - name: Retain candidate and acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: kujo-candidate-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/kujo-candidate/
+            /tmp/kujo-opencode-packed-*/verification.json
+          if-no-files-found: warn
+          retention-days: 30

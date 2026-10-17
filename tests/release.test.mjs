@@ -38,6 +38,9 @@ for (const required of [
   "docs/PROVENANCE.md",
   "docs/SERVICE-SUPPORT.md",
   "docs/COMPATIBILITY.md",
+  "docs/RELEASING.md",
+  "docs/PRODUCTION-READINESS.md",
+  "scripts/release-candidate.mjs",
   "README.md",
   "SECURITY.md",
 ]) assert.ok(files.has(required), `missing ${required}`);

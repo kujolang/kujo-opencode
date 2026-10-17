@@ -16,7 +16,8 @@ This is one paste, with no checkout, build, test, or linking step. Setup downloa
 28 pinned source repositories, installs its own Kujo binary, and configures this
 project. Internet access is required during installation. It can take several
 minutes. npm publication is pending; **the registry package name is not yet an
-available install route**. A maintainer creates the tarball with `npm ci && npm pack`.
+available install route**. A maintainer creates the tarball with `npm ci && npm pack`;
+[release candidates](docs/RELEASING.md) add checksums, an SBOM and exact-archive verification.
 Users with access to the private repository can instead install directly:
 
 ```sh

@@ -1,4 +1,6 @@
 import {createServer} from 'node:http';
+import {verifyCandidate} from '../scripts/release-candidate.mjs';
+import {copyFile} from 'node:fs/promises';
 import {verifySessionLedger} from './session-runledger-acceptance.mjs';
 import {verifyLifecycleDelivery} from './lifecycle-acceptance.mjs';
 import {verifyAgentStarter} from './starter-agent-acceptance.mjs';
@@ -26,8 +28,10 @@ for (const dir of [project,older]) {
  await command('git',['add','.'],{cwd:dir});
  await command('git',['-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','fixture'],{cwd:dir});
 }
-const packed=JSON.parse((await command('npm',['pack','--json','--pack-destination',root])).stdout)[0];
+const candidate=process.env.KUJO_TEST_RELEASE_DIR?await verifyCandidate(process.env.KUJO_TEST_RELEASE_DIR):null;
+const packed=candidate?{filename:candidate.archive}:JSON.parse((await command('npm',['pack','--json','--pack-destination',root])).stdout)[0];
 const tarball=join(root,packed.filename);
+if(candidate)await copyFile(join(candidate.directory,candidate.archive),tarball);
 // Real previous release, not a synthetic version field mutation.
 const baseline=join(root,'baseline'); await mkdir(baseline);
 await command('git',['archive','855524a5da804ae43088aa204350230e62616ab3','--format=tar','-o',join(root,'baseline.tar')]);
@@ -116,7 +120,8 @@ const rpc=await new Promise((resolveResult,reject)=>{
 });
 assert.equal(rpc.result.tools.length,10);
 for(const operation of ['preview','index','status','query','recover'])assert.ok(rpc.result.tools.some(tool=>tool.name===`kujo_knowledge_${operation}`));
-const verification={ok:true,root,tarball,upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,starter_kinds:['script','agent','api','mcp'],starter_services_verified:true,agent_fixture_verified:true,session_runledger_verified:true,browser_launch_verified:true,browser_check_verified:true,knowledge_verified:true,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
+if(candidate)await verifyCandidate(candidate.directory);
+const verification={ok:true,root,tarball,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,starter_kinds:['script','agent','api','mcp'],starter_services_verified:true,agent_fixture_verified:true,session_runledger_verified:true,browser_launch_verified:true,browser_check_verified:true,knowledge_verified:true,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
 await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
 // Keep the immutable tarballs and verification record, not hundreds of MiB of
 // duplicate clones/caches after every successful run. Failures retain diagnosis.
