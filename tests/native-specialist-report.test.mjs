@@ -35,3 +35,13 @@ test('live report uses only new model text and preserves evidence',async()=>{
  const result=await specialistReport({api,journey:{session_id:'owned',agent:'kujo-ship',model:'provider/model',steps},receipts:async()=>[],interrupt:async()=>assert.fail('Successful report must not interrupt'),pollMs:0});
  assert.deepEqual(result.message_ids,['new']);assert.equal(result.operations[0].outcome,'failed');
 });
+
+test('parallel Review opening permits either order but still binds both exact receipts',()=>{
+ const pair=['kujo.patchbrief.changes.summarize','kujo.changebucket.changes.measure'].map((ability,i)=>({ability,concurrent_group:'review-opening',decision:'none',expected_status:'succeeded',receipt_ids:['pair-'+i],terminal_receipt:'pair-'+i}));
+ const opening=pair.map(step=>({ability:step.ability,outcome:'succeeded',receipt_ids:step.receipt_ids,explanation:'Read-only check'})).reverse();
+ const r={operations:[...opening,...report().operations],limitations:'Fixture evidence only'};
+ assert.equal(validateSpecialistReport(JSON.stringify(r),[...pair,...steps]).operations.length,4);
+ const swapped=structuredClone(r);swapped.operations[0].receipt_ids=pair[0].receipt_ids;assert.throws(()=>validateSpecialistReport(JSON.stringify(swapped),[...pair,...steps]));
+ const duplicate=structuredClone(r);duplicate.operations[1]=duplicate.operations[0];assert.throws(()=>validateSpecialistReport(JSON.stringify(duplicate),[...pair,...steps]));
+ const reordered=structuredClone(r);[reordered.operations[2],reordered.operations[3]]=[reordered.operations[3],reordered.operations[2]];assert.throws(()=>validateSpecialistReport(JSON.stringify(reordered),[...pair,...steps]));
+});

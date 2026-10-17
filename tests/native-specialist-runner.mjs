@@ -122,7 +122,7 @@ export async function specialistReviewOpening({api,session,receipts,steps,interr
   assertProviderHealthy(await api(`/api/session/${session.id}/message?limit=100`));
   assert.equal((await api(`/api/session/${session.id}/permission`)).data.length,0);
   const rows=await fresh();validate(rows);const results=[];
-  for(const step of steps){const matches=rows.filter(r=>r.ability_id===step.ability);assert.equal(matches.length,1,'Each requested review check needs a receipt');const row=matches[0];await step.after?.(row,rows);results.push({agent:session.agent,model:session.model,ability:step.ability,decision:'none',expected_status:'succeeded',receipt_ids:[row.receipt_id],terminal_receipt:row.receipt_id});}
+  for(const step of steps){const matches=rows.filter(r=>r.ability_id===step.ability);assert.equal(matches.length,1,'Each requested review check needs a receipt');const row=matches[0];await step.after?.(row,rows);results.push({concurrent_group:'review-opening',agent:session.agent,model:session.model,ability:step.ability,decision:'none',expected_status:'succeeded',receipt_ids:[row.receipt_id],terminal_receipt:row.receipt_id});}
   return results.sort((a,b)=>rows.findIndex(row=>row.receipt_id===a.terminal_receipt)-rows.findIndex(row=>row.receipt_id===b.terminal_receipt));
  }catch(error){await interrupt(session.id).catch(()=>{});throw error;}
 }

@@ -7,8 +7,16 @@ export function validateSpecialistReport(text,steps) {
  const report=JSON.parse(text.trim().replace(/^```(?:json)?\s*\n([\s\S]*?)\n```$/,'$1'));
  assert.ok(Array.isArray(report.operations),'Report must enumerate operations');
  assert.equal(report.operations.length,steps.length,'Report omitted or invented operations');
+ const operations=[...report.operations];
+ if(steps[0]?.concurrent_group==='review-opening'){
+  assert.equal(steps[1]?.concurrent_group,'review-opening');
+  assert.deepEqual(steps.slice(0,2).map(step=>step.ability).sort(),['kujo.changebucket.changes.measure','kujo.patchbrief.changes.summarize']);
+  const opening=operations.slice(0,2);
+  assert.equal(new Set(opening.map(row=>row.ability)).size,2,'Duplicate opening check');
+  for(let i=0;i<2;i++){operations[i]=opening.find(row=>row.ability===steps[i].ability);assert.ok(operations[i],'Missing opening check');}
+ }
  for(const [index,step] of steps.entries()) {
-  const row=report.operations[index];
+  const row=operations[index];
   assert.equal(row.ability,step.ability,'Report changed operation order or identity');
   const outcome=step.decision==='reject'?'rejected':step.decision==='cancel'?'cancelled':step.expected_status;
   assert.equal(row.outcome,outcome,'Report concealed failure or denied execution');
@@ -28,7 +36,7 @@ export async function specialistReport({api,journey,receipts,interrupt,timeoutMs
  const before=await owned();
  const previous=new Set((await api(`/api/session/${id}/message?limit=100`)).data.map(row=>row.id));
  let settled=false,error;
- const pending=api(`/api/session/${id}/prompt`,{text:'Summarize this acceptance session using only the existing conversation evidence. Do not call tools or request permission. Return JSON only: {"operations":[{"ability":"exact Ability ID","outcome":"succeeded|failed|rejected|cancelled","receipt_ids":["actual receipt ID"],"explanation":"what happened"}],"limitations":"what this session did not verify"}. Exclude preparatory catalog and receipt-list reads from the operations array. Use the receipt-list evidence to cite approval-required receipts for rejected requests; distinguish rejection from a failed execution. Include every requested substantive operation in chronological order, including repeated operations, failures and denied/cancelled requests. Cite terminal receipts for executed operations. Do not invent evidence or claim overall release readiness.'},timeoutMs).catch(e=>{error=e;}).finally(()=>{settled=true;});
+ const pending=api(`/api/session/${id}/prompt`,{text:'Summarize this acceptance session using only the existing conversation evidence. Do not call tools or request permission. Return JSON only: {"operations":[{"ability":"exact Ability ID","outcome":"succeeded|failed|rejected|cancelled","receipt_ids":["actual receipt ID"],"explanation":"what happened"}],"limitations":"what this session did not verify"}. Exclude preparatory catalog and receipt-list reads from the operations array. Use the receipt-list evidence to cite approval-required receipts for rejected requests; distinguish rejection from a failed execution. Include every requested substantive operation in chronological order, including repeated operations, failures and denied/cancelled requests. Independent read-only opening checks requested together may appear in either order. Cite terminal receipts for executed operations. Do not invent evidence or claim overall release readiness.'},timeoutMs).catch(e=>{error=e;}).finally(()=>{settled=true;});
  try {
   const deadline=Date.now()+timeoutMs;
   do {
