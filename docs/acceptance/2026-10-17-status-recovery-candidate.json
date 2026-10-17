@@ -328,5 +328,219 @@
     "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
     "candidate_integrity": "sha512-2XDK3zMkBKARZ62PEsJZ7y0Jvh481yXytyWyPDbWx3d7CKSwZ+uUFrzY48z1x+GduEulnoYmU58CiFs16fXISw==",
     "pinned_sources": true
+  },
+  "completion_latest": {
+    "ok": true,
+    "host": "opencode v2.0.32",
+    "terminal_backend": "posix",
+    "service_result_pages": null,
+    "dimensions": [
+      80,
+      24
+    ],
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-1vrfcxc9",
+    "initial_requested_session": "ses_kujo_terminal_b4e8732720524e94972658388d0361c9",
+    "model_call": true,
+    "effects_approved": true,
+    "rendered_ledger": false,
+    "rendered_automatic_completion": true,
+    "rendered_completion_evidence": true,
+    "live_ship_specialist": false,
+    "rendered_leash": false,
+    "rendered_gateway": false,
+    "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+    "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+    "candidate_integrity": "sha512-2XDK3zMkBKARZ62PEsJZ7y0Jvh481yXytyWyPDbWx3d7CKSwZ+uUFrzY48z1x+GduEulnoYmU58CiFs16fXISw==",
+    "pinned_sources": true,
+    "evidence_receipts": [
+      {
+        "schema": "kujo.ability.receipt/v1",
+        "receipt_id": "receipt-6c5f85c3-74a9-4832-8a55-4eaf8d991bb7",
+        "invocation_id": "2f18f73a-401e-434b-882c-e5973e97cf20",
+        "ability_id": "kujo.shipcheck.repository.scan",
+        "ability_version": "1.0.0",
+        "definition_digest": "493d9e2070db5b0a49733b255544d3b585e7c6d04a515a3933f40a738d37818d",
+        "handler_id": "kujo.shipcheck.repository.scan.canonical-cli",
+        "handler_version": "1.0.0",
+        "status": "succeeded",
+        "result": {
+          "exit_code": 0,
+          "structured": {
+            "checks": [
+              {
+                "detail": "",
+                "message": "Git repository detected",
+                "name": "git-repo",
+                "passed": 1,
+                "severity": "info"
+              },
+              {
+                "detail": "",
+                "message": "README found: README.md",
+                "name": "readme",
+                "passed": 1,
+                "severity": "info"
+              },
+              {
+                "detail": "Consider adding a LICENSE file",
+                "message": "No LICENSE file found",
+                "name": "license",
+                "passed": 0,
+                "severity": "warning"
+              },
+              {
+                "detail": "Add a .gitignore to exclude build artifacts",
+                "message": "No .gitignore found",
+                "name": "ignore-files",
+                "passed": 0,
+                "severity": "warning"
+              },
+              {
+                "detail": "Add a tests/ directory or test files",
+                "message": "No test directory or test files found",
+                "name": "tests-exist",
+                "passed": 0,
+                "severity": "error"
+              },
+              {
+                "detail": "Add a lint script or Makefile target",
+                "message": "No lint command detected",
+                "name": "lint-command",
+                "passed": 0,
+                "severity": "warning"
+              },
+              {
+                "detail": "Add a format script or Makefile target",
+                "message": "No format command detected",
+                "name": "format-command",
+                "passed": 0,
+                "severity": "warning"
+              },
+              {
+                "detail": "Consider adding CI (e.g., .github/workflows/ci.yml)",
+                "message": "No CI configuration detected",
+                "name": "ci-config",
+                "passed": 0,
+                "severity": "warning"
+              },
+              {
+                "detail": "Add an 'Install' or 'Quick Start' section",
+                "message": "README may lack install instructions",
+                "name": "readme-install",
+                "passed": 0,
+                "severity": "warning"
+              },
+              {
+                "detail": "Add a 'Usage' section with examples",
+                "message": "README may lack usage instructions",
+                "name": "readme-usage",
+                "passed": 0,
+                "severity": "warning"
+              },
+              {
+                "detail": "Add examples to help users get started",
+                "message": "No examples/ or demo/ directory found",
+                "name": "examples",
+                "passed": 0,
+                "severity": "warning"
+              },
+              {
+                "detail": "Consider adding a docs/ directory",
+                "message": "No docs/ directory found",
+                "name": "docs",
+                "passed": 0,
+                "severity": "warning"
+              },
+              {
+                "detail": "Add kennel.toml, VERSION file, or package.json with version",
+                "message": "No version metadata found",
+                "name": "version-metadata",
+                "passed": 0,
+                "severity": "error"
+              },
+              {
+                "detail": "Add a CHANGELOG.md to track version changes",
+                "message": "No changelog found",
+                "name": "changelog",
+                "passed": 0,
+                "severity": "error"
+              },
+              {
+                "detail": "Add kennel.toml for Kujo package metadata (if this is a Kujo project)",
+                "message": "No kennel.toml found",
+                "name": "kennel-manifest",
+                "passed": 0,
+                "severity": "warning"
+              },
+              {
+                "detail": "Define 'entry' in kennel.toml [kujo] section or add a main .kujo script",
+                "message": "No clear entry point detected",
+                "name": "entry-point",
+                "passed": 0,
+                "severity": "warning"
+              }
+            ],
+            "dir": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-1vrfcxc9/project",
+            "project_type": "unknown",
+            "summary": {
+              "failed_errors": 3,
+              "gate_passed": 0,
+              "passed": 2,
+              "total_checks": 16,
+              "warnings": 11
+            },
+            "tool": "shipcheck",
+            "version": "1.0.0"
+          }
+        },
+        "error": null,
+        "policy_decision": {
+          "schema": "kujo.ability.policy-decision/v1",
+          "decision_id": "decision-c9d440f4-8444-4597-9c83-d921d53d70ca",
+          "outcome": "allow",
+          "reason": "Read-only local Ability is allowed.",
+          "requirements": [],
+          "policy_id": "kujo.ability.local-default",
+          "policy_version": "1.0.0"
+        },
+        "approval_id": "",
+        "idempotency": {
+          "mode": "intrinsic",
+          "state": "not_applicable"
+        },
+        "request_id": "2f18f73a-401e-434b-882c-e5973e97cf20",
+        "trace_id": "2f18f73a-401e-434b-882c-e5973e97cf20",
+        "surface": "plugin",
+        "principal": {
+          "type": "workload",
+          "id": "opencode",
+          "tenant_id": "local",
+          "claims": {}
+        },
+        "started_at_ms": 1792224672375,
+        "completed_at_ms": 1792224672505,
+        "duration_ms": 130,
+        "audit": {
+          "ok": true,
+          "written": true,
+          "sink": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-1vrfcxc9/kujo/receipts.jsonl"
+        },
+        "metadata": {
+          "host": "opencode",
+          "session_id": "ses_eb716bb8cffeBTfVEZzlQED326",
+          "run_id": "",
+          "agent_id": "build",
+          "model_id": "opencode/glm-5.3-flash-free",
+          "tool_id": "kujo_shipcheck_scan",
+          "effects": [
+            {
+              "kind": "read",
+              "resource": "kujo.repository.release"
+            }
+          ],
+          "project_root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-1vrfcxc9/project"
+        }
+      }
+    ]
   }
 }
