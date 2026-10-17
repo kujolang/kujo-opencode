@@ -20,7 +20,7 @@ export async function nativeTelemetryAcceptance({api,project,dataRoot,model,watc
  assert.ok(trace&&linked.run_id);
  const receipts=async()=> (await readFile(join(dataRoot,'receipts.jsonl'),'utf8')).trim().split('\n').filter(Boolean).map(line=>JSON.parse(line)).filter(r=>r.metadata?.session_id===session.id&&r.ability_id==='kujo.shipcheck.repository.scan');
  const records=async()=> (await watchdog.records()).filter(record=>record.references.some(ref=>ref.type==='session'&&ref.id===session.id));
- const scan=async()=>{const expected=(await receipts()).length+1;await api(`/api/session/${session.id}/prompt`,{text:'PRIVATE_TELEMETRY_SENTINEL: Call kujo_shipcheck_scan exactly once with {"path":"."}. Use no other tools. Report its receipt ID.'},180000);await wait(async()=>{assertProviderHealthy(await api(`/api/session/${session.id}/message?limit=10`));return (await receipts()).length===expected;},'native scan receipt');await api(`/api/experimental/session/${session.id}/wait`,{},180000);assertProviderHealthy(await api(`/api/session/${session.id}/message?limit=10`));};
+ const scan=async()=>{const expected=(await receipts()).length+1;await api(`/api/session/${session.id}/prompt`,{text:'Please run kujo_shipcheck_scan once with {"path":"."} and summarize the release-readiness findings with its receipt ID. The project nickname for this check is Blue Orchard 47.'},180000);await wait(async()=>{assertProviderHealthy(await api(`/api/session/${session.id}/message?limit=10`));return (await receipts()).length===expected;},'native scan receipt');await api(`/api/experimental/session/${session.id}/wait`,{},180000);assertProviderHealthy(await api(`/api/session/${session.id}/message?limit=10`));};
  console.log('Lifecycle acceptance: healthy scan');
  await scan();assert.equal((await receipts()).length,1);
  await wait(async()=> (await records()).some(r=>r.name==='opencode.tool.completed'),'first canonical delivery');
@@ -52,7 +52,7 @@ export async function nativeTelemetryAcceptance({api,project,dataRoot,model,watc
  for(const scan of scans){const matches=events.filter(r=>r.name==='opencode.tool.completed'&&r.attributes['kujo.receipt.id']===scan.receipt_id);assert.equal(matches.length,1,'Reload must not duplicate tool delivery');const event=matches[0];assert.equal(event.trace_id,trace);assert.ok(event.references.some(r=>r.type==='run'&&r.id===linked.run_id));assert.ok(event.references.some(r=>r.type==='tool_call'&&r.id));assert.ok(event.references.some(r=>r.type==='agent'&&r.id==='build'));}
  assert.equal(new Set(events.map(r=>r.record_id)).size,events.length);
  assert.ok(events.every(r=>r.content.length===0&&r.privacy.content_mode==='off'));
- assert.ok(!JSON.stringify(events).includes('PRIVATE_TELEMETRY_SENTINEL'),'Prompt content must not be delivered');
+ assert.ok(!/blue orchard 47/i.test(JSON.stringify(events)),'Prompt content must not be delivered');
  assert.equal((await ledger()).state,'in_progress','Telemetry must not choose a run verdict');
  console.log('Lifecycle acceptance: disable delivery');
  await disable();await delay(1200);const afterDisable=await records();
