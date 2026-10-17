@@ -5,7 +5,7 @@ import {setupTui} from '../lib/tui.mjs';
 import {scopedHostContext} from '../lib/plugin-scope.mjs';
 import {homePaths,withDataRoot} from '../lib/paths.mjs';
 
-function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[],home=false,waitCreate,selectedModel,ledgerState='in_progress',services=[],pendingPermissions=[],waitSelect,canonicalProject}={}) {
+function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[],home=false,waitCreate,selectedModel,ledgerState='in_progress',services=[],pendingPermissions=[],waitSelect,canonicalProject,browserState}={}) {
  const calls=[],alerts=[],toasts=[],selections=[],handlers=new Map();let clears=0;let commands,eventHandler,stopped=false,route=home?{type:'home'}:{type:'session',sessionID:'fixture-session'};
  const location={directory:'/fixture/project'};
  const ctx={location,data:{on:(name,handler)=>{handlers.set(name,handler);return ()=>handlers.delete(name);},session:{status:()=> 'idle',sync:async()=>{},permission:{sync:async()=>{},list:()=>pendingPermissions}}},client:{session:{create:async input=>{calls.push({method:'createSession',input});if(waitCreate)await waitCreate;return {id:'new-session'};},switchModel:async input=>calls.push({method:'switchModel',input})},rpc:definition=>{
@@ -15,7 +15,7 @@ function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts
    if(method==='completion')return {available:true,run_id:'fixture'};
    if(method==='knowledge')return input.action==='preview'?{files:[{path:'guide.md'}],bytes:12,digest:'a'.repeat(64),exclusions:['dotfiles'],index_input:{name:input.name,path:input.path,digest:'a'.repeat(64)}}:{state:'current'};
    if(method==='status'){if(waitStatus)await waitStatus;return {services,capabilities:[{id:'kujo.test.check',name:'check',description:'Check repository',active:true,inherited:true,mode:'profile'}],project:canonicalProject||location.directory,version:'0.2.0',profile:'kujo.profile.essentials',specialists:[{id:'kujo-browser',title:'Browser verification',profile:'ship',description:'Verify pages',abilities:['kujo.lens.page.check'],available:[],missing:['kujo.lens.page.check']}],profiles:[{id:'kujo.profile.review',label:'Review',description:'Review repository'}],tools:[{name:'check',description:'Check repository'}]};}
-   if(method==='browser'){if(['status','refresh'].includes(input.action))return {ready:false,state:'dependencies_missing',capabilities:[]};if(profileError)throw Error(profileError);return {ready:false,state:'installing'};}
+   if(method==='browser'){if(['status','refresh'].includes(input.action))return browserState||{ready:false,state:'dependencies_missing',capabilities:[]};if(profileError)throw Error(profileError);return {ready:false,state:'installing'};}
    if(method==='runledger'){if(input.action==='status')return {state:ledgerState,run_id:ledgerState==='not_started'?undefined:'fixture'};if(profileError)throw Error(profileError);return {state:input.status};}
    if(method==='lifecycle'){if(input.action==='status')return {enabled:false,pending:0};if(profileError)throw Error(profileError);return {enabled:input.action==='enable'};}
    if(method==='capability'){if(profileError)throw Error(profileError);return {active:input.mode!=='disabled'};}
@@ -235,4 +235,10 @@ test('a reply during canonical workspace lookup suppresses the late review',asyn
 test('session-scoped permission events without an optional location still receive review',async()=>{
  const f=fixture({choices:['return']});await f.emit('permission.asked',approval,null);
  assert.equal(f.selections[0].title,'Review Kujo operation');assert.equal(f.calls.length,0);
+});
+
+test('browser failure detail explains recovery without starting another installation',async()=>{
+ const message='Storage is full. Free space on the installation and browser-cache volumes, then retry.';
+ const f=fixture({choices:['failure'],browserState:{ready:false,state:'failed',code:'install_disk_full',message}});
+ await f.run('kujo.browser');assert.equal(f.alerts[0].message,message);assert.deepEqual(f.calls.map(c=>[c.method,c.input.action]),[['browser','status']]);
 });

@@ -150,6 +150,14 @@ Lens bridge packages and Chromium; it does not verify your application. It runs
 as a bounded background job. Reopen the menu to see progress, cancel or recheck.
 Closing OpenCode stops its active installation; recheck disk readiness after restart.
 
+If setup fails, choose **Why installation failed** for the detected cause and a
+recovery step. The CLI reports the same safe guidance. Recognized storage/quota,
+folder permissions, missing npm, certificate, authentication and network failures
+have distinct messages; an unclassified failure remains explicitly uncertain.
+Raw installer output is not copied into the UI. Address the reported condition,
+then retry installation. Use recovery first only if setup reports an interrupted
+transaction; recovery refuses to take over a live installer.
+
 When Chromium is ready, the menu can enable page verification and select the
 Browser specialist. Provide a running local URL and the behavior to verify. The
 Ship profile also exposes flow validation and failure evidence. External URLs
