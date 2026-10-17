@@ -163,3 +163,19 @@ Canonical stale-decision and continuation checks alone cannot establish these. N
 is specified by the runner but not established by canonical preflights. Required
 platform coverage, replacement candidate and retained release acceptance evidence
 remain separate gates. The generic ShipCheck/RunLedger helper is insufficient.
+
+### Final model report gate
+
+Every live specialist journey now ends with a model-authored structured summary
+of its existing conversation. The prompt supplies a format, not expected results
+or receipt IDs. Acceptance checks chronological operation coverage, exact outcomes
+(including failure, rejection and cancellation), citations belonging to each
+operation and terminal receipts for executed operations. Explanations and an
+explicit limitations field are required. Any new permission, canonical operation,
+model identity change or tool call fails the report gate and interrupts only the
+owned fixture session. The retained `specialist-evidence.json` includes the report
+and originating message IDs. These structural checks do not establish the truth
+of every prose claim; live report quality still requires review alongside receipts.
+Focused adversarial tests cover fabricated/unrelated citations, concealed failures
+and rejection, omissions, unexpected effects and successful report extraction.
+This gate is acceptance infrastructure, not a completed live-provider result.

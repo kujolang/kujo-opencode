@@ -51,3 +51,4 @@ test('Build specialist scenario exercises the real runtime and retained failures
 });
 
 import './browser-specialist-runner.test.mjs';
+import './native-specialist-report.test.mjs';

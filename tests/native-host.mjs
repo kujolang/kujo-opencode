@@ -297,6 +297,8 @@ try {
   const runJourney={understand:()=>import('./native-understand-acceptance.mjs').then(m=>m.nativeUnderstandAcceptance),build:()=>import('./native-build-acceptance.mjs').then(m=>m.nativeBuildAcceptance),review:()=>import('./native-review-acceptance.mjs').then(m=>m.nativeReviewAcceptance),browser:()=>import('./native-browser-acceptance.mjs').then(m=>m.nativeBrowserAcceptance),workflow:()=>import('./native-workflow-acceptance.mjs').then(m=>m.nativeWorkflowAcceptance),ship:()=>import('./native-ship-acceptance.mjs').then(m=>m.nativeShipAcceptance)};
   const executeJourney=await runJourney[journey]();
   specialistJourney=await executeJourney({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL,interrupt:sessionID=>nativeClient.session.interrupt({sessionID,resume:false},{signal:AbortSignal.timeout(15000)})});
+  const {specialistReport}=await import('./native-specialist-report.mjs');
+  specialistJourney.report=await specialistReport({api,journey:specialistJourney,receipts:async()=>(await readFile(join(env.KUJO_OPENCODE_HOME,'receipts.jsonl'),'utf8')).split('\n').filter(Boolean).map(line=>JSON.parse(line)),interrupt:sessionID=>nativeClient.session.interrupt({sessionID,resume:false},{signal:AbortSignal.timeout(15000)})});
   } catch(error) {
    const provider=String(error.message).match(/Live provider failed before acceptance: provider\.[a-z]+ \(HTTP [0-9]+\)/)?.[0];
    await writeFile(join(root,'specialist-failure.json'),JSON.stringify({ok:false,journey,host:hostVersion,model:process.env.KUJO_TEST_MODEL,error_type:error.name,reason:provider||'Specialist acceptance failed; inspect retained fixture evidence and test log',...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256}:{})},null,2)+'\n');
