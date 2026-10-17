@@ -142,3 +142,15 @@ approval guidance. OpenCode2.0.31 at80x24 passed in324whuzy with no inference or
 approved effects. Screenshots are retained as leash-guidance.txt and
 gateway-guidance.txt in that fixture. This verifies setup guidance, not rendered
 service execution or notification delivery.
+
+
+## Configured Watchdog reads
+
+`WATCHDOG_TEST_SOURCE=/absolute/path/to/watchdog node tests/watchdog-read-canonical.mjs`
+starts the existing private lifecycle fixture, writes one metadata-only event,
+reconciles a simulated lost acknowledgement and reads it through
+`kujo_watchdog_read` transport with a producer filter. Readiness and invalid-token
+rejection are checked against the same canonical server. No provider is called.
+Local fixture P3BjZT passed with one record and duplicate suppression. The unit
+gate additionally covers origin/path escapes, proxy exclusion, credential
+isolation, cancellation, redirects, response bounds and no automatic retry.

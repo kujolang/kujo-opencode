@@ -1,3 +1,4 @@
+import {readWatchdog} from '../lib/watchdog-read.mjs';
 import assert from 'node:assert/strict';
 import {mkdtemp,writeFile,readFile} from 'node:fs/promises';
 import {createServer} from 'node:http';
@@ -21,6 +22,11 @@ export async function verifyLifecycleDelivery(binary,source){
   const two=new LifecycleOutbox(opts);assert.equal((await two.flush()).sent,true);await two.close();
   const response=await fetch(endpoint+'/api/telemetry/v2/records?producer=kujo-opencode',{headers,signal:AbortSignal.timeout(3000)});const body=await response.json();assert.equal(response.status,200,JSON.stringify(body));const records=body.data.records;assert.equal(records.length,1,'Retry must deduplicate at canonical Watchdog');
   assert.deepEqual(records[0].record.content,[]);assert.ok(records[0].record.references.some(ref=>ref.type==='run'&&ref.id==='run_lifecycle'));assert.ok(records[0].record.references.some(ref=>ref.type==='tool_call'&&ref.id==='call_lifecycle'));assert.doesNotMatch(JSON.stringify(body),/PRIVATE_CONTENT|PRIVATE_CREDENTIAL/);assert.doesNotMatch(await readFile(join(two.root,'queue.json'),'utf8'),/PRIVATE_CONTENT|PRIVATE_CREDENTIAL|lifecycle-fixture-token/);
-  return {root,canonical_records:records.length,duplicate_suppressed:true};
+  const readEnv={KUJO_WATCHDOG_URL:endpoint,KUJO_WATCHDOG_TOKEN:token};
+  const apiRead=await readWatchdog({path:'/api/telemetry/v2/records?producer=kujo-opencode'},{env:readEnv});
+  assert.equal(apiRead.body.data.records.length,1);assert.equal(apiRead.body.data.records[0].record.references.some(ref=>ref.type==='run'&&ref.id==='run_lifecycle'),true);assert.equal(apiRead.lifecycle_changed,false);
+  assert.equal((await readWatchdog({path:'/readyz'},{env:readEnv})).http_status,200);
+  await assert.rejects(readWatchdog({path:'/api/stats'},{env:{...readEnv,KUJO_WATCHDOG_TOKEN:'invalid-fixture-token'}}),{code:'watchdog_remote_rejected'});
+  const proof={root,canonical_records:records.length,duplicate_suppressed:true,configured_read:true,read_auth_rejection:true};await writeFile(join(root,'verification.json'),JSON.stringify(proof,null,2)+'\n');return proof;
  }finally{controller.abort();await running;}
 }

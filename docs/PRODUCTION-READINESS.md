@@ -1041,3 +1041,25 @@ onboarding/rejection gate (324whuzy; /tmp/kujo-service-rendered.log), with no mo
 request or granted effect. This is setup guidance acceptance, not native rendered
 Leash/gateway execution approval. Remaining full lifecycle/recovery, live
 specialists, supported host/OS and final packed/public-release gates stay open.
+
+## Configured Watchdog API reads (2026-10-16)
+
+Full now exposes 59 tools, including a configured Watchdog reader in Workflow's
+scope. It uses explicit KUJO_WATCHDOG_URL/KUJO_WATCHDOG_TOKEN (and optional
+audience), supports loopback HTTP or remote HTTPS, preserves query filters and
+allows only GET /api/*, /healthz and /readyz. Model proxy routes are excluded;
+this closes telemetry-read coverage without becoming an inference proxy. The
+reader does not inherit another service's WDG_API_AUTH_TOKEN, enable telemetry,
+start a service or change lifecycle configuration. Response size is bounded to
+256 KiB with a 15-second deadline; redirects and credential echoes are refused.
+
+Canonical Watchdog9e82e8f5b05edca948f6a432ae517031388296e6 fixtureP3BjZT passed
+metadata ingestion/lost-acknowledgement reconciliation followed by filtered reads,
+readiness and invalid-token rejection through the new transport. 151 offline and
+14 focused service/specialist tests passed. Real OpenCode2.0.31 at80x24 rendered
+the new configuration guidance successfully (2csv3ry1), including its final
+separation from lifecycle delivery/model proxying; no inference or effect grant.
+Logs /tmp/kujo-watchdog-read-{unit,canonical,all,e2e,rendered,host}.log retain the
+checkpoint evidence. This is not remote TLS deployment or complete host/OS
+certification. Native rendered service execution approvals and the remaining
+original lifecycle/recovery/specialist/package/public-release gates stay open.
