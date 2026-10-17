@@ -128,5 +128,23 @@
     "source_live_acceptance_pending": true,
     "source_live_log": "/tmp/kujo-lifecycle-status-native.log",
     "archive_rebuild_required": true
+  },
+  "source_prompt_attempt": {
+    "result": "failed_missing_scan_receipt",
+    "fixture": "kujo-native-host-DaX33b",
+    "log": "/tmp/kujo-lifecycle-status-native.log",
+    "diagnostic": "/tmp/kujo-lifecycle-missing-scan-diagnostic.json",
+    "cause": "Model asked for confirmation because synthetic PRIVATE_TELEMETRY_SENTINEL wording appeared suspicious; no scan executed.",
+    "correction_commit": "483dbc9",
+    "correction": "Ordinary scan request with harmless project nickname; receipt and privacy assertions preserved."
+  },
+  "source_live_retry": {
+    "result": "pending",
+    "fixture": "kujo-native-host-ClBBe6",
+    "log": "/tmp/kujo-lifecycle-status-native-retry.log",
+    "host": "2.0.31",
+    "model": "opencode/glm-5.3-flash-free",
+    "packed_candidate": false,
+    "source_commit": "483dbc9"
   }
 }

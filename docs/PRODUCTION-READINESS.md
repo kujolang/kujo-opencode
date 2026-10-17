@@ -38,10 +38,13 @@ proxy, automatic approval, hidden network telemetry, or duplicated product logic
 
 The seven outcomes above remain open. Live lifecycle acceptance on candidate
 `2f80e13` exposed nine discarded records during a Watchdog outage. The retention
-correction preserves exhausted deliveries for explicit approved retry and changes
-the production payload. Earlier candidate passes remain historical evidence;
-rebuild the candidate and repeat applicable exact-archive gates after verifying
-the correction. See [the failure record](acceptance/2026-10-17-lifecycle-retention.json).
+correction preserves exhausted deliveries for explicit approved retry. Its
+replacement archive passed fresh installation and upgrade, but live recovery
+exposed a status request blocked behind a pending human approval. Commit
+`b23b2bc` fixes that serialization bug; 229 unit tests and the local E2E gate
+passed. Source-level live acceptance remains pending. Earlier archive passes
+remain historical evidence; rebuild and repeat applicable exact-archive gates
+after verifying the correction. See [the failure record](acceptance/2026-10-17-lifecycle-retention.json).
 
 Implementation and local acceptance are
 substantial; complete production parity is not yet certified. The table separates
@@ -97,8 +100,9 @@ are dated observations, not permanent claims about provider or account state.
 - [Historical checkpoints](ACCEPTANCE-HISTORY.md): chronological implementation
   evidence. Historical successes apply only to their recorded bytes and scope.
 
-The last tested archive is candidate `2f80e13`, SHA-256
-`08bd3febbb186d47e96d7b5365482b2970c5a83c5e9db32126de7d4e28c87fd1`.
-It passed fresh-install/upgrade and macOS native/rendered manual approval checks
-on OpenCode 2.0.31/2.0.32, but failed the extended lifecycle outage check. The
-retention fix requires a new archive. No current candidate has full acceptance.
+The latest tested archive is candidate `7c5ebc5`, SHA-256
+`2b8073637d7995be5b52aefafffe8003667075560301a78148282ada77b573b6`.
+It passed fresh-install/upgrade, including mixed-version projects, starters,
+browser and knowledge checks. Extended live lifecycle acceptance exposed the
+pending-approval status bug fixed in `b23b2bc`, so this archive is superseded.
+No current candidate has full acceptance.
