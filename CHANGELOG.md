@@ -2,6 +2,8 @@
 
 ## 0.2.0
 
+- Discover retained Dispatch run IDs after a lost response, with explicit index-repair approval and path validation.
+
 - Link explicit Eval run IDs through RunLedger correlation without changing verdicts; retain existing Watchdog trace linking.
 
 - Add explicit Dispatch run inspection for reconciliation, with declared SQLite bookkeeping approval and contained storage paths.

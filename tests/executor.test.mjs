@@ -75,3 +75,12 @@ test('RunLedger correlation requires explicit bounded links and confined records
  await writeFile(join(root,'outside'),'{}');await symlink(join(root,'outside'),join(root,'.runledger/runs/run-one.json'));
  await assert.rejects(adapter({run_id:'run-one',eval_run_id:'eval-one'},{}),{code:'ability_path_invalid'});
 });
+
+test('Dispatch discovery rejects index traversal and symlinked run state before canonical reads',async()=>{
+ const {symlink,unlink}=await import('node:fs/promises');const root=await mkdtemp(join(tmpdir(),'kujo-dispatch-discover-'));await mkdir(join(root,'runs'));
+ const adapter=handlers({project:root,runtime:null,config:{kujo_bin:'must-not-execute',sources:{dispatch:{path:root}}}}).dispatch_list;
+ const index=join(root,'runs/.dispatch-run-index.json');await writeFile(index,JSON.stringify({runs:{'../outside':{}}}));
+ await assert.rejects(adapter({output_dir:'runs'},{}),{code:'ability_path_forbidden'});await unlink(index);
+ await mkdir(join(root,'runs/run-one'));await writeFile(join(root,'outside'),'{}');await symlink(join(root,'outside'),join(root,'runs/run-one/state.json'));
+ await assert.rejects(adapter({output_dir:'runs'},{}),{code:'ability_path_invalid'});
+});
