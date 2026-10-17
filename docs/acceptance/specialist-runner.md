@@ -96,7 +96,7 @@ and browser dependencies. No sibling source or production payload is changed.
 
 ## Workflow journey
 
-`KUJO_TEST_JOURNEY=workflow` selects `kujo-workflow`. Its thirteen steps validate a
+`KUJO_TEST_JOURNEY=workflow` selects `kujo-workflow`. Its seventeen steps validate a
 bounded tool-only workflow, reject and cancel native execution without output,
 run, discover and separately inspect completed/paused/failed cases, and reject an invalid
 workflow. Each run is unique; inspection reconciles the exact retained identifier
@@ -113,9 +113,16 @@ SQLite paths are confined; identifiers cannot be options or path traversal.
 against local canonical Dispatch; `KUJO_TEST_DISPATCH_SOURCE` selects a retained
 pinned checkout. This preflight marks native approval/cancellation and live agent
 behavior false: denied steps only assert absence without invoking execution.
-A paused checkpoint is not completion. Human decision/resumption still uses the
-canonical Dispatch operator surface; this harness does not certify that path or
-an actual lost-response injection.
+A paused checkpoint is not completion. The journey rejects a checkpoint decision
+without changing state, submits a stale revision and requires failure, then
+separately approves the exact inspected decision and inspects completion. This
+uses ordinary human checkpoints from Dispatch 1.4; experimental v2 interventions
+remain on the canonical operator surface. A separate two-checkpoint regression
+proves later checkpoints stay pending and stale decisions cannot advance them.
+Canonical Dispatch keeps the original pending approval in its history and appends
+an approved record; do not treat the first historical entry as current status.
+Explicit rejection produces a failed run with `approval_rejected` and leaves
+later steps unexecuted. The submitted decision artifact is retained on failure.
 
 `node tests/dispatch-lost-response-canonical.mjs` injects loss after the actual
 canonical operation returns, discards its result, discovers the run without its
@@ -151,8 +158,8 @@ specialist/native approvals false; rejected canonical steps only check absence.
 All six distinct harnesses now exist. None is certified as a complete live
 specialist journey. Run the actual selected agents with an authorized provider,
 verify final evidence-backed reports, and retain exact-candidate host identity.
-Workflow still needs native transport-loss injection and checkpoint decision/
-continuation acceptance, including failed decision handling. Native cancellation
+Workflow still needs live native decision/continuation and transport-loss acceptance.
+Canonical stale-decision and continuation checks alone cannot establish these. Native cancellation
 is specified by the runner but not established by canonical preflights. Required
 platform coverage, replacement candidate and retained release acceptance evidence
 remain separate gates. The generic ShipCheck/RunLedger helper is insufficient.

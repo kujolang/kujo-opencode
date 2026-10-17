@@ -17,7 +17,7 @@ export async function* workflowScenario(project) {
  const run={ability:'kujo.dispatch.workflow.run',tool:'kujo_dispatch_run'};
  for(const decision of ['reject','cancel'])yield {...run,input:{path,workflow_file:'complete.json',topic:'No execution without approval',input_json:'{}',output_dir:decision},decision,beforeDecision:()=>absent(decision),after:()=>absent(decision)};
  for(const [file,output,status] of [['complete.json','complete','completed'],['checkpoint.json','checkpoint','paused'],['failed.json','failed','failed']]){
-  let runID,statePath,stateBytes,state;
+  let runID,statePath,stateBytes,state,control;
   yield {...run,input:{path,workflow_file:file,topic:'Bounded explicit Workflow acceptance',input_json:'{}',output_dir:output},decision:'once',expectedStatus:status==='failed'?'failed':'succeeded',beforeDecision:()=>absent(output),after:async receipt=>{
    if(status==='failed'){assert.equal(receipt.error.code,'kujo_command_failed');assert.notEqual(receipt.error.details.exit_code,0);}else assert.equal(receipt.result.exit_code,0);
    const dirs=(await readdir(join(root,output),{withFileTypes:true})).filter(entry=>entry.isDirectory()&&!entry.name.startsWith('.'));assert.equal(dirs.length,1);
@@ -30,11 +30,23 @@ export async function* workflowScenario(project) {
   yield {ability:'kujo.dispatch.runs.list',tool:'kujo_dispatch_runs',input:{path,output_dir:output,limit:50,offset:0},decision:'once',beforeDecision:async()=>assert.equal(await readFile(statePath,'utf8'),stateBytes),after:async receipt=>{assert.equal(receipt.result.structured.filtered_total,1);assert.equal(receipt.result.structured.runs[0].run_id,runID);assert.equal(await readFile(statePath,'utf8'),stateBytes);}};
   // Reconciliation observes the retained run; it never repeats the workflow.
   yield {ability:'kujo.dispatch.run.inspect',tool:'kujo_dispatch_inspect',input:{path,output_dir:output,run_id:runID},decision:'once',beforeDecision:async()=>assert.equal(await readFile(statePath,'utf8'),stateBytes),after:async receipt=>{
-   const result=receipt.result.structured;assert.equal(result.command,'inspect');assert.equal(result.ok,true);assert.equal(result.run_id,runID);assert.equal(result.summary.status,status);
+   const result=receipt.result.structured;control=result.control;assert.equal(result.command,'inspect');assert.equal(result.ok,true);assert.equal(result.run_id,runID);assert.equal(result.summary.status,status);
    assert.equal(await readFile(statePath,'utf8'),stateBytes,'Inspection must not change run decisions or step state');
    assert.deepEqual(result.steps.map(step=>[step.id,step.status,step.attempts]),state.steps.map(step=>[step.id,step.status,step.attempts]));
    if(status==='paused')assert.equal(result.approvals[0].decision,'pending');
   }};
+  if(status==='paused'){
+   assert.equal(control.available,true);
+   const event=control.human_intervention;
+   const input={path,output_dir:output,run_id:runID,step_id:event.run.step_id,event_id:event.event_id,decision_id:event.security.decision_id,expected_revision:control.state_revision,decision:'approve',response:'Explicit isolated acceptance decision'};
+   const decision={ability:'kujo.dispatch.checkpoint.decide',tool:'kujo_dispatch_decide'};
+   const unchanged=async()=>assert.equal(await readFile(statePath,'utf8'),stateBytes);
+   yield {...decision,input,decision:'reject',beforeDecision:unchanged,after:unchanged};
+   yield {...decision,input:{...input,expected_revision:input.expected_revision+1},decision:'once',expectedStatus:'failed',beforeDecision:unchanged,after:async receipt=>{assert.equal(receipt.error.code,'dispatch_checkpoint_changed');await unchanged();}};
+   yield {...decision,input,decision:'once',beforeDecision:unchanged,after:async receipt=>{assert.equal(receipt.result.exit_code,0);const completed=JSON.parse(await readFile(statePath,'utf8'));assert.equal(completed.status,'completed');assert.equal(completed.steps.at(-1).attempts,1);stateBytes=await readFile(statePath,'utf8');}};
+   yield {ability:'kujo.dispatch.run.inspect',tool:'kujo_dispatch_inspect',input:{path,output_dir:output,run_id:runID},decision:'once',beforeDecision:unchanged,after:async receipt=>{assert.equal(receipt.result.structured.control.run_status,'completed');await unchanged();}};
+  }
+
  }
  yield {ability:'kujo.dispatch.workflow.validate',tool:'kujo_dispatch_validate',input:{path,workflow_file:'invalid.json'},expectedStatus:'failed',after:async receipt=>assert.equal(receipt.error.code,'kujo_command_failed')};
 }
