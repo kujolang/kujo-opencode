@@ -57,6 +57,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Use Windows system tools before Git Bash shims
+        if: runner.os == 'Windows'
+        run: echo "$SYSTEMROOT/System32" >> "$GITHUB_PATH"
       - run: npm ci
       - name: Download the exact candidate bundle
         env:
