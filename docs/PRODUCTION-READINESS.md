@@ -36,8 +36,12 @@ proxy, automatic approval, hidden network telemetry, or duplicated product logic
 
 ## Current acceptance status — 2026-10-17
 
-The final archive is built from `bef63f4200e3bf530cf4baab21aa524e6fca13ea`,
-tagged `v0.2.0`. Its SHA-256 is
+The release tag `v0.2.0` points to `587401b86e0fe1c5bfc2c8373946abbfb8d607dd`.
+The live acceptance archive was built from `bef63f4200e3bf530cf4baab21aa524e6fca13ea`.
+The tag was corrected before publication to fix a trailing slash in the GitHub
+metadata request and add its cross-platform regression test. These changes are
+outside the npm payload. The corrected candidate must match the accepted archive
+byte for byte before publication. Its SHA-256 is
 `fa5fd2ed97c9fd7c24d3610434d19e2130cfcb7102b5ab6b0e8785f189fcdb5c`.
 All six specialists passed 50 operation checks with six receipt-grounded model
 reports through OpenCode's ChatGPT sign-in. These live tests used macOS x64,
