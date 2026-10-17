@@ -12,7 +12,7 @@ const journey=process.env.KUJO_TEST_JOURNEY;
 if(journey){assert.ok(['understand','build','review','browser','workflow','ship'].includes(journey),'Only implemented specialist journeys may run');assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Journey needs an explicit model and owns its specialist identity');for(const flag of ['KUJO_TEST_GUARD','KUJO_TEST_TELEMETRY','KUJO_TEST_CANCEL_TELEMETRY','KUJO_TEST_AUTOTRACK'])assert.notEqual(process.env[flag],'1','Run specialist and lifecycle acceptance separately');}
 if(process.env.KUJO_TEST_TELEMETRY==='1'||process.env.KUJO_TEST_CANCEL_TELEMETRY==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Telemetry acceptance needs an explicit model and ordinary Build agent');
 if(process.env.KUJO_TEST_GUARD==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Guard acceptance needs an explicit model and ordinary Build agent');
-const root=await mkdtemp(join(tmpdir(),'kujo-native-host-'));const project=join(root,'project');await mkdir(project);
+const root=await mkdtemp(join(tmpdir(),'kujo-native-host-'));console.log(`Native fixture: ${root}`);const project=join(root,'project');await mkdir(project);
 if(process.env.GITHUB_OUTPUT)await (await import('node:fs/promises')).appendFile(process.env.GITHUB_OUTPUT,`fixture=${root}\n`);
 await exec('git',['init',project]);
 const env={...process.env,KUJO_OPENCODE_HOME:join(root,'kujo')};

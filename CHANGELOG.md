@@ -2,6 +2,8 @@
 
 ## 0.2.0
 
+- Keep lifecycle queue status readable while a management approval is pending, without releasing serialized mutations.
+
 - Retain exhausted or rejected lifecycle deliveries for explicit approved retry instead of deleting them; preserve event IDs, endpoint boundaries and original expiry.
 
 - Pin Dispatch 1.4 and Kujo runtime 1.8.1 for authoritative checkpoint control views.

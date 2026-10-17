@@ -24,3 +24,20 @@ test('native host bridge requires a fresh decision, binds workspace, and dispose
  assert.deepEqual([...commands.keys()],['kujo-status','kujo-evidence','kujo-profile']);
  await cleanup();assert.equal(disposed,5);
 });
+
+test('pending lifecycle management does not block workspace-validated status reads',async()=>{
+ const project=await mkdtemp(join(tmpdir(),'kujo-native-status-'));let rpc,entered,rejectPending,asked=0,secondStarted=false;
+ const ready=new Promise(resolve=>entered=resolve),hold=new Promise((_resolve,reject)=>rejectPending=reject);
+ const registration=()=>({dispose:async()=>{}});
+ const app={runtime:{describe:()=>[]},config:{version:'0.2.0'},catalog:{profiles:[]},paths:{root:project}};
+ const ctx={location:{directory:project},rpc:{register:async(_definition,handlers)=>{rpc=handlers;return registration();}},session:{hook:async()=>registration(),get:async({sessionID})=>{if(sessionID==='second')secondStarted=true;if(sessionID==='pending'){entered();return hold;}return {location:{directory:sessionID==='foreign'?tmpdir():project}};},synthetic:async()=>{}},permission:{hook:async()=>registration(),assert:async()=>{asked++;}},tool:{transform:async fn=>{fn({add:()=>{}});return registration();}},command:{transform:async fn=>{fn({add:()=>{}});return registration();}}};
+ const cleanup=await setupPlugin(ctx,{openApp:async()=>app,dataRoot:join(project,'home')});
+ const pending=rpc.lifecycle({sessionID:'pending',action:'retry'}).catch(error=>error);await ready;
+ const second=rpc.lifecycle({sessionID:'second',action:'retry'}).catch(error=>error);
+ let timer;
+ try {
+  const status=await Promise.race([rpc.lifecycle({sessionID:'local',action:'status'}),new Promise((_resolve,reject)=>{timer=setTimeout(()=>reject(Error('Status blocked behind pending mutation')),500);})]);
+  assert.equal(status.enabled,false);assert.equal(asked,0);assert.equal(secondStarted,false);
+  await assert.rejects(rpc.lifecycle({sessionID:'foreign',action:'status'}),/different workspace/);
+ }finally{clearTimeout(timer);rejectPending(Error('Fixture management cancelled'));await pending;await second;assert.equal(secondStarted,true);await cleanup();}
+});
