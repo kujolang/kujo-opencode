@@ -21,7 +21,7 @@ const root=await mkdtemp(join(tmpdir(),'kujo-opencode-packed-'));
 if(process.env.GITHUB_OUTPUT)await appendFile(process.env.GITHUB_OUTPUT,`fixture=${root}\n`);
 const home=join(root,'home'), prefix=join(root,'prefix'), project=join(root,'project'), older=join(root,'older-project');
 for (const dir of [home,prefix,project,older]) await mkdir(dir);
-const env={...process.env,HOME:home,USERPROFILE:home,XDG_CONFIG_HOME:join(home,'config'),XDG_DATA_HOME:join(home,'data'),XDG_CACHE_HOME:join(home,'cache'),KUJO_OPENCODE_HOME:join(home,'kujo'),npm_config_cache:join(home,'npm-cache'),npm_config_userconfig:join(home,'.npmrc')};
+const env={...process.env,GIT_CONFIG_COUNT:'2',GIT_CONFIG_KEY_0:'core.longpaths',GIT_CONFIG_VALUE_0:'true',GIT_CONFIG_KEY_1:'core.autocrlf',GIT_CONFIG_VALUE_1:'false',HOME:home,USERPROFILE:home,XDG_CONFIG_HOME:join(home,'config'),XDG_DATA_HOME:join(home,'data'),XDG_CACHE_HOME:join(home,'cache'),KUJO_OPENCODE_HOME:join(home,'kujo'),npm_config_cache:join(home,'npm-cache'),npm_config_userconfig:join(home,'.npmrc')};
 for (const key of ['KUJO_BIN','KUJO_SOURCE_ROOT','KUJO_OPENCODE_PROJECT','NODE_PATH','NPM_TOKEN','NODE_AUTH_TOKEN']) delete env[key];
 async function command(bin,args,opts={}) {
  if(bin==='npm'){assert.ok(process.env.npm_execpath,'Run this gate through npm run test:fresh');args=[process.env.npm_execpath,...args];bin=process.execPath;}
@@ -48,7 +48,7 @@ if(registry){
 }else if(candidate)await copyFile(join(candidate.directory,candidate.archive),tarball);
 // Real previous release, not a synthetic version field mutation.
 const baseline=join(root,'baseline'); await mkdir(baseline);
-await command('git',['archive','855524a5da804ae43088aa204350230e62616ab3','--format=tar','-o',join(root,'baseline.tar')]);
+await command('git',['-c','core.autocrlf=false','archive','855524a5da804ae43088aa204350230e62616ab3','--format=tar','-o',join(root,'baseline.tar')]);
 await command('tar',['-xf','baseline.tar','-C','baseline'],{cwd:root});
 const oldPack=JSON.parse((await command('npm',['pack','--json','--pack-destination',root],{cwd:baseline})).stdout)[0];
 await command('npm',['install','--prefix',prefix,join(root,oldPack.filename)]);

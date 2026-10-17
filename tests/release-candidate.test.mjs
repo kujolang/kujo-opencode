@@ -20,9 +20,11 @@ test('candidate packs committed bytes and refuses dirt, overwrite, mutation and 
  await assert.rejects(buildCandidate(repo,join(repo,'candidate')),/outside/);
  await writeFile(join(repo,'untracked'),'private');await assert.rejects(buildCandidate(repo,join(base,'dirty')),/clean/);await rm(join(repo,'untracked'));
  await writeFile(join(repo,'ignored.mjs'),'private ignored content');
+ await git(['config','core.autocrlf','true']);
  const directory=join(base,'candidate');const candidate=await buildCandidate(repo,directory);
  const inventory=JSON.parse((await exec(process.execPath,[process.env.npm_execpath,'pack','--dry-run','--ignore-scripts','--json',join(directory,candidate.archive)],{cwd:base})).stdout)[0];
  assert.ok(inventory.files.some(file=>file.path==='index.mjs'));assert.ok(!inventory.files.some(file=>file.path==='ignored.mjs'));
+ assert.equal((await exec('tar',['-xOf',candidate.archive,'package/index.mjs'],{cwd:directory})).stdout,'export const value=1;\n');
  assert.equal(candidate.name,pkg.name);assert.equal(candidate.version,pkg.version);assert.equal(candidate.acceptance,'pending');assert.equal(candidate.published,false);assert.equal(candidate.commit,(await git(['rev-parse','HEAD'])).stdout.trim());
  await assert.rejects(buildCandidate(repo,directory),{code:'EEXIST'});
  const archive=join(directory,candidate.archive),bytes=await readFile(archive);await writeFile(archive,Buffer.concat([bytes,Buffer.from('changed')]));await assert.rejects(verifyCandidate(directory),/Changed candidate file/);await writeFile(archive,bytes);

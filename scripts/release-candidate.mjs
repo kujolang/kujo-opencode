@@ -29,7 +29,7 @@ export async function buildCandidate(root,destination){
   const snapshot=await mkdtemp(join(tmpdir(),'kujo-release-source-'));
   try {
   const source=join(snapshot,'source');await mkdir(source);
-  await git(['archive','--format=tar','--output='+join(snapshot,'source.tar'),commit],root);
+  await git(['-c','core.autocrlf=false','archive','--format=tar','--output='+join(snapshot,'source.tar'),commit],root);
   await exec('tar',['-xf','source.tar','-C','source'],{cwd:snapshot});
   const pkg=await json(join(source,'package.json'));
   await mkdir(destination); // Exclusive: never replace a prior candidate.
