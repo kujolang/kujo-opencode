@@ -96,9 +96,9 @@ and browser dependencies. No sibling source or production payload is changed.
 
 ## Workflow journey
 
-`KUJO_TEST_JOURNEY=workflow` selects `kujo-workflow`. Its ten steps validate a
+`KUJO_TEST_JOURNEY=workflow` selects `kujo-workflow`. Its thirteen steps validate a
 bounded tool-only workflow, reject and cancel native execution without output,
-run and separately inspect completed/paused/failed cases, and reject an invalid
+run, discover and separately inspect completed/paused/failed cases, and reject an invalid
 workflow. Each run is unique; inspection reconciles the exact retained identifier
 without rerunning it. State bytes, step attempts and pending approvals must remain
 unchanged after inspection. Tool output-schema failure remains a failed workflow;
@@ -116,6 +116,19 @@ behavior false: denied steps only assert absence without invoking execution.
 A paused checkpoint is not completion. Human decision/resumption still uses the
 canonical Dispatch operator surface; this harness does not certify that path or
 an actual lost-response injection.
+
+`node tests/dispatch-lost-response-canonical.mjs` injects loss after the actual
+canonical operation returns, discards its result, discovers the run without its
+returned ID, and inspects it. Exactly one execution and one run must remain. It
+also deletes the owned fixture index and verifies canonical repair preserves run
+state. This proves adapter-result recovery, not native HTTP transport loss or a
+live model's recovery decision. It runs against current or explicitly selected
+pinned Dispatch and is part of the E2E gate.
+
+Discovery declares possible index writes, bounds inputs and pagination, and
+rejects traversal keys or symlinked state before calling the canonical CLI. It
+never resumes a workflow. Native Workflow journeys now request discovery before
+each exact-run inspection.
 
 ## Ship journey
 
@@ -138,7 +151,7 @@ specialist/native approvals false; rejected canonical steps only check absence.
 All six distinct harnesses now exist. None is certified as a complete live
 specialist journey. Run the actual selected agents with an authorized provider,
 verify final evidence-backed reports, and retain exact-candidate host identity.
-Workflow still needs actual lost-response injection and checkpoint decision/
+Workflow still needs native transport-loss injection and checkpoint decision/
 continuation acceptance, including failed decision handling. Native cancellation
 is specified by the runner but not established by canonical preflights. Required
 platform coverage, replacement candidate and retained release acceptance evidence

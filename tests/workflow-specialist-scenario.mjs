@@ -27,6 +27,7 @@ export async function* workflowScenario(project) {
    if(status==='paused'){assert.equal(state.approvals[0].decision,'pending');assert.equal(state.steps[2].attempts,0);assert.equal(state.data.after,undefined);}
    if(status==='failed')assert.ok(state.errors.length>0);
   }};
+  yield {ability:'kujo.dispatch.runs.list',tool:'kujo_dispatch_runs',input:{path,output_dir:output,limit:50,offset:0},decision:'once',beforeDecision:async()=>assert.equal(await readFile(statePath,'utf8'),stateBytes),after:async receipt=>{assert.equal(receipt.result.structured.filtered_total,1);assert.equal(receipt.result.structured.runs[0].run_id,runID);assert.equal(await readFile(statePath,'utf8'),stateBytes);}};
   // Reconciliation observes the retained run; it never repeats the workflow.
   yield {ability:'kujo.dispatch.run.inspect',tool:'kujo_dispatch_inspect',input:{path,output_dir:output,run_id:runID},decision:'once',beforeDecision:async()=>assert.equal(await readFile(statePath,'utf8'),stateBytes),after:async receipt=>{
    const result=receipt.result.structured;assert.equal(result.command,'inspect');assert.equal(result.ok,true);assert.equal(result.run_id,runID);assert.equal(result.summary.status,status);
