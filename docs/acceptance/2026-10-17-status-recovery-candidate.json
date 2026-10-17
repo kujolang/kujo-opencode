@@ -742,5 +742,162 @@
     "registration": "Each suite appears once in the explicit npm test list; removed indirect test imports",
     "historical_count_correction": "264 and 274 were passing test executions including duplicates, not distinct tests. The five suites described as omitted were already imported indirectly. Original distinct count was 229; five new controller cases bring it to 234.",
     "incomplete_disk_pressure_run": "/tmp/kujo-current-unit-gate.log"
+  },
+  "dispatch_transport_acceptance": [
+    {
+      "log": "/tmp/kujo-status-dispatch-transport-deepseek-retry.log",
+      "host": "opencode v2.0.32",
+      "platform": "darwin",
+      "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-QzenDQ",
+      "ok": true,
+      "evidence": {
+        "scope": "Native one-time approval HTTP reply lost; retained Dispatch run discovered and inspected without workflow retry",
+        "agent": "build",
+        "model": "opencode/deepseek-v4.1-flash-free",
+        "session_id": "ses_eb6f47906ffe4Txn1Vysgebqbr",
+        "transport": {
+          "forwarded_requests": 1,
+          "upstream_status": 204,
+          "upstream_response_consumed": true,
+          "client_response_lost": true
+        },
+        "reviewed_inputs": [
+          {
+            "ability": "kujo.dispatch.workflow.run",
+            "input": {
+              "path": "dispatch-transport",
+              "topic": "Recover the retained run after an approval reply is lost",
+              "workflow_file": "workflow.json",
+              "input_json": "{\"recovery_case\":\"lost-native-approval-reply\"}",
+              "output_dir": "runs"
+            }
+          },
+          {
+            "ability": "kujo.dispatch.runs.list",
+            "input": {
+              "path": "dispatch-transport",
+              "output_dir": "runs",
+              "limit": 50,
+              "offset": 0
+            }
+          },
+          {
+            "ability": "kujo.dispatch.run.inspect",
+            "input": {
+              "path": "dispatch-transport",
+              "output_dir": "runs",
+              "run_id": "run-1792226860237-8616"
+            }
+          }
+        ],
+        "run_id": "run-1792226860237-8616",
+        "receipt_ids": [
+          "receipt-3fb80dbc-3b86-456b-be95-10e4e1d9fdae",
+          "receipt-5ba5463e-7209-421a-a602-431298ff5657",
+          "receipt-9245c9da-6ad6-463c-b46a-e5f531b1130b"
+        ],
+        "workflow_executions": 1,
+        "canonical_state_unchanged_by_reconciliation": true
+      }
+    },
+    {
+      "log": "/tmp/kujo-status-dispatch-transport-minimum.log",
+      "host": "opencode v2.0.31",
+      "platform": "darwin",
+      "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-FRNFs3",
+      "ok": true,
+      "evidence": {
+        "scope": "Native one-time approval HTTP reply lost; retained Dispatch run discovered and inspected without workflow retry",
+        "agent": "build",
+        "model": "opencode/deepseek-v4.1-flash-free",
+        "session_id": "ses_eb6f203d4ffe5VlXwG2vzZWVkY",
+        "transport": {
+          "forwarded_requests": 1,
+          "upstream_status": 204,
+          "upstream_response_consumed": true,
+          "client_response_lost": true
+        },
+        "reviewed_inputs": [
+          {
+            "ability": "kujo.dispatch.workflow.run",
+            "input": {
+              "path": "dispatch-transport",
+              "topic": "Recover the retained run after an approval reply is lost",
+              "workflow_file": "workflow.json",
+              "input_json": "{\"recovery_case\":\"lost-native-approval-reply\"}",
+              "output_dir": "runs"
+            }
+          },
+          {
+            "ability": "kujo.dispatch.runs.list",
+            "input": {
+              "path": "dispatch-transport",
+              "output_dir": "runs",
+              "limit": 50,
+              "offset": 0
+            }
+          },
+          {
+            "ability": "kujo.dispatch.run.inspect",
+            "input": {
+              "path": "dispatch-transport",
+              "output_dir": "runs",
+              "run_id": "run-1792227037182-8657"
+            }
+          }
+        ],
+        "run_id": "run-1792227037182-8657",
+        "receipt_ids": [
+          "receipt-fbc55e1e-4233-49c8-8c5d-937133a15b24",
+          "receipt-461a10ef-7249-408b-a22f-ce7431c506a9",
+          "receipt-8c6fd07b-db2d-400c-bf1c-242f3b18f6aa"
+        ],
+        "workflow_executions": 1,
+        "canonical_state_unchanged_by_reconciliation": true
+      }
+    }
+  ],
+  "specialist_provider_diagnostic": {
+    "session_id": "ses_eb70d60f2ffeJB0e8CIjmXlbuZ",
+    "session_agent": "kujo-understand",
+    "session_model": {
+      "id": "glm-5.3-flash-free",
+      "providerID": "opencode",
+      "variant": "default"
+    },
+    "messages": [
+      {
+        "id": "msg_148f29fe20017A9oXZSrlZbVVi",
+        "agent": "kujo-understand",
+        "model": {
+          "id": "glm-5.3-flash-free",
+          "providerID": "opencode",
+          "variant": "default"
+        },
+        "keys": [
+          "id",
+          "time",
+          "type",
+          "agent",
+          "model",
+          "content",
+          "snapshot",
+          "finish",
+          "error"
+        ],
+        "error": {
+          "type": "provider.auth",
+          "status": 403,
+          "known_free_tier_origin_message": true,
+          "keys": [
+            "type",
+            "message",
+            "status",
+            "response"
+          ]
+        }
+      }
+    ],
+    "interpretation": "Correct requested GLM model and kujo-understand agent; free-tier origin rejection confirmed. Root cause and supported remedy remain unproven; do not weaken specialist restrictions."
   }
 }

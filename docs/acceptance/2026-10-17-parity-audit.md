@@ -15,7 +15,7 @@ host versions, fixture locations and the scope of each passing check.
 | Opt-in lifecycle and intervention | Complete native minimum-host run; latest-host telemetry/guard and cancellation are separate retained runs. Outage/reload, explicit retry, no discarded records, opt-out and cancellation checked. Rendered automatic completion/evidence browsing and separate finish approval pass on both hosts | Partial: other supported platforms remain; latest first combined run failed at the synthetic cancellation prompt and must remain labelled failed |
 | Six scoped specialist workflows | Scoped tools and scenario/runner/report regression suites exist and run in the 234-test standard gate (each suite registered once) | Incomplete: all six successful real specialist journeys and final reports are missing; ordinary Build runs do not substitute |
 | Canonical ecosystem coverage | Exact-package fresh gate verifies starters, source acquisition, Agents SDK, real browser and knowledge flows; rendered Leash and CMS gateway pass on both hosts | Partial: specialist/platform workflow proof remains |
-| Recovery | Fresh 0.1.0→0.2.0 upgrade retains the old project and verifies mixed versions; live telemetry recovery and lost HTTP RunLedger reply reconciliation pass | Partial: final-package cross-platform recovery and native Dispatch transport-loss reconciliation remain unverified |
+| Recovery | Fresh 0.1.0→0.2.0 upgrade retains the old project and verifies mixed versions; live telemetry recovery and lost HTTP RunLedger reply reconciliation pass; native Dispatch lost approval acknowledgement recovery passes on both macOS hosts without rerunning the workflow | Partial: final-package cross-platform recovery remains unverified; Dispatch evidence covers a lost native approval HTTP acknowledgement, not arbitrary provider response loss |
 | Package/host/platform compatibility | Immutable package verified; minimum/latest macOS native and rendered evidence retained | Incomplete: Linux and Windows matrix has not executed; macOS cannot establish those results |
 | Public release and registry consumption | Candidate contains checksums, SBOM and unsigned build record; local tarball installation verified | Incomplete: no successful protected release, public package/tag/release/provenance or registry-consumer installation/upgrade |
 
@@ -25,9 +25,10 @@ The latest recorded GitHub run `39015426601` executed no job steps. Annotation
 `117346447494` reports failed account payments or a spending-limit restriction.
 `npm whoami` returned E401. The repository remains private and its release
 environment list is empty. These are dated observations, not permanent claims.
-An authorized, entitled provider is still needed for scoped specialist acceptance
-after the recorded free-provider HTTP 403 failures, including the current-package
-Understand attempt on OpenCode 2.0.32. Do not change identity or use
+Scoped specialist acceptance still needs a working supported provider path. The
+current-package Understand attempt on OpenCode 2.0.32 used the correct requested
+GLM model and returned the free-tier origin rejection. This does not establish
+missing credentials or entitlement as the cause; root cause remains unproven. Do not change identity or use
 a paid fallback to manufacture a pass.
 
 Account prerequisites do not prevent finishing remaining local package checks.
