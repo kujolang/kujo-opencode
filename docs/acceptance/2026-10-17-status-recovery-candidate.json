@@ -65,6 +65,112 @@
     },
     "diagnostic": "/tmp/kujo-candidate-cancel-diagnostic.json",
     "diagnosis": "Retained assistant response explicitly declined synthetic sentinel-framed directive and requested confirmation.",
-    "correction": "Natural request with cancellation purpose and harmless privacy canary; same exact input approval, absent-effect and metadata assertions."
+    "correction": "Natural request with cancellation purpose and harmless privacy canary; same exact input approval, absent-effect and metadata assertions.",
+    "failure_guard": {
+      "session_id": "ses_eb722ee2dffecgvwqFUe0Se2PI",
+      "model": "opencode/glm-5.3-flash-free",
+      "agent": "build",
+      "interventions": 1,
+      "notification": true,
+      "telemetry_enabled": false,
+      "failed_receipts": [
+        "receipt-736169ce-f6ee-42c5-8926-115b0b170c13",
+        "receipt-158aadbb-57e7-4e4b-b5be-7fb0db3b7a6d",
+        "receipt-f248e7fd-1593-43a8-a1b7-c8002fb06592"
+      ],
+      "approval_granted": false
+    }
+  },
+  "fresh": {
+    "ok": true,
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-opencode-packed-j1N3yt",
+    "tarball": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-opencode-packed-j1N3yt/kujolang-kujo-opencode-0.2.0.tgz",
+    "registry_consumer": false,
+    "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+    "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+    "candidate_integrity": "sha512-2XDK3zMkBKARZ62PEsJZ7y0Jvh481yXytyWyPDbWx3d7CKSwZ+uUFrzY48z1x+GduEulnoYmU58CiFs16fXISw==",
+    "upgrade": "0.1.0 -> 0.2.0",
+    "old_project_retained": true,
+    "mixed_version_verified": true,
+    "fresh_sources": 28,
+    "packed_mcp_tools": 10,
+    "starter_kinds": [
+      "script",
+      "agent",
+      "api",
+      "mcp"
+    ],
+    "starter_services_verified": true,
+    "agent_fixture_verified": true,
+    "session_runledger_verified": true,
+    "browser_launch_verified": true,
+    "browser_check_verified": true,
+    "knowledge_verified": true,
+    "fixture_workdirs_retained": false
+  },
+  "latest_cancellation_rerun": {
+    "ok": true,
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-0MZTgl",
+    "host": "opencode v2.0.32",
+    "platform": "darwin",
+    "arch": "x64",
+    "pinned_sources": true,
+    "rendered_tui": false,
+    "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+    "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+    "candidate_integrity": "sha512-2XDK3zMkBKARZ62PEsJZ7y0Jvh481yXytyWyPDbWx3d7CKSwZ+uUFrzY48z1x+GduEulnoYmU58CiFs16fXISw==",
+    "live": {
+      "read_receipt": "receipt-86ae1751-b19a-423e-b329-0cf5541db93a",
+      "denied_without_write": true,
+      "write_receipt": "receipt-265a7ff0-0214-4a7e-8775-f772e434fc41"
+    },
+    "specialistJourney": null,
+    "failureGuard": null,
+    "cancellation": {
+      "watchdog": {
+        "source_commit": "9e82e8f5b05edca948f6a432ae517031388296e6",
+        "source_clean": true,
+        "runtime_sha256": "cc811ce04910d68f6703f8717eb6dc4fcd05666a29f738dee88bf57d52f852c2"
+      },
+      "session_id": "ses_eb71c5bd8ffeYMTPwqNNB2FOvb",
+      "model": "opencode/glm-5.3-flash-free",
+      "agent": "build",
+      "permission_requested": true,
+      "approval_granted": false,
+      "effect_absent": true,
+      "remaining_permissions": 0,
+      "cancellation_records": 1,
+      "receipt_ids": [
+        "receipt-0227a05b-0633-4508-8350-0a8e5449e43b"
+      ],
+      "metadata_only": true
+    },
+    "telemetry": null,
+    "commands": [
+      "kujo-status",
+      "kujo-evidence",
+      "kujo-profile",
+      "kujo-doctor",
+      "kujo-review"
+    ],
+    "native_status_recorded": true,
+    "native_evidence_recorded": true,
+    "native_profile_permission": true,
+    "native_capability_permissions": true,
+    "native_lifecycle_permissions": true,
+    "native_session_runledger": true,
+    "nativeTransportRecovery": {
+      "forwarded_requests": 1,
+      "upstream_status": 200,
+      "upstream_response_consumed": true,
+      "client_response_lost": true,
+      "scope": "session RunLedger start; no inference or Dispatch transport claim",
+      "run_id": "2026-10-17-glm-5-3-flash-free-opencode-session-ses-eb71cfd22ffee1bbvgoixnkxyf-001"
+    },
+    "native_browser_readiness": true,
+    "native_knowledge_verified": true,
+    "native_automatic_tracking": true,
+    "browser_ready": false,
+    "model_call": true
   }
 }
