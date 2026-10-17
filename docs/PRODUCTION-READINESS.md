@@ -1187,3 +1187,34 @@ actual large receipt browsing: evidence dialogs still pass full JSON to fixed
 alerts. Remaining lifecycle/recovery, supported host/OS and public release gates
 stay open. The service-support documentation update following this record changes
 packaged documentation; the executable payload remains the certified9044492 bytes.
+
+
+## Searchable native receipt evidence (2026-10-16)
+
+29792fc replaces fixed/truncated receipt alerts with complete retained-value pages,
+first/last navigation and text search. History separates a readable outcome summary
+from input/provenance, result and current artifact previews. The summary explicitly
+says a tool outcome is not a whole-task verdict. Completion review uses the same
+paged viewer. Navigation/unload invalidate owned viewers and late receipt responses.
+Server-side retention and artifact bounds remain unchanged; these are current
+artifact previews, not immutable historical artifact snapshots.
+
+171 offline tests, canonical E2E and isolated OpenCode2.0.31 discovery passed.
+Tests reconstruct a result longer than18,000 characters and find its tail; completion
+review has the same search and stale-response coverage. Logs:
+/tmp/kujo-evidence-all-final.log, /tmp/kujo-evidence-e2e-final.log and
+/tmp/kujo-evidence-host-final.log. Final host discovery used refreshed fixturef9t8kuv6.
+
+Actual80x24 terminal fixtureirmj6ila passed native CMS rejection/once-approved
+mutation, history summary and last-page caveat, then searched the retained result
+and displayed the approved title on page7/8. verification.json, gateway-delivery-
+evidence.json and gateway-outcome/result snapshots remain beneath
+/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-irmj6ila.
+Log:/tmp/kujo-evidence-rendered-retry.log. Earlier fixturef9t8kuv6 failed because
+the caveat split across pages; the retry keeps it together. The rendered run
+covers history browsing; the subsequent completion-review path changes have
+unit/E2E/host checks, not a separate rendered completion acceptance yet.
+
+This changes executable package bytes and supersedes the earlier raw-history-alert
+gap. It does not certify a final packed candidate, complete the supportedOS/host
+matrix, resolve scoped-provider failures or close the seven original gates.

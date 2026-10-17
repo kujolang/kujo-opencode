@@ -16,6 +16,7 @@ import json
 import os
 from pathlib import Path
 import pty
+import re
 import select
 import signal
 import struct
@@ -337,6 +338,35 @@ try:
             evidence={'receipt':delivered[0],'events':events}
         (root/(service+'-delivery-evidence.json')).write_text(json.dumps(evidence,indent=2))
         (root/(service+'-delivered.txt')).write_text(current())
+        menu()
+        choose('Evidence history', 'Kujo evidence scope', service+'-evidence-scope')
+        choose('This session', 'Kujo evidence · session', service+'-evidence-list')
+        choose('succeeded', 'Receipt details', service+'-receipt-details')
+        choose('Outcome summary', 'Recorded outcome · 1/', service+'-outcome-summary')
+        wait('Outcome: succeeded', service+'-outcome-summary')
+        wait('Approval: Recorded', service+'-outcome-summary')
+        send('\x1b')
+        wait('Recorded outcome pages', service+'-outcome-pages')
+        choose('Last page', 'Recorded outcome ·', service+'-outcome-last')
+        wait('not a verdict', service+'-outcome-last')
+        send('\x1b')
+        wait('Recorded outcome pages', service+'-outcome-pages')
+        choose('Close preview', 'commands', service+'-outcome-closed')
+        menu()
+        choose('Evidence history', 'Kujo evidence scope', service+'-result-scope')
+        choose('This session', 'Kujo evidence · session', service+'-result-list')
+        choose('succeeded', 'Receipt details', service+'-result-details')
+        choose('Recorded result', 'Recorded result · 1/', service+'-result-first')
+        send('\x1b')
+        wait('Recorded result pages', service+'-result-pages')
+        choose('Find text', 'Find text in this record', service+'-result-search')
+        send('Rendered gateway approved' if gateway else 'awaiting_decision')
+        send('\r')
+        wait('Recorded result ·', service+'-result-found')
+        page=re.search(r'Recorded result · (\d+)/(\d+)',current())
+        assert page, 'Search should return to a numbered result page'
+        if gateway:
+            assert int(page.group(1))>1, 'Search should reveal retained result beyond the first page'
     result = dict(ok=True, host=version, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=args.automatic or args.leash or args.gateway, effects_approved=args.ledger or args.automatic or args.leash or args.gateway, rendered_ledger=args.ledger, rendered_automatic_completion=args.automatic, live_ship_specialist=args.ship, rendered_leash=args.leash, rendered_gateway=args.gateway)
     (root/'verification.json').write_text(json.dumps(result, indent=2)+'\n')
     print(json.dumps(result))
