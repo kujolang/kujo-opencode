@@ -115,7 +115,7 @@ try {
  await lifecycleChange('enable','once');
  await lifecycleChange('retry','once');
  const trackingCapabilities=(await api('/api/rpc/kujo.control/status',{input:{}})).output.capabilities;
- if(!['kujo.runledger.runs.start','kujo.runledger.runs.finish'].every(id=>trackingCapabilities.find(item=>item.id===id).active))await assert.rejects(api('/api/rpc/kujo.control/lifecycle',{input:{sessionID:session.id,action:'enable_tracking'}}),/Ship or Full/);
+ if(!['kujo.runledger.runs.start','kujo.runledger.runs.finish'].every(id=>trackingCapabilities.find(item=>item.id===id).active))assert.equal((await api('/api/rpc/kujo.control/lifecycle',{input:{sessionID:session.id,action:'enable_tracking'}})).output.code,'tracking_capabilities_missing');
  for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish']){if(!trackingCapabilities.find(item=>item.id===id).active){ability=id;await capabilityChange('enabled','once');}}
  await lifecycleChange('enable_tracking','reject');
  await lifecycleChange('enable_tracking','once');
