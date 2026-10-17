@@ -63,9 +63,9 @@ kujo-opencode abilities
 | --- | ---: | --- |
 | `essentials` | 5 | Understand a repository and its changes |
 | `review` | 18 | Check architecture, contracts, context, and change footprint |
-| `ship` | 29 | Run verification and retain release evidence |
+| `ship` | 30 | Run verification and retain release evidence |
 | `build` | 17 | Inspect source and run reviewed source/test snapshots |
-| `full` | 53 | Add orchestration, RAG, and optional service tools |
+| `full` | 54 | Add orchestration, RAG, and optional service tools |
 
 `enable` and `disable` accept a product name, a tool name, or the canonical Ability
 ID. Product names select all of that product's supported operations. Canonical
@@ -422,3 +422,21 @@ Failed builds preserve the previous index. After an interrupted installer has
 stopped, choose **Recover interrupted indexing**, approve recovery, then check
 freshness. Recovery never takes over a live owner. Keep retained evidence after
 an uncertain response before deciding whether to rebuild.
+
+### Session evidence correlation
+
+In `/kujo` → Session RunLedger, choose **Link this session’s Watchdog trace**
+after starting a record. Approve the exact link; it records only the stable trace
+identifier in canonical RunLedger. It does not enable telemetry, start a service,
+or change your verdict. Repeating an already recorded link is read-only. A
+different existing trace requires inspection rather than silent replacement.
+
+When lifecycle delivery is separately enabled, events automatically include the
+run ID only when canonical RunLedger confirms the matching trace. Inspection is
+cached for at most five seconds across up to128 sessions; native ledger changes
+invalidate that session’s cache immediately. Missing, corrupt or unavailable
+records leave events unlinked. Read attempts are bounded and no record contents
+are sent. Session idle still means an unknown outcome, not a passing run.
+
+Automatic RunLedger creation/finalization is not yet implemented. Session start,
+linking and human-selected finish remain separate approved operations.

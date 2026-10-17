@@ -26,7 +26,7 @@
     "description": "Verification and durable run evidence for release work.",
     "default": false,
     "extends": ["kujo.profile.review"],
-    "ability_ids": ["kujo.eval.suite.run", "kujo.runledger.runs.report", "kujo.runledger.runs.start", "kujo.runledger.runs.finish", "kujo.casefile.failure.capture", "kujo.watchdog.telemetry.record", "kujo.redact.document.scan", "kujo.redact.document.sanitize", "kujo.tribunal.review.mock", "kujo.howl.showcase.render", "kujo.lens.page.check"],
+    "ability_ids": ["kujo.eval.suite.run", "kujo.runledger.runs.report", "kujo.runledger.runs.start", "kujo.runledger.runs.finish", "kujo.opencode.runledger.correlate", "kujo.casefile.failure.capture", "kujo.watchdog.telemetry.record", "kujo.redact.document.scan", "kujo.redact.document.sanitize", "kujo.tribunal.review.mock", "kujo.howl.showcase.render", "kujo.lens.page.check"],
     "metadata": { "label": "Ship", "risk": "execute" }
   },
   {

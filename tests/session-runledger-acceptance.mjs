@@ -16,8 +16,10 @@ export async function verifySessionLedger({project,packageRoot,home}){
   // Simulate a caller losing the returned receipt: a fresh app/runtime reads
   // the canonical session record and never starts a duplicate attempt.
   const replay=await manageSessionLedger({...options,action:'start'});assert.equal(replay.run_id,started.run_id);assert.equal(requests,2);
+  approve=false;await assert.rejects(manageSessionLedger({...options,action:'correlate'}),/human rejected/);approve=true;const linked=await manageSessionLedger({...options,action:'correlate'});assert.match(linked.record.correlation.watchdog_trace_id,/^[a-f0-9]{32}$/);assert.equal(linked.state,'in_progress');const requestCount=requests;await manageSessionLedger({...options,action:'correlate'});assert.equal(requests,requestCount);
+  const {SessionCorrelation}=await import(pathToFileURL(join(packageRoot,'lib/session-correlation.mjs')));const correlation=new SessionCorrelation({project,openApp:createApp});assert.equal(await correlation.resolve(sessionID),started.run_id);
   approve=false;await assert.rejects(manageSessionLedger({...options,action:'finish',status:'partial'}),/human rejected/);assert.equal((await manageSessionLedger({...options,action:'status'})).state,'in_progress');
-  approve=true;const finished=await manageSessionLedger({...options,action:'finish',status:'partial'});assert.equal(finished.state,'partial');assert.match(finished.record.verdict,/Human selected partial/);assert.equal(finished.record.model,'offline');assert.equal(requests,4);
+  approve=true;const finished=await manageSessionLedger({...options,action:'finish',status:'partial'});assert.equal(finished.state,'partial');assert.match(finished.record.verdict,/Human selected partial/);assert.equal(finished.record.model,'offline');assert.equal(requests,6);
   return {run_id:finished.run_id,receipt_id:finished.receipt_id};
  });
 }

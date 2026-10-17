@@ -53,3 +53,10 @@ test('guard-only mode has no telemetry and does not wait for interruption inside
  for(const id of ['a','b','c'])await f.hooks.get('tool.execute.after')({sessionID:'local',tool:'fixture',id,status:'error'});
  for(let i=0;i<20&&!pauses;i++)await delay(1);assert.equal(pauses,1);assert.equal(f.records.length,0);release();await bridge.close();
 });
+
+test('enabled telemetry includes verified run identity, while failed lookup preserves the event',async()=>{
+ const f=fixture();let calls=0;const bridge=await startLifecycle({...f.options,config:{enabled:true},resolveRun:async()=>{calls++;return 'verified-run';}});
+ await f.hooks.get('tool.execute.before')({sessionID:'local',tool:'fixture',id:'one'});assert.ok(f.records.some(r=>r.callID==='one'&&r.runID==='verified-run'));assert.ok(calls>0);await bridge.close();
+ const g=fixture();const failed=await startLifecycle({...g.options,config:{enabled:true},resolveRun:async()=>{throw Error('private');}});await g.hooks.get('tool.execute.before')({sessionID:'local',tool:'fixture',id:'two'});assert.ok(g.records.some(r=>r.callID==='two'&&r.runID===undefined));await failed.close();
+ const h=fixture();const quiet=await startLifecycle({...h.options,resolveRun:async()=>{throw Error('must not inspect');}});assert.equal(h.hooks.size,0);await quiet.close();
+});

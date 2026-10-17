@@ -82,9 +82,9 @@ assert.match((await command(process.execPath,['--input-type=module','-e',starter
 await verifyStarterServers(fresh,installed.kujo_bin);
 await verifyAgentStarter(fresh,installed.kujo_bin,installed.sources.kennel.path);
 await verifyLifecycleDelivery(installed.kujo_bin,installed.sources.watchdog.path);
-for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish'])await call(['enable',id],fresh);
+for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish','kujo.opencode.runledger.correlate'])await call(['enable',id],fresh);
 await verifySessionLedger({project:fresh,packageRoot:installed.projection_root,home:freshHome});
-for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish'])await call(['disable',id],fresh);
+for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish','kujo.opencode.runledger.correlate'])await call(['disable',id],fresh);
 // Execute the managed offline knowledge workflow from installed package bytes.
 for(const operation of ['preview','index','status','query','recover'])await call(['enable',`kujo.opencode.knowledge.${operation}`],fresh);
 await mkdir(join(fresh,'knowledge-docs'),{recursive:true});await writeFile(join(fresh,'knowledge-docs/guide.md'),'# Modules\nKujo modules organize reusable functions using explicit imports.\n');

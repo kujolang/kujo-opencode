@@ -157,7 +157,7 @@ try {
  const hostConfig=JSON.parse(await readFile(join(project,'.opencode/opencode.json'),'utf8'));
  assert.match(hostConfig.mcp.servers.kujo.command[0],/(?:^|[/\\])node(?:\.exe)?$/i,'native projection must retain a Node interpreter');
  // Session RunLedger uses canonical records and exact native Ability grants.
- for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish']){
+ for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish','kujo.opencode.runledger.correlate']){
   const state=(await api('/api/rpc/kujo.control/status',{input:{}})).output;
   if(!state.capabilities.find(item=>item.id===id).active){ability=id;inherited=false;await capabilityChange('enabled','once');}
  }
@@ -171,7 +171,7 @@ try {
   assert.ok(permission,'session ledger mutation requires approval');assert.deepEqual(permission.save,[]);
   assert.equal((await ledgerStatus()).output.state,action==='start'?'not_started':'in_progress');
   await api(`/api/session/${ledgerSession.id}/permission/${permission.id}/reply`,{decision});
-  const result=await outcome;if(decision==='reject')assert.ok(result.error);else{if(result.error)throw result.error;assert.equal(result.value.output.state,action==='start'?'in_progress':status);assert.ok(result.value.output.receipt_id);}
+  const result=await outcome;if(decision==='reject')assert.ok(result.error);else{if(result.error)throw result.error;assert.equal(result.value.output.state,action==='finish'?status:'in_progress');assert.ok(result.value.output.receipt_id);}
  }
  await sessionLedgerChange('start','reject');
  assert.equal((await ledgerStatus()).output.state,'not_started');
@@ -180,6 +180,9 @@ try {
  const repeated=(await api('/api/rpc/kujo.control/runledger',{input:{sessionID:ledgerSession.id,action:'start'}})).output;
  assert.equal(repeated.run_id,beforeRepeat.run_id);
  assert.equal((await api(`/api/session/${ledgerSession.id}/permission`)).data.length,0);
+ await sessionLedgerChange('correlate','reject');
+ await sessionLedgerChange('correlate','once');
+ assert.match((await ledgerStatus()).output.record.correlation.watchdog_trace_id,/^[a-f0-9]{32}$/);
  await sessionLedgerChange('finish','once','partial');
  const finished=(await ledgerStatus()).output;assert.equal(finished.record.status,'partial');assert.equal(finished.record.prompt_file,null);
  assert.ok((await api(`/api/session/${ledgerSession.id}/message?limit=100`)).data.every(message=>message.type!=='assistant'));

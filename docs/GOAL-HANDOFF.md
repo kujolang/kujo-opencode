@@ -515,3 +515,22 @@ and failed harness attempts above.114 offline tests and native wVQuk0 remain the
 local evidence; six real specialist tasks and full host/OS/public release gates
 are still open. Next implementation: optional automatic RunLedger lifecycle and
 correlation, followed by remaining recovery/acceptance. Preserve the full goal.
+
+## RunLedger/Watchdog correlation checkpoint (2026-10-16)
+
+Session ledger correlate action and host-owned canonical correlate Ability now
+write the stable lifecycle trace after fresh human approval. Existing matching
+links reconcile without writing; mismatches refuse replacement. SessionCorrelation
+resolves canonical matching run IDs (128-entry/5second identifier cache,1.5second
+lookup signal), and enabled lifecycle events include those IDs as run references.
+Native ledger changes invalidate cache. Telemetry remains opt-in; no body/record
+contents are sent; idle never implies success. Ship30/Full54/Build17.
+
+119 offline tests and native xPvZMx pass. E2E fixed old29-tool assertion and is
+running in /tmp/kujo-correlation-e2e-final.log handle48644. PackedTOmi4m is running
+in /tmp/kujo-correlation-fresh.log handle2542. Verify terminal outcomes before
+claiming acceptance. Standalone canonical Watchdog run-reference/dedup test is
+also running. Current pass completes correlation, not automatic creation/finalizing.
+Next: opt-in automatic session start requests and human-verdict finish lifecycle,
+remaining recovery, six real specialists, full host/OS matrix and public release.
+All seven broad outcomes remain open. No new SignalBox finding is warranted.

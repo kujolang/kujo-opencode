@@ -16,11 +16,11 @@ export async function verifyLifecycleDelivery(binary,source){
   let ready=false;for(let i=0;i<100;i++){if(terminal)throw Error(JSON.stringify(terminal));try{if((await fetch(endpoint+'/readyz',{signal:AbortSignal.timeout(500)})).ok){ready=true;break;}}catch{}await delay(100);}assert.equal(ready,true,'Watchdog readiness');
   let now=Date.now();const opts={home:join(root,'home'),project:root,enabled:true,url:endpoint,token:()=>token,now:()=>now,version:'acceptance'};
   const one=new LifecycleOutbox({...opts,fetchImpl:async(url,options)=>{const response=await fetch(url,options);const body=await response.json();assert.equal(response.status,200,JSON.stringify(body));throw Error('Simulated acknowledgement loss');}});
-  const raw={phase:'tool.completed',sessionID:'ses_lifecycle',agent:'kujo-build',callID:'call_lifecycle',tool:'kujo_starter_create',provider:'fixture',model:'offline',input:'PRIVATE_CONTENT',output:'PRIVATE_CONTENT',headers:{Authorization:'PRIVATE_CREDENTIAL'}};
+  const raw={phase:'tool.completed',sessionID:'ses_lifecycle',runID:'run_lifecycle',agent:'kujo-build',callID:'call_lifecycle',tool:'kujo_starter_create',provider:'fixture',model:'offline',input:'PRIVATE_CONTENT',output:'PRIVATE_CONTENT',headers:{Authorization:'PRIVATE_CREDENTIAL'}};
   await one.capture(raw);assert.equal((await one.flush()).sent,false);await one.close();now+=2000;
   const two=new LifecycleOutbox(opts);assert.equal((await two.flush()).sent,true);await two.close();
   const response=await fetch(endpoint+'/api/telemetry/v2/records?producer=kujo-opencode',{headers,signal:AbortSignal.timeout(3000)});const body=await response.json();assert.equal(response.status,200,JSON.stringify(body));const records=body.data.records;assert.equal(records.length,1,'Retry must deduplicate at canonical Watchdog');
-  assert.deepEqual(records[0].record.content,[]);assert.ok(records[0].record.references.some(ref=>ref.type==='tool_call'&&ref.id==='call_lifecycle'));assert.doesNotMatch(JSON.stringify(body),/PRIVATE_CONTENT|PRIVATE_CREDENTIAL/);assert.doesNotMatch(await readFile(join(two.root,'queue.json'),'utf8'),/PRIVATE_CONTENT|PRIVATE_CREDENTIAL|lifecycle-fixture-token/);
+  assert.deepEqual(records[0].record.content,[]);assert.ok(records[0].record.references.some(ref=>ref.type==='run'&&ref.id==='run_lifecycle'));assert.ok(records[0].record.references.some(ref=>ref.type==='tool_call'&&ref.id==='call_lifecycle'));assert.doesNotMatch(JSON.stringify(body),/PRIVATE_CONTENT|PRIVATE_CREDENTIAL/);assert.doesNotMatch(await readFile(join(two.root,'queue.json'),'utf8'),/PRIVATE_CONTENT|PRIVATE_CREDENTIAL|lifecycle-fixture-token/);
   return {root,canonical_records:records.length,duplicate_suppressed:true};
  }finally{controller.abort();await running;}
 }

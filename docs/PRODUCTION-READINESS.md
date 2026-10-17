@@ -758,3 +758,23 @@ and failed harness attempts above.114 offline tests and native wVQuk0 remain the
 local evidence; six real specialist tasks and full host/OS/public release gates
 are still open. Next implementation: optional automatic RunLedger lifecycle and
 correlation, followed by remaining recovery/acceptance. Preserve the full goal.
+
+## Session evidence correlation checkpoint (2026-10-16)
+
+Session RunLedger now exposes an explicit approved link to the stable Watchdog
+trace. Canonical RunLedger owns correlation persistence; repeated matching links
+reconcile read-only, while a different existing link is refused. Linking neither
+enables telemetry nor changes the run verdict. Ship30/Full54/Build17.
+
+Enabled lifecycle delivery automatically adds a run reference only after canonical
+RunLedger confirms that exact trace. A bounded identifier cache holds up to128
+sessions for5seconds; native ledger actions invalidate it immediately. Canonical
+lookup has a1.5second cancellation signal; unavailable records leave events
+unlinked. Metadata projection strips all other fields, and idle remains unknown.
+The observer does not create, mutate or finalize records. Automatic session start
+and human-verdict finalization are still outstanding original-goal work.
+
+119 offline tests and real OpenCode2.0.31 native xPvZMx passed approval rejection,
+linking and canonical inspection. Canonical E2E initially stopped on the old
+Ship29 assertion; corrected to30 with the new tool name checked. Final E2E,
+canonical Watchdog run-reference acceptance and packedTOmi4m are pending below.
