@@ -1,0 +1,85 @@
+[
+  {
+    "definition": {
+      "schema": "kujo.ability/v1",
+      "id": "kujo.opencode.leash.status",
+      "version": "1.0.0",
+      "title": "Inspect Leash configuration",
+      "description": "Inspect local Leash opt-in configuration without a network call.",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "effects": [
+        {
+          "kind": "read",
+          "resource": "kujo.leash.configuration"
+        }
+      ],
+      "idempotency": {
+        "mode": "intrinsic"
+      }
+    },
+    "tool": {
+      "name": "kujo_leash_status",
+      "description": "Inspect local Leash opt-in configuration without a network call."
+    },
+    "adapter": "leash_status",
+    "source": "leash"
+  },
+  {
+    "definition": {
+      "schema": "kujo.ability/v1",
+      "id": "kujo.opencode.leash.deliver",
+      "version": "1.0.0",
+      "title": "Submit a Leash intervention",
+      "description": "Send one reviewed canonical intervention event to the configured Leash service. Does not grant native permissions or observe a human decision.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "origin": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "Exact configured service origin from kujo_leash_status; bound to this approval."
+          },
+          "event": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Canonical Leash legacy event or kujo.intervention-request/v2 object, validated by Leash."
+          }
+        },
+        "required": [
+          "origin",
+          "event"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "effects": [
+        {
+          "kind": "external",
+          "resource": "kujo.leash.interventions"
+        }
+      ],
+      "idempotency": {
+        "mode": "keyed"
+      }
+    },
+    "tool": {
+      "name": "kujo_leash_deliver",
+      "description": "Send one reviewed canonical intervention event to the configured Leash service. Does not grant native permissions or observe a human decision."
+    },
+    "adapter": "leash_deliver",
+    "source": "leash"
+  }
+]

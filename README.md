@@ -65,7 +65,7 @@ kujo-opencode abilities
 | `review` | 18 | Check architecture, contracts, context, and change footprint |
 | `ship` | 30 | Run verification and retain release evidence |
 | `build` | 17 | Inspect source and run reviewed source/test snapshots |
-| `full` | 54 | Add orchestration, RAG, and optional service tools |
+| `full` | 56 | Add orchestration, RAG, and optional service tools |
 
 `enable` and `disable` accept a product name, a tool name, or the canonical Ability
 ID. Product names select all of that product's supported operations. Canonical
@@ -480,3 +480,29 @@ RunLedger start records the model currently selected in the OpenCode prompt,
 without calling it. If no model is selected, choose one before starting tracking.
 The native result shows a compact status summary; **Record location** identifies
 the canonical JSON file, and **Evidence history** exposes operation receipts.
+
+
+### Leash intervention delivery
+
+Select **Full**, or enable the two Leash capabilities under `/kujo` → Capabilities
+(`kujo-opencode enable leash` also enables both). Start and configure your canonical
+Leash service separately. In the environment that launches OpenCode, set
+`KUJO_LEASH_URL` to its origin and `KUJO_LEASH_TOKEN` to a registered-device JWT.
+Leash's bootstrap token only registers devices; it cannot submit interventions.
+Remote services require HTTPS; local loopback HTTP is supported. Optional
+`KUJO_LEASH_AUDIENCE` is sent as `x-kujo-audience`. Tokens are never stored in the
+project configuration or returned by these tools.
+
+`kujo_leash_status` inspects configuration without contacting the service. Ask the
+Workflow specialist to submit a canonical Leash intervention event with
+`kujo_leash_deliver`, using the exact origin reported by status. Review the event
+and destination in the native approval dialog: Leash may route it to configured
+notification providers. Delivery requires separate one-time approval even with
+Full selected. Changing the configured origin requires a new approved request.
+
+The receipt distinguishes `awaiting_decision`, `delivered`, `partially_delivered`,
+`delivery_failed` and `duplicate`. None means a human approved the action or that
+OpenCode permissions changed. The adapter does not poll for decisions, resume
+workflows, register devices, start Leash or automatically retry submissions. If
+a response is lost, inspect the stable request/event ID in Leash before retrying.
+Keep that ID when reconciling; a new ID could create another intervention.
