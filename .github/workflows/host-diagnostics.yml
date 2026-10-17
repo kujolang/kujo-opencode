@@ -35,15 +35,17 @@ jobs:
           CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
           EXPECTED_SHA256: ${{ inputs.candidate_sha256 }}
         run: |
-          npm exec -- node --input-type=module <<'JS'
-          import assert from 'node:assert/strict';import {execFileSync} from 'node:child_process';import {verifyCandidate} from './scripts/release-candidate.mjs';
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';import {execFileSync} from 'node:child_process';import {readFileSync} from 'node:fs';
           const id=process.env.CANDIDATE_RUN_ID;assert.match(id,/^[1-9][0-9]*$/);assert.match(process.env.EXPECTED_SHA256,/^[a-f0-9]{64}$/);
           const repo='kujolang/kujo-opencode';assert.equal(process.env.GITHUB_REPOSITORY,repo);
           const run=JSON.parse(execFileSync('gh',['api',`repos/${repo}/actions/runs/${id}`],{encoding:'utf8'}));
           assert.equal(run.path,'.github/workflows/release-candidate.yml');assert.equal(run.event,'workflow_dispatch');assert.equal(run.conclusion,'success');assert.equal(run.repository.full_name,repo);
           execFileSync('gh',['run','download',id,'--repo',repo,'--name','kujo-candidate-'+run.head_sha,'--dir',process.env.RUNNER_TEMP+'/candidate'],{stdio:'inherit'});
-          const candidate=await verifyCandidate(process.env.RUNNER_TEMP+'/candidate');assert.equal(candidate.commit,run.head_sha);assert.equal(candidate.sha256,process.env.EXPECTED_SHA256);
-          console.log(JSON.stringify({candidate_commit:candidate.commit,sha256:candidate.sha256,harness_commit:process.env.GITHUB_SHA,diagnostic_only:true}));
+          const directory=process.env.RUNNER_TEMP+'/candidate';
+          execFileSync(process.platform==='win32'?'npm.cmd':'npm',['run','release:verify','--',directory],{stdio:'inherit',shell:process.platform==='win32'});
+          const candidate=JSON.parse(readFileSync(directory+'/candidate.json','utf8'));assert.equal(candidate.commit,run.head_sha);assert.equal(candidate.files[candidate.archive],process.env.EXPECTED_SHA256);
+          console.log(JSON.stringify({candidate_commit:candidate.commit,sha256:candidate.files[candidate.archive],harness_commit:process.env.GITHUB_SHA,diagnostic_only:true}));
           JS
       - name: Install the official host
         id: host

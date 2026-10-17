@@ -224,7 +224,7 @@ try {
   let permission;for(let i=0;i<50;i++){permission=(await api(`/api/session/${ledgerSession.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(permission||settled)break;await delay(100);}
   if(!permission&&settled?.error)throw settled.error;
 
-  assert.ok(permission,'session ledger mutation requires approval');assert.deepEqual(permission.save,[]);
+  assert.ok(permission,`session ledger mutation requires approval; response=${JSON.stringify(settled?.value ?? null)}; session=${JSON.stringify((await api(`/api/session/${ledgerSession.id}`)).data.model ?? null)}`);assert.deepEqual(permission.save,[]);
   assert.equal((await ledgerStatus()).output.state,action==='start'?'not_started':'in_progress');
   await api(`/api/session/${ledgerSession.id}/permission/${permission.id}/reply`,{decision});
   const result=await outcome;if(decision==='reject')assert.ok(result.error);else{if(result.error)throw result.error;assert.equal(result.value.output.state,action==='finish'?status:'in_progress');assert.ok(result.value.output.receipt_id);}
