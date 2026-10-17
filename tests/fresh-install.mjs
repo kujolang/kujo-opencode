@@ -11,18 +11,22 @@ import {verifyStarterServers} from './starter-runtime-acceptance.mjs';
 import assert from 'node:assert/strict';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
-import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises';
+import {mkdtemp,mkdir,writeFile,readFile,rm,appendFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 const exec=promisify(execFile);
 const repo=resolve('.');
 const root=await mkdtemp(join(tmpdir(),'kujo-opencode-packed-'));
+if(process.env.GITHUB_OUTPUT)await appendFile(process.env.GITHUB_OUTPUT,`fixture=${root}\n`);
 const home=join(root,'home'), prefix=join(root,'prefix'), project=join(root,'project'), older=join(root,'older-project');
 for (const dir of [home,prefix,project,older]) await mkdir(dir);
 const env={...process.env,HOME:home,USERPROFILE:home,XDG_CONFIG_HOME:join(home,'config'),XDG_DATA_HOME:join(home,'data'),XDG_CACHE_HOME:join(home,'cache'),KUJO_OPENCODE_HOME:join(home,'kujo'),npm_config_cache:join(home,'npm-cache'),npm_config_userconfig:join(home,'.npmrc')};
 for (const key of ['KUJO_BIN','KUJO_SOURCE_ROOT','KUJO_OPENCODE_PROJECT','NODE_PATH','NPM_TOKEN','NODE_AUTH_TOKEN']) delete env[key];
-async function command(bin,args,opts={}) { return exec(bin,args,{env,cwd:repo,timeout:900000,maxBuffer:8*1024*1024,...opts}); }
+async function command(bin,args,opts={}) {
+ if(bin==='npm'){assert.ok(process.env.npm_execpath,'Run this gate through npm run test:fresh');args=[process.env.npm_execpath,...args];bin=process.execPath;}
+ return exec(bin,args,{env,cwd:repo,timeout:900000,maxBuffer:8*1024*1024,...opts});
+}
 for (const dir of [project,older]) {
  await writeFile(join(dir,'README.md'),'# Fresh install fixture\n');
  await writeFile(join(dir,'LICENSE'),'MIT\n');

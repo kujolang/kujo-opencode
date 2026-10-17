@@ -45,12 +45,14 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.resolve.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 40
+    timeout-minutes: 60
     defaults:
       run:
         shell: bash
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version: 22
@@ -71,6 +73,22 @@ jobs:
           const candidate=JSON.parse(await readFile(process.env.RUNNER_TEMP+'/kujo-candidate/candidate.json','utf8'));
           assert.equal(candidate.commit,process.env.GITHUB_SHA);assert.equal(candidate.files[candidate.archive],process.env.EXPECTED_SHA256);
           JS
+      - name: Fresh install and upgrade on each platform
+        if: matrix.bound == 'minimum'
+        id: fresh
+        run: npm run test:fresh
+        env:
+          KUJO_TEST_RELEASE_DIR: ${{ runner.temp }}/kujo-candidate
+      - name: Retain fresh-install evidence
+        if: always() && steps.fresh.outputs.fixture != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: fresh-${{ matrix.os }}-${{ github.sha }}
+          path: |
+            ${{ steps.fresh.outputs.fixture }}/verification.json
+            ${{ steps.fresh.outputs.fixture }}/mixed-version-verification.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Install the official standalone host in an isolated directory
         id: host
         env:
