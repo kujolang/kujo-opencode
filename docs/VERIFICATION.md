@@ -38,9 +38,11 @@ https://opencode.ai/v2/docs/commands/
 This optional gate launches a private OpenCode TUI in a real PTY, drives keyboard
 navigation, and uses pyte to inspect the rendered screen. It creates its own Git
 project and Kujo data root, using sibling canonical source checkouts. It does not
-send a model prompt or approve tool effects. It retains text screen snapshots and
+send a model prompt. By default it rejects the profile request; --ledger also
+explicitly approves only the disposable fixture’s Ship profile, session start
+and human-selected partial finish through the real keyboard permission UI. It retains text screen snapshots and
 verification.json in its printed temporary directory, and stops its own terminal.
-It does not certify Windows, all terminal emulators, granted-operation approval, or the finish dialog.
+It does not certify Windows, all terminal emulators or automatic completion presentation.
 
 ```sh
 python3 -m venv /tmp/kujo-tui-env
@@ -53,4 +55,15 @@ The gate covers slash discovery, status, installation details, home-screen sessi
 creation, profile selection and keyboard rejection (with unchanged configuration), capability discovery, browser readiness,
 session RunLedger, lifecycle controls and session-scoped empty evidence. Host
 approval and completion interactions remain covered separately by test:native;
-rendered granted-operation/finish acceptance is still required before full certification.
+the --ledger variant verifies rendered manual start/finish approval and canonical
+record state before and after each grant. Automatic completion presentation is
+not exercised by this no-inference gate.
+
+```sh
+OPENCODE_BIN=/path/to/opencode /tmp/kujo-tui-env/bin/python tests/tui-terminal.py --ledger
+OPENCODE_BIN=/path/to/opencode /tmp/kujo-tui-env/bin/python tests/tui-terminal.py --ledger --columns 120 --rows 40
+```
+
+Before pressing Enter on a permission, the harness verifies the selected choice's
+rendered styling. It checks that choosing a verdict alone leaves the canonical
+record in progress, and that the separate final grant produces `partial`.

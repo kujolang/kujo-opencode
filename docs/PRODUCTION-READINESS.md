@@ -905,3 +905,32 @@ or platforms. Rendered granted-operation/final-verdict interaction, remaining
 lifecycle/recovery/service support, six live specialists, the supported host/OS
 matrix and public distribution remain open. The previous packed nilWU7 gate
 predates this UI fix; exact final release packaging still needs certification.
+
+## Rendered RunLedger approval and final verdict (2026-10-16)
+
+Commit5327d99 fixes two issues found by the real terminal gate: a newly created
+session could display a prompt model without persisting it for RunLedger, and
+raw JSON results extended below an80x24 window. Session creation and explicit
+manual ledger start now persist the currently visible model/variant without
+inference. Missing model returns actionable state instead of a masked RPC error.
+The default result is a compact canonical summary; Record location exposes the
+JSON path separately, while operation receipts remain in Evidence history.
+
+134 offline tests, canonical E2E,30 focused tests and native host discovery pass.
+Real OpenCode2.0.31 manual profile/start/partial-finish approvals passed at80x24
+(rsqdib7s) and120x40 (a_w45y2l). The gate verifies no record before start approval,
+in_progress after selecting a verdict but before the separate finish grant, then
+canonical partial status and null prompt_file. The wide run also renders the
+canonical record location. Final logs /tmp/kujo-rendered-ledger-summary.log and
+/tmp/kujo-rendered-ledger-wide-retry.log. Snapshots and canonical records are in
+/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-<id>.
+No model prompt was sent; only explicitly selected disposable-fixture operations
+were approved. Tests inspect choice highlighting before submitting permission.
+
+The first wide run tz9lwi7l failed with ENOSPC and is not acceptance evidence.
+Runtime copies from11 explicitly identified completed fixtures were removed;
+snapshots/records remain. A stale exploratory terminal awaiting permission was
+stopped after exact PID/cwd identification; the harness now has bounded cleanup.
+The final wide retry passed. Automatic completion popup rendering, remaining
+lifecycle/recovery/service boundaries, six live specialists, supported host/OS
+and exact final packed/public-release certification remain open.

@@ -474,3 +474,8 @@ Open `/kujo` and choose the setup action you need. If no session is open, choose
 in the current workspace without sending a prompt or calling a model. Cancel
 leaves your workspace and session list unchanged. Capability changes and tool
 effects still require their normal approvals.
+
+RunLedger start records the model currently selected in the OpenCode prompt,
+without calling it. If no model is selected, choose one before starting tracking.
+The native result shows a compact status summary; **Record location** identifies
+the canonical JSON file, and **Evidence history** exposes operation receipts.

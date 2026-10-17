@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Real OpenCode PTY acceptance; no mocked dialogs, inference or auto-approval.
+"""Real OpenCode PTY acceptance; no mocked dialogs, inference or standing grants.
+--ledger explicitly approves only this disposable fixture’s profile/start/finish.
 Requires the optional pinned tests/requirements-tui.txt environment (POSIX only).
 """
 import argparse
@@ -23,6 +24,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--host', default=os.environ.get('OPENCODE_BIN', 'opencode'))
 parser.add_argument('--columns', type=int, default=80)
 parser.add_argument('--rows', type=int, default=24)
+parser.add_argument('--ledger', action='store_true', help='Approve fixture-only profile/start/finish operations through the rendered UI')
 args = parser.parse_args()
 if args.columns < 80 or args.rows < 24:
     parser.error('Acceptance dimensions must be at least 80x24')
@@ -131,7 +133,47 @@ try:
     menu()
     choose('Evidence history', 'Kujo evidence scope', 'evidence-scope')
     choose('This session', 'No receipts in this scope', 'empty-evidence')
-    result = dict(ok=True, host=version, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=False, effects_approved=False)
+    if args.ledger:
+        def allow(name):
+            wait('Allow once', name)
+            assert choice_style('Allow once')==selected and choice_style('Reject')!=selected, 'Allow once must be visibly selected before Enter'
+            send('\r')
+        def record():
+            files=list(project.glob('.kujo/opencode-runledger/*/runs/*.json'))
+            assert len(files)==1, 'Expected exactly one canonical session record'
+            return json.loads(files[0].read_text())
+        send('\x1b')
+        menu()
+        choose('Choose a profile', 'Choose Kujo capabilities', 'ship-profile')
+        choose('Ship', 'Allow once', 'ship-approval')
+        allow('ship-approval')
+        wait('tools ready', 'ship-active')
+        assert json.loads((project/'.kujo/opencode.json').read_text())['profile']=='kujo.profile.ship'
+        menu()
+        choose('Session RunLedger', 'Start tracking this session', 'ledger-start-menu')
+        choose('Start tracking', 'Allow once', 'ledger-start-permission')
+        assert not list(project.glob('.kujo/opencode-runledger/*/runs/*.json')), 'No record before human approval'
+        allow('ledger-start-permission')
+        wait('Status: in progress', 'ledger-start-result')
+        wait('Use Record location', 'ledger-start-result')
+        assert record()['status']=='in_progress'
+        send('\x1b')
+        menu()
+        choose('Session RunLedger', 'Finish this session run', 'ledger-finish-menu')
+        choose('Finish this session run', 'Your verdict for this session', 'human-verdict')
+        choose('Partial', 'Allow once', 'ledger-finish-permission')
+        assert record()['status']=='in_progress', 'Choosing a verdict alone must not finalize'
+        allow('ledger-finish-permission')
+        wait('Status: partial', 'ledger-finished')
+        wait('Use Record location', 'ledger-finished')
+        assert record()['status']=='partial'
+        assert record()['prompt_file'] is None
+        send('\x1b')
+        menu()
+        choose('Session RunLedger', 'Record location', 'finished-record-menu')
+        choose('Record location', 'Canonical RunLedger record', 'record-location')
+        wait('.json', 'record-location')
+    result = dict(ok=True, host=version, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=False, effects_approved=args.ledger, rendered_ledger=args.ledger)
     (root/'verification.json').write_text(json.dumps(result, indent=2)+'\n')
     print(json.dumps(result))
 finally:
