@@ -36,7 +36,13 @@ proxy, automatic approval, hidden network telemetry, or duplicated product logic
 
 ## Current acceptance status — 2026-10-17
 
-The seven outcomes above remain open. Implementation and local acceptance are
+The seven outcomes above remain open. The Dispatch checkpoint correction changes
+the production payload after candidate `713fbe4`; its earlier exact-archive
+records remain historical evidence and cannot certify the next candidate.
+Build a replacement after remaining product changes and repeat the applicable
+exact-archive acceptance gates.
+
+Implementation and local acceptance are
 substantial; complete production parity is not yet certified. The table separates
 working behavior from the evidence still required to close each outcome.
 

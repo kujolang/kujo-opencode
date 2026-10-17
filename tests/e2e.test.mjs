@@ -200,4 +200,5 @@ try{
 const config = JSON.parse(await readFile(join(project, ".kujo", "opencode.json"), "utf8"));
 assert.equal(config.sources, undefined);
 assert.equal(Object.keys(installation.sources).length, 28);
+await import('./dispatch-checkpoint-canonical.mjs');
 console.log("OpenCode local package compatibility: setup, discovery, schema metadata, canonical invocation, approvals, receipts, cross-project isolation, concurrency, and restart passed");

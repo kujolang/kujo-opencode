@@ -2,6 +2,8 @@
 
 ## 0.2.0
 
+- Preserve pending Dispatch checkpoints instead of auto-approving them; resolve installed source fixtures and project-relative workflow/output paths.
+
 - Reject Leash events without their canonical identity before delivery and expose identity requirements in the tool schema.
 - Packaged one-paste installation and an isolated network fresh-install/0.1.0 upgrade gate.
 - Preserve JSONC comments, existing settings, and older project runtime projections.
