@@ -1,11 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {approvalSections,reviewPages} from '../lib/approval-review.mjs';
+import {outcomePages} from '../lib/evidence-view.mjs';
 import {setupTui} from '../lib/tui.mjs';
 import {scopedHostContext} from '../lib/plugin-scope.mjs';
 import {homePaths,withDataRoot} from '../lib/paths.mjs';
 
-function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[],home=false,waitCreate,selectedModel,ledgerState='in_progress',services=[],pendingPermissions=[],waitSelect,canonicalProject,browserState}={}) {
+function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[],home=false,waitCreate,selectedModel,ledgerState='in_progress',services=[],pendingPermissions=[],waitSelect,canonicalProject,browserState,waitDetail,waitAlert}={}) {
  const calls=[],alerts=[],toasts=[],selections=[],handlers=new Map();let clears=0;let commands,eventHandler,stopped=false,route=home?{type:'home'}:{type:'session',sessionID:'fixture-session'};
  const location={directory:'/fixture/project'};
  const ctx={location,data:{on:(name,handler)=>{handlers.set(name,handler);return ()=>handlers.delete(name);},session:{status:()=> 'idle',sync:async()=>{},permission:{sync:async()=>{},list:()=>pendingPermissions}}},client:{session:{create:async input=>{calls.push({method:'createSession',input});if(waitCreate)await waitCreate;return {id:'new-session'};},switchModel:async input=>calls.push({method:'switchModel',input})},rpc:definition=>{
@@ -20,12 +21,12 @@ function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts
    if(method==='lifecycle'){if(input.action==='status')return {enabled:false,pending:0};if(profileError)throw Error(profileError);return {enabled:input.action==='enable'};}
    if(method==='capability'){if(profileError)throw Error(profileError);return {active:input.mode!=='disabled'};}
    if(method==='profile'){if(profileError)throw Error(profileError);return {abilities:18};}
-   if(method==='evidenceDetail')return {receipt:evidenceReceipts.find(item=>item.receipt_id===input.receiptID),artifacts:['/fixture/project/report.txt']};
+   if(method==='evidenceDetail'){if(waitDetail)await waitDetail;return {receipt:evidenceReceipts.find(item=>item.receipt_id===input.receiptID),artifacts:['/fixture/project/report.txt']};}
    if(method==='artifact')return {kind:'file',content:'artifact text',notice:'Current contents'};
    if(method==='compare')return {same_ability:true,notice:'Timing is informational'};
    return {receipts:evidenceReceipts,coverage:'Recent retained evidence'};
   }]))};
- }},ui:{model:{current:()=>selectedModel},router:{current:()=>route,navigate:next=>{route=next;}},dialog:{clear:()=>{clears++;},prompt:async()=>prompts.shift(),alert:async value=>alerts.push(value),select:async value=>{selections.push(value);if(waitSelect)await waitSelect;return choices.shift();}},toast:{show:value=>toasts.push(value)}},keymap:{layer:factory=>{commands=factory().commands;}}};
+ }},ui:{model:{current:()=>selectedModel},router:{current:()=>route,navigate:next=>{route=next;}},dialog:{clear:()=>{clears++;},prompt:async()=>prompts.shift(),alert:async value=>{alerts.push(value);if(waitAlert)await waitAlert;},select:async value=>{selections.push(value);if(waitSelect)await waitSelect;return choices.shift();}},toast:{show:value=>toasts.push(value)}},keymap:{layer:factory=>{commands=factory().commands;}}};
  const cleanup=setupTui(ctx);
  return {calls,alerts,toasts,selections,clears:()=>clears,emit:async(type,data,directory=location.directory)=>handlers.get(type)?.({...(directory===null?{}:{location:{directory}}),data}),cleanup,route:()=>route,navigate:next=>{route=next;},event:async(sessionID='fixture-session',directory=location.directory)=>{if(!stopped)await eventHandler({location:{directory},data:{sessionID}});},run:id=>commands.find(c=>c.id===id).run()};
 }
@@ -82,9 +83,9 @@ test('evidence opens only server-selected artifacts and compares chosen receipt 
  const receipts=['r1','r2'].map(receipt_id=>({receipt_id,status:'succeeded',ability_id:'check',completed_at_ms:1,result:{ok:true}}));
  const artifact=fixture({choices:['project','r1','artifact:0'],evidenceReceipts:receipts});await artifact.run('kujo.evidence');
  assert.deepEqual(artifact.calls.map(c=>c.method),['evidence','evidenceDetail','artifact']);
- assert.deepEqual(artifact.calls[2].input,{receiptID:'r1',index:0});assert.match(artifact.alerts[0].message,/artifact text/);
+ assert.deepEqual(artifact.calls[2].input,{receiptID:'r1',index:0});assert.match(artifact.alerts[0].message.replaceAll('\n',''),/artifact text/);
  const compare=fixture({choices:['project','compare','r1','r2'],evidenceReceipts:receipts});await compare.run('kujo.evidence');
- assert.deepEqual(compare.calls[1].input,{left:'r1',right:'r2'});assert.match(compare.alerts[0].message,/informational/);
+ assert.deepEqual(compare.calls[1].input,{left:'r1',right:'r2'});assert.match(compare.alerts[0].message.replaceAll('\n',''),/informational/);
 });
 
 test('lifecycle picker requires deliberate action and reports denied activation',async()=>{
@@ -241,4 +242,43 @@ test('browser failure detail explains recovery without starting another installa
  const message='Storage is full. Free space on the installation and browser-cache volumes, then retry.';
  const f=fixture({choices:['failure'],browserState:{ready:false,state:'failed',code:'install_disk_full',message}});
  await f.run('kujo.browser');assert.equal(f.alerts[0].message,message);assert.deepEqual(f.calls.map(c=>[c.method,c.input.action]),[['browser','status']]);
+});
+
+test('evidence result pages retain values beyond the former 16000 character preview',async()=>{
+ const result={value:'x'.repeat(18000)+'tail-marker'};
+ const pages=reviewPages(JSON.stringify(result));
+ const f=fixture({choices:['session','r1','result',...Array(pages.length-1).fill('next'),'close'],evidenceReceipts:[{receipt_id:'r1',status:'succeeded',ability_id:'fixture',result}]});
+ await f.run('kujo.evidence');
+ assert.equal(f.alerts.map(a=>a.message).join('').replaceAll('\n',''),JSON.stringify(result));
+ assert.ok(f.alerts.every(a=>a.message.split('\n').length<=6));
+ assert.deepEqual(f.calls.map(c=>c.method),['evidence','evidenceDetail']);
+});
+test('evidence search reaches retained text beyond the old truncation limit',async()=>{
+ const f=fixture({choices:['project','r1','result','find','close'],prompts:['tail-marker'],evidenceReceipts:[{receipt_id:'r1',status:'succeeded',ability_id:'fixture',result:{value:'x'.repeat(18000)+'tail-marker'}}]});
+ await f.run('kujo.evidence');assert.equal(f.alerts.length,2);assert.match(f.alerts[1].message.replaceAll('\n',''),/tail-marker/);
+});
+test('evidence summary distinguishes the tool outcome from overall task completion',async()=>{
+ const receipt={receipt_id:'r1',status:'failed',ability_id:'fixture',approval_id:'grant',metadata:{model_id:'provider/model'}};
+ const f=fixture({choices:['session','r1','summary','last','close'],evidenceReceipts:[receipt]});await f.run('kujo.evidence');
+ const text=f.alerts.map(a=>a.message).join('').replaceAll('\n','');assert.match(text,/Outcome: failed/);assert.match(text,/Approval: Recorded/);assert.match(text,/not a verdict on the whole task/);
+ assert.match(outcomePages({}).join('').replaceAll('\n',''),/Outcome: Not recorded/);
+});
+test('navigation suppresses late receipt details and unload closes the owned viewer',async()=>{
+ let release;const f=fixture({choices:['session','r1'],waitDetail:new Promise(r=>release=r),evidenceReceipts:[{receipt_id:'r1',status:'succeeded'}]});
+ const pending=f.run('kujo.evidence');await new Promise(r=>setImmediate(r));f.navigate({type:'session',sessionID:'other'});await f.emit('session.viewed',{sessionID:'other'});release();await pending;
+ assert.equal(f.alerts.length,0);assert.ok(!f.selections.some(s=>s.title==='Receipt details'));assert.equal(f.clears(),1);
+ let close;const open=fixture({choices:['session','r1','result'],waitAlert:new Promise(r=>close=r),evidenceReceipts:[{receipt_id:'r1',result:{value:'long'.repeat(200)}}]});
+ const viewed=open.run('kujo.evidence');await new Promise(r=>setImmediate(r));open.cleanup();close();await viewed;assert.equal(open.clears(),1);assert.equal(open.alerts.length,1);
+});
+
+test('completion evidence can search the full retained receipt without choosing a verdict',async()=>{
+ const f=fixture({choices:['evidence','r1','find','close','later'],prompts:['completion-tail'],evidenceReceipts:[{receipt_id:'r1',status:'succeeded',result:{value:'x'.repeat(18000)+'completion-tail'}}]});
+ await f.event();assert.equal(f.alerts.length,2);assert.match(f.alerts[1].message.replaceAll('\n',''),/completion-tail/);
+ assert.ok(!f.calls.some(c=>c.method==='runledger'));
+});
+
+test('completion suppresses receipt details returned after session navigation',async()=>{
+ let release;const f=fixture({choices:['evidence','r1'],waitDetail:new Promise(r=>release=r),evidenceReceipts:[{receipt_id:'r1',result:{value:'old'}}]});
+ const pending=f.event();await new Promise(r=>setImmediate(r));f.navigate({type:'session',sessionID:'other'});release();await pending;
+ assert.equal(f.alerts.length,0);assert.ok(!f.calls.some(c=>c.method==='runledger'));
 });

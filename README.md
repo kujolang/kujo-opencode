@@ -283,14 +283,17 @@ run/test, starter creation, MCP generation and Agents SDK fixtures. Ship gathers
 In `/kujo` → **Evidence history**, choose this project, the current session, or
 older unscoped receipts. New receipts carry the canonical project path. Older
 receipts are kept separate because their project cannot be inferred safely.
-Choose a receipt to view its outcome/provenance, recorded result, or referenced
-artifacts. Compare two project receipts to see status, duration, model and exact
+Choose a receipt for an outcome summary, input and provenance, its recorded
+result, or referenced artifacts. The summary reports the tool outcome; it does
+not declare the overall task complete. Long records have pages, first/last-page
+navigation and text search across the complete retained value. Compare two project receipts to see status, duration, model and exact
 serialized-result differences; comparison does not establish correctness.
 
 Artifact previews show current local files, which may have changed since the
 run. They reject paths outside the project and symlinks, show at most 64 KiB of
 UTF-8 text or 50 directory entries, and do not execute or open external URLs.
-The terminal display further limits long previews to 16,000 characters.
+The terminal viewer preserves the complete returned preview in readable pages;
+those server-side file and directory limits still apply.
 
 Export full retained receipts to standard output for your own tooling:
 
