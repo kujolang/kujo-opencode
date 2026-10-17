@@ -990,3 +990,29 @@ contract gate. Logs: /tmp/kujo-leash-final-{all,e2e}.log,
 /tmp/kujo-leash-focused-final.log, /tmp/kujo-leash-canonical-final.log and
 /tmp/kujo-leash-host-tools.log. These checks do not close the full service or
 release gates above.
+
+## Application Ability gateway checkpoint (2026-10-16)
+
+Full58 and the Workflow specialist now expose explicitly configured gateway
+catalog discovery and approved execution. Execution binds origin, full reviewed
+descriptor, input, invocation/idempotency identifiers and any separate server
+approval ID. A fresh catalog comparison refuses changed descriptors before POST;
+this is not an atomic server-side version lock. Canonical receipt validation and
+identity comparison reject HTTP success with an invalid or unrelated receipt.
+Server rejections/approval-required receipts remain failures with retained
+validated evidence. No approval-issuing endpoint, tenant inference or automatic
+retry is introduced. The canonical SDK is pinned/generated with source/license
+and digest checks; local-runtime.mjs is unchanged.
+
+145 offline tests, canonical E2E,5 gateway contracts and the updated package
+content gate passed. Isolated Full58 setup and real OpenCode2.0.31 discovery
+explicitly verified kujo_gateway_list and kujo_gateway_call. Actual CMS177f2a0
+fixtureLo86Vk passed discovery, read execution with canonical receipt, separate
+server approval requirement and bad-token rejection. Test fixtures disable all
+external connectors and preserve only verification/receipt evidence. Logs are
+/tmp/kujo-gateway-{all,e2e,host,canonical-final,release}.log.
+
+This supersedes the missing gateway implementation, not complete service parity.
+Granted remote mutation and real native rendered service approvals remain to be
+accepted. Six live specialist workflows, remaining lifecycle/recovery scenarios,
+immutable final packaging, supported host/OS and public release remain required.

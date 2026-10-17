@@ -106,3 +106,21 @@ before approval, idempotency replay, origin change refusal, cancellation, size
 limits, redirect rejection and sanitised acknowledgements. This is not proof of
 provider notification delivery, native rendered Leash approval or remote human
 decision handling. Those operations are outside this local acceptance evidence.
+
+## Canonical application gateway acceptance
+
+`CMS_TEST_SOURCE=/absolute/path/to/cms node tests/gateway-canonical.mjs` starts
+canonical CMS with a private database, an ephemeral fixture-only bootstrap token,
+all connectors unconfigured and all writable application paths inside its temp
+root. It executes the read-only site-info Ability and verifies its canonical
+receipt. An attempted SEO operation remains `approval_required` even with its
+legacy `confirmed` input set; no application approval is issued. Invalid bearer
+authentication is rejected. The harness stops its own CMS process and retains
+verification.json and the read receipt without the token.
+
+Local Lo86Vk passed against CMS177f2a016861eb20ac46ba152b03d38b27d41732 and runtime
+SHA256979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5.
+145 offline tests, canonical E2E, gateway contract tests, release-content checks
+and actual OpenCode2.0.31 discovery of both gateway tools passed. These checks do
+not establish a granted application mutation, rendered native gateway approval,
+multitenant deployment certification or a supported OS/host release matrix.
