@@ -1,0 +1,72 @@
+{
+  "recorded": "2026-10-17",
+  "scope": "macOS OpenCode 2.0.31 rendered service acceptance; not full platform acceptance",
+  "accepted": {
+    "automatic_completion": {
+      "ok": true,
+      "host": "opencode v2.0.31",
+      "terminal_backend": "posix",
+      "service_result_pages": null,
+      "dimensions": [
+        80,
+        24
+      ],
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-fhpu1k8v",
+      "initial_requested_session": "ses_kujo_terminal_32d0a8ced51e497a93989011eb992904",
+      "model_call": true,
+      "effects_approved": true,
+      "rendered_ledger": false,
+      "rendered_automatic_completion": true,
+      "rendered_completion_evidence": true,
+      "live_ship_specialist": false,
+      "rendered_leash": false,
+      "rendered_gateway": false,
+      "candidate_commit": "c3a256a99609bb2b0dfbaef46133673cbb2a2192",
+      "candidate_sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+      "candidate_integrity": "sha512-AOF4KrOvsFAjSnLLAXbR8MlYDTdW2bwMHNvZF164B4i8Hqs7T1SYnYcrAyHY20V7JTpfkK73sf+NoJr1NVsAmQ==",
+      "pinned_sources": true
+    },
+    "cms_gateway": {
+      "ok": true,
+      "host": "opencode v2.0.31",
+      "terminal_backend": "posix",
+      "service_result_pages": 8,
+      "dimensions": [
+        80,
+        24
+      ],
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-ezs3sq68",
+      "initial_requested_session": "ses_kujo_terminal_e5ff980d35b84915af28952d58a55d33",
+      "model_call": true,
+      "effects_approved": true,
+      "rendered_ledger": false,
+      "rendered_automatic_completion": false,
+      "rendered_completion_evidence": false,
+      "live_ship_specialist": false,
+      "rendered_leash": false,
+      "rendered_gateway": true,
+      "candidate_commit": "c3a256a99609bb2b0dfbaef46133673cbb2a2192",
+      "candidate_sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+      "candidate_integrity": "sha512-AOF4KrOvsFAjSnLLAXbR8MlYDTdW2bwMHNvZF164B4i8Hqs7T1SYnYcrAyHY20V7JTpfkK73sf+NoJr1NVsAmQ==",
+      "pinned_sources": true
+    }
+  },
+  "failed": {
+    "leash": {
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-_fovvdxw",
+      "candidate_commit": "c3a256a99609bb2b0dfbaef46133673cbb2a2192",
+      "receipt": "receipt-c12b2266-c163-4ef9-9cc3-fea576b1a776",
+      "observed": "Model omitted request_id; canonical delivery returned HTTP 500. No succeeded delivery receipt. Excluded from passing evidence."
+    }
+  },
+  "correction": {
+    "commit": "7cccdc4",
+    "behavior": "Reject missing canonical event identity before network delivery; expose identity fields in schema; assert exact reviewed fixture input before native grant.",
+    "verified": [
+      "186 offline tests",
+      "canonical E2E and knowledge checks",
+      "actual Leash daemon v2, duplicate, authentication and invalid-event checks"
+    ],
+    "remaining": "Build a new immutable archive and rerun native/rendered acceptance, fresh install and upgrade. Earlier candidate successes do not certify corrected bytes."
+  }
+}
