@@ -223,9 +223,10 @@ try {
  // Keep a bounded wait and require the same native approval and unchanged state.
  async function sessionLedgerChange(action,decision,status){
   let settled;const outcome=api('/api/rpc/kujo.control/runledger',{input:{sessionID:ledgerSession.id,action,...(status?{status}:{})}},60000).then(value=>(settled={value}),error=>(settled={error}));
-  let permission;for(let i=0;i<300;i++){permission=(await api(`/api/session/${ledgerSession.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(permission||settled)break;await delay(100);}
+  let permission,permissionList;for(let i=0;i<300;i++){permissionList=(await api(`/api/session/${ledgerSession.id}/permission`)).data;permission=permissionList.find(p=>p.action==='kujo.runledger.session');if(permission||settled)break;await delay(100);}
   if(!permission&&settled?.error)throw settled.error;
 
+  if(!permission){const receipts=(await readFile(join(env.KUJO_OPENCODE_HOME,'receipts.jsonl'),'utf8')).split('\n').filter(Boolean).map(JSON.parse).slice(-8).map(({ability_id,status,code,metadata})=>({ability_id,status,code,session_id:metadata?.session_id}));console.error(JSON.stringify({ledger_permissions:permissionList,ledger_recent_receipts:receipts}));}
   assert.ok(permission,`session ledger mutation requires approval; response=${JSON.stringify(settled?.value ?? null)}; session=${JSON.stringify((await api(`/api/session/${ledgerSession.id}`)).data.model ?? null)}`);assert.deepEqual(permission.save,[]);
   assert.equal((await ledgerStatus()).output.state,action==='start'?'not_started':'in_progress');
   await api(`/api/session/${ledgerSession.id}/permission/${permission.id}/reply`,{decision});
