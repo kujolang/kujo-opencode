@@ -1,0 +1,38 @@
+{
+  "recorded": "2026-10-17",
+  "harness_commit": "dfa376a",
+  "production_candidate_unchanged": true,
+  "live_understand": {
+    "ok": false,
+    "journey": "understand",
+    "host": "opencode v2.0.31",
+    "model": "opencode/glm-5.3-flash-free",
+    "error_type": "Error",
+    "reason": "Live provider failed before acceptance: provider.auth (HTTP 403)",
+    "candidate_commit": "713fbe4dc10ae8c68aee4205d17da70ff67027bd",
+    "candidate_sha256": "a444a22098e6e16a76a6991e9dda2271564a9a9e9e64a77ac9cc581cb3e5d48f"
+  },
+  "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-rIkdUO",
+  "verification": {
+    "full_offline_tests": 195,
+    "later_added_test": "ordinary Build supplied directly is refused; focused specialist suite passed",
+    "canonical_e2e": "passed, including knowledge",
+    "scout_scent_preflight": {
+      "ok": true,
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-understand-canonical-x8aPrE",
+      "canonical_artifacts": true,
+      "live_specialist": false
+    }
+  },
+  "excluded_initial_attempt": "Base native profile assertion failed before model execution; corrected by retaining partial-profile tests and separately approving full profile before the specialist journey. Log /tmp/kujo-specialist-understand-live.log.",
+  "remaining": [
+    "Complete live Understand journey with an authorized entitled provider",
+    "Implement distinct Build, Review, Browser, Workflow and Ship journeys",
+    "Required supported-platform and public release acceptance"
+  ],
+  "limits": [
+    "Fake-host runner tests are not live specialist evidence",
+    "Canonical preflight uses local sibling sources and does not certify pinned candidate behavior",
+    "No provider fallback or model identity spoofing"
+  ]
+}
