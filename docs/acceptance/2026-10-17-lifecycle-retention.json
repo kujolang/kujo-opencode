@@ -257,6 +257,12 @@
       "lost-http-reply",
       "native-specialist-report",
       "native-specialist-runner"
-    ]
+    ],
+    "count_correction": {
+      "distinct_tests": 229,
+      "executions_including_duplicates": 264,
+      "previously_registered_via_imports": true,
+      "current_record": "2026-10-17-status-recovery-candidate.json"
+    }
   }
 }

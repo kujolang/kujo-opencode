@@ -720,11 +720,27 @@
       "result": "refused_invalid_quoted_json_before_approval",
       "effect_absent": true,
       "next_step": "Same unchanged recovery case with requested free DeepSeek model; both free IDs confirmed via official OpenCode models --standalone"
+    },
+    {
+      "fixture": "kujo-native-host-Lw1cSS",
+      "log": "/tmp/kujo-status-dispatch-transport-deepseek.log",
+      "result": "setup_failed_ENOSPC_before_inference",
+      "model": "opencode/deepseek-v4.1-flash-free",
+      "provider_called": false
     }
   ],
   "dispatch_controller_regressions": {
     "log": "/tmp/kujo-dispatch-controller-check.log",
     "passed": 18,
     "cases": "Existing transport/runner checks plus wrong ability, altered input, persistent permission and provider failure all refused before a grant"
+  },
+  "current_unit_gate": {
+    "passed": 234,
+    "failed": 0,
+    "skipped": 0,
+    "log": "/tmp/kujo-current-unit-gate-unique.log",
+    "registration": "Each suite appears once in the explicit npm test list; removed indirect test imports",
+    "historical_count_correction": "264 and 274 were passing test executions including duplicates, not distinct tests. The five suites described as omitted were already imported indirectly. Original distinct count was 229; five new controller cases bring it to 234.",
+    "incomplete_disk_pressure_run": "/tmp/kujo-current-unit-gate.log"
   }
 }
