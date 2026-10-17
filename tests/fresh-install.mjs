@@ -1,4 +1,5 @@
 import {verifyMixedVersion} from './mixed-version-acceptance.mjs';
+import {createHash} from 'node:crypto';
 import {createServer} from 'node:http';
 import {verifyCandidate} from '../scripts/release-candidate.mjs';
 import {copyFile} from 'node:fs/promises';
@@ -32,7 +33,15 @@ for (const dir of [project,older]) {
 const candidate=process.env.KUJO_TEST_RELEASE_DIR?await verifyCandidate(process.env.KUJO_TEST_RELEASE_DIR):null;
 const packed=candidate?{filename:candidate.archive}:JSON.parse((await command('npm',['pack','--json','--pack-destination',root])).stdout)[0];
 const tarball=join(root,packed.filename);
-if(candidate)await copyFile(join(candidate.directory,candidate.archive),tarball);
+const registry=process.env.KUJO_TEST_REGISTRY==='1';
+assert.ok(!registry||candidate,'Registry acceptance requires an exact candidate');
+const installSpec=registry?`${candidate.name}@${candidate.version}`:tarball;
+if(registry){
+ env.npm_config_registry='https://registry.npmjs.org/';
+ const downloaded=JSON.parse((await command('npm',['pack','--ignore-scripts','--json','--registry=https://registry.npmjs.org/','--pack-destination',root,installSpec])).stdout)[0];
+ assert.equal(downloaded.filename,candidate.archive);assert.equal(downloaded.integrity,candidate.integrity);
+ assert.equal(createHash('sha256').update(await readFile(tarball)).digest('hex'),candidate.sha256);
+}else if(candidate)await copyFile(join(candidate.directory,candidate.archive),tarball);
 // Real previous release, not a synthetic version field mutation.
 const baseline=join(root,'baseline'); await mkdir(baseline);
 await command('git',['archive','855524a5da804ae43088aa204350230e62616ab3','--format=tar','-o',join(root,'baseline.tar')]);
@@ -46,7 +55,8 @@ await call(['setup']); await call(['setup'],older);
 await call(['profile','kujo.profile.review']); await call(['disable','kujo.fence.architecture.check']);
 await writeFile(join(env.KUJO_OPENCODE_HOME,'preserved-marker'),'keep');
 const priorReceipts=await readFile(join(env.KUJO_OPENCODE_HOME,'receipts.jsonl'),'utf8');
-await command('npm',['install','--prefix',prefix,tarball]);
+await command('npm',['install','--prefix',prefix,installSpec]);
+if(registry)assert.equal(JSON.parse(await readFile(join(prefix,'package-lock.json'),'utf8')).packages['node_modules/@kujolang/kujo-opencode'].integrity,candidate.integrity);
 const upgrade=await call(['update']); assert.equal(upgrade.profile,'kujo.profile.review'); assert.deepEqual(upgrade.disabled,['kujo.fence.architecture.check']);
 assert.ok((await readFile(join(env.KUJO_OPENCODE_HOME,'receipts.jsonl'),'utf8')).startsWith(priorReceipts));
 const oldCli=join(env.KUJO_OPENCODE_HOME,'runtime/0.1.0/bin/kujo-opencode.mjs');
@@ -56,7 +66,7 @@ await verifyMixedVersion({root,env,cli,oldCli,project,older});
 const fresh=join(root,'fresh'); await mkdir(fresh); await writeFile(join(fresh,'README.md'),'# Clean package fixture\n');
 const freshHome=join(home,'fresh-kujo'); const previousHome=env.KUJO_OPENCODE_HOME; env.KUJO_OPENCODE_HOME=freshHome;
 // This is the documented one-command tarball install path, with no global link.
-await command('npm',['exec','--yes',`--package=${tarball}`,'--','kujo-opencode','setup','--project',fresh,'--json']);
+await command('npm',['exec','--yes',`--package=${installSpec}`,'--','kujo-opencode','setup','--project',fresh,'--json']);
 assert.equal((await call(['demo'],fresh)).ok,true);
 const installed=JSON.parse(await readFile(join(freshHome,'installation.json'),'utf8'));
 assert.ok(Object.values(installed.sources).every(source=>source.mode==='pinned' && source.path.startsWith(freshHome)));
@@ -123,7 +133,7 @@ const rpc=await new Promise((resolveResult,reject)=>{
 assert.equal(rpc.result.tools.length,10);
 for(const operation of ['preview','index','status','query','recover'])assert.ok(rpc.result.tools.some(tool=>tool.name===`kujo_knowledge_${operation}`));
 if(candidate)await verifyCandidate(candidate.directory);
-const verification={ok:true,root,tarball,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,mixed_version_verified:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,starter_kinds:['script','agent','api','mcp'],starter_services_verified:true,agent_fixture_verified:true,session_runledger_verified:true,browser_launch_verified:true,browser_check_verified:true,knowledge_verified:true,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
+const verification={ok:true,root,tarball,registry_consumer:registry,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,mixed_version_verified:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,starter_kinds:['script','agent','api','mcp'],starter_services_verified:true,agent_fixture_verified:true,session_runledger_verified:true,browser_launch_verified:true,browser_check_verified:true,knowledge_verified:true,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
 await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
 // Keep the immutable tarballs and verification record, not hundreds of MiB of
 // duplicate clones/caches after every successful run. Failures retain diagnosis.

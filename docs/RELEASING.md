@@ -61,5 +61,76 @@ Publication remains a separate required gate: supported host/OS acceptance,
 all live specialist workflows, protected release approval, matching version/tag,
 public repository/registry access, signed provenance, and registry consumer
 install/upgrade must be verified. Do not publish a rebuilt archive or infer
-release approval from a candidate artifact. No publish workflow or public release
-is claimed by this candidate-preparation workflow.
+release approval from a candidate artifact. The separate publication workflow below is prepared but unexecuted; no public
+release is claimed by candidate preparation.
+
+## Protected publication workflow
+
+`publish.yml` is a manually dispatched, tag-only publication path. It is prepared
+but has not run successfully. The repository is currently private and has no
+`npm-release` environment; those facts, CI billing, provider-rejected specialist
+acceptance and npm authorization remain release blockers.
+
+Before using it, the repository must be public, and an administrator must configure
+`npm-release` with required reviewers and prevention of self-review. Configure the
+npm trusted publisher for `kujolang/kujo-opencode`, workflow `publish.yml`, and
+environment `npm-release`, permitting direct publishing. No npm token is stored in
+the workflow. npm requires Node 22.14+ and npm 11.5.1+ for trusted publishing;
+the workflow uses Node 22 and npm 11.19.0. Public-repository provenance and publisher
+configuration follow the [npm trusted-publishing documentation](https://docs.npmjs.com/trusted-publishers/).
+A first package registration may require an authenticated maintainer before that
+trust can be configured. Do not bypass the acceptance gate to bootstrap a release.
+
+After all pre-publication acceptance is complete, create the exact version tag
+(e.g. `v0.2.0`) on the candidate source commit. Dispatch **Release candidate** at
+that tag. Its immutable bundle and acceptance records are uploaded as separate
+artifacts so downloading the bundle preserves its exact inventory. Dispatch
+**Publish accepted release** at the same tag with that successful candidate run ID,
+the reviewed archive SHA-256, and the acceptance report JSON below.
+
+The workflow checks repository visibility, required-reviewer protection, candidate
+workflow identity/outcome, source commit, version tag and archive digest before
+requesting environment approval. It repeats those checks after approval. A missing
+environment fails the preflight; a named but unprotected environment is insufficient.
+It then publishes the same tarball with scripts disabled and OIDC provenance. A retry
+after an uncertain publish skips publication only when the public registry already
+has exactly the candidate integrity; consumer provenance checks still run.
+
+The post-publication gate verifies registry integrity, installs as a consumer,
+checks registry signatures/provenance, and runs the full isolated fresh-install
+and baseline-0.1.0-upgrade suite with the new version fetched from npm. The baseline
+is the retained historical source archive, not a claim that 0.1.0 was published.
+Only afterward does it create a GitHub release for the existing tag and attach the
+unchanged bundle and reviewed acceptance report. A failure after npm publication
+cannot retract the immutable npm version. Keep the evidence and retry the same
+candidate; never overwrite it or publish different bytes under that version. If a
+GitHub release already exists, inspect it and its assets before resolving the
+release-create conflict; the workflow does not overwrite an existing release.
+
+### Acceptance report contract
+
+The JSON has `schema: "kujo.opencode.release-acceptance/v1"`, `commit` (full source
+SHA), `sha256` (archive digest), and `candidate_run_id` (decimal string). It must
+contain all of these inventories:
+
+- `requirements`: `native-management`, `lifecycle`, `specialists`,
+  `capability-parity`, `recovery`, `host-platform-matrix`.
+- `specialists`: `understand`, `build`, `review`, `browser`, `workflow`, `ship`.
+- `host_matrix`: `darwin`, `linux`, `win32`, each containing `minimum` and `latest`.
+  Each matrix entry also records the tested OpenCode `2.x.y` version. The two
+  versions may coincide only when the declared supported range has one version.
+
+Each entry must have `status: "passed"` and a nonempty `evidence` array of retained
+GitHub Actions run/artifact URLs in this repository. Evidence must identify the
+same candidate digest and demonstrate the behavior and failure paths in
+PRODUCTION-READINESS.md. Do not supply a passing report until those results exist.
+The structural gate checks identity and completeness; it does not interpret logs,
+screenshots or assess usability. Required human reviewers must inspect the linked
+artifacts, candidate digest, platform scope, and all six actual specialist journeys.
+Expired artifacts, unrelated green jobs and discovery-only checks are insufficient.
+
+Validate a prepared report with `npm run release:gate -- CANDIDATE CONTEXT REPORT`.
+CONTEXT contains the authoritative GitHub `repo`, `environment`, `run` responses
+plus `sha`, `ref`, `digest`, `runID`; the composite action fetches these afresh.
+No passing acceptance report is checked in because the full required evidence
+is still incomplete. Adding a report is not a substitute for completing it.

@@ -37,8 +37,14 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: kujo-candidate-${{ github.sha }}
-          path: |
-            ${{ runner.temp }}/kujo-candidate/
-            /tmp/kujo-opencode-packed-*/verification.json
+          path: ${{ runner.temp }}/kujo-candidate/
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Retain acceptance records separately
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: kujo-candidate-evidence-${{ github.sha }}
+          path: /tmp/kujo-opencode-packed-*/verification.json
           if-no-files-found: warn
           retention-days: 30

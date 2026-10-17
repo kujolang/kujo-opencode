@@ -1,0 +1,108 @@
+name: Publish accepted release
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_run_id:
+        description: Successful Release candidate run for this version tag's exact commit
+        required: true
+        type: string
+      candidate_sha256:
+        description: Reviewed immutable archive SHA-256
+        required: true
+        type: string
+      acceptance_json:
+        description: Completed release-acceptance/v1 report with retained evidence for every requirement
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+  deployments: read
+concurrency:
+  group: kujo-publication
+  cancel-in-progress: false
+jobs:
+  preflight:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22
+      - run: npm install --global npm@11.19.0
+      - uses: ./.github/actions/verify-release
+        with:
+          candidate-run-id: ${{ inputs.candidate_run_id }}
+          candidate-sha256: ${{ inputs.candidate_sha256 }}
+          acceptance-json: ${{ inputs.acceptance_json }}
+  publish:
+    needs: preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    environment: npm-release
+    permissions:
+      contents: write
+      actions: read
+      deployments: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22
+      - run: npm install --global npm@11.19.0
+      - name: Revalidate after protected environment approval
+        id: accepted
+        uses: ./.github/actions/verify-release
+        with:
+          candidate-run-id: ${{ inputs.candidate_run_id }}
+          candidate-sha256: ${{ inputs.candidate_sha256 }}
+          acceptance-json: ${{ inputs.acceptance_json }}
+      - name: Publish the verified archive with OIDC provenance
+        env:
+          ARCHIVE: ${{ steps.accepted.outputs.archive }}
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';import {execFileSync} from 'node:child_process';
+          const dir=process.env.RUNNER_TEMP+'/kujo-candidate',candidate=JSON.parse(await readFile(dir+'/candidate.json','utf8'));
+          const existing=await fetch('https://registry.npmjs.org/'+encodeURIComponent(candidate.name)+'/'+candidate.version,{signal:AbortSignal.timeout(30000)});
+          if(existing.status===404)execFileSync('npm',['publish',dir+'/'+process.env.ARCHIVE,'--ignore-scripts','--provenance','--access','public','--registry=https://registry.npmjs.org/'],{stdio:'inherit'});
+          else{assert.ok(existing.ok,'Cannot determine whether publication already succeeded');assert.equal((await existing.json()).dist?.integrity,candidate.integrity,'Existing release has different bytes');}
+          JS
+      - name: Verify registry integrity and provenance as a consumer
+        run: |
+          node --input-type=module <<'JS'
+          import {validateRegistryDist} from './scripts/release-gate.mjs';import {readFile,mkdir} from 'node:fs/promises';import {execFileSync} from 'node:child_process';
+          const candidate=JSON.parse(await readFile(process.env.RUNNER_TEMP+'/kujo-candidate/candidate.json','utf8'));
+          const identity=candidate.name+'@'+candidate.version;
+          const dist=JSON.parse(execFileSync('npm',['view',identity,'dist','--json','--registry=https://registry.npmjs.org/'],{encoding:'utf8'}));validateRegistryDist(candidate,dist);
+          const cwd=process.env.RUNNER_TEMP+'/registry-consumer';await mkdir(cwd);
+          execFileSync('npm',['install','--ignore-scripts','--registry=https://registry.npmjs.org/',identity],{cwd,stdio:'inherit'});
+          execFileSync('npm',['audit','signatures','--registry=https://registry.npmjs.org/'],{cwd,stdio:'inherit'});
+          JS
+      - name: Verify registry fresh installation and upgrade
+        run: |
+          npm ci --ignore-scripts
+          npm run test:fresh
+        env:
+          KUJO_TEST_RELEASE_DIR: ${{ runner.temp }}/kujo-candidate
+          KUJO_TEST_REGISTRY: '1'
+      - name: Retain registry consumer evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: registry-consumer-${{ github.sha }}
+          path: /tmp/kujo-opencode-packed-*/verification.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Attach the same bundle and acceptance report to the existing version tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.accepted.outputs.tag }}
+        run: gh release create "$RELEASE_TAG" "$RUNNER_TEMP/kujo-candidate/"* "$RUNNER_TEMP/release-acceptance.json" --verify-tag --title "Kujo OpenCode $RELEASE_TAG" --notes "Immutable npm archive, checksums, dependency/source inventory, and reviewed acceptance evidence. npm provenance is available through the registry."
