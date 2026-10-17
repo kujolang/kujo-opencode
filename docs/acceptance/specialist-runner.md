@@ -16,7 +16,7 @@ checked again after the host finishes, including late tool execution.
 The ten runner contract tests are included through `tests/specialists.test.mjs`
 in `npm test`. Fake-host tests verify orchestration/refusal behavior only.
 
-## Implemented journey
+## Understand journey
 
 `KUJO_TEST_JOURNEY=understand` selects the real `kujo-understand` agent, after the
 base native checks and a separately approved full-profile selection. It checks:
@@ -48,10 +48,33 @@ It uses a disposable Git repository and makes no model calls. This preflight doe
 not prove pinned-candidate or live-agent behavior. Scout's manifest artifacts are
 a map; Scent's minimum budget includes its fixed context overhead.
 
+## Build and Review journeys
+
+`KUJO_TEST_JOURNEY=build` selects `kujo-build` for eight steps: inspect a source
+file, preview formatting without modification, preview all imported test files and
+expectations, reject execution without creating a snapshot, approve a passing
+snapshot, refuse the old digest after changing an import, preview the changed
+bytes, and retain diagnostics/artifacts for the now-failing test. Snapshots are
+checked byte-for-byte against reviewed hashes. This does not claim an OS sandbox.
+
+`KUJO_TEST_JOURNEY=review` selects `kujo-review`. It uses an owned nested Git
+repository with a committed baseline and one real working-tree change. PatchBrief
+and ChangeBucket must report that actual file; a valid Spec passes and a missing-
+goal Spec fails. After every step the tracked diff and contract bytes must remain
+unchanged. Footprint heuristics do not establish correctness or review approval.
+
+`node tests/build-specialist-canonical.mjs` executes the real Kujo runtime without
+a model or native permission flow and is included in `npm test`. The corresponding
+Review preflight is `node tests/review-specialist-canonical.mjs`; it uses canonical
+local sibling sources, so it is an explicit local integration gate. These scripts
+reuse scenario assertions, but cannot substitute for actual scoped-agent runs.
+On macOS the Review preflight canonicalizes its disposable project path before
+calling Spec, matching the native journey's realpath boundary.
+
 ## Still required
 
-Distinct Build, Review, Browser, Workflow and Ship journeys remain to implement,
+Distinct Browser, Workflow and Ship journeys remain to implement,
 following `2026-10-17-completion-audit.md`. The generic ShipCheck/RunLedger helper
-must not be presented as these five workflows. The full Understand live journey
-also remains unverified until a complete native run succeeds. Required platform
+must not be presented as these workflows. The full Understand, Build and Review live journeys
+remain unverified until a complete native run succeeds. Required platform
 coverage and retained release acceptance evidence remain separate gates.

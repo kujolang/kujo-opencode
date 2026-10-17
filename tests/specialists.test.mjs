@@ -42,3 +42,10 @@ test('live acceptance distinguishes provider rejection from missing tool executi
  assert.doesNotThrow(()=>assertProviderHealthy({data:[{type:'assistant',content:[]}]}));
  assert.throws(()=>assertProviderHealthy({data:[{error:{type:'provider.auth',status:403,response:{body:'private response'}}}]}),error=>error.message.includes('provider.auth (HTTP 403)')&&!error.message.includes('private response'));
 });
+
+test('Build specialist scenario exercises the real runtime and retained failures',async()=>{
+ const {execFile}=await import('node:child_process');const {promisify}=await import('node:util');const {fileURLToPath}=await import('node:url');
+ const script=fileURLToPath(new URL('./build-specialist-canonical.mjs',import.meta.url));
+ const result=await promisify(execFile)(process.execPath,[script],{timeout:120000,maxBuffer:1024*1024});
+ const evidence=JSON.parse(result.stdout.trim());assert.equal(evidence.ok,true);assert.equal(evidence.steps,8);assert.equal(evidence.live_specialist,false);assert.equal(evidence.native_approval,false);
+});
