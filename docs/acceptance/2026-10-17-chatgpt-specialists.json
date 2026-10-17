@@ -1,0 +1,1217 @@
+{
+  "date": "2026-10-17",
+  "authentication": "OpenCode Sign in with ChatGPT; explicit user-approved plan allowance; no API key imported",
+  "model": "openai/gpt-5.6-sol",
+  "passed": [
+    "understand",
+    "review",
+    "workflow",
+    "build",
+    "browser",
+    "ship"
+  ],
+  "all_six_passed": true,
+  "published": false,
+  "scope": "Real scoped native specialist journeys and model-authored reports on macOS/OpenCode 2.0.32; not complete cross-platform or publication acceptance",
+  "results": [
+    {
+      "name": "understand",
+      "log": "/tmp/kujo-chatgpt-understand-bounded.log",
+      "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-9tyxAZ",
+      "host": "opencode v2.0.32",
+      "platform": "darwin",
+      "arch": "x64",
+      "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+      "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+      "journey": {
+        "agent": "kujo-understand",
+        "model": "openai/gpt-5.6-sol",
+        "session_id": "ses_eb5aae83fffea9G15YMXz8kiKZ",
+        "scope": "canonical Scout/Scent fixture; not repository safety certification",
+        "steps": [
+          {
+            "agent": "kujo-understand",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.scout.repository.inspect",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-1740ef39-3802-4059-b424-a841c776f97b",
+              "receipt-201ed063-7e0d-4a34-a400-1e5290bbf31d"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-understand",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.scout.repository.inspect",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-539a15bc-39bd-4a3b-82be-1e3775b7e8df",
+              "receipt-90e4fa3f-279a-4d6e-aae3-aa844e7a9bff"
+            ],
+            "terminal_receipt": "receipt-90e4fa3f-279a-4d6e-aae3-aa844e7a9bff"
+          },
+          {
+            "agent": "kujo-understand",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.scent.context.pack",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-db465b99-84df-4fb7-8a8e-68e03bc47341",
+              "receipt-42de06a3-f633-462d-a2de-d75f93a62415"
+            ],
+            "terminal_receipt": "receipt-42de06a3-f633-462d-a2de-d75f93a62415"
+          },
+          {
+            "agent": "kujo-understand",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.scent.context.pack",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-b1cd3f74-2c57-41a0-bb3b-b4b9102400ff",
+              "receipt-b801bd7e-04ff-474f-85e8-4771d0b14ccd"
+            ],
+            "terminal_receipt": "receipt-b801bd7e-04ff-474f-85e8-4771d0b14ccd"
+          },
+          {
+            "agent": "kujo-understand",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.scout.repository.inspect",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-eb9b9add-0839-485e-89e4-5709b14e0e59",
+              "receipt-c278942e-0dbd-4c99-89bc-de10fe1963da"
+            ],
+            "terminal_receipt": "receipt-c278942e-0dbd-4c99-89bc-de10fe1963da"
+          }
+        ],
+        "report": {
+          "message_ids": [
+            "msg_14a5609e7001K712W21qtbCI8a"
+          ],
+          "operations": [
+            {
+              "ability": "kujo.scout.repository.inspect",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-201ed063-7e0d-4a34-a400-1e5290bbf31d"
+              ],
+              "explanation": "Scout requested explicit one-time human approval for local write effects; the user declined, so execution did not start."
+            },
+            {
+              "ability": "kujo.scout.repository.inspect",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-90e4fa3f-279a-4d6e-aae3-aa844e7a9bff"
+              ],
+              "explanation": "A fresh approval was granted and the quick Scout inspection completed, analyzing 23 code files and producing minimal-profile artifacts under .kujo/understand-scout."
+            },
+            {
+              "ability": "kujo.scent.context.pack",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-42de06a3-f633-462d-a2de-d75f93a62415"
+              ],
+              "explanation": "The dry-run Scent pack completed, selecting 12 files and estimating 2,600 tokens within the 4,000-token budget; it wrote no context artifacts."
+            },
+            {
+              "ability": "kujo.scent.context.pack",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-b801bd7e-04ff-474f-85e8-4771d0b14ccd"
+              ],
+              "explanation": "The non-dry-run Scent pack completed after fresh approval and generated .kujo/scent/context.md and .kujo/scent/context.json from 12 included files."
+            },
+            {
+              "ability": "kujo.scout.repository.inspect",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-c278942e-0dbd-4c99-89bc-de10fe1963da"
+              ],
+              "explanation": "Scout execution failed with ENOENT because .missing-understand-scope did not exist; no retry occurred."
+            }
+          ],
+          "limitations": "The successful Scout run used quick minimal-profile coverage rather than an exhaustive inspection. The generated Scent context was not read in this session, so its explanation of understand-fixture.kujo and its identification of untested behavior were not verified. The missing-scope request produced no inspection artifacts. This session did not establish overall release readiness."
+        }
+      }
+    },
+    {
+      "name": "review",
+      "log": "/tmp/kujo-chatgpt-review.log",
+      "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-W8NiTN",
+      "host": "opencode v2.0.32",
+      "platform": "darwin",
+      "arch": "x64",
+      "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+      "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+      "journey": {
+        "agent": "kujo-review",
+        "model": "openai/gpt-5.6-sol",
+        "session_id": "ses_eb5ae6d5bffe7vWajq8WPUfMeE",
+        "scope": "real Git diff, heuristic footprint and contract validation; no review approval manufactured",
+        "steps": [
+          {
+            "agent": "kujo-review",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.patchbrief.changes.summarize",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-d840c4c2-aa68-4a06-a459-eae40d8c51c6",
+              "receipt-67a897ef-0430-4976-8603-ea9f10bb7c08"
+            ],
+            "terminal_receipt": "receipt-67a897ef-0430-4976-8603-ea9f10bb7c08"
+          },
+          {
+            "agent": "kujo-review",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.changebucket.changes.measure",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-82a91dac-1c23-4a7c-a62b-24a6d804d0bc",
+              "receipt-19e3a2b0-2343-487a-bf13-5c80e6711a5c"
+            ],
+            "terminal_receipt": "receipt-19e3a2b0-2343-487a-bf13-5c80e6711a5c"
+          },
+          {
+            "agent": "kujo-review",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.spec.contract.validate",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-b316f822-f5ee-4251-bf0a-c995735f2cca",
+              "receipt-57032d1f-c778-4d62-a4f9-07b97ae6ad7d"
+            ],
+            "terminal_receipt": "receipt-57032d1f-c778-4d62-a4f9-07b97ae6ad7d"
+          },
+          {
+            "agent": "kujo-review",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.spec.contract.validate",
+            "decision": "none",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-e8b56afb-c8c4-481d-9e7d-7b370afdbe8b",
+              "receipt-921ff93c-04a7-4a9a-8974-b009d8368f19"
+            ],
+            "terminal_receipt": "receipt-921ff93c-04a7-4a9a-8974-b009d8368f19"
+          }
+        ],
+        "evidence_read": {
+          "agent": "kujo-review",
+          "model": "openai/gpt-5.6-sol",
+          "ability": "kujo.ability.receipts.list",
+          "decision": "none",
+          "expected_status": "succeeded",
+          "receipt_ids": [
+            "receipt-0e4fdeb1-46f1-4e79-b1e9-b584740a84b6",
+            "receipt-c5588c86-a40c-456e-a416-88ccbdca84f9"
+          ],
+          "terminal_receipt": "receipt-c5588c86-a40c-456e-a416-88ccbdca84f9"
+        },
+        "report": {
+          "message_ids": [
+            "msg_14a52ba570013ELugxBNVhPnhU"
+          ],
+          "operations": [
+            {
+              "ability": "kujo.patchbrief.changes.summarize",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-67a897ef-0430-4976-8603-ea9f10bb7c08"
+              ],
+              "explanation": "Summarized changes in specialist-review: one Markdown file modified with one addition and one deletion; heuristic risk scan found no high-risk patterns."
+            },
+            {
+              "ability": "kujo.changebucket.changes.measure",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-19e3a2b0-2343-487a-bf13-5c80e6711a5c"
+              ],
+              "explanation": "Measured the specialist-review working tree against HEAD: one documentation file changed, total churn 2, and low measured risk; no budgets were checked."
+            },
+            {
+              "ability": "kujo.spec.contract.validate",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-57032d1f-c778-4d62-a4f9-07b97ae6ad7d"
+              ],
+              "explanation": "Validated valid.spec.json in non-strict mode with no errors or warnings."
+            },
+            {
+              "ability": "kujo.spec.contract.validate",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-921ff93c-04a7-4a9a-8974-b009d8368f19"
+              ],
+              "explanation": "Strict validation of invalid.spec.json executed but failed with exit code 1 because the required goal field was missing."
+            }
+          ],
+          "limitations": "The session did not verify architecture boundaries, artifact drift, Dossier evidence, tests, builds, runtime behavior, security, strict validity of valid.spec.json, change budgets, or overall release readiness. No substantive request in this conversation was rejected or cancelled, so no approval-required receipt applies to a requested substantive operation."
+        }
+      }
+    },
+    {
+      "name": "workflow",
+      "log": "/tmp/kujo-chatgpt-workflow.log",
+      "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-NxuFKb",
+      "host": "opencode v2.0.32",
+      "platform": "darwin",
+      "arch": "x64",
+      "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+      "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+      "journey": {
+        "agent": "kujo-workflow",
+        "model": "openai/gpt-5.6-sol",
+        "session_id": "ses_eb5aaa78fffek0qrcwAbvBiXWV",
+        "scope": "bounded canonical tool workflows, pending checkpoint and inspect-before-retry evidence; no automatic checkpoint decision or resume",
+        "steps": [
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.workflow.validate",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-9bb4ca28-34b8-4db2-a5f3-6719bc18255a",
+              "receipt-64b5929d-60a2-4645-8811-8dd19aef63be"
+            ],
+            "terminal_receipt": "receipt-64b5929d-60a2-4645-8811-8dd19aef63be"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.workflow.run",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-e5ba7ac9-6523-48db-b2c3-3535fe25214b"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.workflow.run",
+            "decision": "cancel",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-a80d3cd1-f726-48f5-8b10-f13c4fa81b8d"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.workflow.run",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-e5ed30b3-66b1-4138-9fbf-f53a802ea955",
+              "receipt-403e588f-93b8-469a-bee6-f55f62ffdc06"
+            ],
+            "terminal_receipt": "receipt-403e588f-93b8-469a-bee6-f55f62ffdc06"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.runs.list",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-c9e2147e-1d4e-48fa-8873-5ec6b0178d52",
+              "receipt-c245fcae-bd37-44c6-ae6d-0e7af0eaa9a0"
+            ],
+            "terminal_receipt": "receipt-c245fcae-bd37-44c6-ae6d-0e7af0eaa9a0"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.run.inspect",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-2aa2665b-8371-4231-96c5-dffe50763810",
+              "receipt-e441d9f1-58a5-416a-81a2-d4dfd8603c4a"
+            ],
+            "terminal_receipt": "receipt-e441d9f1-58a5-416a-81a2-d4dfd8603c4a"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.workflow.run",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-380099ca-2ec0-4dae-92c7-9e5f4a5e5ef6",
+              "receipt-e1e774c9-31cb-4e5e-91d5-925e259960cc"
+            ],
+            "terminal_receipt": "receipt-e1e774c9-31cb-4e5e-91d5-925e259960cc"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.runs.list",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-b851f1dc-0286-4b84-b3ba-1034e1a45182",
+              "receipt-74f83f37-6d84-44a2-ac6d-03b5acfb98b2"
+            ],
+            "terminal_receipt": "receipt-74f83f37-6d84-44a2-ac6d-03b5acfb98b2"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.run.inspect",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-645e6383-e734-43dc-8931-d86d7d2b4205",
+              "receipt-bb9ae6af-735e-4421-a2d5-f64a4aa2f633"
+            ],
+            "terminal_receipt": "receipt-bb9ae6af-735e-4421-a2d5-f64a4aa2f633"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.checkpoint.decide",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-c50331ed-bb08-4a55-9a52-6c4a5d011cd6"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.checkpoint.decide",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-0e041fa0-1d1b-4ba2-a4d5-2d66369319a9",
+              "receipt-44fa3c38-5d84-48b4-bd96-cb021a091ce4"
+            ],
+            "terminal_receipt": "receipt-44fa3c38-5d84-48b4-bd96-cb021a091ce4"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.checkpoint.decide",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-0d82e833-c1b7-4439-be5b-ab4c5b85eac0",
+              "receipt-a9d66c32-559d-4e16-b444-2da90db5571f"
+            ],
+            "terminal_receipt": "receipt-a9d66c32-559d-4e16-b444-2da90db5571f"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.run.inspect",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-7f33b711-ec69-45d6-b850-f9eddeb333ae",
+              "receipt-360bc711-cf52-4d4c-a2bc-32382c7c82f5"
+            ],
+            "terminal_receipt": "receipt-360bc711-cf52-4d4c-a2bc-32382c7c82f5"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.workflow.run",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-f6ed0d31-ff67-4568-9b70-802adbff2099",
+              "receipt-dd892160-7090-4bcd-8208-5437f5d024f6"
+            ],
+            "terminal_receipt": "receipt-dd892160-7090-4bcd-8208-5437f5d024f6"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.runs.list",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-3a6f92fa-9db8-4c29-9b3c-f96abb352aca",
+              "receipt-52c57b5f-1101-4ea6-b55c-eec30f5bf082"
+            ],
+            "terminal_receipt": "receipt-52c57b5f-1101-4ea6-b55c-eec30f5bf082"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.run.inspect",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-dd8ff087-31cc-4464-9c84-c89ef6766381",
+              "receipt-04ca2686-5fa9-4972-b874-8c17bbf25ea6"
+            ],
+            "terminal_receipt": "receipt-04ca2686-5fa9-4972-b874-8c17bbf25ea6"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.dispatch.workflow.validate",
+            "decision": "none",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-2dbb9f97-6334-4183-ac92-77ebecaa4b7e"
+            ],
+            "terminal_receipt": "receipt-2dbb9f97-6334-4183-ac92-77ebecaa4b7e"
+          }
+        ],
+        "report": {
+          "message_ids": [
+            "msg_14a587951001gs7ovVAhOqwSMG"
+          ],
+          "operations": [
+            {
+              "ability": "kujo.dispatch.workflow.validate",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-64b5929d-60a2-4645-8811-8dd19aef63be"
+              ],
+              "explanation": "Validated complete.json successfully with no errors or warnings."
+            },
+            {
+              "ability": "kujo.dispatch.workflow.run",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-e5ba7ac9-6523-48db-b2c3-3535fe25214b"
+              ],
+              "explanation": "The request using output_dir reject required explicit human approval, which the user declined; execution did not start."
+            },
+            {
+              "ability": "kujo.dispatch.workflow.run",
+              "outcome": "cancelled",
+              "receipt_ids": [
+                "receipt-a80d3cd1-f726-48f5-8b10-f13c4fa81b8d"
+              ],
+              "explanation": "The request using output_dir cancel required explicit human approval, and tool execution was interrupted; execution did not start."
+            },
+            {
+              "ability": "kujo.dispatch.workflow.run",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-403e588f-93b8-469a-bee6-f55f62ffdc06"
+              ],
+              "explanation": "Executed complete.json with fresh approval. Run run-1792248518796-8238 completed with exit code 0."
+            },
+            {
+              "ability": "kujo.dispatch.runs.list",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-c245fcae-bd37-44c6-ae6d-0e7af0eaa9a0"
+              ],
+              "explanation": "Listed the complete output directory and found run run-1792248518796-8238 completed with one reported issue."
+            },
+            {
+              "ability": "kujo.dispatch.run.inspect",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-e441d9f1-58a5-416a-81a2-d4dfd8603c4a"
+              ],
+              "explanation": "Inspected completed run run-1792248518796-8238 at state revision 4; its only step completed, but report.json was missing."
+            },
+            {
+              "ability": "kujo.dispatch.workflow.run",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-e1e774c9-31cb-4e5e-91d5-925e259960cc"
+              ],
+              "explanation": "Executed checkpoint.json with fresh approval. Run run-1792248551668-1379 reached a pending human checkpoint and paused."
+            },
+            {
+              "ability": "kujo.dispatch.runs.list",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-74f83f37-6d84-44a2-ac6d-03b5acfb98b2"
+              ],
+              "explanation": "Listed the checkpoint output directory and found paused, resumable run run-1792248551668-1379."
+            },
+            {
+              "ability": "kujo.dispatch.run.inspect",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-bb9ae6af-735e-4421-a2d5-f64a4aa2f633"
+              ],
+              "explanation": "Inspected paused run run-1792248551668-1379 at revision 5 and identified its pending human checkpoint, event and decision identifiers."
+            },
+            {
+              "ability": "kujo.dispatch.checkpoint.decide",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-c50331ed-bb08-4a55-9a52-6c4a5d011cd6"
+              ],
+              "explanation": "The first checkpoint approval request required explicit human approval, which the user declined; the decision was not applied."
+            },
+            {
+              "ability": "kujo.dispatch.checkpoint.decide",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-44fa3c38-5d84-48b4-bd96-cb021a091ce4"
+              ],
+              "explanation": "A fresh-approved checkpoint decision using expected revision 6 failed with dispatch_checkpoint_changed; no retry occurred within that request."
+            },
+            {
+              "ability": "kujo.dispatch.checkpoint.decide",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-a9d66c32-559d-4e16-b444-2da90db5571f"
+              ],
+              "explanation": "A separately approved decision using expected revision 5 approved the checkpoint and completed run run-1792248551668-1379."
+            },
+            {
+              "ability": "kujo.dispatch.run.inspect",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-360bc711-cf52-4d4c-a2bc-32382c7c82f5"
+              ],
+              "explanation": "Inspected run run-1792248551668-1379 after the decision; all three steps were completed at state revision 12, but report.json was missing."
+            },
+            {
+              "ability": "kujo.dispatch.workflow.run",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-dd892160-7090-4bcd-8208-5437f5d024f6"
+              ],
+              "explanation": "Execution of failed.json created run run-1792248635953-5549, which failed because step bad-output omitted required output key missing_field."
+            },
+            {
+              "ability": "kujo.dispatch.runs.list",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-52c57b5f-1101-4ea6-b55c-eec30f5bf082"
+              ],
+              "explanation": "Listed the failed output directory and found non-resumable failed run run-1792248635953-5549."
+            },
+            {
+              "ability": "kujo.dispatch.run.inspect",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-04ca2686-5fa9-4972-b874-8c17bbf25ea6"
+              ],
+              "explanation": "Inspected failed run run-1792248635953-5549 at revision 3 and confirmed a non-retryable step_output_schema_validation_failed error."
+            },
+            {
+              "ability": "kujo.dispatch.workflow.validate",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-2dbb9f97-6334-4183-ac92-77ebecaa4b7e"
+              ],
+              "explanation": "Validation of invalid.json failed because step invalid used unsupported type unknown."
+            }
+          ],
+          "limitations": "The session did not correct or revalidate invalid.json, repair or rerun the non-resumable failed workflow, generate the missing report.json artifacts for completed runs, or execute the rejected and cancelled workflow requests. It did not verify broader integration, production behavior, or overall release readiness."
+        }
+      }
+    },
+    {
+      "name": "build",
+      "log": "/tmp/kujo-chatgpt-build-serial.log",
+      "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-ZieRln",
+      "host": "opencode v2.0.32",
+      "platform": "darwin",
+      "arch": "x64",
+      "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+      "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+      "journey": {
+        "agent": "kujo-build",
+        "model": "openai/gpt-5.6-sol",
+        "session_id": "ses_eb5a36512ffeX1UKrKhiIulKYM",
+        "scope": "reviewed imported test snapshots; no OS sandbox claim",
+        "steps": [
+          {
+            "agent": "kujo-build",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.opencode.source.inspect",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-e746720e-c796-428d-ac8f-534f5af62a79"
+            ],
+            "terminal_receipt": "receipt-e746720e-c796-428d-ac8f-534f5af62a79"
+          },
+          {
+            "agent": "kujo-build",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.opencode.source.format",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-7418cc75-887e-4a1d-bb0b-04765e14d88e"
+            ],
+            "terminal_receipt": "receipt-7418cc75-887e-4a1d-bb0b-04765e14d88e"
+          },
+          {
+            "agent": "kujo-build",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.opencode.source.preview",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-c5c395d0-6b0d-43de-91c8-ee1c0a4aed3f"
+            ],
+            "terminal_receipt": "receipt-c5c395d0-6b0d-43de-91c8-ee1c0a4aed3f"
+          },
+          {
+            "agent": "kujo-build",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.opencode.source.execute",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-1c3f4ea2-0f9f-4813-a9df-bd9a320ecf6c"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-build",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.opencode.source.execute",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-3428f623-e3d5-4c90-8c39-78979457bc52",
+              "receipt-681a1cb4-3620-41cb-8083-f7edc32d7694"
+            ],
+            "terminal_receipt": "receipt-681a1cb4-3620-41cb-8083-f7edc32d7694"
+          },
+          {
+            "agent": "kujo-build",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.opencode.source.execute",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-6361aa7a-d6a5-4289-b6ec-350dfd251165",
+              "receipt-363fd5b8-7db5-4707-b437-6db4d2e27e78"
+            ],
+            "terminal_receipt": "receipt-363fd5b8-7db5-4707-b437-6db4d2e27e78"
+          },
+          {
+            "agent": "kujo-build",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.opencode.source.preview",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-1654641e-6d90-4576-b615-5aaa6ca31a08"
+            ],
+            "terminal_receipt": "receipt-1654641e-6d90-4576-b615-5aaa6ca31a08"
+          },
+          {
+            "agent": "kujo-build",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.opencode.source.execute",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-4358ce20-8115-46e4-8da7-e3f3cad5e234",
+              "receipt-53bc1831-ce8d-48bd-b066-1c941a6c469f"
+            ],
+            "terminal_receipt": "receipt-53bc1831-ce8d-48bd-b066-1c941a6c469f"
+          }
+        ],
+        "report": {
+          "message_ids": [
+            "msg_14a5e439b0013bKsjtzonT0Oqt"
+          ],
+          "operations": [
+            {
+              "ability": "kujo.opencode.source.inspect",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-e746720e-c796-428d-ac8f-534f5af62a79"
+              ],
+              "explanation": "Single-file check and lint passed for src/specialist_helper.kujo at digest 3f48b9eafe0e1978b04b1a8b472d546d9886543cd0da759908020c6245edbbad."
+            },
+            {
+              "ability": "kujo.opencode.source.format",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-7418cc75-887e-4a1d-bb0b-04765e14d88e"
+              ],
+              "explanation": "Formatting preview succeeded and reported that formatting would change the file; it did not modify source."
+            },
+            {
+              "ability": "kujo.opencode.source.preview",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-c5c395d0-6b0d-43de-91c8-ee1c0a4aed3f"
+              ],
+              "explanation": "Previewed the test command and exact three-file snapshot, including the original helper digest and expected output."
+            },
+            {
+              "ability": "kujo.opencode.source.execute",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-1c3f4ea2-0f9f-4813-a9df-bd9a320ecf6c"
+              ],
+              "explanation": "The execution required one-time human approval and was declined; execution did not start."
+            },
+            {
+              "ability": "kujo.opencode.source.execute",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-681a1cb4-3620-41cb-8083-f7edc32d7694"
+              ],
+              "explanation": "A fresh human approval authorized the reviewed snapshot. The interpreter test passed 1/1 with exit code 0."
+            },
+            {
+              "ability": "kujo.opencode.source.execute",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-363fd5b8-7db5-4707-b437-6db4d2e27e78"
+              ],
+              "explanation": "After fresh approval, execution was blocked because src/specialist_helper.kujo had changed since preview; no test ran."
+            },
+            {
+              "ability": "kujo.opencode.source.preview",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-1654641e-6d90-4576-b615-5aaa6ca31a08"
+              ],
+              "explanation": "Previewed a new snapshot with helper digest 00aa653697dff0f07ec2fe9da97a8eb20f19a445b6b49bc5d3ee1005435628cb; the helper returned changed import while the fixture still expected reviewed import."
+            },
+            {
+              "ability": "kujo.opencode.source.execute",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-53bc1831-ce8d-48bd-b066-1c941a6c469f"
+              ],
+              "explanation": "After fresh human approval, the exact new snapshot executed but failed 0/1 tests with exit code 3 because expected reviewed import differed from actual changed import."
+            }
+          ],
+          "limitations": "The session did not apply formatting, correct or re-test the final failing source, verify files beyond the selected snapshot, establish broader import or runtime correctness, provide OS sandboxing, or establish overall release readiness."
+        }
+      }
+    },
+    {
+      "name": "browser",
+      "log": "/tmp/kujo-chatgpt-browser-serial.log",
+      "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-r4dsMG",
+      "host": "opencode v2.0.32",
+      "platform": "darwin",
+      "arch": "x64",
+      "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+      "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+      "journey": {
+        "agent": "kujo-browser",
+        "model": "openai/gpt-5.6-sol",
+        "session_id": "ses_eb5a038ceffeQ2NPAUxdnYtn4n",
+        "browser": {
+          "before": {
+            "ready": false,
+            "state": "dependencies_missing",
+            "bridge": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-r4dsMG/kujo/sources/lens-852cb91928cfa0ab5dbdaecb3fb8fc51aa69db6b/bridge",
+            "capabilities": [
+              "kujo.lens.flow.validate",
+              "kujo.lens.page.check"
+            ],
+            "source_commit": "852cb91928cfa0ab5dbdaecb3fb8fc51aa69db6b"
+          },
+          "after": {
+            "ready": true,
+            "state": "ready",
+            "mode": "headless-shell",
+            "bridge": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-r4dsMG/kujo/sources/lens-852cb91928cfa0ab5dbdaecb3fb8fc51aa69db6b/bridge",
+            "capabilities": [
+              "kujo.lens.flow.validate",
+              "kujo.lens.page.check"
+            ],
+            "source_commit": "852cb91928cfa0ab5dbdaecb3fb8fc51aa69db6b"
+          },
+          "installed": true
+        },
+        "scope": "real desktop/mobile page evidence; external opt-in rejected without contacting a public endpoint",
+        "steps": [
+          {
+            "agent": "kujo-browser",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.lens.flow.validate",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-0a09f67d-69d1-4ad8-9474-0734881afdb1"
+            ],
+            "terminal_receipt": "receipt-0a09f67d-69d1-4ad8-9474-0734881afdb1"
+          },
+          {
+            "agent": "kujo-browser",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.lens.flow.validate",
+            "decision": "none",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-686528c9-a533-49fe-9096-640ada1d487d"
+            ],
+            "terminal_receipt": "receipt-686528c9-a533-49fe-9096-640ada1d487d"
+          },
+          {
+            "agent": "kujo-browser",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.lens.page.check",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-b2358b3b-92ad-41c5-9dc7-03a6888d22a8"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-browser",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.lens.page.check",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-a16e50d5-856a-4e19-a468-cd3d2edbeb2f",
+              "receipt-19c1dc13-3fe2-4c13-8d2f-825d1fdad2c4"
+            ],
+            "terminal_receipt": "receipt-19c1dc13-3fe2-4c13-8d2f-825d1fdad2c4"
+          },
+          {
+            "agent": "kujo-browser",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.lens.page.check",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-1a8aa39c-e416-4692-a8dc-b84ecd5ac966",
+              "receipt-46a40113-5561-4c53-ac8c-9824656641e1"
+            ],
+            "terminal_receipt": "receipt-46a40113-5561-4c53-ac8c-9824656641e1"
+          },
+          {
+            "agent": "kujo-browser",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.lens.page.check",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-64c17c67-97f7-43a2-8a56-4ff139f8d066"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-browser",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.lens.page.check",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-4088bdef-36fc-41da-ae60-b23498d16850",
+              "receipt-600145ad-383c-47a9-9c64-bcdb516c2c21"
+            ],
+            "terminal_receipt": "receipt-600145ad-383c-47a9-9c64-bcdb516c2c21"
+          }
+        ],
+        "report": {
+          "message_ids": [
+            "msg_14a616439001FVw7iStuXxw4VQ"
+          ],
+          "operations": [
+            {
+              "ability": "kujo.lens.flow.validate",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-0a09f67d-69d1-4ad8-9474-0734881afdb1"
+              ],
+              "explanation": "Validated valid-flow.json successfully: 3 steps passed with 0 problems."
+            },
+            {
+              "ability": "kujo.lens.flow.validate",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-686528c9-a533-49fe-9096-640ada1d487d"
+              ],
+              "explanation": "Validation executed and failed because the click step lacked a selector."
+            },
+            {
+              "ability": "kujo.lens.page.check",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-b2358b3b-92ad-41c5-9dc7-03a6888d22a8"
+              ],
+              "explanation": "The localhost browser check required one-time human approval, which was declined; execution did not start."
+            },
+            {
+              "ability": "kujo.lens.page.check",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-19c1dc13-3fe2-4c13-8d2f-825d1fdad2c4"
+              ],
+              "explanation": "The approved localhost browser check passed with 0 critical findings, 0 errors, 0 warnings, and 1 informational finding; artifacts were written under specialist-browser/accepted."
+            },
+            {
+              "ability": "kujo.lens.page.check",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-46a40113-5561-4c53-ac8c-9824656641e1"
+              ],
+              "explanation": "The check failed with ability_url_forbidden because an external URL was supplied while allow_external was false."
+            },
+            {
+              "ability": "kujo.lens.page.check",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-64c17c67-97f7-43a2-8a56-4ff139f8d066"
+              ],
+              "explanation": "The external browser check required one-time human approval, which was declined; execution did not start."
+            },
+            {
+              "ability": "kujo.lens.page.check",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-600145ad-383c-47a9-9c64-bcdb516c2c21"
+              ],
+              "explanation": "The approved localhost /failure browser check executed and failed with 4 errors, 0 warnings, and 1 informational finding; a report was written under specialist-browser/browser-failed."
+            }
+          ],
+          "limitations": "Rejected checks were not executed and produced no browser evidence. The accepted and failed browser artifacts were not inspected beyond receipt-reported results and paths. Detailed findings in the failed browser report were not reviewed. No successful external-URL browser check occurred, and this session did not establish overall release readiness."
+        }
+      }
+    },
+    {
+      "name": "ship",
+      "log": "/tmp/kujo-chatgpt-ship-room.log",
+      "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-23HYJ2",
+      "host": "opencode v2.0.32",
+      "platform": "darwin",
+      "arch": "x64",
+      "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+      "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+      "journey": {
+        "agent": "kujo-ship",
+        "model": "openai/gpt-5.6-sol",
+        "session_id": "ses_eb59b8bfcffeikDh0djUwJqgQM",
+        "scope": "informational release scan, actual passing/failing Eval and linked RunLedger; no publication",
+        "steps": [
+          {
+            "agent": "kujo-ship",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.shipcheck.repository.scan",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-6ee390dc-6c09-4fce-bda0-6137c26bbaa7"
+            ],
+            "terminal_receipt": "receipt-6ee390dc-6c09-4fce-bda0-6137c26bbaa7"
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.runledger.runs.start",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-a0ad6348-a09b-4150-be91-c95d4c5d69e4",
+              "receipt-3e0269c4-8037-447a-9909-6127f5fcef8b"
+            ],
+            "terminal_receipt": "receipt-3e0269c4-8037-447a-9909-6127f5fcef8b"
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.eval.suite.run",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-839d25e8-92db-4a7b-89c9-283ef71f849f"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.eval.suite.run",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-56209e2e-2439-4c2f-89ef-3559e9dc4055",
+              "receipt-b456362a-6add-4b68-8db4-2e56f039a930"
+            ],
+            "terminal_receipt": "receipt-b456362a-6add-4b68-8db4-2e56f039a930"
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.eval.suite.run",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-e07a5c49-aee3-4b63-a4db-a76c7fb97067",
+              "receipt-3d8ba1d2-da52-4c8e-8f64-9623cbfb6b92"
+            ],
+            "terminal_receipt": "receipt-3d8ba1d2-da52-4c8e-8f64-9623cbfb6b92"
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.opencode.runledger.correlate",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-210824dc-bff7-4584-9d15-203208cccf1a",
+              "receipt-2f7fb491-945d-4a52-b738-6264ea1b0360"
+            ],
+            "terminal_receipt": "receipt-2f7fb491-945d-4a52-b738-6264ea1b0360"
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.runledger.runs.finish",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-7b23c50e-de4e-422c-9a26-be5a8b9bef10",
+              "receipt-b5548594-33f2-4458-bcf1-cff40b0e9f21"
+            ],
+            "terminal_receipt": "receipt-b5548594-33f2-4458-bcf1-cff40b0e9f21"
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "openai/gpt-5.6-sol",
+            "ability": "kujo.runledger.runs.report",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-c10363cd-c5f6-446b-9f71-61679d39b0e7"
+            ],
+            "terminal_receipt": "receipt-c10363cd-c5f6-446b-9f71-61679d39b0e7"
+          }
+        ],
+        "report": {
+          "message_ids": [
+            "msg_14a65d9650011BmpNagbX6xoIT"
+          ],
+          "operations": [
+            {
+              "ability": "kujo.shipcheck.repository.scan",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-6ee390dc-6c09-4fce-bda0-6137c26bbaa7"
+              ],
+              "explanation": "Informational ShipCheck scan completed: 1 check passed, 4 error-severity checks failed, and 11 warnings were reported."
+            },
+            {
+              "ability": "kujo.runledger.runs.start",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-3e0269c4-8037-447a-9909-6127f5fcef8b"
+              ],
+              "explanation": "Started the RunLedger record for the ship-acceptance task with fresh approval."
+            },
+            {
+              "ability": "kujo.eval.suite.run",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-839d25e8-92db-4a7b-89c9-283ef71f849f"
+              ],
+              "explanation": "The requested Eval targeting rejected-eval required human approval, which was declined; execution never started."
+            },
+            {
+              "ability": "kujo.eval.suite.run",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-b456362a-6add-4b68-8db4-2e56f039a930"
+              ],
+              "explanation": "The pass.json Eval executed with fresh approval and passed its single evidence.txt file-existence check."
+            },
+            {
+              "ability": "kujo.eval.suite.run",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-3d8ba1d2-da52-4c8e-8f64-9623cbfb6b92"
+              ],
+              "explanation": "The fail.json Eval executed with fresh approval and exited 1 because missing.txt did not exist."
+            },
+            {
+              "ability": "kujo.opencode.runledger.correlate",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-2f7fb491-945d-4a52-b738-6264ea1b0360"
+              ],
+              "explanation": "Linked Eval run ID eval-fd14991ebd6e3d57d2be632a to the RunLedger record with fresh approval."
+            },
+            {
+              "ability": "kujo.runledger.runs.finish",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-b5548594-33f2-4458-bcf1-cff40b0e9f21"
+              ],
+              "explanation": "Finished the RunLedger record with status fail and the caller-supplied verdict that the fixture Eval failed and no release was authorized or published."
+            },
+            {
+              "ability": "kujo.runledger.runs.report",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-c10363cd-c5f6-446b-9f71-61679d39b0e7"
+              ],
+              "explanation": "Rendered a read-only report showing one recorded run with fail status, 25 changed files, and no follow-ups, notes, or cost data."
+            }
+          ],
+          "limitations": "ShipCheck was an informational metadata scan, not execution of tests, lint, builds, or release gates. The Eval evidence covered only two deterministic file-existence fixtures, one passing and one failing, and both executed Evals emitted a KUJORUN001 warning about undefined remove_file. Correlation recorded a link without validating or copying evidence, and RunLedger finish recorded a caller-supplied verdict rather than independently proving it. The session did not verify all release requirements, establish overall release readiness, authorize shipping, or publish a release."
+        }
+      }
+    }
+  ],
+  "harness_commits": [
+    "f41a3f6",
+    "9065090"
+  ],
+  "focused_regressions": {
+    "passed": 30,
+    "failed": 0,
+    "log": "/tmp/kujo-chatgpt-final-harness-tests.log"
+  },
+  "prior_attempts": [
+    {
+      "log": "/tmp/kujo-chatgpt-understand.log",
+      "finding": "Repeated request interpreted as retry after rejection; clarified independent native decision."
+    },
+    {
+      "log": "/tmp/kujo-chatgpt-understand-renewed.log",
+      "finding": "Report included preparatory catalog read and could not cite rejected invocation."
+    },
+    {
+      "log": "/tmp/kujo-chatgpt-understand-evidence.log",
+      "finding": "Full receipt listing elided by host; replaced with bounded receipt read immediately after refusal."
+    },
+    {
+      "log": "/tmp/kujo-chatgpt-build.log",
+      "finding": "Preparatory catalog entry counted in report; substantive operation scope clarified."
+    },
+    {
+      "log": "/tmp/kujo-chatgpt-browser.log",
+      "finding": "Harness checked asynchronous setup too early; now waits for terminal readiness."
+    },
+    {
+      "log": "/tmp/kujo-chatgpt-build-corrected.log",
+      "finding": "Baseline management RPC failure during disk pressure, before specialist acceptance; precise cause unproven."
+    },
+    {
+      "logs": [
+        "/tmp/kujo-chatgpt-browser-corrected.log",
+        "/tmp/kujo-chatgpt-ship.log",
+        "/tmp/kujo-chatgpt-ship-serial.log"
+      ],
+      "finding": "Confirmed ENOSPC during fixture setup; no specialist inference in these attempts."
+    }
+  ]
+}
