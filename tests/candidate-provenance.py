@@ -15,9 +15,9 @@ parser.add_argument('--host',required=True)
 args=parser.parse_args()
 root=Path(args.fixture).resolve()
 archive=Path(args.tarball).resolve()
-accepted=json.loads((root/'verification.json').read_text())
+accepted=json.loads((root/'verification.json').read_text(encoding='utf-8'))
 assert accepted['ok'] is True, 'Only accepted fixtures can establish candidate evidence'
-installation=json.loads((root/'kujo/installation.json').read_text())
+installation=json.loads((root/'kujo/installation.json').read_text(encoding='utf-8'))
 projection=Path(installation['projection_root']).resolve()
 assert projection.is_relative_to(root), 'Projection must be owned by this fixture'
 host=Path(args.host).resolve()

@@ -43,22 +43,31 @@ Use `bin/opencode.exe` on Windows. For source-checkout testing without a candida
 than local siblings. Live-model flags remain explicit and require an entitled
 provider; no paid model is selected automatically.
 
-The POSIX jobs also run the actual 80×24 terminal harness with the exact candidate,
+All jobs are configured to run the actual 80×24 terminal harness with the exact candidate,
 including onboarding, service guidance, visible profile rejection, and separate
 RunLedger start/finish approvals. Screens and payload proof are retained. This does
 not request inference. The harness uses a private Python environment with pinned
 terminal-parser dependencies.
 
+The harness uses POSIX PTYs on Linux/macOS and pinned pywinpty 3.0.5 with native
+ConPTY on Windows. It launches only an owned standalone host, uses bounded reads,
+and retains UTF-8 screens. A real-terminal smoke gate checks dimensions, Unicode
+input, early exit and cleanup before the OpenCode journey. Windows invokes npm's
+JavaScript entrypoint through node, avoiding shell interpolation of fixture paths.
+The transport follows the upstream [pywinpty 3.0.5 API](https://github.com/andfoy/pywinpty/blob/v3.0.5/winpty/ptyprocess.py).
+
 Windows rendered-terminal acceptance and all six live specialist model journeys
-remain separate gaps; the POSIX harness does not run on Windows. These records are
+remain separate gaps: adding the ConPTY transport and CI step is not evidence that
+Windows passed. Local POSIX tests cannot close that requirement. These records are
 required in addition to native API checks before the release report can mark the
 full platform requirement passed. A CI billing failure before jobs start supplies
 no compatibility evidence.
 
-For local POSIX rendered acceptance after installing tests/requirements-tui.txt in
-a private Python environment:
+For local rendered acceptance after installing tests/requirements-tui.txt in
+a private Python environment (Windows requires its conditional pywinpty wheel):
 
 ```sh
+python tests/terminal-transport-test.py
 python tests/tui-terminal.py --candidate /absolute/candidate \
   --host /absolute/host/bin/opencode --ledger --columns 80 --rows 24
 ```

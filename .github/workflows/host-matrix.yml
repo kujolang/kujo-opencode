@@ -89,15 +89,20 @@ jobs:
         run: |
           ARCHIVE=$(node -p "JSON.parse(require('fs').readFileSync(process.env.RUNNER_TEMP+'/kujo-candidate/candidate.json','utf8')).archive")
           python tests/candidate-provenance.py --tarball "$RUNNER_TEMP/kujo-candidate/$ARCHIVE" --fixture "$FIXTURE" --host "$OPENCODE_BIN"
-      - name: Verify rendered onboarding and ledger approvals on POSIX hosts
-        if: matrix.os != 'windows-2025'
+      - name: Verify rendered onboarding and ledger approvals
         id: rendered
         env:
           OPENCODE_BIN: ${{ steps.host.outputs.host }}
         run: |
           python -m venv "$RUNNER_TEMP/tui-venv"
-          "$RUNNER_TEMP/tui-venv/bin/python" -m pip install -r tests/requirements-tui.txt
-          "$RUNNER_TEMP/tui-venv/bin/python" tests/tui-terminal.py --candidate "$RUNNER_TEMP/kujo-candidate" --host "$OPENCODE_BIN" --ledger --columns 80 --rows 24
+          if [[ "$RUNNER_OS" == Windows ]]; then
+            TUI_PYTHON="$RUNNER_TEMP/tui-venv/Scripts/python.exe"
+          else
+            TUI_PYTHON="$RUNNER_TEMP/tui-venv/bin/python"
+          fi
+          "$TUI_PYTHON" -m pip install -r tests/requirements-tui.txt
+          "$TUI_PYTHON" tests/terminal-transport-test.py
+          "$TUI_PYTHON" tests/tui-terminal.py --candidate "$RUNNER_TEMP/kujo-candidate" --host "$OPENCODE_BIN" --ledger --columns 80 --rows 24
       - name: Retain rendered evidence
         if: always() && steps.rendered.outputs.fixture != ''
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

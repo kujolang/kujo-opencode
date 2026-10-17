@@ -7,27 +7,21 @@ also requires a successful scoped specialist receipt.
 --leash rejects then grants a fixture-only canonical delivery using that model;
 notification providers and workflow callbacks are disabled.
 --gateway tests a private CMS mutation with separate application/native grants.
-Requires the optional pinned tests/requirements-tui.txt environment (POSIX only).
+Requires the optional pinned tests/requirements-tui.txt environment (POSIX PTY or Windows ConPTY).
 """
 import argparse
-import codecs
-import fcntl
 import json
 import os
 from pathlib import Path
-import pty
 import re
-import select
-import signal
 import shutil
 import sys
-import struct
 import subprocess
-import termios
 import time
 import tempfile
 import uuid
 import pyte
+from terminal_transport import Terminal
 from leash_fixture import LeashFixture
 from gateway_fixture import GatewayFixture
 from datetime import datetime, timezone
@@ -65,22 +59,35 @@ project.mkdir()
 (project / 'README.md').write_text('# Terminal acceptance fixture\n')
 subprocess.run(['git', 'init', '-q', str(project)], check=True)
 env = dict(os.environ, KUJO_OPENCODE_HOME=str(root / 'kujo'), TERM='xterm-256color')
+# Windows npm.cmd needs a shell; invoke npm's JS entrypoint with node instead.
+# No shell interpolation of candidate or project paths is needed.
+if os.name == 'nt':
+    node = shutil.which('node')
+    npm_shim = shutil.which('npm')
+    npm_cli = Path(os.environ.get('npm_execpath', ''))
+    if not npm_cli.is_file():
+        npm_cli = Path(npm_shim).parent / 'node_modules/npm/bin/npm-cli.js' if npm_shim else Path('')
+    if not node or not npm_cli.is_file() or npm_cli.suffix != '.js':
+        raise RuntimeError('Node and the npm JS entrypoint are required for Windows acceptance')
+    npm = [node, str(npm_cli.resolve())]
+else:
+    npm = ['npm']
 candidate = None
 setup_cli = repo / 'bin/kujo-opencode.mjs'
 source_options = ['--source-root', str(repo.parent)]
 if args.candidate:
     args.candidate = args.candidate.resolve()
-    subprocess.run(['npm', 'run', 'release:verify', '--', str(args.candidate)], cwd=repo, check=True, stdout=subprocess.DEVNULL, timeout=120)
-    candidate = json.loads((args.candidate / 'candidate.json').read_text())
+    subprocess.run([*npm, 'run', 'release:verify', '--', str(args.candidate)], cwd=repo, check=True, stdout=subprocess.DEVNULL, timeout=120)
+    candidate = json.loads((args.candidate / 'candidate.json').read_text(encoding='utf-8'))
     for key in ['KUJO_BIN', 'KUJO_SOURCE_ROOT', 'KUJO_OPENCODE_PROJECT', 'NODE_PATH']:
         env.pop(key, None)
     prefix = root / 'prefix'
-    subprocess.run(['npm', 'install', '--prefix', str(prefix), str(args.candidate / candidate['archive'])], env=env, check=True, stdout=subprocess.DEVNULL, timeout=180)
+    subprocess.run([*npm, 'install', '--prefix', str(prefix), str(args.candidate / candidate['archive'])], env=env, check=True, stdout=subprocess.DEVNULL, timeout=180)
     setup_cli = prefix / 'node_modules/@kujolang/kujo-opencode/bin/kujo-opencode.mjs'
     source_options = []
 subprocess.run(['node', str(setup_cli), 'setup', '--project', str(project), *source_options, '--json'], env=env, check=True, stdout=subprocess.DEVNULL, timeout=900)
 if candidate:
-    installation = json.loads((root / 'kujo/installation.json').read_text())
+    installation = json.loads((root / 'kujo/installation.json').read_text(encoding='utf-8'))
     assert all(source['mode'] == 'pinned' for source in installation['sources'].values())
 
 leash=LeashFixture(root,os.environ['LEASH_TEST_BIN']) if args.leash else None
@@ -94,14 +101,10 @@ version = subprocess.check_output([args.host, '--version'], text=True).strip()
 session = 'ses_kujo_terminal_' + uuid.uuid4().hex
 screen = pyte.Screen(args.columns, args.rows)
 stream = pyte.Stream(screen)
-decoder = codecs.getincrementaldecoder('utf8')('replace')
-pid, fd = pty.fork()
-if pid == 0:
-    os.chdir(project)
-    # setup embeds the fixture data root; do not override the host globally.
-    env.pop('KUJO_OPENCODE_HOME', None)
-    os.execvpe(args.host, [args.host, '--standalone', '--session', session], env)
-fcntl.ioctl(fd, termios.TIOCSWINSZ, struct.pack('HHHH', args.rows, args.columns, 0, 0))
+# setup embeds the fixture data root; do not override the host globally.
+env.pop('KUJO_OPENCODE_HOME', None)
+terminal = Terminal([args.host, '--standalone', '--session', session],
+                    project, env, rows=args.rows, columns=args.columns)
 
 def current():
     return '\n'.join(screen.display)
@@ -109,28 +112,22 @@ def current():
 def pump(seconds=.2):
     deadline = time.monotonic() + seconds
     while time.monotonic() < deadline:
-        ready, _, _ = select.select([fd], [], [], min(.1, max(0, deadline-time.monotonic())))
-        if ready:
-            try:
-                data = os.read(fd, 65536)
-            except OSError:
-                raise RuntimeError('OpenCode terminal exited before acceptance')
-            if not data:
-                raise RuntimeError('OpenCode terminal closed')
-            stream.feed(decoder.decode(data))
+        data = terminal.read(min(.1, max(0, deadline-time.monotonic())))
+        if data:
+            stream.feed(data)
 
 def wait(text, name, seconds=30):
     deadline = time.monotonic()+seconds
     while time.monotonic()<deadline:
         pump()
         if text in current():
-            (root / (name+'.txt')).write_text(current())
+            (root / (name+'.txt')).write_text(current(), encoding='utf-8')
             return
-    (root / 'failure.txt').write_text(current())
+    (root / 'failure.txt').write_text(current(), encoding='utf-8')
     raise AssertionError(f'{text!r} not rendered; see {root}/failure.txt')
 
 def send(text):
-    os.write(fd, text.encode())
+    terminal.write(text)
     pump(.35)
 
 def menu():
@@ -190,7 +187,7 @@ try:
     wait('Request declined', 'profile-denied')
     assert 'RPC call failed' not in '\n'.join(screen.display)
     assert 'No permission was granted' in '\n'.join(screen.display)
-    assert json.loads((project/'.kujo/opencode.json').read_text())['profile']=='kujo.profile.essentials'
+    assert json.loads((project/'.kujo/opencode.json').read_text(encoding='utf-8'))['profile']=='kujo.profile.essentials'
     send('\x1b')
     menu()
     choose('Manage individual capabilities', 'From profile', 'capabilities')
@@ -215,14 +212,14 @@ try:
         def record():
             files=list(project.glob('.kujo/opencode-runledger/*/runs/*.json'))
             assert len(files)==1, 'Expected exactly one canonical session record'
-            return json.loads(files[0].read_text())
+            return json.loads(files[0].read_text(encoding='utf-8'))
         send('\x1b')
         menu()
         choose('Choose a profile', 'Choose Kujo capabilities', 'ship-profile')
         choose('Ship', 'Allow once', 'ship-approval')
         allow('ship-approval')
         wait('tools ready', 'ship-active')
-        assert json.loads((project/'.kujo/opencode.json').read_text())['profile']=='kujo.profile.ship'
+        assert json.loads((project/'.kujo/opencode.json').read_text(encoding='utf-8'))['profile']=='kujo.profile.ship'
         if args.automatic:
             if args.ship:
                 menu()
@@ -233,7 +230,7 @@ try:
             choose('Enable automatic tracking', 'Allow once', 'automatic-enable-permission')
             allow('automatic-enable-permission')
             wait('Lifecycle delivery', 'automatic-enabled')
-            assert json.loads((project/'.kujo/opencode.json').read_text())['lifecycle']['runledger'] is True
+            assert json.loads((project/'.kujo/opencode.json').read_text(encoding='utf-8'))['lifecycle']['runledger'] is True
             send('\x1b')
             wait('GLM-5.3-Flash Free', 'automatic-visible-model')
             assert any('GLM-5.3-Flash Free' in line and 'OpenCode' in line for line in screen.display), 'Only the visible OpenCode free model is permitted for this gate'
@@ -245,12 +242,12 @@ try:
             wait('Review this tracked attempt', 'automatic-completion', seconds=90)
             assert record()['status']=='in_progress'
             if args.ship:
-                receipts=[json.loads(line) for line in (root/'kujo/receipts.jsonl').read_text().splitlines() if line.strip()]
+                receipts=[json.loads(line) for line in (root/'kujo/receipts.jsonl').read_text(encoding='utf-8').splitlines() if line.strip()]
                 scans=[r for r in receipts if r.get('ability_id')=='kujo.shipcheck.repository.scan' and r.get('status')=='succeeded' and r.get('metadata',{}).get('agent_id')=='kujo-ship']
                 (root/'specialist-evidence.json').write_text(json.dumps(scans,indent=2))
                 assert scans, 'Ship specialist did not produce a successful native scan receipt'
             if args.completion_evidence:
-                receipts=[json.loads(line) for line in (root/'kujo/receipts.jsonl').read_text().splitlines() if line.strip()]
+                receipts=[json.loads(line) for line in (root/'kujo/receipts.jsonl').read_text(encoding='utf-8').splitlines() if line.strip()]
                 scans=[r for r in receipts if r.get('ability_id')=='kujo.shipcheck.repository.scan' and r.get('status')=='succeeded']
                 assert scans, 'Completion evidence requires a successful native scan'
                 (root/'completion-evidence.json').write_text(json.dumps(scans,indent=2))
@@ -312,7 +309,7 @@ try:
         assert choice_style('Allow once')==selected and choice_style('Reject')!=selected
         send('\r')
         wait('tools ready', service+'-full-active')
-        assert json.loads((project/'.kujo/opencode.json').read_text())['profile']=='kujo.profile.full'
+        assert json.loads((project/'.kujo/opencode.json').read_text(encoding='utf-8'))['profile']=='kujo.profile.full'
         wait('GLM-5.3-Flash Free', service+'-visible-model')
         assert any('GLM-5.3-Flash Free' in line and 'OpenCode' in line for line in screen.display), 'Only the visible OpenCode free model is permitted'
         event={'schema':'kujo.intervention-request/v2','request_id':'rendered-leash-fixture','boundary_id':'boundary-fixture','run_id':'run-fixture','state_revision':1,'reason':{'type':'evaluation_failed','message':'Local acceptance'},'summary':'Fixture only; notifications disabled','policy_decision_ref':'policy-fixture','evidence':[],'preservation':{'status':'satisfied'},'allowed_actions':['retry_evaluation','abort'],'created_at':datetime.now(timezone.utc).isoformat(),'expires_at':None,'callback':{'target':'dispatch://resume-decision/run-fixture'},'run':{'workflow_id':'fixture','step_id':'gate','attempt':1},'routing':{'channels':[],'audience':[]},'security':{'contains_sensitive_data':False}}
@@ -366,7 +363,7 @@ try:
             pump()
             receipt_file=root/'kujo/receipts.jsonl'
             if receipt_file.exists():
-                receipts=[json.loads(line) for line in receipt_file.read_text().splitlines() if line.strip()]
+                receipts=[json.loads(line) for line in receipt_file.read_text(encoding='utf-8').splitlines() if line.strip()]
             delivered=[r for r in receipts if r.get('ability_id')==ability and r.get('status')=='succeeded']
             if delivered:
                 break
@@ -388,7 +385,7 @@ try:
             assert delivered[0]['result']['native_permissions']=='unchanged'
             evidence={'receipt':delivered[0],'events':events}
         (root/(service+'-delivery-evidence.json')).write_text(json.dumps(evidence,indent=2))
-        (root/(service+'-delivered.txt')).write_text(current())
+        (root/(service+'-delivered.txt')).write_text(current(), encoding='utf-8')
         menu()
         choose('Evidence history', 'Kujo evidence scope', service+'-evidence-scope')
         choose('This session', 'Kujo evidence · session', service+'-evidence-list')
@@ -418,10 +415,10 @@ try:
         assert page, 'Search should return to a numbered result page'
         if gateway:
             assert int(page.group(1))>1, 'Search should reveal retained result beyond the first page'
-    result = dict(ok=True, host=version, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=args.automatic or args.leash or args.gateway, effects_approved=args.ledger or args.automatic or args.leash or args.gateway, rendered_ledger=args.ledger, rendered_automatic_completion=args.automatic, rendered_completion_evidence=args.completion_evidence, live_ship_specialist=args.ship, rendered_leash=args.leash, rendered_gateway=args.gateway)
+    result = dict(ok=True, host=version, terminal_backend=terminal.backend, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=args.automatic or args.leash or args.gateway, effects_approved=args.ledger or args.automatic or args.leash or args.gateway, rendered_ledger=args.ledger, rendered_automatic_completion=args.automatic, rendered_completion_evidence=args.completion_evidence, live_ship_specialist=args.ship, rendered_leash=args.leash, rendered_gateway=args.gateway)
     if candidate:
         result.update(candidate_commit=candidate['commit'], candidate_sha256=candidate['files'][candidate['archive']], candidate_integrity=candidate['integrity'], pinned_sources=True)
-        subprocess.run(['npm', 'run', 'release:verify', '--', str(args.candidate)], cwd=repo, check=True, stdout=subprocess.DEVNULL, timeout=120)
+        subprocess.run([*npm, 'run', 'release:verify', '--', str(args.candidate)], cwd=repo, check=True, stdout=subprocess.DEVNULL, timeout=120)
     (root/'verification.json').write_text(json.dumps(result, indent=2)+'\n')
     if candidate:
         try:
@@ -434,24 +431,14 @@ try:
 finally:
     # Only the owned standalone terminal is stopped; never touch a user server.
     try:
-        os.write(fd, b'\x03\x03')
+        terminal.write('\x03\x03')
         pump(.3)
-    except (OSError, RuntimeError):
+    except (OSError, EOFError, RuntimeError):
         pass
     try:
-        os.kill(pid, signal.SIGTERM)
-    except ProcessLookupError:
-        pass
-    deadline=time.monotonic()+5
-    while time.monotonic()<deadline:
-        if os.waitpid(pid, os.WNOHANG)[0]:
-            break
-        time.sleep(.1)
-    else:
-        os.kill(pid, signal.SIGKILL)
-        os.waitpid(pid, 0)
-    os.close(fd)
-    if leash:
-        leash.close()
-    if gateway:
-        gateway.close()
+        terminal.close()
+    finally:
+        if leash:
+            leash.close()
+        if gateway:
+            gateway.close()
