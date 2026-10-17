@@ -123,6 +123,9 @@ OpenCode's own permission checks remain independent.
 
 ## Maintenance
 
+See [compatibility, upgrades and troubleshooting](docs/COMPATIBILITY.md) for
+tested host/platform limits and recovery instructions.
+
 - `status` shows the active installation; `doctor` reports readiness and fixes.
 - Install the newer release package, then run `update` in each project. It keeps
   profiles, overrides, and receipts. Projects on 0.1.0 keep their prior projection.

@@ -20,7 +20,8 @@
     "scripts/build-release.mjs",
     "scripts/check-opencode-host.mjs",
     "docs/VERIFICATION.md",
-    "docs/SERVICE-SUPPORT.md"
+    "docs/SERVICE-SUPPORT.md",
+    "docs/COMPATIBILITY.md"
   ],
   "scripts": {
     "build": "node scripts/build-release.mjs",

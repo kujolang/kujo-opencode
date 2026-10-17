@@ -37,6 +37,7 @@ for (const required of [
   "assets/opencode/skills/kujo-opencode/SKILL.md",
   "docs/PROVENANCE.md",
   "docs/SERVICE-SUPPORT.md",
+  "docs/COMPATIBILITY.md",
   "README.md",
   "SECURITY.md",
 ]) assert.ok(files.has(required), `missing ${required}`);
