@@ -4,6 +4,18 @@ import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 import {assertProviderHealthy} from './native-model-acceptance.mjs';
 
+// Review the fixture's embedded JSON semantically while preserving every other
+// field. The narrow grammar refuses duplicate/extra keys and changed values;
+// execution still uses the host's original request and its exact approval ID.
+export function assertDispatchReviewedInput(actual,expected) {
+ if(Object.hasOwn(expected,'input_json')) {
+  assert.equal(typeof actual.input_json,'string');
+  assert.match(actual.input_json,/^\s*\{\s*"recovery_case"\s*:\s*"lost-native-approval-reply"\s*\}\s*$/);
+  assert.deepEqual(JSON.parse(actual.input_json),JSON.parse(expected.input_json));
+  assert.deepEqual({...actual,input_json:expected.input_json},expected);
+ } else assert.deepEqual(actual,expected);
+}
+
 // Fault only the owned host's one-time approval reply. This does not claim loss
 // of a model-provider response or arbitrary exactly-once workflow execution.
 export async function nativeDispatchTransport({api,project,dataRoot,model,loseApprovalReply,interrupt}) {
@@ -14,7 +26,7 @@ export async function nativeDispatchTransport({api,project,dataRoot,model,loseAp
  const session=(await api('/api/session',{title:'Dispatch approval transport recovery',location:{directory:project},agent:'build',model:{providerID:model.slice(0,split),id:model.slice(split+1)}})).data;
  assert.equal((await api(`/api/session/${session.id}`)).data.agent,'build');
  const rows=async()=> (await readFile(join(dataRoot,'receipts.jsonl'),'utf8')).split('\n').filter(Boolean).map(JSON.parse).filter(r=>r.metadata?.session_id===session.id);
- let transport;
+ let transport;const reviewedInputs=[];
  async function operation(tool,ability,input,beforeDecision,lose=false) {
   const before=new Set((await rows()).map(r=>r.receipt_id));
   const fresh=async()=> (await rows()).filter(r=>!before.has(r.receipt_id));
@@ -28,10 +40,10 @@ export async function nativeDispatchTransport({api,project,dataRoot,model,loseAp
     const observed=await fresh();
     for(const row of observed){assert.equal(row.surface,'plugin');assert.equal(row.metadata.agent_id,'build');assert.equal(row.metadata.model_id,model);assert.equal(row.metadata.project_root,project);assert.ok([ability,'kujo.ability.catalog.list','kujo.ability.receipts.list'].includes(row.ability_id),'Unexpected operation during recovery');}
     for(const permission of (await api(`/api/session/${session.id}/permission`)).data){
-     assert.equal(permission.action,'kujo.ability.approve');assert.equal(permission.metadata.ability,ability);assert.deepEqual(permission.metadata.input,input);assert.deepEqual(permission.save,[]);
+     assert.equal(permission.action,'kujo.ability.approve');assert.equal(permission.metadata.ability,ability);assertDispatchReviewedInput(permission.metadata.input,input);assert.deepEqual(permission.save,[]);
      if(permissionID){assert.equal(permission.id,permissionID);continue;}
      assert.ok(observed.some(r=>r.ability_id===ability&&r.status==='approval_required'));
-     await beforeDecision();permissionID=permission.id;
+     await beforeDecision();permissionID=permission.id;reviewedInputs.push({ability,input:permission.metadata.input});
      if(lose)transport=await loseApprovalReply(session.id,permission.id);
      else await api(`/api/session/${session.id}/permission/${permission.id}/reply`,{decision:'once'});
     }
@@ -62,5 +74,5 @@ export async function nativeDispatchTransport({api,project,dataRoot,model,loseAp
  const inspected=await operation('kujo_dispatch_inspect','kujo.dispatch.run.inspect',{path,output_dir:'runs',run_id:runID},unchanged);
  assert.equal(inspected.result.structured.run_id,runID);assert.equal(inspected.result.structured.summary.status,'completed');await unchanged();
  assert.equal((await rows()).filter(r=>r.ability_id==='kujo.dispatch.workflow.run'&&r.status==='succeeded').length,1);
- return {scope:'Native one-time approval HTTP reply lost; retained Dispatch run discovered and inspected without workflow retry',agent:'build',model,session_id:session.id,transport,run_id:runID,receipt_ids:[run.receipt_id,listed.receipt_id,inspected.receipt_id],workflow_executions:1,canonical_state_unchanged_by_reconciliation:true};
+ return {scope:'Native one-time approval HTTP reply lost; retained Dispatch run discovered and inspected without workflow retry',agent:'build',model,session_id:session.id,transport,reviewed_inputs:reviewedInputs,run_id:runID,receipt_ids:[run.receipt_id,listed.receipt_id,inspected.receipt_id],workflow_executions:1,canonical_state_unchanged_by_reconciliation:true};
 }

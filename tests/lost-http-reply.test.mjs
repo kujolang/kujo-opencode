@@ -41,3 +41,12 @@ for(const mismatch of ['ability','input','persistent','provider'])test(`Dispatch
   assert.equal(granted,0);assert.equal(interrupted,1);
  } finally {await rm(root,{recursive:true,force:true});}
 });
+
+test('Dispatch input review accepts only harmless embedded JSON whitespace',async()=>{
+ const {assertDispatchReviewedInput}=await import('./native-dispatch-transport.mjs');
+ const expected={path:'owned',input_json:'{"recovery_case":"lost-native-approval-reply"}'};
+ assertDispatchReviewedInput({...expected,input_json:' { "recovery_case": "lost-native-approval-reply" } '},expected);
+ for(const input_json of ['{}','{"recovery_case":"different"}','{"recovery_case":"lost-native-approval-reply","extra":1}','{"recovery_case":"lost-native-approval-reply","recovery_case":"lost-native-approval-reply"}'])assert.throws(()=>assertDispatchReviewedInput({...expected,input_json},expected),{code:'ERR_ASSERTION'});
+ assert.throws(()=>assertDispatchReviewedInput({...expected,path:'elsewhere'},expected),{code:'ERR_ASSERTION'});
+ assert.throws(()=>assertDispatchReviewedInput({path:'owned'},expected),{code:'ERR_ASSERTION'});
+});
