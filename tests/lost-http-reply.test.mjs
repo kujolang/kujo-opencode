@@ -15,3 +15,29 @@ for(const status of [200,500])test(`real socket loss with upstream ${status}`,as
  }finally{server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}
 });
 test('fault injection cannot target an external host',async()=>assert.rejects(lostHttpReply({url:'https://example.com',body:{}})));
+
+// The live Dispatch fixture may grant only its exact isolated request.
+// These negative cases exercise the controller without a model or service.
+for(const mismatch of ['ability','input','persistent','provider'])test(`Dispatch transport fixture refuses ${mismatch} mismatch before approval`,async()=>{
+ const {mkdtemp,mkdir,writeFile,rm}=await import('node:fs/promises');
+ const {tmpdir}=await import('node:os');const {join}=await import('node:path');
+ const {nativeDispatchTransport}=await import('./native-dispatch-transport.mjs');
+ const root=await mkdtemp(join(tmpdir(),'kujo-dispatch-controller-')),project=join(root,'project'),dataRoot=join(root,'data');
+ await mkdir(project);await mkdir(dataRoot);await writeFile(join(dataRoot,'receipts.jsonl'),'');
+ const {realpath}=await import('node:fs/promises');const canonical=await realpath(project);
+ let interrupted=0,granted=0;
+ const input={path:'dispatch-transport',workflow_file:'workflow.json',topic:'Recover the retained run after an approval reply is lost',input_json:'{}',output_dir:'runs'};
+ const api=async(path,body)=>{
+  if(path==='/api/session')return {data:{id:'owned'}};
+  if(path==='/api/session/owned')return {data:{id:'owned',agent:'build'}};
+  if(path.endsWith('/prompt')){await writeFile(join(dataRoot,'receipts.jsonl'),JSON.stringify({receipt_id:'pending',ability_id:'kujo.dispatch.workflow.run',status:'approval_required',surface:'plugin',metadata:{session_id:'owned',agent_id:'build',model_id:'provider/model',project_root:canonical}})+'\n');return {};}
+  if(path.includes('/message?'))return {data:mismatch==='provider'?[{error:{type:'provider.auth',status:403}}]:[]};
+  if(path.endsWith('/permission'))return {data:[{id:'permission',action:'kujo.ability.approve',save:mismatch==='persistent'?['*']:[],metadata:{ability:mismatch==='ability'?'kujo.other':'kujo.dispatch.workflow.run',input:mismatch==='input'?{...input,output_dir:'elsewhere'}:input}}]};
+  if(path.endsWith('/reply')){granted++;throw Error('Unexpected grant');}
+  throw Error('Unexpected fixture API '+path);
+ };
+ try {
+  await assert.rejects(nativeDispatchTransport({api,project,dataRoot,model:'provider/model',loseApprovalReply:async()=>{granted++;throw Error('Unexpected grant');},interrupt:async id=>{assert.equal(id,'owned');interrupted++;}}),mismatch==='provider'?/provider.auth/:{code:'ERR_ASSERTION'});
+  assert.equal(granted,0);assert.equal(interrupted,1);
+ } finally {await rm(root,{recursive:true,force:true});}
+});
