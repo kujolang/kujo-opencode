@@ -187,7 +187,9 @@ try:
     (root/'permission-focus.json').write_text(json.dumps(focus))
     assert focus['reject']==selected and focus['allow']!=selected, 'Reject must be visibly selected before Enter'
     send('\r')
-    wait('Kujo needs attention', 'profile-denied')
+    wait('Request declined', 'profile-denied')
+    assert 'RPC call failed' not in '\n'.join(screen.display)
+    assert 'No permission was granted' in '\n'.join(screen.display)
     assert json.loads((project/'.kujo/opencode.json').read_text())['profile']=='kujo.profile.essentials'
     send('\x1b')
     menu()

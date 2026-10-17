@@ -1,5 +1,6 @@
 import {verifyCandidate} from '../scripts/release-candidate.mjs';
 import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
 import {execFile,spawn} from 'node:child_process';
 import {promisify} from 'node:util';
 import {mkdtemp,mkdir,readFile,writeFile,realpath} from 'node:fs/promises';
@@ -42,10 +43,23 @@ try {
   await delay(250);
  }
  if(!base||!authorization)throw Error('Host did not start');
+ const managementActions={profile:'kujo.profile.change',capability:'kujo.capability.change',lifecycle:'kujo.lifecycle.change',runledger:'kujo.runledger.session',browser:'kujo.browser.setup',knowledge:'kujo.ability.approve'};
+ const pendingManagement=new Map();
  async function api(path,body,timeoutMs=15000) {
+  const action=managementActions[path.replace('/api/rpc/kujo.control/','')];
+  const marker=action&&body?.input?randomUUID():undefined;
+  const key=marker?body.input.sessionID+':'+action:undefined;
+  if(marker){body={...body,input:{...body.input,uiRequestID:marker}};pendingManagement.set(key,marker);}
+  try {
   const response=await fetch(base+path,{method:body?'POST':'GET',headers:{Authorization:authorization,'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(timeoutMs)});
   if(!response.ok)throw Error(`Host HTTP ${response.status}: ${await response.text()}`);
-  return response.status===204?null:response.json();
+  const result=response.status===204?null:await response.json();
+  if(!body&&path.endsWith('/permission'))for(const permission of result.data||[]) {
+   const expected=pendingManagement.get(permission.sessionID+':'+permission.action);
+   if(expected)assert.equal(permission.metadata.ui_request_id,expected,'management permission echoes its exact display correlation');
+  }
+  return result;
+  }finally{if(marker&&pendingManagement.get(key)===marker)pendingManagement.delete(key);}
  }
  let commands=[];
  for(let i=0;i<20;i++){commands=(await api('/api/command')).data;if(commands.some(c=>c.name==='kujo-status'))break;await delay(250);}

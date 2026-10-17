@@ -6,13 +6,14 @@ import {setupTui} from '../lib/tui.mjs';
 import {scopedHostContext} from '../lib/plugin-scope.mjs';
 import {homePaths,withDataRoot} from '../lib/paths.mjs';
 
-function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[],home=false,waitCreate,selectedModel,ledgerState='in_progress',services=[],pendingPermissions=[],waitSelect,canonicalProject,browserState,waitDetail,waitAlert}={}) {
+function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[],home=false,waitCreate,selectedModel,ledgerState='in_progress',services=[],pendingPermissions=[],waitSelect,canonicalProject,browserState,waitDetail,waitAlert,onRPC}={}) {
  const calls=[],alerts=[],toasts=[],selections=[],handlers=new Map();let clears=0;let commands,eventHandler,stopped=false,route=home?{type:'home'}:{type:'session',sessionID:'fixture-session'};
  const location={directory:'/fixture/project'};
  const ctx={location,data:{on:(name,handler)=>{handlers.set(name,handler);return ()=>handlers.delete(name);},session:{status:()=> 'idle',sync:async()=>{},permission:{sync:async()=>{},list:()=>pendingPermissions}}},client:{session:{create:async input=>{calls.push({method:'createSession',input});if(waitCreate)await waitCreate;return {id:'new-session'};},switchModel:async input=>calls.push({method:'switchModel',input})},rpc:definition=>{
   assert.equal(definition.id,'kujo.control');
   return {events:{on:(_name,handler)=>{eventHandler=handler;return ()=>stopped=true;}},...Object.fromEntries(['completion','status','profile','evidence','specialist','capability','evidenceDetail','artifact','compare','lifecycle','runledger','browser','knowledge'].map(method=>[method,async(input,options)=>{
-   calls.push({method,input,options});assert.deepEqual(options,{location});
+   const {uiRequestID,...businessInput}=input;calls.push({method,input:businessInput,uiRequestID,options});assert.deepEqual(options,{location});
+   if(onRPC)await onRPC(method,input);
    if(method==='completion')return {available:true,run_id:'fixture'};
    if(method==='knowledge')return input.action==='preview'?{files:[{path:'guide.md'}],bytes:12,digest:'a'.repeat(64),exclusions:['dotfiles'],index_input:{name:input.name,path:input.path,digest:'a'.repeat(64)}}:{state:'current'};
    if(method==='status'){if(waitStatus)await waitStatus;return {services,capabilities:[{id:'kujo.test.check',name:'check',description:'Check repository',active:true,inherited:true,mode:'profile'}],project:canonicalProject||location.directory,version:'0.2.0',profile:'kujo.profile.essentials',specialists:[{id:'kujo-browser',title:'Browser verification',profile:'ship',description:'Verify pages',abilities:['kujo.lens.page.check'],available:[],missing:['kujo.lens.page.check']}],profiles:[{id:'kujo.profile.review',label:'Review',description:'Review repository'}],tools:[{name:'check',description:'Check repository'}]};}
@@ -281,4 +282,83 @@ test('completion suppresses receipt details returned after session navigation',a
  let release;const f=fixture({choices:['evidence','r1'],waitDetail:new Promise(r=>release=r),evidenceReceipts:[{receipt_id:'r1',result:{value:'old'}}]});
  const pending=f.event();await new Promise(r=>setImmediate(r));f.navigate({type:'session',sessionID:'other'});release();await pending;
  assert.equal(f.alerts.length,0);assert.ok(!f.calls.some(c=>c.method==='runledger'));
+});
+
+test('management rejection feedback requires the exact pending request and decision',async()=>{
+ const {managementFeedback,ManagementDeclined}=await import('../lib/management-feedback.mjs');
+ const error=Error('RPC call failed');
+ for(const mismatch of ['nonce','action','project','session','location','id','replySession','replyLocation','allow','missing']) {
+  const feedback=managementFeedback();
+  const request=feedback.begin('profile',{sessionID:'s'},{directory:'/alias',project:'/real',current:()=>true});
+  const asked={location:{directory:'/real'},data:{id:'p',sessionID:'s',action:'kujo.profile.change',metadata:{project:'/real',ui_request_id:request.id}}};
+  if(mismatch==='nonce')asked.data.metadata.ui_request_id='other';
+  if(mismatch==='action')asked.data.action='kujo.ability.approve';
+  if(mismatch==='project')asked.data.metadata.project='/elsewhere';
+  if(mismatch==='session')asked.data.sessionID='other';
+  if(mismatch==='location')asked.location.directory='/elsewhere';
+  feedback.asked(asked);
+  if(mismatch!=='missing')feedback.replied({location:{directory:mismatch==='replyLocation'?'/elsewhere':'/alias'},data:{requestID:mismatch==='id'?'other':'p',sessionID:mismatch==='replySession'?'other':'s',reply:mismatch==='allow'?'once':'reject'}});
+  await assert.rejects(request.failure(error),e=>e===error&&!(e instanceof ManagementDeclined),mismatch);
+  request.finish();
+ }
+});
+
+test('management rejection correlation handles delayed delivery, parallel requests and cleanup',async()=>{
+ const {managementFeedback,ManagementDeclined,ManagementDismissed}=await import('../lib/management-feedback.mjs');
+ for(const delayed of [false,true]) {
+  const feedback=managementFeedback();let current=true;
+  const options={directory:'/project',project:'/project',current:()=>current};
+  const first=feedback.begin('profile',{sessionID:'s'},options),second=feedback.begin('profile',{sessionID:'s'},options);
+  assert.notEqual(first.id,second.id);
+  feedback.asked({data:{id:'p',sessionID:'s',action:'kujo.profile.change',metadata:{project:'/project',ui_request_id:first.id}}});
+  const reply=()=>feedback.replied({data:{requestID:'p',sessionID:'s',reply:'reject'}});
+  if(!delayed)reply();else setTimeout(reply,10);
+  await assert.rejects(first.failure(Error('RPC call failed')),ManagementDeclined);first.finish();
+  const actual=Error('Real failure');await assert.rejects(second.failure(actual),e=>e===actual);second.finish();
+  const stale=feedback.begin('profile',{sessionID:'s'},options);current=false;feedback.clear();
+  await assert.rejects(stale.failure(actual),ManagementDismissed);stale.finish();
+ }
+});
+
+test('all six management surfaces present confirmed rejection without a success notification',async()=>{
+ for(const [method,choices,prompts,action] of [
+  ['profile',['review'],[],'kujo.profile.change'],
+  ['capability',['kujo.test.check','disabled'],[],'kujo.capability.change'],
+  ['lifecycle',['enable'],[],'kujo.lifecycle.change'],
+  ['runledger',['finish','partial'],[],'kujo.runledger.session'],
+  ['browser',['install'],[],'kujo.browser.setup'],
+  ['knowledge',['preview','index'],['manual','docs'],'kujo.ability.approve'],
+ ]) {
+  let f;f=fixture({choices,prompts,onRPC:async(name,input)=>{
+   if(name!==method||['status','preview'].includes(input.action))return;
+   assert.match(input.uiRequestID,/^[0-9a-f-]{36}$/);
+   await f.emit('permission.asked',{id:'permission',sessionID:'fixture-session',action,metadata:{project:'/fixture/project',ui_request_id:input.uiRequestID}});
+   await f.emit('permission.replied',{requestID:'permission',sessionID:'fixture-session',reply:'reject'});
+   throw Error('RPC call failed');
+  }});
+  await f.run('kujo.'+(method==='capability'?'capabilities':method));
+  assert.equal(f.alerts.at(-1).title,'Request declined',method);
+  assert.match(f.alerts.at(-1).message,/No permission was granted/);
+  assert.equal(f.toasts.length,0);f.cleanup();
+ }
+});
+
+test('first management request can correlate the server canonical workspace without a cached status',async()=>{
+ const {managementFeedback,ManagementDeclined}=await import('../lib/management-feedback.mjs');
+ const feedback=managementFeedback(),request=feedback.begin('browser',{sessionID:'s'},{directory:'/symlink',current:()=>true});
+ assert.equal(feedback.asked({location:{directory:'/canonical'},data:{id:'p',sessionID:'s',action:'kujo.browser.setup',metadata:{project:'/canonical',ui_request_id:request.id}}}),true);
+ feedback.replied({location:{directory:'/canonical'},data:{requestID:'p',sessionID:'s',reply:'reject'}});
+ await assert.rejects(request.failure(Error('RPC failed')),ManagementDeclined);request.finish();
+});
+
+test('navigation during a management request suppresses late success and failure dialogs',async()=>{
+ for(const fail of [false,true]) {
+  let entered,release;const started=new Promise(resolve=>entered=resolve),waiting=new Promise(resolve=>release=resolve);
+  const f=fixture({choices:['review'],onRPC:async method=>{if(method!=='profile')return;entered();await waiting;if(fail)throw Error('RPC failed');}});
+  const running=f.run('kujo.profile');await started;
+  f.navigate({type:'session',sessionID:'elsewhere'});
+  await f.emit('session.viewed',{sessionID:'elsewhere'},'/other');
+  f.navigate({type:'session',sessionID:'fixture-session'});release();await running;
+  assert.equal(f.toasts.length,0);assert.equal(f.alerts.length,0);f.cleanup();
+ }
 });
