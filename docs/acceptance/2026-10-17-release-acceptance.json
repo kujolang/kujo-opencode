@@ -1,0 +1,142 @@
+{
+  "schema": "kujo.opencode.release-acceptance/v1",
+  "commit": "bef63f4200e3bf530cf4baab21aa524e6fca13ea",
+  "sha256": "fa5fd2ed97c9fd7c24d3610434d19e2130cfcb7102b5ab6b0e8785f189fcdb5c",
+  "candidate_run_id": "39067819847",
+  "requirements": {
+    "native-management": {
+      "status": "passed",
+      "evidence": [
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39065994542",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+      ]
+    },
+    "lifecycle": {
+      "status": "passed",
+      "evidence": [
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+      ]
+    },
+    "specialists": {
+      "status": "passed",
+      "evidence": [
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+      ]
+    },
+    "capability-parity": {
+      "status": "passed",
+      "evidence": [
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39065994542",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+      ]
+    },
+    "recovery": {
+      "status": "passed",
+      "evidence": [
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+      ]
+    },
+    "host-platform-matrix": {
+      "status": "passed",
+      "evidence": [
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39065994542",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+      ]
+    }
+  },
+  "specialists": {
+    "understand": {
+      "status": "passed",
+      "evidence": [
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+      ]
+    },
+    "build": {
+      "status": "passed",
+      "evidence": [
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+      ]
+    },
+    "review": {
+      "status": "passed",
+      "evidence": [
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+      ]
+    },
+    "browser": {
+      "status": "passed",
+      "evidence": [
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+      ]
+    },
+    "workflow": {
+      "status": "passed",
+      "evidence": [
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+      ]
+    },
+    "ship": {
+      "status": "passed",
+      "evidence": [
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+      ]
+    }
+  },
+  "host_matrix": {
+    "darwin": {
+      "minimum": {
+        "version": "2.0.31",
+        "status": "passed",
+        "evidence": [
+          "https://github.com/kujolang/kujo-opencode/actions/runs/39065994542",
+          "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        ]
+      },
+      "latest": {
+        "version": "2.0.32",
+        "status": "passed",
+        "evidence": [
+          "https://github.com/kujolang/kujo-opencode/actions/runs/39065994542",
+          "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        ]
+      }
+    },
+    "linux": {
+      "minimum": {
+        "version": "2.0.31",
+        "status": "passed",
+        "evidence": [
+          "https://github.com/kujolang/kujo-opencode/actions/runs/39065994542",
+          "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        ]
+      },
+      "latest": {
+        "version": "2.0.32",
+        "status": "passed",
+        "evidence": [
+          "https://github.com/kujolang/kujo-opencode/actions/runs/39065994542",
+          "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        ]
+      }
+    },
+    "win32": {
+      "minimum": {
+        "version": "2.0.31",
+        "status": "passed",
+        "evidence": [
+          "https://github.com/kujolang/kujo-opencode/actions/runs/39065994542",
+          "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        ]
+      },
+      "latest": {
+        "version": "2.0.32",
+        "status": "passed",
+        "evidence": [
+          "https://github.com/kujolang/kujo-opencode/actions/runs/39065994542",
+          "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        ]
+      }
+    }
+  },
+  "scope": "Native/rendered host matrix: Linux, macOS, Windows; live model acceptance: macOS x64/OpenCode 2.0.32/openai/gpt-5.6-sol, authorized ChatGPT. Six specialists/50 checks. Free GLM and DeepSeek model routes unverified. Prior failed attempts and narrowly scoped harness corrections are retained in the evidence records. GitHub environment human approval is separate from this evidence inventory."
+}
