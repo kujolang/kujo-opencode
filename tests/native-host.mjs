@@ -11,7 +11,7 @@ const exec=promisify(execFile),repo=resolve('.');
 const journey=process.env.KUJO_TEST_JOURNEY;
 const dispatchTransportEnabled=process.env.KUJO_TEST_DISPATCH_TRANSPORT==='1';
 if(dispatchTransportEnabled){assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT&&!journey,'Dispatch transport requires an explicit model and its own Build session');for(const flag of ['KUJO_TEST_GUARD','KUJO_TEST_TELEMETRY','KUJO_TEST_CANCEL_TELEMETRY','KUJO_TEST_AUTOTRACK'])assert.notEqual(process.env[flag],'1','Run transport and lifecycle checks separately');}
-if(journey){assert.ok(['understand','build','review','browser','workflow','ship'].includes(journey),'Only implemented specialist journeys may run');assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Journey needs an explicit model and owns its specialist identity');for(const flag of ['KUJO_TEST_GUARD','KUJO_TEST_TELEMETRY','KUJO_TEST_CANCEL_TELEMETRY','KUJO_TEST_AUTOTRACK'])assert.notEqual(process.env[flag],'1','Run specialist and lifecycle acceptance separately');}
+if(journey){assert.ok(['all','understand','build','review','browser','workflow','ship'].includes(journey),'Only implemented specialist journeys may run');assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Journey needs an explicit model and owns its specialist identity');for(const flag of ['KUJO_TEST_GUARD','KUJO_TEST_TELEMETRY','KUJO_TEST_CANCEL_TELEMETRY','KUJO_TEST_AUTOTRACK'])assert.notEqual(process.env[flag],'1','Run specialist and lifecycle acceptance separately');}
 if(process.env.KUJO_TEST_TELEMETRY==='1'||process.env.KUJO_TEST_CANCEL_TELEMETRY==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Telemetry acceptance needs an explicit model and ordinary Build agent');
 if(process.env.KUJO_TEST_GUARD==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Guard acceptance needs an explicit model and ordinary Build agent');
 const root=await mkdtemp(join(tmpdir(),'kujo-native-host-'));console.log(`Native fixture: ${root}`);const project=join(root,'project');await mkdir(project);
@@ -30,7 +30,12 @@ if(candidate){
 }
 await exec(process.execPath,[setupCLI,'setup','--project',project,...(pinned?[]:['--source-root',resolve('..')]),'--json'],{env,timeout:pinned?900000:120000,maxBuffer:4*1024*1024});
 const installation=JSON.parse(await readFile(join(env.KUJO_OPENCODE_HOME,'installation.json'),'utf8'));
-if(pinned)assert.ok(Object.values(installation.sources).every(source=>source.mode==='pinned'));
+if(pinned){
+ assert.ok(Object.values(installation.sources).every(source=>source.mode==='pinned'));
+ for(const source of Object.values(installation.sources)){
+  for(const [key,value] of [['core.autocrlf','false'],['core.longpaths','true']])assert.equal((await exec('git',['config','--local','--get',key],{cwd:source.path})).stdout.trim(),value);
+ }
+}
 const hostVersion=(await exec(process.env.OPENCODE_BIN||'opencode',['--version'],{timeout:30000})).stdout.trim();
 const watchdog=(process.env.KUJO_TEST_TELEMETRY==='1'||process.env.KUJO_TEST_CANCEL_TELEMETRY==='1')?await (await import('./watchdog-host-fixture.mjs')).watchdogHostFixture(root,JSON.parse(await readFile(join(env.KUJO_OPENCODE_HOME,'installation.json'),'utf8'))):null;
 if(watchdog)env.WDG_API_AUTH_TOKEN=watchdog.token;
@@ -302,7 +307,7 @@ try {
  assert.equal(detail.receipt.metadata.project_root,await realpath(project));
  await assert.rejects(api('/api/rpc/kujo.control/artifact',{input:{receiptID:'not-retained',index:0}}));
  const live=process.env.KUJO_TEST_MODEL&&!journey&&!dispatchTransportEnabled ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
- let specialistJourney=null;
+ let specialistJourney=null;const specialistJourneys=[];
  if(journey||dispatchTransportEnabled){
   const changingFull=api('/api/rpc/kujo.control/profile',{input:{sessionID:session.id,profile:'full'}});
   let fullPermission;
@@ -313,19 +318,25 @@ try {
  }
  if(journey){
   const {OpenCode}=await import('@opencode/client');const nativeClient=OpenCode.make({baseUrl:base,headers:{Authorization:authorization}});
+  const selectedJourneys=journey==='all'?['understand','build','review','browser','workflow','ship']:[journey];
+  for(const selectedJourney of selectedJourneys){
+  const suffix=journey==='all'?'-'+selectedJourney:'';
   try {
   const runJourney={understand:()=>import('./native-understand-acceptance.mjs').then(m=>m.nativeUnderstandAcceptance),build:()=>import('./native-build-acceptance.mjs').then(m=>m.nativeBuildAcceptance),review:()=>import('./native-review-acceptance.mjs').then(m=>m.nativeReviewAcceptance),browser:()=>import('./native-browser-acceptance.mjs').then(m=>m.nativeBrowserAcceptance),workflow:()=>import('./native-workflow-acceptance.mjs').then(m=>m.nativeWorkflowAcceptance),ship:()=>import('./native-ship-acceptance.mjs').then(m=>m.nativeShipAcceptance)};
-  const executeJourney=await runJourney[journey]();
+  const executeJourney=await runJourney[selectedJourney]();
   specialistJourney=await executeJourney({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL,interrupt:sessionID=>nativeClient.session.interrupt({sessionID,resume:false},{signal:AbortSignal.timeout(15000)})});
-  await writeFile(join(root,'specialist-operations.json'),JSON.stringify(specialistJourney,null,2)+'\n');
+  await writeFile(join(root,'specialist-operations'+suffix+'.json'),JSON.stringify(specialistJourney,null,2)+'\n');
   const {specialistReport}=await import('./native-specialist-report.mjs');
   specialistJourney.report=await specialistReport({api,journey:specialistJourney,receipts:async()=>(await readFile(join(env.KUJO_OPENCODE_HOME,'receipts.jsonl'),'utf8')).split('\n').filter(Boolean).map(line=>JSON.parse(line)),interrupt:sessionID=>nativeClient.session.interrupt({sessionID,resume:false},{signal:AbortSignal.timeout(15000)})});
   } catch(error) {
    const provider=String(error.message).match(/Live provider failed before acceptance: provider\.[a-z]+ \(HTTP [0-9]+\)/)?.[0];
-   await writeFile(join(root,'specialist-failure.json'),JSON.stringify({ok:false,journey,host:hostVersion,model:process.env.KUJO_TEST_MODEL,error_type:error.name,reason:provider||'Specialist acceptance failed; inspect retained fixture evidence and test log',...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256}:{})},null,2)+'\n');
+   await writeFile(join(root,'specialist-failure'+suffix+'.json'),JSON.stringify({ok:false,journey:selectedJourney,host:hostVersion,model:process.env.KUJO_TEST_MODEL,error_type:error.name,reason:provider||'Specialist acceptance failed; inspect retained fixture evidence and test log',...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256}:{})},null,2)+'\n');
    throw error;
   }
-  await writeFile(join(root,'specialist-evidence.json'),JSON.stringify(specialistJourney,null,2)+'\n');
+  await writeFile(join(root,'specialist-evidence'+suffix+'.json'),JSON.stringify(specialistJourney,null,2)+'\n');
+  specialistJourneys.push(specialistJourney);
+  console.log(JSON.stringify({specialist:selectedJourney,passed:true,steps:specialistJourney.steps.length}));
+  }
  }
  let failureGuard=null;
  if(process.env.KUJO_TEST_GUARD==='1'){
@@ -355,7 +366,7 @@ try {
   dispatchTransport=await (await import('./native-dispatch-transport.mjs')).nativeDispatchTransport({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL,loseApprovalReply:(sessionID,permissionID)=>lostHttpReply({url:base+`/api/session/${sessionID}/permission/${permissionID}/reply`,authorization,body:{decision:'once'},timeoutMs:180000}),interrupt:sessionID=>nativeClient.session.interrupt({sessionID,resume:false},{signal:AbortSignal.timeout(15000)})});
   await writeFile(join(root,'dispatch-transport-evidence.json'),JSON.stringify(dispatchTransport,null,2)+'\n');
  }
- const verification={ok:true,root,host:hostVersion,platform:process.platform,arch:process.arch,pinned_sources:pinned,rendered_tui:false,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),live,specialistJourney,dispatchTransport,failureGuard,cancellation:cancellation?{...cancellation,events:undefined}:null,telemetry:telemetry?{...telemetry,events:undefined}:null,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,nativeTransportRecovery,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||Boolean(specialistJourney)||Boolean(dispatchTransport)||process.env.KUJO_TEST_AUTOTRACK==='1'};
+ const verification={ok:true,root,host:hostVersion,platform:process.platform,arch:process.arch,pinned_sources:pinned,rendered_tui:false,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),live,specialistJourney,specialistJourneys,dispatchTransport,failureGuard,cancellation:cancellation?{...cancellation,events:undefined}:null,telemetry:telemetry?{...telemetry,events:undefined}:null,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,nativeTransportRecovery,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||Boolean(specialistJourney)||Boolean(dispatchTransport)||process.env.KUJO_TEST_AUTOTRACK==='1'};
  if(candidate)await verifyCandidate(candidate.directory);
  await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
  console.log(JSON.stringify(verification));
