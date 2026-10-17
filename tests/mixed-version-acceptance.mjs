@@ -20,6 +20,12 @@ export async function verifyMixedVersion({root,env,cli,oldCli,project,older}){
  const oldServer=join(resolve(oldCli,'..'),'kujo-opencode-mcp.mjs'),newServer=join(resolve(cli,'..'),'kujo-opencode-mcp.mjs');
  assert.equal(JSON.parse(baseline[0]).installation_version,'0.1.0');assert.equal(JSON.parse(baseline[1]).installation_version,'0.2.0');
  const before={old:await scan(oldServer,older,env),current:await scan(newServer,project,env)};
+ // Fail acquisition through the actual new CLI while the old project is active.
+ // An empty explicit source root is deterministic and needs no network fault.
+ const missingSources=await mkdtemp(join(root,'missing-upgrade-sources-'));
+ await assert.rejects(commands(cli,['update','--source-root',missingSources],older),error=>error.code===1&&error.stderr.includes('local source is missing'));
+ await checkUnchanged();
+ const afterFailedUpgrade={old:await scan(oldServer,older,env),current:await scan(newServer,project,env)};
  const third=await mkdtemp(join(root,'mixed-version-project-'));await writeFile(join(third,'README.md'),'# Independent integration fixture\n');await exec('git',['init','-q',third],{env});
  assert.equal((await commands(cli,['setup'],third)).ok,true);
  assert.equal((await commands(cli,['repair'],third)).ok,true);
@@ -28,7 +34,7 @@ export async function verifyMixedVersion({root,env,cli,oldCli,project,older}){
  const removed=await commands(cli,['uninstall'],third);assert.equal(removed.ok,true);assert.equal(await readFile(join(third,'README.md'),'utf8'),'# Independent integration fixture\n');
  await checkUnchanged();
  const afterUninstall={old:await scan(oldServer,older,env),current:await scan(newServer,project,env)};
- const proof={ok:true,versions:['0.1.0','0.2.0'],project:third,before,third_receipt:thirdReceipt,after_repair:afterRepair,after_uninstall:afterUninstall,other_configs_and_readmes_unchanged:true,purge:false};
+ const proof={ok:true,versions:['0.1.0','0.2.0'],project:third,before,third_receipt:thirdReceipt,after_repair:afterRepair,after_uninstall:afterUninstall,after_failed_upgrade:afterFailedUpgrade,other_configs_and_readmes_unchanged:true,purge:false};
  await writeFile(join(root,'mixed-version-verification.json'),JSON.stringify(proof,null,2)+'\n');return proof;
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
