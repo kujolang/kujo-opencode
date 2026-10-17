@@ -102,5 +102,55 @@
     "log": "/tmp/kujo-checkpoint-rendered-latest.log"
   },
   "full_platform_matrix_passed": false,
-  "full_parity_certified": false
+  "full_parity_certified": false,
+  "rendered_minimum": {
+    "verification": {
+      "ok": true,
+      "host": "opencode v2.0.31",
+      "terminal_backend": "posix",
+      "service_result_pages": null,
+      "dimensions": [
+        80,
+        24
+      ],
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-2truw3fk",
+      "initial_requested_session": "ses_kujo_terminal_5e3865e58b514d01a0d6e1a20413d623",
+      "model_call": false,
+      "effects_approved": true,
+      "rendered_ledger": true,
+      "rendered_automatic_completion": false,
+      "rendered_completion_evidence": false,
+      "live_ship_specialist": false,
+      "rendered_leash": false,
+      "rendered_gateway": false,
+      "candidate_commit": "2f80e136a359e068321372b0bedb1ca23ce21934",
+      "candidate_sha256": "08bd3febbb186d47e96d7b5365482b2970c5a83c5e9db32126de7d4e28c87fd1",
+      "candidate_integrity": "sha512-ODpzXE+BRnwv9QeuGnuQGNJsQmlsmdIAA50c4xNXA2LNyMkM8HSxlWZ4rwBPl4ba/hOxPYE6UckVFOiNIFJJ/g==",
+      "pinned_sources": true
+    },
+    "payload": {
+      "ok": true,
+      "fixture": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-2truw3fk",
+      "tarball": "/private/tmp/kujo-checkpoint-candidate/kujolang-kujo-opencode-0.2.0.tgz",
+      "tarball_sha256": "08bd3febbb186d47e96d7b5365482b2970c5a83c5e9db32126de7d4e28c87fd1",
+      "host": "opencode v2.0.31",
+      "host_sha256": "b73356ad2368c54ea51b869032bc419c96faea18a41d0c0f427923bcf583f688",
+      "platform": "macOS-26.6.2-x86_64-i386-64bit",
+      "runtime_sha256": "cc811ce04910d68f6703f8717eb6dc4fcd05666a29f738dee88bf57d52f852c2",
+      "payload_files_verified": 72,
+      "payload_manifest_sha256": "7d7a1f2e65e430b33eba6e539d57603cd4de0bd81a73236fddfc0e710e1132df",
+      "rendered_gateway": false,
+      "rendered_leash": false
+    },
+    "log": "/tmp/kujo-checkpoint-rendered-minimum-retry.log"
+  },
+  "native_minimum_record": "2026-10-17-native-transport-recovery.json",
+  "excluded_attempts": [
+    {
+      "fixture": "kujo-rendered-tui-fg9416fz",
+      "reason": "GitHub Casefile fetch timed out before UI launch",
+      "log": "/tmp/kujo-checkpoint-rendered-minimum.log",
+      "connectivity_rechecked": true
+    }
+  ]
 }
