@@ -1218,3 +1218,38 @@ unit/E2E/host checks, not a separate rendered completion acceptance yet.
 This changes executable package bytes and supersedes the earlier raw-history-alert
 gap. It does not certify a final packed candidate, complete the supportedOS/host
 matrix, resolve scoped-provider failures or close the seven original gates.
+
+
+## Rendered completion evidence and packaged support guidance (2026-10-16)
+
+Actual OpenCode2.0.31 at80x24, ordinary Build with the visible
+opencode/glm-5.3-flash-free model, passed the full automatic tracking path:
+approve start, execute one canonical ShipCheck scan, open the completion review,
+select that exact operation, reach page20/20, search back to its identity, close
+the preview, choose Partial and separately approve finalization. The canonical
+record remains in_progress while browsing and after choosing a verdict until the
+finish permission is granted, then becomes partial with no prompt_file.
+Fixturelfbpp317 retains verification.json, completion-evidence.json, canonical
+RunLedger record and rendered snapshots beneath
+/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-lfbpp317.
+Log:/tmp/kujo-completion-evidence-rendered-final.log. This closes the prior
+rendered completion-viewer gap; it is not scoped Ship specialist acceptance.
+
+The first attemptt9mso9uo ended with ENOSPC. Generated runtime copies from
+completed f9t8kuv6,irmj6ila,t9mso9uo were removed; receipts/manifests/snapshots
+were retained. The next attempt_3p_0opn selected the tracking receipt using a
+nonunique succeeded label and correctly found no ShipCheck identifier. The
+harness now selects kujo.shipcheck.repository.scan explicitly. Both failures are
+retained and excluded from passing evidence.
+
+f0a0a3a packages docs/COMPATIBILITY.md and links it from maintenance instructions.
+It states tested host/platform limits, provider authorization boundaries,
+0.1.0 upgrade evidence, recovery/repair distinction, unsupported downgrade,
+troubleshooting and support-report content.171 offline tests including package
+content checks passed (/tmp/kujo-compatibility-tests.log).
+
+External gates were rechecked: npm whoami returns E401. GitHub run38997090048
+for eb5861e completed without starting jobs; job117291923495's annotation cites
+failed account payments or the spending limit. This is not a failed code test or
+platform evidence. Release automation/publication, exact final package/matrix,
+scoped specialists and remaining lifecycle/recovery acceptance remain required.

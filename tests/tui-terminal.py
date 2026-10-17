@@ -34,6 +34,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--host', default=os.environ.get('OPENCODE_BIN', 'opencode'))
 parser.add_argument('--columns', type=int, default=80)
 parser.add_argument('--rows', type=int, default=24)
+parser.add_argument('--completion-evidence', action='store_true', help='With --automatic, execute a native scan and browse its receipt before choosing a verdict')
 parser.add_argument('--ship', action='store_true', help='With --automatic, execute a real Ship specialist scan')
 mode=parser.add_mutually_exclusive_group()
 mode.add_argument('--gateway', action='store_true', help='With CMS_TEST_SOURCE, review/reject/approve a private canonical CMS mutation')
@@ -45,6 +46,8 @@ if args.gateway and not os.environ.get('CMS_TEST_SOURCE'):
     parser.error('--gateway requires CMS_TEST_SOURCE pointing to canonical CMS')
 if args.leash and not os.environ.get('LEASH_TEST_BIN'):
     parser.error('--leash requires LEASH_TEST_BIN pointing to canonical leashd')
+if args.completion_evidence and not args.automatic:
+    parser.error('--completion-evidence requires --automatic')
 if args.ship and not args.automatic:
     parser.error('--ship requires --automatic')
 if args.columns < 80 or args.rows < 24:
@@ -209,7 +212,7 @@ try:
             send('\x1b')
             wait('GLM-5.3-Flash Free', 'automatic-visible-model')
             assert any('GLM-5.3-Flash Free' in line and 'OpenCode' in line for line in screen.display), 'Only the visible OpenCode free model is permitted for this gate'
-            send('Use kujo_shipcheck_scan exactly once with {"path":"."}. Do not use shell or other tools. Report the receipt ID.' if args.ship else 'Reply OK. Do not use tools.')
+            send('Use kujo_shipcheck_scan exactly once with {"path":"."}. Do not use shell or other tools. Report the receipt ID.' if args.ship or args.completion_evidence else 'Reply OK. Do not use tools.')
             send('\r')
             wait('kujo.runledger.session', 'automatic-start-permission', seconds=60)
             assert not list(project.glob('.kujo/opencode-runledger/*/runs/*.json'))
@@ -221,6 +224,29 @@ try:
                 scans=[r for r in receipts if r.get('ability_id')=='kujo.shipcheck.repository.scan' and r.get('status')=='succeeded' and r.get('metadata',{}).get('agent_id')=='kujo-ship']
                 (root/'specialist-evidence.json').write_text(json.dumps(scans,indent=2))
                 assert scans, 'Ship specialist did not produce a successful native scan receipt'
+            if args.completion_evidence:
+                receipts=[json.loads(line) for line in (root/'kujo/receipts.jsonl').read_text().splitlines() if line.strip()]
+                scans=[r for r in receipts if r.get('ability_id')=='kujo.shipcheck.repository.scan' and r.get('status')=='succeeded']
+                assert scans, 'Completion evidence requires a successful native scan'
+                (root/'completion-evidence.json').write_text(json.dumps(scans,indent=2))
+                choose('Review session evidence', 'Recorded session evidence', 'completion-evidence-list')
+                choose('kujo.shipcheck.repository.scan', 'Recorded outcome and provenance · 1/', 'completion-evidence-first')
+                send('\x1b')
+                wait('Recorded outcome and provenance pages', 'completion-evidence-pages')
+                choose('Last page', 'Recorded outcome and provenance ·', 'completion-evidence-last')
+                page=re.search(r'Recorded outcome and provenance · (\d+)/(\d+)',current())
+                assert page and int(page.group(1))==int(page.group(2)) and int(page.group(1))>1
+                assert record()['status']=='in_progress', 'Browsing evidence cannot finalize a run'
+                send('\x1b')
+                wait('Recorded outcome and provenance pages', 'completion-evidence-pages')
+                choose('Find text', 'Find text in this record', 'completion-evidence-search')
+                send('kujo.shipcheck.repository.scan')
+                send('\r')
+                wait('Recorded outcome and provenance ·', 'completion-evidence-found')
+                send('\x1b')
+                wait('Recorded outcome and provenance pages', 'completion-evidence-pages')
+                choose('Close preview', 'Review this tracked attempt', 'completion-evidence-closed')
+                assert record()['status']=='in_progress'
             choose('Choose a verdict and finish', 'Your verdict for this session', 'automatic-verdict')
         else:
             menu()
@@ -367,7 +393,7 @@ try:
         assert page, 'Search should return to a numbered result page'
         if gateway:
             assert int(page.group(1))>1, 'Search should reveal retained result beyond the first page'
-    result = dict(ok=True, host=version, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=args.automatic or args.leash or args.gateway, effects_approved=args.ledger or args.automatic or args.leash or args.gateway, rendered_ledger=args.ledger, rendered_automatic_completion=args.automatic, live_ship_specialist=args.ship, rendered_leash=args.leash, rendered_gateway=args.gateway)
+    result = dict(ok=True, host=version, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=args.automatic or args.leash or args.gateway, effects_approved=args.ledger or args.automatic or args.leash or args.gateway, rendered_ledger=args.ledger, rendered_automatic_completion=args.automatic, rendered_completion_evidence=args.completion_evidence, live_ship_specialist=args.ship, rendered_leash=args.leash, rendered_gateway=args.gateway)
     (root/'verification.json').write_text(json.dumps(result, indent=2)+'\n')
     print(json.dumps(result))
 finally:
