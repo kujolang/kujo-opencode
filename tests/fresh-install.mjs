@@ -70,7 +70,8 @@ await verifyMixedVersion({root,env,cli,oldCli,project,older});
 const fresh=join(root,'fresh'); await mkdir(fresh); await writeFile(join(fresh,'README.md'),'# Clean package fixture\n');
 const freshHome=join(home,'fresh-kujo'); const previousHome=env.KUJO_OPENCODE_HOME; env.KUJO_OPENCODE_HOME=freshHome;
 // This is the documented one-command tarball install path, with no global link.
-await command('npm',['exec','--yes',`--package=${installSpec}`,'--','kujo-opencode','setup','--project',fresh,'--json']);
+// Run outside this package checkout so npm resolves the registry package, not itself.
+await command('npm',['exec','--yes',`--package=${installSpec}`,'--','kujo-opencode','setup','--project',fresh,'--json'],{cwd:fresh});
 assert.equal((await call(['demo'],fresh)).ok,true);
 const installed=JSON.parse(await readFile(join(freshHome,'installation.json'),'utf8'));
 assert.ok(Object.values(installed.sources).every(source=>source.mode==='pinned' && source.path.startsWith(freshHome)));

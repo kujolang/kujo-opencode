@@ -1,0 +1,75 @@
+name: Verify published registry release
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_run_id:
+        description: Successful candidate run for the published version
+        required: true
+        type: string
+      candidate_commit:
+        description: Full source commit of the published version tag
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+jobs:
+  consumer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22
+      - run: npm install --global npm@11.19.0
+      - name: Download the published candidate without publishing or modifying tags
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+          CANDIDATE_COMMIT: ${{ inputs.candidate_commit }}
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';import {execFileSync} from 'node:child_process';
+          const {CANDIDATE_RUN_ID:id,CANDIDATE_COMMIT:commit,RUNNER_TEMP:tmp}=process.env;
+          assert.match(id,/^[1-9][0-9]*$/);assert.match(commit,/^[a-f0-9]{40}$/);
+          const run=JSON.parse(execFileSync('gh',['api','repos/kujolang/kujo-opencode/actions/runs/'+id],{encoding:'utf8'}));
+          assert.equal(run.repository.full_name,'kujolang/kujo-opencode');assert.equal(run.head_sha,commit);assert.equal(run.conclusion,'success');assert.equal(run.path,'.github/workflows/release-candidate.yml');
+          execFileSync('gh',['run','download',id,'--repo','kujolang/kujo-opencode','--name','kujo-candidate-'+commit,'--dir',tmp+'/kujo-candidate'],{stdio:'inherit'});
+          JS
+      - run: npm run release:verify -- "$RUNNER_TEMP/kujo-candidate"
+      - name: Verify the public version, tag, integrity and signatures
+        env:
+          CANDIDATE_COMMIT: ${{ inputs.candidate_commit }}
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';import {readFile,mkdir,writeFile} from 'node:fs/promises';import {execFileSync} from 'node:child_process';
+          import {waitRegistryDist} from './.github/scripts/wait-registry-dist.mjs';import {validateRegistryDist} from './scripts/release-gate.mjs';
+          const candidate=JSON.parse(await readFile(process.env.RUNNER_TEMP+'/kujo-candidate/candidate.json','utf8'));
+          assert.equal(candidate.commit,process.env.CANDIDATE_COMMIT);
+          assert.equal(execFileSync('git',['rev-parse','v'+candidate.version+'^{commit}'],{encoding:'utf8'}).trim(),candidate.commit);
+          const identity=candidate.name+'@'+candidate.version,dist=await waitRegistryDist(identity);validateRegistryDist(candidate,dist);
+          const cwd=process.env.RUNNER_TEMP+'/registry-consumer';await mkdir(cwd);
+          execFileSync('npm',['install','--ignore-scripts','--registry=https://registry.npmjs.org/',identity],{cwd,stdio:'inherit'});
+          execFileSync('npm',['audit','signatures','--registry=https://registry.npmjs.org/'],{cwd,stdio:'inherit'});
+          await writeFile(process.env.RUNNER_TEMP+'/registry-integrity.json',JSON.stringify({ok:true,name:candidate.name,version:candidate.version,commit:candidate.commit,sha256:candidate.files[candidate.archive],integrity:dist.integrity,attestations:dist.attestations,signatures_verified:true},null,2)+'\n');
+          JS
+      - name: Verify registry fresh install and upgrade
+        run: |
+          npm ci --ignore-scripts
+          npm run test:fresh
+        env:
+          KUJO_TEST_RELEASE_DIR: ${{ runner.temp }}/kujo-candidate
+          KUJO_TEST_REGISTRY: '1'
+      - name: Retain consumer verification
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: published-registry-consumer-${{ inputs.candidate_commit }}
+          path: |
+            ${{ runner.temp }}/registry-integrity.json
+            /tmp/kujo-opencode-packed-*/verification.json
+          if-no-files-found: warn
+          retention-days: 90
