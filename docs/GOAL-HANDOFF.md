@@ -547,3 +547,27 @@ with opencode/glm-5.3-flash-free and again failed provider.auth HTTP403 before t
 execution (/tmp/kujo-correlation-live-specialist.log). This is not acceptance of
 specialist execution. Automatic RunLedger start/finalization and the remaining
 full parity/recovery/platform/public release requirements remain open.
+
+## Automatic RunLedger start/reminder checkpoint (2026-10-16)
+
+AutomaticLedger is opt-in via lifecycle.runledger (defaultfalse). The model.request
+hook awaits exact native approval before starting the canonical session record.
+Durable hashed-session request markers prevent automatic repeats after denial or
+uncertain results/reload;128-session bound, explicit approved reset/recovery. Idle,
+interrupted and explicit execution failed/succeeded events produce one inbox
+human-verdict reminder. No automatic verdict/finalization or usage fabrication.
+Session cancellation/unload/disable prevent late approval writes; inspect commands
+already started. Native tracking activation validates start/finish exposure first.
+
+127 offline tests, canonical E2E and real native Ydsdor hook acceptance pass.
+Native prompt HTTP acknowledgement is not execution completion: poll canonical
+state after approval. Provider failures emit execution.failed; explicit terminal
+events are necessary, not only session.status idle. Native final prerequisite
+acceptance is running /tmp/kujo-automatic-native-acceptance.log handle8568.
+PackeduWlYRq passed but predates final refinements; final packed gate is running
+/tmp/kujo-automatic-fresh-final.log. Inspect terminal outcomes before claiming pass.
+
+Next: automatic native presentation of human verdict selection/finalization and
+expanded real cancellation/reconnect acceptance, then remaining recovery, six
+live specialists, exact host/OS certification and public distribution. Preserve
+all seven outcomes; no full lifecycle completion is claimed. No new SignalBox item.

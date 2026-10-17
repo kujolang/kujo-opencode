@@ -107,13 +107,21 @@ try {
   await api(`/api/session/${session.id}/permission/${permission.id}/reply`,{decision});
   const result=await outcome;
   if(decision==='reject'||stale){assert.ok(result.error);if(!stale)assert.equal(await readFile(configPath,'utf8'),before);}
-  else {if(result.error)throw result.error;const output=result.value.output;if(['enable','disable'].includes(action))assert.equal(output.enabled,action==='enable');else if(action==='retry')assert.equal(output.reason,'idle');else if(action==='discard')assert.equal(output.discarded,0);else if(action.endsWith('_guard'))assert.equal(output.intervention.enabled,action==='enable_guard');else assert.equal(output.recovered,false);}
+  else {if(result.error)throw result.error;const output=result.value.output;if(['enable','disable'].includes(action))assert.equal(output.enabled,action==='enable');else if(action==='retry')assert.equal(output.reason,'idle');else if(action==='discard')assert.equal(output.discarded,0);else if(action.endsWith('_tracking')){if(action==='reset_tracking')assert.equal(output.reset,true);else if(action==='recover_tracking')assert.equal(output.recovered,false);else assert.equal(output.runledger.enabled,action==='enable_tracking');}else if(action.endsWith('_guard'))assert.equal(output.intervention.enabled,action==='enable_guard');else assert.equal(output.recovered,false);}
  }
  await lifecycleChange('enable','reject');
  await lifecycleChange('enable','once',{stale:true});
  await writeFile(configPath,originalConfig);
  await lifecycleChange('enable','once');
  await lifecycleChange('retry','once');
+ const trackingCapabilities=(await api('/api/rpc/kujo.control/status',{input:{}})).output.capabilities;
+ if(!['kujo.runledger.runs.start','kujo.runledger.runs.finish'].every(id=>trackingCapabilities.find(item=>item.id===id).active))await assert.rejects(api('/api/rpc/kujo.control/lifecycle',{input:{sessionID:session.id,action:'enable_tracking'}}),/Ship or Full/);
+ for(const id of ['kujo.runledger.runs.start','kujo.runledger.runs.finish']){if(!trackingCapabilities.find(item=>item.id===id).active){ability=id;await capabilityChange('enabled','once');}}
+ await lifecycleChange('enable_tracking','reject');
+ await lifecycleChange('enable_tracking','once');
+ await lifecycleChange('recover_tracking','once');
+ await lifecycleChange('reset_tracking','once');
+ await lifecycleChange('disable_tracking','once');
  await lifecycleChange('recover','once');
  await lifecycleChange('discard','once');
  await lifecycleChange('disable','once');
@@ -186,6 +194,20 @@ try {
  await sessionLedgerChange('finish','once','partial');
  const finished=(await ledgerStatus()).output;assert.equal(finished.record.status,'partial');assert.equal(finished.record.prompt_file,null);
  assert.ok((await api(`/api/session/${ledgerSession.id}/message?limit=100`)).data.every(message=>message.type!=='assistant'));
+ if(process.env.KUJO_TEST_AUTOTRACK==='1'){
+  await lifecycleChange('enable_tracking','once');
+  const auto=(await api('/api/session',{title:'Automatic ledger hook acceptance',location:{directory:await realpath(project)},agent:'kujo-ship',model:{providerID:'opencode',id:'glm-5.3-flash-free'}})).data;
+  const inference=api(`/api/session/${auto.id}/prompt`,{text:'Reply OK. Do not use any tools.'},180000).then(value=>({value}),error=>({error}));
+  let permission;for(let i=0;i<60;i++){permission=(await api(`/api/session/${auto.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(permission)break;await delay(200);}
+  assert.ok(permission,'automatic start must request native permission before inference');assert.equal(permission.metadata.ability,'kujo.runledger.runs.start');assert.deepEqual(permission.save,[]);
+  assert.equal((await api('/api/rpc/kujo.control/runledger',{input:{sessionID:auto.id,action:'status'}})).output.state,'not_started');
+  await api(`/api/session/${auto.id}/permission/${permission.id}/reply`,{decision:'once'});await inference;
+  let autoState;for(let i=0;i<60;i++){autoState=(await api('/api/rpc/kujo.control/runledger',{input:{sessionID:auto.id,action:'status'}})).output.state;if(autoState==='in_progress')break;await delay(100);}
+  assert.equal(autoState,'in_progress');
+  let reminder=false;for(let i=0;i<40;i++){reminder=JSON.stringify(await api(`/api/session/${auto.id}/inbox`)).includes('choose your verdict');if(reminder)break;await delay(100);}
+  assert.equal(reminder,true,'idle must retain a human-verdict reminder');
+  await lifecycleChange('disable_tracking','once');
+ }
  const {createApp}=await import('../lib/app.mjs');const {withDataRoot}=await import('../lib/paths.mjs');
  const fixtureApp=await withDataRoot(env.KUJO_OPENCODE_HOME,()=>createApp(project));
  const ownReceipt=await fixtureApp.runtime.execute({abilityId:'kujo.ability.catalog.list',input:{},controls:{sessionId:session.id}});
@@ -200,5 +222,5 @@ try {
  assert.equal(detail.receipt.metadata.project_root,await realpath(project));
  await assert.rejects(api('/api/rpc/kujo.control/artifact',{input:{receiptID:'not-retained',index:0}}));
  const live=process.env.KUJO_TEST_MODEL ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
- console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,native_browser_readiness:true,native_knowledge_verified:true,browser_ready:browserBefore.ready,model_call:Boolean(live)}));
+ console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||process.env.KUJO_TEST_AUTOTRACK==='1'}));
 } finally {child.kill('SIGTERM');}

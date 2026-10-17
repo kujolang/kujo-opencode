@@ -438,5 +438,26 @@ invalidate that session’s cache immediately. Missing, corrupt or unavailable
 records leave events unlinked. Read attempts are bounded and no record contents
 are sent. Session idle still means an unknown outcome, not a passing run.
 
-Automatic RunLedger creation/finalization is not yet implemented. Session start,
-linking and human-selected finish remain separate approved operations.
+Opt-in automatic start and finish reminders are available in Lifecycle controls.
+Linking and human-selected finish remain separate approved operations.
+
+### Automatic session tracking
+
+Choose Ship or Full (or enable RunLedger start/finish), then `/kujo` → Lifecycle
+delivery → **Enable automatic tracking**. This is separate from Watchdog delivery
+and is off by default. Before the first model request, OpenCode asks for exact
+one-time approval to start that session’s canonical RunLedger record. Declining
+or leaving an uncertain result never triggers an automatic retry.
+
+When execution becomes idle, fails, completes or is interrupted, an in-progress
+record receives one inbox reminder to choose a verdict in Session RunLedger.
+Completion does not imply success. Finalization still requires your selected
+verdict and approval; no usage or cost is invented.
+
+Request/reminder markers survive reload and are bounded to128 sessions per
+project. **Reset tracking requests** clears only those markers after approval,
+allowing new requests; canonical run records are preserved. **Recover tracking
+journal** handles a stopped writer and refuses live ownership. Disable tracking
+to stop new requests. Unload, disable and session cancellation prevent a late
+approval from starting a new record; inspect canonical state if a command had
+already begun. A host permission dialog may still require dismissal.

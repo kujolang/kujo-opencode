@@ -791,3 +791,30 @@ with opencode/glm-5.3-flash-free and again failed provider.auth HTTP403 before t
 execution (/tmp/kujo-correlation-live-specialist.log). This is not acceptance of
 specialist execution. Automatic RunLedger start/finalization and the remaining
 full parity/recovery/platform/public release requirements remain open.
+
+## Automatic session start requests (2026-10-16)
+
+Lifecycle controls now offer a separate opt-in automatic RunLedger start request
+before the first model request. RunLedger start/finish exposure is a prerequisite.
+Canonical writes retain exact native human approval. A durable bounded request
+journal prevents repeating declined/uncertain requests across reload. In-progress
+records receive one inbox finish reminder on idle, interruption or explicit host
+execution success/failure; no human verdict, usage or cost is invented.
+
+Markers hold at most128 sessions per project. Approved reset clears markers only
+and allows new requests; canonical records remain. Explicit recovery refuses live
+writers. Disable/unload/session cancellation abort pending writes after approval;
+commands already begun require canonical inspection. Host permission dialogs may
+still require dismissal. Configuration is rechecked after approval. This does not
+yet automatically present the final-verdict TUI dialog or certify all real host
+cancellation/reconnect scenarios; those remain part of the original lifecycle gate.
+
+127 offline tests and canonical E2E passed. Real OpenCode2.0.31 Ydsdor proved the
+model-request hook’s exact start approval, canonical creation and finish reminder.
+The prompt API acknowledges before execution: tests poll canonical state after
+approval. Explicit session.execution.failed/succeeded events were required for
+provider failure/completion reminders; their bodies are never captured. Earlier
+native checks exposed and corrected those test/observer gaps. PackeduWlYRq passed
+baseline automatic-controller/canonical ledger gates but predates cancellation,
+capacity-message, explicit completion-event and prerequisite refinements. Final
+native acceptance and packed retry are pending below.

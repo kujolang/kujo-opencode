@@ -20,6 +20,15 @@ export async function verifySessionLedger({project,packageRoot,home}){
   const {SessionCorrelation}=await import(pathToFileURL(join(packageRoot,'lib/session-correlation.mjs')));const correlation=new SessionCorrelation({project,openApp:createApp});assert.equal(await correlation.resolve(sessionID),started.run_id);
   approve=false;await assert.rejects(manageSessionLedger({...options,action:'finish',status:'partial'}),/human rejected/);assert.equal((await manageSessionLedger({...options,action:'status'})).state,'in_progress');
   approve=true;const finished=await manageSessionLedger({...options,action:'finish',status:'partial'});assert.equal(finished.state,'partial');assert.match(finished.record.verdict,/Human selected partial/);assert.equal(finished.record.model,'offline');assert.equal(requests,6);
+  const {AutomaticLedger}=await import(pathToFileURL(join(packageRoot,'lib/automatic-ledger.mjs')));
+  const autoSession='session_auto_acceptance';let autoApprovals=0,allowAuto=false,reminders=0;
+  const autoOptions={project,openApp:createApp,sessionAtProject:async id=>{assert.equal(id,autoSession);return {model:{providerID:'fixture',id:'offline'}};},approve:async()=>{autoApprovals++;if(!allowAuto)throw Error('Human rejected automatic start');}};
+  const tracking={home,project,enabled:true,isCurrent:async()=>true,manage:input=>manageSessionLedger({...autoOptions,...input}),notify:async()=>{reminders++;}};
+  let automatic=new AutomaticLedger(tracking);await automatic.before(autoSession);automatic.close();automatic=new AutomaticLedger(tracking);await automatic.before(autoSession);assert.equal(autoApprovals,1);
+  await automatic.reset();automatic.close();allowAuto=true;automatic=new AutomaticLedger(tracking);await automatic.before(autoSession);assert.equal(autoApprovals,2);
+  assert.equal((await manageSessionLedger({...autoOptions,sessionID:autoSession,action:'status'})).state,'in_progress');
+  const priorReminders=reminders;await automatic.idle(autoSession);automatic.close();automatic=new AutomaticLedger(tracking);await automatic.idle(autoSession);assert.equal(reminders,priorReminders+1);automatic.close();
+  const autoFinished=await manageSessionLedger({...autoOptions,sessionID:autoSession,action:'finish',status:'partial'});assert.equal(autoFinished.state,'partial');
   return {run_id:finished.run_id,receipt_id:finished.receipt_id};
  });
 }

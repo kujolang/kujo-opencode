@@ -12,7 +12,7 @@ function fixture(){
 }
 test('lifecycle defaults off and rejects unknown configuration and remote endpoints',async()=>{
  const f=fixture(),bridge=await startLifecycle(f.options);assert.equal(f.hooks.size,0);assert.equal(f.counts().subscribed,0);assert.equal((await bridge.status()).enabled,false);assert.equal((await bridge.status()).intervention.enabled,false);await bridge.close();
- for(const value of [{enabled:'true'},{enabled:false,intervention:'yes'},{enabled:true,token:'secret'},{enabled:true,url:'https://remote.example'}])assert.throws(()=>lifecycleConfig(value));
+ for(const value of [{enabled:'true'},{enabled:false,intervention:'yes'},{enabled:false,runledger:'yes'},{enabled:true,token:'secret'},{enabled:true,url:'https://remote.example'}])assert.throws(()=>lifecycleConfig(value));
 });
 test('enabled observers bind real metadata, reject other workspaces, and stop at unload',async()=>{
  const f=fixture(),bridge=await startLifecycle({...f.options,config:{enabled:true}});
@@ -59,4 +59,9 @@ test('enabled telemetry includes verified run identity, while failed lookup pres
  await f.hooks.get('tool.execute.before')({sessionID:'local',tool:'fixture',id:'one'});assert.ok(f.records.some(r=>r.callID==='one'&&r.runID==='verified-run'));assert.ok(calls>0);await bridge.close();
  const g=fixture();const failed=await startLifecycle({...g.options,config:{enabled:true},resolveRun:async()=>{throw Error('private');}});await g.hooks.get('tool.execute.before')({sessionID:'local',tool:'fixture',id:'two'});assert.ok(g.records.some(r=>r.callID==='two'&&r.runID===undefined));await failed.close();
  const h=fixture();const quiet=await startLifecycle({...h.options,resolveRun:async()=>{throw Error('must not inspect');}});assert.equal(h.hooks.size,0);await quiet.close();
+});
+
+test('explicit host completion and failure events retain outcomes without a RunLedger verdict',async()=>{
+ const f=fixture();f.options.ctx.event.subscribe=async function*({signal}){yield {type:'session.execution.failed',data:{sessionID:'local',error:'PRIVATE'}};yield {type:'session.execution.succeeded',data:{sessionID:'local'}};await new Promise(resolve=>signal.aborted?resolve():signal.addEventListener('abort',resolve,{once:true}));};
+ const bridge=await startLifecycle({...f.options,config:{enabled:true}});for(let i=0;i<30&&!f.records.some(r=>r.phase==='session.completed');i++)await delay(5);assert.ok(f.records.some(r=>r.phase==='session.error'));assert.ok(f.records.some(r=>r.phase==='session.completed'));assert.equal(JSON.stringify(f.records).includes('PRIVATE'),false);await bridge.close();
 });

@@ -21,3 +21,7 @@ function projectHash(project){return createHash('sha256').update(resolve(project
 test('unavailable or mismatched ledgers omit correlation and cancellation stops lookup',async()=>{
  const cache=new SessionCorrelation({project:'/fixture',openApp:async()=>{throw Error('private failure');}});assert.equal(await cache.resolve('session1'),undefined);const stop=new AbortController();stop.abort();await assert.rejects(cache.resolve('session2',stop.signal));
 });
+
+test('host execution completion is not task success, while host failure remains an error event',()=>{
+ for(const [phase,status]of [['session.completed','unset'],['session.error','error']]){const batch=lifecycleBatch({id:'fixture',created:0,event:{phase,sessionID:'session1'}},projectHash('/fixture'));assert.equal(batch.records[0].status,status);assert.equal(batch.records[0].attributes['watchdog.outcome.terminal'],true);}
+});
