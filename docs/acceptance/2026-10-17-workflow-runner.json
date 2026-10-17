@@ -1,0 +1,46 @@
+{
+  "recorded": "2026-10-17",
+  "production_commit": "66e2bb5",
+  "harness_commit": "cd2a2df",
+  "candidate_status": "Replacement of historical 713fbe4 remains required; production payload changed.",
+  "local_preflight": {
+    "ok": true,
+    "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-workflow-specialist-A8RQrn",
+    "source": "/Users/robertdevore/2026/Kujolang/kujo-repos/dispatch",
+    "steps": 10,
+    "live_specialist": false,
+    "native_approval": false,
+    "native_cancellation": false
+  },
+  "pinned_preflight": {
+    "ok": true,
+    "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-workflow-specialist-KWjSaG",
+    "source": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-rIkdUO/kujo/sources/dispatch-e1bbc21166022b00fb21ed000cc4f3cbb26e7e07",
+    "steps": 10,
+    "live_specialist": false,
+    "native_approval": false,
+    "native_cancellation": false
+  },
+  "verification": {
+    "unit_suite": 204,
+    "executor_suite_after_new_boundary_test": 5,
+    "canonical_e2e": "passed including checkpoint regression",
+    "knowledge_tests": 2,
+    "workflow_preflight": "Ten-step scenario passed separately on current and pinned Dispatch; newly added E2E import applies to future runs.",
+    "syntax_and_diff": "passed"
+  },
+  "contracts": [
+    "Validate before executing bounded tool-only workflow.",
+    "Native runner declares reject and cancel steps with absent-output invariants; canonical preflight does not execute these.",
+    "Completed, paused and failed runs each inspected by exact identifier with unchanged state bytes/attempts.",
+    "Run inspection declares read/write effects because canonical SQLite load may initialize bookkeeping.",
+    "Run ID option/path injection and symlinked SQLite store rejected."
+  ],
+  "limitations": [
+    "No live Workflow specialist, native cancellation or actual lost-response injection certified.",
+    "Human checkpoint decision/resumption still uses canonical Dispatch operator commands.",
+    "Failed output-schema step remains failed; this does not prove a failed human-decision submission.",
+    "Ship distinct journey remains to implement.",
+    "All live specialists, platform/release/registry and replacement exact-candidate acceptance remain incomplete."
+  ]
+}
