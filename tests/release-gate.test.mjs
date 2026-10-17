@@ -49,3 +49,18 @@ test('publication metadata uses canonical GitHub endpoints, including repository
   assert.equal(context.repo.private,false);assert.equal(context.environment.name,'npm-release');assert.equal(context.run.head_sha,sha);
  }finally{await rm(directory,{recursive:true,force:true});}
 });
+
+
+test('registry propagation retries only missing versions and stays bounded',async()=>{
+ const {waitRegistryDist}=await import('../.github/scripts/wait-registry-dist.mjs');
+ const missing=Object.assign(new Error('not visible'),{stdout:JSON.stringify({error:{code:'E404'}})});
+ let calls=0,waits=0;
+ const dist={integrity:'verified separately'};
+ assert.equal(await waitRegistryDist('fixture@1.0.0',{read:async()=>{if(++calls===1)throw missing;return dist;},wait:async()=>{waits++;},attempts:2}),dist);
+ assert.equal(calls,2);assert.equal(waits,1);
+ calls=0;
+ await assert.rejects(waitRegistryDist('fixture@1.0.0',{read:async()=>{calls++;throw missing;},wait:async()=>{},attempts:2}),/not visible/);
+ assert.equal(calls,2);
+ const denied=Object.assign(new Error('authentication failed'),{stdout:JSON.stringify({error:{code:'ENEEDAUTH'}})});
+ await assert.rejects(waitRegistryDist('fixture@1.0.0',{read:async()=>{throw denied;},wait:async()=>{assert.fail('Must not retry authentication failures');}}),/authentication failed/);
+});

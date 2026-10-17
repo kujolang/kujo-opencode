@@ -78,10 +78,10 @@ jobs:
       - name: Verify registry integrity and provenance as a consumer
         run: |
           node --input-type=module <<'JS'
-          import {validateRegistryDist} from './scripts/release-gate.mjs';import {readFile,mkdir} from 'node:fs/promises';import {execFileSync} from 'node:child_process';
+          import {waitRegistryDist} from './.github/scripts/wait-registry-dist.mjs';import {validateRegistryDist} from './scripts/release-gate.mjs';import {readFile,mkdir} from 'node:fs/promises';import {execFileSync} from 'node:child_process';
           const candidate=JSON.parse(await readFile(process.env.RUNNER_TEMP+'/kujo-candidate/candidate.json','utf8'));
           const identity=candidate.name+'@'+candidate.version;
-          const dist=JSON.parse(execFileSync('npm',['view',identity,'dist','--json','--registry=https://registry.npmjs.org/'],{encoding:'utf8'}));validateRegistryDist(candidate,dist);
+          const dist=await waitRegistryDist(identity);validateRegistryDist(candidate,dist);
           const cwd=process.env.RUNNER_TEMP+'/registry-consumer';await mkdir(cwd);
           execFileSync('npm',['install','--ignore-scripts','--registry=https://registry.npmjs.org/',identity],{cwd,stdio:'inherit'});
           execFileSync('npm',['audit','signatures','--registry=https://registry.npmjs.org/'],{cwd,stdio:'inherit'});

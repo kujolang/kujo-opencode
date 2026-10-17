@@ -82,6 +82,17 @@ the workflow uses Node 22 and npm 11.19.0. Public-repository provenance and publ
 configuration follow the [npm trusted-publishing documentation](https://docs.npmjs.com/trusted-publishers/).
 A first package registration may require an authenticated maintainer before that
 trust can be configured. Do not bypass the acceptance gate to bootstrap a release.
+If staged publishing is used for registration, give the registration-only package
+a separate prerelease version. Never stage the intended release version: npm
+reserves staged versions and rejects a direct publish over them. Keep the
+registration placeholder until the real release is public, and never approve it.
+Rejecting the only staged registration was followed by loss of publisher access
+during the 0.2.0 release; publisher configuration then had to be created again.
+
+After npm accepts publication, public metadata may take a few minutes to appear.
+The current workflow retries missing-version responses for up to five minutes
+before checking integrity and provenance. It does not retry authentication
+failures or accept mismatched bytes.
 
 After all pre-publication acceptance is complete, create the exact version tag
 (e.g. `v0.2.0`) on the candidate source commit. Dispatch **Release candidate** at
