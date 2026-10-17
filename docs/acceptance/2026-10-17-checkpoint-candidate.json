@@ -44,6 +44,21 @@
     "conclusion": "failure",
     "annotation": "Account payment/spending limit prevented job start"
   },
-  "native_understand": "running; /tmp/kujo-checkpoint-understand.log; exec session 89906",
+  "native_understand": {
+    "result": {
+      "ok": false,
+      "journey": "understand",
+      "host": "opencode v2.0.31",
+      "model": "opencode/glm-5.3-flash-free",
+      "error_type": "Error",
+      "reason": "Live provider failed before acceptance: provider.auth (HTTP 403)",
+      "candidate_commit": "2f80e136a359e068321372b0bedb1ca23ce21934",
+      "candidate_sha256": "08bd3febbb186d47e96d7b5365482b2970c5a83c5e9db32126de7d4e28c87fd1"
+    },
+    "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-1DtNos",
+    "log": "/tmp/kujo-checkpoint-understand.log",
+    "exit_code": 1,
+    "live_report_verified": false
+  },
   "production_parity_certified": false
 }
