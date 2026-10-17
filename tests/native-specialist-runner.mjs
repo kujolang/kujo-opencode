@@ -90,3 +90,39 @@ export async function specialistStep({api,session,receipts,step,interrupt,timeou
   throw error;
  }
 }
+
+// Review's opening instruction requests these two read-only checks together.
+// Verify both explicitly instead of treating one as an unsolicited side effect.
+export async function specialistReviewOpening({api,session,receipts,steps,interrupt,timeoutMs=180000,pollMs=500}) {
+ assert.equal(session.agent,'kujo-review');assert.equal(typeof interrupt,'function');
+ assert.deepEqual(steps.map(step=>[step.ability,step.tool,step.decision??'none']),[
+  ['kujo.patchbrief.changes.summarize','kujo_patchbrief_summarize','none'],
+  ['kujo.changebucket.changes.measure','kujo_changebucket_measure','none']]);
+ const owned=async()=> (await receipts()).filter(r=>r.metadata?.session_id===session.id);
+ const before=new Set((await owned()).map(r=>r.receipt_id));
+ const fresh=async()=> (await owned()).filter(r=>!before.has(r.receipt_id));
+ const allowed=[...steps.map(step=>step.ability),'kujo.ability.catalog.list','kujo.ability.receipts.list'];
+ const validate=rows=>{for(const row of rows){
+  assert.ok(allowed.includes(row.ability_id),'Unrequested operation executed');
+  assert.equal(row.surface,'plugin');assert.equal(row.metadata.agent_id,session.agent);
+  assert.equal(row.metadata.model_id,session.model);assert.equal(row.metadata.project_root,session.project);
+  assert.equal(row.status,'succeeded');assert.ok(!row.approval_id,'Read-only review cannot carry a grant');
+ }for(const step of steps)assert.ok(rows.filter(r=>r.ability_id===step.ability).length<=1,'No duplicate review operation');};
+ let settled=false,requestError;
+ const request=api(`/api/session/${session.id}/prompt`,{text:`Perform the two opening read-only review checks, each exactly once: ${JSON.stringify(steps.map(({tool,input})=>({tool,input})))}. These are the complete requested operations. Preserve their inputs, use no other substantive operation, do not retry, and report the canonical receipts and limitations.`},timeoutMs).catch(error=>{requestError=error;}).finally(()=>{settled=true;});
+ try {
+  const deadline=Date.now()+timeoutMs;
+  while(!settled&&Date.now()<deadline){
+   assertProviderHealthy(await api(`/api/session/${session.id}/message?limit=100`));
+   assert.equal((await api(`/api/session/${session.id}/permission`)).data.length,0,'Read-only review requested permission');
+   validate(await fresh());await delay(pollMs);
+  }
+  assert.ok(settled,'Review opening timed out');await request;if(requestError)throw requestError;
+  await api(`/api/experimental/session/${session.id}/wait`,{},Math.max(1000,deadline-Date.now()));
+  assertProviderHealthy(await api(`/api/session/${session.id}/message?limit=100`));
+  assert.equal((await api(`/api/session/${session.id}/permission`)).data.length,0);
+  const rows=await fresh();validate(rows);const results=[];
+  for(const step of steps){const matches=rows.filter(r=>r.ability_id===step.ability);assert.equal(matches.length,1,'Each requested review check needs a receipt');const row=matches[0];await step.after?.(row,rows);results.push({agent:session.agent,model:session.model,ability:step.ability,decision:'none',expected_status:'succeeded',receipt_ids:[row.receipt_id],terminal_receipt:row.receipt_id});}
+  return results.sort((a,b)=>rows.findIndex(row=>row.receipt_id===a.terminal_receipt)-rows.findIndex(row=>row.receipt_id===b.terminal_receipt));
+ }catch(error){await interrupt(session.id).catch(()=>{});throw error;}
+}

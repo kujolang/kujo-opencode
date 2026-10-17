@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {specialistSession,specialistStep} from './native-specialist-runner.mjs';
+import {specialistSession,specialistStep,specialistReviewOpening} from './native-specialist-runner.mjs';
 const ability='kujo.runledger.runs.start',input={path:'.',task:'Owned fixture'};
 function fixture({altered=false,providerError=false,wrongAgent=false,lateUnexpected=false}={}) {
  const session={id:'owned',agent:'kujo-ship',model:'opencode/explicit-test-model',project:'/owned'};
@@ -66,4 +66,23 @@ test('decline evidence is read with a bounded query and never grants an effect',
  const result=await specialistStep({...f,api,receipts:async()=>[...f.state().rows,...(evidence?[listed]:[])],step:step('reject'),pollMs:0});
  assert.deepEqual(f.state().replies,['reject']);assert.equal(evidence,true);assert.equal(prompts.length,2);
  assert.deepEqual(result.receipt_ids,['pending']);assert.equal(result.terminal_receipt,null);
+});
+
+function reviewOpeningFixture(mode='valid') {
+ const session={id:'review-owned',agent:'kujo-review',model:'openai/test',project:'/fixture'};
+ const steps=[{ability:'kujo.patchbrief.changes.summarize',tool:'kujo_patchbrief_summarize',input:{path:'review',format:'json'}},{ability:'kujo.changebucket.changes.measure',tool:'kujo_changebucket_measure',input:{path:'review',base:'HEAD'}}];
+ let rows=[],interrupted=false;const api=async(path,body)=>{
+  if(path.endsWith('/prompt')){for(const step of steps)assert.ok(body.text.includes(JSON.stringify({tool:step.tool,input:step.input})));rows=steps.map((step,i)=>({receipt_id:'r'+i,ability_id:step.ability,status:'succeeded',surface:'plugin',metadata:{session_id:session.id,agent_id:session.agent,model_id:session.model,project_root:session.project}}));if(mode==='missing')rows.pop();if(mode==='duplicate')rows.push({...rows[0],receipt_id:'extra'});if(mode==='unexpected')rows.push({...rows[0],ability_id:'kujo.fence.architecture.check'});if(mode==='wrong-model')rows[0].metadata.model_id='other';return {};}
+  if(path.endsWith('/permission'))return {data:mode==='permission'?[{id:'never-granted'}]:[]};
+  if(path.includes('/message'))return {data:[]};
+  if(path.endsWith('/wait'))return {};
+  throw Error('Unexpected API '+path);
+ };
+ return {api,session,steps,receipts:async()=>rows,interrupt:async()=>{interrupted=true;},wasInterrupted:()=>interrupted,pollMs:0};
+}
+test('review opening explicitly requests and verifies both canonical read-only checks',async()=>{
+ const f=reviewOpeningFixture();const rows=await specialistReviewOpening(f);assert.deepEqual(rows.map(r=>r.ability),f.steps.map(s=>s.ability));assert.equal(f.wasInterrupted(),false);
+});
+for(const mode of ['missing','duplicate','unexpected','wrong-model','permission'])test(`review opening rejects ${mode} evidence without granting effects`,async()=>{
+ const f=reviewOpeningFixture(mode);await assert.rejects(specialistReviewOpening(f));assert.equal(f.wasInterrupted(),true);
 });
