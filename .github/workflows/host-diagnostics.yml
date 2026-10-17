@@ -59,17 +59,24 @@ jobs:
           "$TUI_PYTHON" -m pip install -r tests/requirements-tui.txt
           "$TUI_PYTHON" tests/terminal-transport-test.py
           "$TUI_PYTHON" tests/tui-terminal.py --candidate "$RUNNER_TEMP/candidate" --host "$RUNNER_TEMP/host/bin/opencode.exe" --ledger --columns 80 --rows 24
-      - name: Retain diagnostics and verification
-        if: always()
+      - name: Retain native diagnostics
+        if: always() && steps.native.outputs.fixture != ''
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: windows-candidate-diagnostics-${{ github.sha }}
+          name: windows-native-diagnostics-${{ github.sha }}
           path: |
             ${{ steps.native.outputs.fixture }}/host-failure.json
             ${{ steps.native.outputs.fixture }}/verification.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Retain rendered diagnostics
+        if: always() && steps.rendered.outputs.fixture != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: windows-rendered-diagnostics-${{ github.sha }}
+          path: |
             ${{ steps.rendered.outputs.fixture }}/*.txt
             ${{ steps.rendered.outputs.fixture }}/verification.json
             ${{ steps.rendered.outputs.fixture }}/candidate-verification.json
-            ${{ runner.temp }}/host/host-provenance.json
           if-no-files-found: warn
           retention-days: 30
