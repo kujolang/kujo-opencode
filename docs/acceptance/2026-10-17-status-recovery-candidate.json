@@ -542,5 +542,30 @@
         }
       }
     ]
+  },
+  "leash_latest": {
+    "ok": true,
+    "host": "opencode v2.0.32",
+    "terminal_backend": "posix",
+    "service_result_pages": 1,
+    "dimensions": [
+      80,
+      24
+    ],
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-3ikj1ihv",
+    "initial_requested_session": "ses_kujo_terminal_d6647f9957524d82b4ef4770ec2c5a6f",
+    "model_call": true,
+    "effects_approved": true,
+    "rendered_ledger": false,
+    "rendered_automatic_completion": false,
+    "rendered_completion_evidence": false,
+    "live_ship_specialist": false,
+    "rendered_leash": true,
+    "rendered_gateway": false,
+    "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+    "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+    "candidate_integrity": "sha512-2XDK3zMkBKARZ62PEsJZ7y0Jvh481yXytyWyPDbWx3d7CKSwZ+uUFrzY48z1x+GduEulnoYmU58CiFs16fXISw==",
+    "pinned_sources": true,
+    "binary_sha256": "b79889ca39229684b7262e46f2382388b30191b26e4497989bc99100cb8758a9"
   }
 }
