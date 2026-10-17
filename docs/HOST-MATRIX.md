@@ -1,7 +1,7 @@
 # Exact-candidate host checks
 
 The `Exact candidate host matrix` workflow passed on Linux, macOS and Windows
-for the [recorded candidate](acceptance/2026-10-17-windows.md). It uses 2.0.31 as its minimum test target and resolves the latest version
+for the [published 0.2.0 archive](acceptance/2026-10-17-release-hosts.json). It uses 2.0.31 as its minimum test target and resolves the latest version
 of the official `@opencode/cli` v2 package once per run. These are recorded test targets; a newer host or archive needs its own evidence. The Linux runner is
 glibc Ubuntu; musl distributions are outside this matrix. The general GitHub latest
 release and the `opencode-ai` npm package can still refer to v1; the workflow

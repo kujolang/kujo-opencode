@@ -1,6 +1,6 @@
 # Kujo OpenCode
 
-[![Version](https://img.shields.io/badge/version-0.2.0-black)](package.json)
+[![Version](https://img.shields.io/badge/version-0.2.0-black)](https://www.npmjs.com/package/@kujolang/kujo-opencode/v/0.2.0)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 [![built with Kujo](https://img.shields.io/badge/built%20with-Kujo-white.svg)](https://github.com/kujolang/kujo)
 [![OpenCode](https://img.shields.io/badge/OpenCode-2-black)](https://opencode.ai/v2/docs/)
@@ -12,14 +12,13 @@ handles your model account; Kujo runs tools locally and records their results.
 
 All six specialists have passed with a connected ChatGPT account on macOS.
 Native and rendered host checks passed on Linux, macOS and Windows with OpenCode
-2.0.31 and 2.0.32. Those results have separate archive scopes; see
-[release readiness](docs/PRODUCTION-READINESS.md) for the exact evidence and
-remaining publication gates.
+2.0.31 and 2.0.32. See [release readiness](docs/PRODUCTION-READINESS.md) for
+the exact package identity, test scope and provider limits.
 
 ## Install
 
 You need Node.js 20+, npm, Git and [OpenCode 2](https://opencode.ai/v2/docs/).
-For a published version, install from npm, then configure your project:
+Install version 0.2.0 from npm, then configure your project:
 
 ```sh
 npm install --global @kujolang/kujo-opencode@0.2.0
@@ -29,7 +28,8 @@ kujo-opencode demo
 opencode
 ```
 
-Check the [release page](https://github.com/kujolang/kujo-opencode/releases) before using the npm command. Until 0.2.0 is published, install a reviewed archive instead:
+You can also install the matching archive from the
+[release page](https://github.com/kujolang/kujo-opencode/releases):
 
 ```sh
 npm install --global /path/to/kujolang-kujo-opencode-0.2.0.tgz
@@ -45,8 +45,7 @@ or API key. A successful scan does not mean your project is ready to release.
 
 The repository is public. To build a candidate yourself, clone it, run `npm ci`,
 then `npm pack`. For an archive with checksums and a dependency inventory, follow
-[the release procedure](docs/RELEASING.md). The npm package name is not yet a
-verified installation route; use the candidate archive until publication.
+[the release procedure](docs/RELEASING.md).
 
 ## Connect your model
 

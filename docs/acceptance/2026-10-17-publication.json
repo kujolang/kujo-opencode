@@ -1,0 +1,111 @@
+{
+  "schema": "kujo.opencode.publication/v1",
+  "date": "2026-10-17",
+  "status": "published-and-verified",
+  "version": "0.2.0",
+  "tag": "v0.2.0",
+  "commit": "587401b86e0fe1c5bfc2c8373946abbfb8d607dd",
+  "sha256": "fa5fd2ed97c9fd7c24d3610434d19e2130cfcb7102b5ab6b0e8785f189fcdb5c",
+  "npm": "https://www.npmjs.com/package/@kujolang/kujo-opencode/v/0.2.0",
+  "release": "https://github.com/kujolang/kujo-opencode/releases/tag/v0.2.0",
+  "release_id": 416134915,
+  "publication_run": "https://github.com/kujolang/kujo-opencode/actions/runs/39068560416",
+  "publication_attempt": 3,
+  "registry_verification_run": "https://github.com/kujolang/kujo-opencode/actions/runs/39080095211",
+  "registry_verification_artifact": "https://github.com/kujolang/kujo-opencode/actions/runs/39080095211/artifacts/12117993326",
+  "registry_integrity": {
+    "ok": true,
+    "name": "@kujolang/kujo-opencode",
+    "version": "0.2.0",
+    "commit": "587401b86e0fe1c5bfc2c8373946abbfb8d607dd",
+    "sha256": "fa5fd2ed97c9fd7c24d3610434d19e2130cfcb7102b5ab6b0e8785f189fcdb5c",
+    "integrity": "sha512-Uy+Q0Fh7k0/DQlgXvHv0Hj1VLaBpQdghhj+Bp/KoTVUDFUCNMCOYvFDI2KMJoVkNwbWeNM7p0ipvl+1ZzmsDxQ==",
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/@kujolang%2fkujo-opencode@0.2.0",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "signatures_verified": true
+  },
+  "registry_consumer": {
+    "ok": true,
+    "root": "/tmp/kujo-opencode-packed-csoPu3",
+    "tarball": "/tmp/kujo-opencode-packed-csoPu3/kujolang-kujo-opencode-0.2.0.tgz",
+    "registry_consumer": true,
+    "candidate_commit": "587401b86e0fe1c5bfc2c8373946abbfb8d607dd",
+    "candidate_sha256": "fa5fd2ed97c9fd7c24d3610434d19e2130cfcb7102b5ab6b0e8785f189fcdb5c",
+    "candidate_integrity": "sha512-Uy+Q0Fh7k0/DQlgXvHv0Hj1VLaBpQdghhj+Bp/KoTVUDFUCNMCOYvFDI2KMJoVkNwbWeNM7p0ipvl+1ZzmsDxQ==",
+    "upgrade": "0.1.0 -> 0.2.0",
+    "old_project_retained": true,
+    "mixed_version_verified": true,
+    "fresh_sources": 28,
+    "packed_mcp_tools": 10,
+    "starter_kinds": [
+      "script",
+      "agent",
+      "api",
+      "mcp"
+    ],
+    "starter_services_verified": true,
+    "agent_fixture_verified": true,
+    "session_runledger_verified": true,
+    "browser_launch_verified": true,
+    "browser_check_verified": true,
+    "knowledge_verified": true,
+    "fixture_workdirs_retained": false
+  },
+  "release_assets_verified": [
+    {
+      "name": "build-record.json",
+      "size": 1561,
+      "digest": "sha256:9b3de2d730e565aa88e39834daab55124fa1e20df10f307eecd0027926d7cd2b"
+    },
+    {
+      "name": "candidate.json",
+      "size": 914,
+      "digest": "sha256:65f126cca611449be11e0cb6f8bc8c7b3f75db7ede801535d6cf69eea2ae88de"
+    },
+    {
+      "name": "kujolang-kujo-opencode-0.2.0.tgz",
+      "size": 187852,
+      "digest": "sha256:fa5fd2ed97c9fd7c24d3610434d19e2130cfcb7102b5ab6b0e8785f189fcdb5c"
+    },
+    {
+      "name": "package-lock.json",
+      "size": 142015,
+      "digest": "sha256:fbcd25076c26885cb916d02a26d70b418bed75c7cdd8c1c56a8886309c7d9c88"
+    },
+    {
+      "name": "registry-integrity.json",
+      "size": 559,
+      "digest": "sha256:36f183978ea97c67680e2acd70dafaa0b41c26772d4a3b054d50cac7d3088b5a"
+    },
+    {
+      "name": "release-acceptance.json",
+      "size": 6654,
+      "digest": "sha256:3a187e69758f32649602aa748473bfcd0d4c727027c2c37179391272003ecbe6"
+    },
+    {
+      "name": "sbom.cdx.json",
+      "size": 8771,
+      "digest": "sha256:efdb2018723680e51f94323f8289d5458c0aafd734ef1de6840ad332069c5dd9"
+    },
+    {
+      "name": "SHA256SUMS",
+      "size": 507,
+      "digest": "sha256:8e0af2be24435fb08150fdadcfc36f8f94e724cbcdb4eca799f3b4fb2b5543d8"
+    },
+    {
+      "name": "sources.json",
+      "size": 3676,
+      "digest": "sha256:3e530d171be98a3adeb8946d7ba05de45ceec403ac48f229ae957d02c1c3c651"
+    },
+    {
+      "name": "verification.json",
+      "size": 920,
+      "digest": "sha256:ed665e1a7607f70026a5eddaa8c8402c631467db3029de27b74d92e782803b43"
+    }
+  ],
+  "recovery": "Protected OIDC publication succeeded on attempt 3. Immediate registry lookup failed during npm processing. Attempt 4 verified signatures and attestations, then exposed a test cwd issue: npm exec ran inside this package checkout. Commit a0f4761 runs npm exec in the independent consumer project. The separate read-only CI run passed all registry checks; the GitHub release was then created from the unchanged accepted bundle. Failed attempts remain visible. No republish or post-publication tag change."
+}

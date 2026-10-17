@@ -61,22 +61,22 @@ Publication remains a separate required gate: supported host/OS acceptance,
 all live specialist workflows, protected release approval, matching version/tag,
 public repository/registry access, signed provenance, and registry consumer
 install/upgrade must be verified. Do not publish a rebuilt archive or infer
-release approval from a candidate artifact. The separate publication workflow below is prepared but unexecuted; no public
-release is claimed by candidate preparation.
+release approval from a candidate artifact. Candidate preparation alone does not claim a public release. The first public
+release, 0.2.0, is recorded in [publication evidence](acceptance/2026-10-17-publication.json).
 
 ## Protected publication workflow
 
-`publish.yml` is a manually dispatched, tag-only publication path. It is prepared
-but has not published a release. The repository is public. The `npm-release`
+`publish.yml` is a manually dispatched, tag-only publication path. It published
+0.2.0 with OIDC provenance on 2026-10-17. The repository is public. The `npm-release`
 environment requires `robertdevore` to review, allows self-review and permits
-only `v*` tags. npm authorization and complete candidate acceptance remain open.
+only `v*` tags. npm authorization and 0.2.0 acceptance are complete.
 
 The maintainer explicitly authorized self-review on 2026-10-17. The same account
 may dispatch and approve the run. Human approval is still required; administrator
 bypass remains disabled. No second maintainer is required.
-At the desk, configure the
-npm trusted publisher for `kujolang/kujo-opencode`, workflow `publish.yml`, and
-environment `npm-release`, permitting direct publishing. No npm token is stored in
+
+The configured npm trusted publisher for `kujolang/kujo-opencode`, workflow `publish.yml`, and
+environment `npm-release` permits direct publishing. No npm token is stored in
 the workflow. npm requires Node 22.14+ and npm 11.5.1+ for trusted publishing;
 the workflow uses Node 22 and npm 11.19.0. Public-repository provenance and publisher
 configuration follow the [npm trusted-publishing documentation](https://docs.npmjs.com/trusted-publishers/).
@@ -147,3 +147,15 @@ CONTEXT contains the authoritative GitHub `repo`, `environment`, `run` responses
 plus `sha`, `ref`, `digest`, `runID`; the composite action fetches these afresh.
 No passing acceptance report is checked in because the full required evidence
 is still incomplete. Adding a report is not a substitute for completing it.
+
+## Recovering verification after publication
+
+If npm accepts publication but a later consumer check fails, first inspect the
+public version and compare its integrity with the candidate. Never replace that
+version or move its tag. Fix the verification problem and dispatch
+`verify-registry.yml` with the original candidate run ID and source commit.
+This workflow has read-only repository permissions and cannot publish. It verifies
+the tag, archive, signatures, provenance, fresh registry install and upgrade, then
+retains its evidence. After it passes, a maintainer can create a missing GitHub
+release from the original bundle and attach the acceptance and consumer records.
+Keep the failed publication run and the recovery run linked in the release notes.

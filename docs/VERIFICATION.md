@@ -1,5 +1,10 @@
 # Kujo OpenCode 0.2.0 verification
 
+Version 0.2.0 is published on npm and [GitHub](https://github.com/kujolang/kujo-opencode/releases/tag/v0.2.0).
+The [publication record](acceptance/2026-10-17-publication.json) binds the release
+to its exact archive, signed provenance and passing registry consumer checks.
+The historical evidence below retains its original scope.
+
 This document retains earlier evidence and its original scope. For current gates,
 read [release readiness](PRODUCTION-READINESS.md). All six specialists now have
 [macOS ChatGPT acceptance](acceptance/2026-10-17-chatgpt-specialists.md); older
