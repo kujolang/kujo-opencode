@@ -618,5 +618,29 @@
     "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
     "candidate_integrity": "sha512-2XDK3zMkBKARZ62PEsJZ7y0Jvh481yXytyWyPDbWx3d7CKSwZ+uUFrzY48z1x+GduEulnoYmU58CiFs16fXISw==",
     "pinned_sources": true
+  },
+  "leash_minimum": {
+    "ok": true,
+    "host": "opencode v2.0.31",
+    "terminal_backend": "posix",
+    "service_result_pages": 1,
+    "dimensions": [
+      80,
+      24
+    ],
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-oxuzi2tm",
+    "initial_requested_session": "ses_kujo_terminal_c28f943b9fdd40a5ac762ca0ec8adec3",
+    "model_call": true,
+    "effects_approved": true,
+    "rendered_ledger": false,
+    "rendered_automatic_completion": false,
+    "rendered_completion_evidence": false,
+    "live_ship_specialist": false,
+    "rendered_leash": true,
+    "rendered_gateway": false,
+    "candidate_commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+    "candidate_sha256": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+    "candidate_integrity": "sha512-2XDK3zMkBKARZ62PEsJZ7y0Jvh481yXytyWyPDbWx3d7CKSwZ+uUFrzY48z1x+GduEulnoYmU58CiFs16fXISw==",
+    "pinned_sources": true
   }
 }
