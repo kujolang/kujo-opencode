@@ -94,10 +94,33 @@ live journey, but rejected steps only check absence without invoking the adapter
 integration gate is separate from ordinary unit tests because it requires Lens
 and browser dependencies. No sibling source or production payload is changed.
 
+## Workflow journey
+
+`KUJO_TEST_JOURNEY=workflow` selects `kujo-workflow`. Its ten steps validate a
+bounded tool-only workflow, reject and cancel native execution without output,
+run and separately inspect completed/paused/failed cases, and reject an invalid
+workflow. Each run is unique; inspection reconciles the exact retained identifier
+without rerunning it. State bytes, step attempts and pending approvals must remain
+unchanged after inspection. Tool output-schema failure remains a failed workflow;
+no automatic retry or checkpoint decision is supplied.
+
+Inspection invokes canonical Dispatch. Its SQLite backend can initialize storage
+bookkeeping, so the Ability declares a write effect and needs a separate native
+approval even when a filesystem-backed fixture does not change. Run-state and
+SQLite paths are confined; identifiers cannot be options or path traversal.
+
+`node tests/workflow-specialist-canonical.mjs` exercises these same operations
+against local canonical Dispatch; `KUJO_TEST_DISPATCH_SOURCE` selects a retained
+pinned checkout. This preflight marks native approval/cancellation and live agent
+behavior false: denied steps only assert absence without invoking execution.
+A paused checkpoint is not completion. Human decision/resumption still uses the
+canonical Dispatch operator surface; this harness does not certify that path or
+an actual lost-response injection.
+
 ## Still required
 
-Distinct Workflow and Ship journeys remain to implement,
+The distinct Ship journey remains to implement,
 following `2026-10-17-completion-audit.md`. The generic ShipCheck/RunLedger helper
-must not be presented as these workflows. The full Understand, Build, Review and Browser live journeys
+must not be presented as these workflows. The full Understand, Build, Review, Browser and Workflow live journeys
 remain unverified until a complete native run succeeds. Required platform
 coverage and retained release acceptance evidence remain separate gates.
