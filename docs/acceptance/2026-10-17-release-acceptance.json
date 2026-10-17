@@ -1,46 +1,52 @@
 {
   "schema": "kujo.opencode.release-acceptance/v1",
-  "commit": "bef63f4200e3bf530cf4baab21aa524e6fca13ea",
+  "commit": "587401b86e0fe1c5bfc2c8373946abbfb8d607dd",
   "sha256": "fa5fd2ed97c9fd7c24d3610434d19e2130cfcb7102b5ab6b0e8785f189fcdb5c",
-  "candidate_run_id": "39067819847",
+  "candidate_run_id": "39068400481",
   "requirements": {
     "native-management": {
       "status": "passed",
       "evidence": [
         "https://github.com/kujolang/kujo-opencode/actions/runs/39065994542",
-        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39068400481"
       ]
     },
     "lifecycle": {
       "status": "passed",
       "evidence": [
-        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39068400481"
       ]
     },
     "specialists": {
       "status": "passed",
       "evidence": [
-        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39068400481"
       ]
     },
     "capability-parity": {
       "status": "passed",
       "evidence": [
         "https://github.com/kujolang/kujo-opencode/actions/runs/39065994542",
-        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39068400481"
       ]
     },
     "recovery": {
       "status": "passed",
       "evidence": [
-        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39068400481"
       ]
     },
     "host-platform-matrix": {
       "status": "passed",
       "evidence": [
         "https://github.com/kujolang/kujo-opencode/actions/runs/39065994542",
-        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39068400481"
       ]
     }
   },
@@ -48,37 +54,43 @@
     "understand": {
       "status": "passed",
       "evidence": [
-        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39068400481"
       ]
     },
     "build": {
       "status": "passed",
       "evidence": [
-        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39068400481"
       ]
     },
     "review": {
       "status": "passed",
       "evidence": [
-        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39068400481"
       ]
     },
     "browser": {
       "status": "passed",
       "evidence": [
-        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39068400481"
       ]
     },
     "workflow": {
       "status": "passed",
       "evidence": [
-        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39068400481"
       ]
     },
     "ship": {
       "status": "passed",
       "evidence": [
-        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242"
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39067797542/artifacts/12114017242",
+        "https://github.com/kujolang/kujo-opencode/actions/runs/39068400481"
       ]
     }
   },
@@ -138,5 +150,17 @@
       }
     }
   },
-  "scope": "Native/rendered host matrix: Linux, macOS, Windows; live model acceptance: macOS x64/OpenCode 2.0.32/openai/gpt-5.6-sol, authorized ChatGPT. Six specialists/50 checks. Free GLM and DeepSeek model routes unverified. Prior failed attempts and narrowly scoped harness corrections are retained in the evidence records. GitHub environment human approval is separate from this evidence inventory."
+  "scope": "Native/rendered host matrix: Linux, macOS, Windows; live model acceptance: macOS x64/OpenCode 2.0.32/openai/gpt-5.6-sol, authorized ChatGPT. Six specialists/50 checks. Free GLM and DeepSeek model routes unverified. Prior failed attempts and narrowly scoped harness corrections are retained in the evidence records. GitHub environment human approval is separate from this evidence inventory.",
+  "source_transition": {
+    "accepted_test_source": "bef63f4200e3bf530cf4baab21aa524e6fca13ea",
+    "release_source": "587401b86e0fe1c5bfc2c8373946abbfb8d607dd",
+    "changed_paths": [
+      ".github/actions/verify-release/action.yml",
+      "tests/release-gate.test.mjs"
+    ],
+    "reason": "Correct publication metadata root URL and add a CRLF-safe regression test. Both files are outside the npm payload. The release archive is byte-for-byte identical to the archive used by all retained live specialist, lifecycle and host acceptance. Original receipts retain their actual source commit.",
+    "original_candidate_run": "39067819847",
+    "release_candidate_run": "39068400481",
+    "sha256": "fa5fd2ed97c9fd7c24d3610434d19e2130cfcb7102b5ab6b0e8785f189fcdb5c"
+  }
 }
