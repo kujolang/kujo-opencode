@@ -36,25 +36,29 @@ proxy, automatic approval, hidden network telemetry, or duplicated product logic
 
 ## Current acceptance status — 2026-10-17
 
-The repository is public and GitHub Actions now runs. ChatGPT authentication is
-connected through OpenCode's supported sign-in. All six scoped specialists passed
-49 operation checks and produced six model reports on macOS/OpenCode 2.0.32 with
-`openai/gpt-5.6-sol`. The [specialist record](acceptance/2026-10-17-chatgpt-specialists.md)
-identifies the exact tested archive, approvals, failures and receipts.
+The final archive is built from `bef63f4200e3bf530cf4baab21aa524e6fca13ea`,
+tagged `v0.2.0`. Its SHA-256 is
+`fa5fd2ed97c9fd7c24d3610434d19e2130cfcb7102b5ab6b0e8785f189fcdb5c`.
+All six specialists passed 50 operation checks with six receipt-grounded model
+reports through OpenCode's ChatGPT sign-in. These live tests used macOS x64,
+OpenCode 2.0.32 and `openai/gpt-5.6-sol`; they do not establish live-model behavior
+on Linux or Windows.
 
-Those results apply to that archive. Changes to runtime or packaged documentation
-require a new candidate and the applicable checks. No candidate has passed the
-complete release contract yet.
-
-| Gate | Established | Still needed |
+| Gate | Verified scope | Evidence |
 | --- | --- | --- |
-| Native UI and approvals | Local native and rendered management, rejection and one-time grants | Final archive through supported host/platform journeys |
-| Lifecycle | Opt-in delivery, outage/reload recovery, cancellation and human RunLedger verdicts | Final-archive lifecycle coverage on supported platforms |
-| Specialists | Understand, Build, Review, Browser, Workflow and Ship passed with ChatGPT | Revalidate affected behavior after candidate changes; retain release evidence |
-| Capabilities | Canonical source/test, starters, Agents SDK, knowledge, browser and service workflows | Confirm the comparison against the final archive and declared platform limits |
-| Recovery | Local interruption, rollback, concurrent setup, mixed versions, repair and uninstall | Supported-platform acceptance for the final archive |
-| CI and compatibility | Fresh-install and Node 20/22 package jobs passed on Linux, macOS and Windows ([run 39044492319](https://github.com/kujolang/kujo-opencode/actions/runs/39044492319)) | Retain the [passing native/rendered matrix](acceptance/2026-10-17-windows.md) for its exact archive; revalidate the final archive |
-| Publication | Public repository; protected `npm-release` environment and publication workflow | npm publisher setup, reviewed candidate, matching tag, provenance and registry consumer checks |
+| Native UI and approvals | Native and rendered checks on Linux, macOS and Windows, OpenCode 2.0.31 and 2.0.32 | [Final host receipts](acceptance/2026-10-17-release-hosts.json) |
+| Lifecycle | macOS live-model cancellation, opt-in delivery, outage/reload recovery, bounded intervention and automatic tracking | [Final lifecycle receipts](acceptance/2026-10-17-release-lifecycle.json) |
+| Specialists | Understand 5, Build 8, Review 4, Browser 7, Workflow 18, Ship 8 checks; accepted and rejected operations | [Final specialist receipts](acceptance/2026-10-17-release-specialists.json) |
+| Capabilities | Canonical source/test, starters, Agents SDK, knowledge, browser and service workflows within the documented host boundaries | [Comparison](CAPABILITY-PARITY.md), final host and specialist records |
+| Recovery | Fresh install/upgrade on three operating systems; lost Dispatch response reconciled without duplicate execution in the macOS live test | [Final host receipts](acceptance/2026-10-17-release-hosts.json), [Dispatch receipts](acceptance/2026-10-17-release-dispatch.json), [failure-path scope](RECOVERY-ACCEPTANCE.md) |
+| Publication | Version tag pushed; npm trusted publisher configured for `publish.yml` and `npm-release` | Protected publication, registry provenance/signatures and consumer checks remain pending |
+
+The final records are [retained on GitHub](https://github.com/kujolang/kujo-opencode/actions/runs/39067797542).
+Prior failed attempts remain in those records. The Windows minimum-version native
+host job passed on an unchanged rerun after a connection failure. Review acceptance
+was corrected to allow its documented pair of opening read-only tools and either
+completion order for that parallel pair. Later operation order, receipts and
+permission checks remain strict. The current test suite passes 245 checks.
 
 The release environment requires `robertdevore` to review. On 2026-10-17 the
 maintainer authorized self-review, so that account may dispatch and approve its
