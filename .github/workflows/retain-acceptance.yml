@@ -2,6 +2,11 @@ name: Retain local acceptance evidence
 on:
   workflow_dispatch:
     inputs:
+      evidence_prefix:
+        description: Checked-in acceptance record prefix
+        default: 2026-10-17-promotion
+        required: true
+        type: string
       candidate_commit:
         description: Commit recorded in the tested candidate
         required: true
@@ -22,6 +27,7 @@ jobs:
           node-version: 22
       - name: Check the identity and completeness of imported local receipts
         env:
+          ACCEPTANCE_PREFIX: ${{ inputs.evidence_prefix }}
           CANDIDATE_COMMIT: ${{ inputs.candidate_commit }}
           CANDIDATE_SHA256: ${{ inputs.candidate_sha256 }}
         run: node scripts/retain-acceptance.mjs
@@ -30,9 +36,9 @@ jobs:
         with:
           name: local-acceptance-${{ inputs.candidate_sha256 }}
           path: |
-            docs/acceptance/2026-10-17-promotion-hosts.json
-            docs/acceptance/2026-10-17-promotion-specialists.json
-            docs/acceptance/2026-10-17-promotion-lifecycle.json
-            docs/acceptance/2026-10-17-promotion-dispatch.json
+            docs/acceptance/${{ inputs.evidence_prefix }}-hosts.json
+            docs/acceptance/${{ inputs.evidence_prefix }}-specialists.json
+            docs/acceptance/${{ inputs.evidence_prefix }}-lifecycle.json
+            docs/acceptance/${{ inputs.evidence_prefix }}-dispatch.json
           if-no-files-found: error
           retention-days: 90
