@@ -114,7 +114,8 @@ const rpc=await new Promise((resolveResult,reject)=>{
   child.on('error',reject); child.stdin.write(JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/list'})+'\n');
  });
 });
-assert.equal(rpc.result.tools.length,5);
+assert.equal(rpc.result.tools.length,10);
+for(const operation of ['preview','index','status','query','recover'])assert.ok(rpc.result.tools.some(tool=>tool.name===`kujo_knowledge_${operation}`));
 const verification={ok:true,root,tarball,upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,starter_kinds:['script','agent','api','mcp'],starter_services_verified:true,agent_fixture_verified:true,session_runledger_verified:true,browser_launch_verified:true,browser_check_verified:true,knowledge_verified:true,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
 await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
 // Keep the immutable tarballs and verification record, not hundreds of MiB of

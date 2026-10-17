@@ -735,3 +735,13 @@ workdirs were removed. The retry is in /tmp/kujo-knowledge-fresh-retry.log.
 Remaining scope includes real specialist knowledge tasks and supported host/OS
 acceptance, automatic RunLedger lifecycle/correlation, remaining recovery matrix
 and public release. No broad parity checkbox is closed by this local checkpoint.
+
+Subsequent packed blmhIp exposed a harness omission (new knowledge Abilities had
+not been explicitly enabled); fixed by enabling all five. Packed7mXzpz completed
+knowledge and browser checks but failed the final old five-tool assertion: ten
+were correctly exposed after enabling knowledge. Final harness asserts ten plus
+all five knowledge tool names. These are failed gates, not passing full-package
+certification; logs/packages/available fixture receipts remain retained. Only
+owned disposable test workspaces were removed to recover disk. Final retry is
+/tmp/kujo-knowledge-fresh-acceptance.log (handle63137). Product bytes matchfb82c42.
+Final offline suite passes114 tests; five focused knowledge tests also pass.
