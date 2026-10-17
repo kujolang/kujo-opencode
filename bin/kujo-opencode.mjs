@@ -147,7 +147,7 @@ async function browser(opts) {
   const project = resolve(opts.project || process.cwd()); const { config } = await loadProjectConfig(project); const lens = config.sources.lens;
   if (!lens) throw new Error("Lens source is not installed");
   const status = action === "install" ? await installLensBrowser(lens.path) : await lensBrowserStatus(lens.path);
-  output({ ok: status.ready, message: status.ready ? "Lens browser is ready." : "Lens browser is not installed; run 'kujo-opencode browser install'.", browser: "chromium", ready: status.ready, ...(status.executable ? { executable: status.executable } : {}) }, opts.json);
+  output({ ok: status.ready, message: status.ready ? "Lens browser launched successfully." : status.state === "dependencies_missing" ? "Lens bridge dependencies are missing; run 'kujo-opencode browser install'." : status.state === "launch_failed" ? "Chromium could not launch; run 'kujo-opencode browser install', then check operating-system browser dependencies if the problem persists." : "Browser readiness probe failed; verify Node is available and retry.", browser: "chromium", ready: status.ready, state:status.state, ...(status.executable ? { executable: status.executable } : {}) }, opts.json);
   if (!status.ready) process.exitCode = 1;
 }
 
