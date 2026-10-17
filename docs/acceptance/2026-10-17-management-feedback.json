@@ -1,0 +1,120 @@
+{
+  "date": "2026-10-17",
+  "scope": "Local macOS management rejection and packed install/upgrade acceptance; not complete production certification",
+  "candidate": {
+    "commit": "c3a256a99609bb2b0dfbaef46133673cbb2a2192",
+    "archive": "kujolang-kujo-opencode-0.2.0.tgz",
+    "sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+    "integrity": "sha512-AOF4KrOvsFAjSnLLAXbR8MlYDTdW2bwMHNvZF164B4i8Hqs7T1SYnYcrAyHY20V7JTpfkK73sf+NoJr1NVsAmQ=="
+  },
+  "source_tests": {
+    "offline": 184,
+    "canonical_e2e": true,
+    "host_discovery": "2.0.32"
+  },
+  "native": {
+    "ok": true,
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-HYLkrc",
+    "host": "opencode v2.0.32",
+    "platform": "darwin",
+    "arch": "x64",
+    "pinned_sources": true,
+    "rendered_tui": false,
+    "candidate_commit": "c3a256a99609bb2b0dfbaef46133673cbb2a2192",
+    "candidate_sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+    "candidate_integrity": "sha512-AOF4KrOvsFAjSnLLAXbR8MlYDTdW2bwMHNvZF164B4i8Hqs7T1SYnYcrAyHY20V7JTpfkK73sf+NoJr1NVsAmQ==",
+    "live": null,
+    "failureGuard": null,
+    "cancellation": null,
+    "telemetry": null,
+    "commands": [
+      "kujo-status",
+      "kujo-evidence",
+      "kujo-profile",
+      "kujo-doctor",
+      "kujo-review"
+    ],
+    "native_status_recorded": true,
+    "native_evidence_recorded": true,
+    "native_profile_permission": true,
+    "native_capability_permissions": true,
+    "native_lifecycle_permissions": true,
+    "native_session_runledger": true,
+    "native_browser_readiness": true,
+    "native_knowledge_verified": true,
+    "native_automatic_tracking": false,
+    "browser_ready": false,
+    "model_call": false
+  },
+  "rendered": {
+    "ok": true,
+    "host": "opencode v2.0.32",
+    "dimensions": [
+      80,
+      24
+    ],
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-0akctfp_",
+    "initial_requested_session": "ses_kujo_terminal_0afd0b0b1dd143e08975c1bd99b51c85",
+    "model_call": false,
+    "effects_approved": true,
+    "rendered_ledger": true,
+    "rendered_automatic_completion": false,
+    "rendered_completion_evidence": false,
+    "live_ship_specialist": false,
+    "rendered_leash": false,
+    "rendered_gateway": false,
+    "candidate_commit": "c3a256a99609bb2b0dfbaef46133673cbb2a2192",
+    "candidate_sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+    "candidate_integrity": "sha512-AOF4KrOvsFAjSnLLAXbR8MlYDTdW2bwMHNvZF164B4i8Hqs7T1SYnYcrAyHY20V7JTpfkK73sf+NoJr1NVsAmQ==",
+    "pinned_sources": true
+  },
+  "payload_proof": {
+    "ok": true,
+    "fixture": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-0akctfp_",
+    "tarball": "/private/tmp/kujo-decline-candidate/kujolang-kujo-opencode-0.2.0.tgz",
+    "tarball_sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+    "host": "opencode v2.0.32",
+    "host_sha256": "5de9ff73d2e46934371dd96c9f012be58b98fc0084f966e643fa89d3b6e69070",
+    "platform": "macOS-26.6.2-x86_64-i386-64bit",
+    "runtime_sha256": "979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5",
+    "payload_files_verified": 70,
+    "payload_manifest_sha256": "95512c0b4705a9f44b1b1a3db8974e4fc3c3e64539a2f107136c4537a0acde61",
+    "rendered_gateway": false,
+    "rendered_leash": false
+  },
+  "fresh": {
+    "ok": true,
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-opencode-packed-Vb7vJG",
+    "tarball": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-opencode-packed-Vb7vJG/kujolang-kujo-opencode-0.2.0.tgz",
+    "registry_consumer": false,
+    "candidate_commit": "c3a256a99609bb2b0dfbaef46133673cbb2a2192",
+    "candidate_sha256": "6ef9dd1145676d95e89e6f12015e784a05b9e24d27c797a8c5a5d7da88e61e17",
+    "candidate_integrity": "sha512-AOF4KrOvsFAjSnLLAXbR8MlYDTdW2bwMHNvZF164B4i8Hqs7T1SYnYcrAyHY20V7JTpfkK73sf+NoJr1NVsAmQ==",
+    "upgrade": "0.1.0 -> 0.2.0",
+    "old_project_retained": true,
+    "mixed_version_verified": true,
+    "fresh_sources": 28,
+    "packed_mcp_tools": 10,
+    "starter_kinds": [
+      "script",
+      "agent",
+      "api",
+      "mcp"
+    ],
+    "starter_services_verified": true,
+    "agent_fixture_verified": true,
+    "session_runledger_verified": true,
+    "browser_launch_verified": true,
+    "browser_check_verified": true,
+    "knowledge_verified": true,
+    "fixture_workdirs_retained": false
+  },
+  "limitations": [
+    "Linux and Windows platform acceptance remains open",
+    "Minimum-host final-candidate journeys remain open",
+    "Six live scoped specialist journeys remain unaccepted",
+    "Automatic completion, gateway and Leash rendered modes were not rerun against this archive",
+    "Public registry publication, provenance and registry consumer installation remain unverified"
+  ],
+  "retention": "Native and rendered fixtures retain screenshots, receipts and verification but generated installed copies were removed after process completion; see each cleanup-record.json. Fresh fixture retention is recorded in its verification."
+}
