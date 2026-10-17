@@ -125,7 +125,7 @@
     "unit_log": "/tmp/kujo-lifecycle-status-unit.log",
     "e2e_passed": true,
     "e2e_log": "/tmp/kujo-lifecycle-status-e2e.log",
-    "source_live_acceptance_pending": true,
+    "source_live_acceptance_pending": false,
     "source_live_log": "/tmp/kujo-lifecycle-status-native.log",
     "archive_rebuild_required": true
   },
@@ -139,12 +139,124 @@
     "correction": "Ordinary scan request with harmless project nickname; receipt and privacy assertions preserved."
   },
   "source_live_retry": {
-    "result": "pending",
+    "result": "passed",
     "fixture": "kujo-native-host-ClBBe6",
     "log": "/tmp/kujo-lifecycle-status-native-retry.log",
     "host": "2.0.31",
     "model": "opencode/glm-5.3-flash-free",
     "packed_candidate": false,
-    "source_commit": "483dbc9"
+    "source_commit": "483dbc9",
+    "verification": {
+      "ok": true,
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-ClBBe6",
+      "host": "opencode v2.0.31",
+      "platform": "darwin",
+      "arch": "x64",
+      "pinned_sources": true,
+      "rendered_tui": false,
+      "live": {
+        "read_receipt": "receipt-e396a972-da3b-43f2-8b8f-b93cddcc8554",
+        "denied_without_write": true,
+        "write_receipt": "receipt-bf0e4474-6084-4475-9e34-306e46edca4f"
+      },
+      "specialistJourney": null,
+      "failureGuard": {
+        "session_id": "ses_eb7272162ffeXi7Ddl2GuV3yTO",
+        "model": "opencode/glm-5.3-flash-free",
+        "agent": "build",
+        "interventions": 1,
+        "notification": true,
+        "telemetry_enabled": false,
+        "failed_receipts": [
+          "receipt-50478d30-1914-4e0b-8491-a802871a7a6d",
+          "receipt-e2253d1f-2a41-4b07-9591-9f77fbabcc99",
+          "receipt-c1335f83-587d-4f29-93e3-ea0a974e62e5"
+        ],
+        "approval_granted": false
+      },
+      "cancellation": {
+        "watchdog": {
+          "source_commit": "9e82e8f5b05edca948f6a432ae517031388296e6",
+          "source_clean": true,
+          "runtime_sha256": "cc811ce04910d68f6703f8717eb6dc4fcd05666a29f738dee88bf57d52f852c2"
+        },
+        "session_id": "ses_eb72549caffeLWUqaaD835UdUf",
+        "model": "opencode/glm-5.3-flash-free",
+        "agent": "build",
+        "permission_requested": true,
+        "approval_granted": false,
+        "effect_absent": true,
+        "remaining_permissions": 0,
+        "cancellation_records": 1,
+        "receipt_ids": [
+          "receipt-279b4b2d-c494-4092-848b-fba8903a61df"
+        ],
+        "metadata_only": true
+      },
+      "telemetry": {
+        "watchdog": {
+          "source_commit": "9e82e8f5b05edca948f6a432ae517031388296e6",
+          "source_clean": true,
+          "runtime_sha256": "cc811ce04910d68f6703f8717eb6dc4fcd05666a29f738dee88bf57d52f852c2"
+        },
+        "queue_delivered": 31,
+        "queue_discarded": 0,
+        "session_id": "ses_eb726f267ffeahJc47bJ7h3ejV",
+        "run_id": "2026-10-17-glm-5-3-flash-free-opencode-session-ses-eb726f267ffeahjc47bj7h3ejv-001",
+        "trace_id": "34c6107d851602e35b3ddceb73dd3806",
+        "model": "opencode/glm-5.3-flash-free",
+        "agent": "build",
+        "receipt_ids": [
+          "receipt-fe4d87d5-d41b-4486-8611-100ff7c499b9",
+          "receipt-c18e7f2a-ce59-4f82-8733-1b84c1aeeece"
+        ],
+        "record_count": 31,
+        "service_outage_recovered": true,
+        "explicit_retry_rearmed": 1,
+        "host_reload_recovered": true,
+        "metadata_only": true,
+        "opt_out_verified": true,
+        "opt_out_assistant_observed": true,
+        "record_still_in_progress": true
+      },
+      "commands": [
+        "kujo-status",
+        "kujo-evidence",
+        "kujo-profile",
+        "kujo-doctor",
+        "kujo-review"
+      ],
+      "native_status_recorded": true,
+      "native_evidence_recorded": true,
+      "native_profile_permission": true,
+      "native_capability_permissions": true,
+      "native_lifecycle_permissions": true,
+      "native_session_runledger": true,
+      "nativeTransportRecovery": {
+        "forwarded_requests": 1,
+        "upstream_status": 200,
+        "upstream_response_consumed": true,
+        "client_response_lost": true,
+        "scope": "session RunLedger start; no inference or Dispatch transport claim",
+        "run_id": "2026-10-17-glm-5-3-flash-free-opencode-session-ses-eb7284784ffer6i2fhrqr4be9c-001"
+      },
+      "native_browser_readiness": true,
+      "native_knowledge_verified": true,
+      "native_automatic_tracking": true,
+      "browser_ready": false,
+      "model_call": true
+    }
+  },
+  "standard_unit_gate": {
+    "commit": "0541eb5",
+    "passed": 264,
+    "log": "/tmp/kujo-complete-unit-gate.log",
+    "added_suites": [
+      "browser-specialist-runner",
+      "dispatch-decision",
+      "lost-http-reply",
+      "native-specialist-report",
+      "native-specialist-runner"
+    ]
   }
 }

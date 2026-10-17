@@ -42,7 +42,10 @@ correction preserves exhausted deliveries for explicit approved retry. Its
 replacement archive passed fresh installation and upgrade, but live recovery
 exposed a status request blocked behind a pending human approval. Commit
 `b23b2bc` fixes that serialization bug; 229 unit tests and the local E2E gate
-passed. Source-level live acceptance remains pending. Earlier archive passes
+passed. Source-level live acceptance on OpenCode 2.0.31 now passes: outage
+recovery delivered 31 records without discards, and reload, opt-out, cancellation
+and failure intervention were verified. The expanded standard gate passes all
+264 tests. These results do not certify packed bytes. Earlier archive passes
 remain historical evidence; rebuild and repeat applicable exact-archive gates
 after verifying the correction. See [the failure record](acceptance/2026-10-17-lifecycle-retention.json).
 
