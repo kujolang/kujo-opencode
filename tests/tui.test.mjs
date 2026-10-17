@@ -4,10 +4,10 @@ import {setupTui} from '../lib/tui.mjs';
 import {scopedHostContext} from '../lib/plugin-scope.mjs';
 import {homePaths,withDataRoot} from '../lib/paths.mjs';
 
-function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[],home=false,waitCreate}={}) {
+function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[],home=false,waitCreate,selectedModel,ledgerState='in_progress'}={}) {
  const calls=[],alerts=[],toasts=[];let commands,eventHandler,stopped=false,route=home?{type:'home'}:{type:'session',sessionID:'fixture-session'};
  const location={directory:'/fixture/project'};
- const ctx={location,client:{session:{create:async input=>{calls.push({method:'createSession',input});if(waitCreate)await waitCreate;return {id:'new-session'};}},rpc:definition=>{
+ const ctx={location,client:{session:{create:async input=>{calls.push({method:'createSession',input});if(waitCreate)await waitCreate;return {id:'new-session'};},switchModel:async input=>calls.push({method:'switchModel',input})},rpc:definition=>{
   assert.equal(definition.id,'kujo.control');
   return {events:{on:(_name,handler)=>{eventHandler=handler;return ()=>stopped=true;}},...Object.fromEntries(['completion','status','profile','evidence','specialist','capability','evidenceDetail','artifact','compare','lifecycle','runledger','browser','knowledge'].map(method=>[method,async(input,options)=>{
    calls.push({method,input,options});assert.deepEqual(options,{location});
@@ -15,7 +15,7 @@ function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts
    if(method==='knowledge')return input.action==='preview'?{files:[{path:'guide.md'}],bytes:12,digest:'a'.repeat(64),exclusions:['dotfiles'],index_input:{name:input.name,path:input.path,digest:'a'.repeat(64)}}:{state:'current'};
    if(method==='status'){if(waitStatus)await waitStatus;return {capabilities:[{id:'kujo.test.check',name:'check',description:'Check repository',active:true,inherited:true,mode:'profile'}],project:location.directory,version:'0.2.0',profile:'kujo.profile.essentials',specialists:[{id:'kujo-browser',title:'Browser verification',profile:'ship',description:'Verify pages',abilities:['kujo.lens.page.check'],available:[],missing:['kujo.lens.page.check']}],profiles:[{id:'kujo.profile.review',label:'Review',description:'Review repository'}],tools:[{name:'check',description:'Check repository'}]};}
    if(method==='browser'){if(['status','refresh'].includes(input.action))return {ready:false,state:'dependencies_missing',capabilities:[]};if(profileError)throw Error(profileError);return {ready:false,state:'installing'};}
-   if(method==='runledger'){if(input.action==='status')return {state:'in_progress',run_id:'fixture'};if(profileError)throw Error(profileError);return {state:input.status};}
+   if(method==='runledger'){if(input.action==='status')return {state:ledgerState,run_id:ledgerState==='not_started'?undefined:'fixture'};if(profileError)throw Error(profileError);return {state:input.status};}
    if(method==='lifecycle'){if(input.action==='status')return {enabled:false,pending:0};if(profileError)throw Error(profileError);return {enabled:input.action==='enable'};}
    if(method==='capability'){if(profileError)throw Error(profileError);return {active:input.mode!=='disabled'};}
    if(method==='profile'){if(profileError)throw Error(profileError);return {abilities:18};}
@@ -24,7 +24,7 @@ function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts
    if(method==='compare')return {same_ability:true,notice:'Timing is informational'};
    return {receipts:evidenceReceipts,coverage:'Recent retained evidence'};
   }]))};
- }},ui:{router:{current:()=>route,navigate:next=>{route=next;}},dialog:{prompt:async()=>prompts.shift(),alert:async value=>alerts.push(value),select:async()=>choices.shift()},toast:{show:value=>toasts.push(value)}},keymap:{layer:factory=>{commands=factory().commands;}}};
+ }},ui:{model:{current:()=>selectedModel},router:{current:()=>route,navigate:next=>{route=next;}},dialog:{prompt:async()=>prompts.shift(),alert:async value=>alerts.push(value),select:async()=>choices.shift()},toast:{show:value=>toasts.push(value)}},keymap:{layer:factory=>{commands=factory().commands;}}};
  const cleanup=setupTui(ctx);
  return {calls,alerts,toasts,cleanup,route:()=>route,event:async(sessionID='fixture-session',directory=location.directory)=>{if(!stopped)await eventHandler({location:{directory},data:{sessionID}});},run:id=>commands.find(c=>c.id===id).run()};
 }
@@ -136,4 +136,17 @@ test('unload during session creation does not navigate or continue setup',async(
  let release;const f=fixture({home:true,choices:['create'],waitCreate:new Promise(r=>release=r)});
  const pending=f.run('kujo.profile');await new Promise(r=>setImmediate(r));f.cleanup();release();await pending;
  assert.deepEqual(f.calls.map(c=>c.method),['createSession']);assert.equal(f.route().type,'home');
+});
+
+test('home session creation persists the model and variant visible in the prompt without inference',async()=>{
+ const f=fixture({home:true,choices:['create'],selectedModel:{providerID:'fixture-provider',modelID:'fixture-model',variant:'reasoning'}});await f.run('kujo.profile');
+ assert.deepEqual(f.calls[0].input.model,{providerID:'fixture-provider',id:'fixture-model',variant:'reasoning'});
+ assert.deepEqual(f.calls.map(c=>c.method),['createSession','status']);
+});
+
+test('manual ledger start persists the visible prompt model before requesting the canonical operation',async()=>{
+ const f=fixture({choices:['start'],ledgerState:'not_started',selectedModel:{providerID:'fixture',modelID:'selected'}});await f.run('kujo.runledger');
+ assert.deepEqual(f.calls.map(c=>c.method),['runledger','switchModel','runledger']);
+ assert.deepEqual(f.calls[1].input,{sessionID:'fixture-session',model:{providerID:'fixture',id:'selected'}});
+ assert.equal(f.calls[2].input.action,'start');
 });

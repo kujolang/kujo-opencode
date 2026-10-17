@@ -23,7 +23,7 @@ test('session RunLedger start and human verdict each require exact approval; rep
  await assert.rejects(manageSessionLedger({...f.options,action:'finish',status:'pass'}),/in-progress/);assert.equal(f.counts().writes,2);
 });
 test('session RunLedger refuses missing models, hidden capabilities and cross-workspace access',async()=>{
- const f=await fixture();await assert.rejects(manageSessionLedger({...f.options,action:'start',sessionAtProject:async()=>({})}),/Select an OpenCode model/);
+ const f=await fixture();const missing=await manageSessionLedger({...f.options,action:'start',sessionAtProject:async()=>({})});assert.equal(missing.state,'model_required');assert.match(missing.message,/Select a model/);assert.equal(f.counts().writes,0);
  await assert.rejects(manageSessionLedger({...f.options,action:'start',openApp:async()=>({runtime:{describe:()=>[]}})}),/Enable RunLedger/);
  await assert.rejects(manageSessionLedger({...f.options,action:'status',sessionAtProject:async()=>{throw Error('different workspace');}}),/different workspace/);assert.equal(f.counts().writes,0);
 });
