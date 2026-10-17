@@ -1,0 +1,116 @@
+{
+  "host": "2.0.32",
+  "model": "opencode/glm-5.3-flash-free",
+  "scope": "Isolated custom primary agents; identical no-tool prompt, no grants. Not Kujo specialist acceptance.",
+  "cases": [
+    {
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-permission-diagnostic-tKbM19",
+      "result": {
+        "agent": "control",
+        "session_id": "ses_eb6ece2e9ffePXnwSX50K9xPIB",
+        "request_error": "Unexpected end of JSON input",
+        "messages": [
+          {
+            "agent": "control",
+            "model": {
+              "id": "glm-5.3-flash-free",
+              "providerID": "opencode",
+              "variant": "default"
+            },
+            "finish": "stop",
+            "error": null,
+            "text": [
+              "OK"
+            ],
+            "tool_parts": 0
+          }
+        ]
+      },
+      "source_log": "/tmp/kujo-permission-diagnostic-waited.log"
+    },
+    {
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-permission-diagnostic-tKbM19",
+      "result": {
+        "agent": "shell-denied",
+        "session_id": "ses_eb6ec8a4affevWEFJDjMKp4z3J",
+        "request_error": "Unexpected end of JSON input",
+        "messages": [
+          {
+            "agent": "shell-denied",
+            "model": {
+              "id": "glm-5.3-flash-free",
+              "providerID": "opencode",
+              "variant": "default"
+            },
+            "finish": "stop",
+            "error": null,
+            "text": [
+              "OK"
+            ],
+            "tool_parts": 0
+          }
+        ]
+      },
+      "source_log": "/tmp/kujo-permission-diagnostic-waited.log"
+    },
+    {
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-permission-diagnostic-iOg0DZ",
+      "result": {
+        "agent": "deny-all",
+        "session_id": "ses_eb6ec1ddcffeSDqMTm1ZomQ1Iy",
+        "request_error": null,
+        "messages": [
+          {
+            "agent": "deny-all",
+            "model": {
+              "id": "glm-5.3-flash-free",
+              "providerID": "opencode",
+              "variant": "default"
+            },
+            "finish": "error",
+            "text": [],
+            "tool_parts": 0,
+            "error": {
+              "type": "provider.auth",
+              "status": 403,
+              "free_tier_origin_rejection": true
+            }
+          }
+        ]
+      },
+      "source_log": "/tmp/kujo-permission-diagnostic-broad.log"
+    },
+    {
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-permission-diagnostic-iOg0DZ",
+      "result": {
+        "agent": "deny-with-question",
+        "session_id": "ses_eb6ec1911ffeTzEPIRqPICEuqX",
+        "request_error": null,
+        "messages": [
+          {
+            "agent": "deny-with-question",
+            "model": {
+              "id": "glm-5.3-flash-free",
+              "providerID": "opencode",
+              "variant": "default"
+            },
+            "finish": "error",
+            "text": [],
+            "tool_parts": 0,
+            "error": {
+              "type": "provider.auth",
+              "status": 403,
+              "free_tier_origin_rejection": true
+            }
+          }
+        ]
+      },
+      "source_log": "/tmp/kujo-permission-diagnostic-broad.log"
+    }
+  ],
+  "limitations": [
+    "Initial control/shell wait endpoint returned an empty body; diagnostic JSON parsing reported an error after successful terminal assistant messages. Terminal messages are authoritative for those outcomes.",
+    "Deny-all cases used corrected empty-body handling.",
+    "No inference about provider internals or acceptable workaround. Preserve Kujo specialist permissions."
+  ]
+}

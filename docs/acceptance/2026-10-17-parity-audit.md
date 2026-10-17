@@ -33,3 +33,15 @@ a paid fallback to manufacture a pass.
 
 Account prerequisites do not prevent finishing remaining local package checks.
 No outcome should be checked off until evidence covers its full required scope.
+
+## Free-model compatibility isolation
+
+[Controlled diagnostic](2026-10-17-free-model-permissions.json) on official
+OpenCode 2.0.32/free GLM succeeds with a control custom agent and with shell
+denied. Identical no-tool prompts fail with the free-tier origin HTTP 403 under
+deny-all, with or without a question exception. No tool calls or grants occurred.
+This narrows the compatibility failure; it does not establish provider internals
+or justify weakening specialist scopes. The six real journeys remain required.
+
+The existing failed CI run and npm E401 were rechecked on 2026-10-17; account
+prerequisites remain unresolved.
