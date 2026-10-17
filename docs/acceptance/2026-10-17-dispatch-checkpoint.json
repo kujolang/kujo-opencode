@@ -1,0 +1,51 @@
+{
+  "recorded": "2026-10-17",
+  "implementation_commit": "0f0ba64",
+  "production_payload_changed": true,
+  "prior_candidate": "713fbe4dc10ae8c68aee4205d17da70ff67027bd",
+  "prior_candidate_status": "Historical evidence only; replacement and exact-archive reacceptance required after remaining product changes.",
+  "changes": [
+    "Remove --yes so Dispatch human checkpoints pause.",
+    "Pass contained project-relative workflow and output paths, rather than canonical-rejected absolute paths.",
+    "Set DISPATCH_ROOT to the configured canonical source for bundled fixture discovery."
+  ],
+  "local_canonical": {
+    "ok": true,
+    "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-dispatch-checkpoint-9GFhDE",
+    "source": "/Users/robertdevore/2026/Kujolang/kujo-repos/dispatch",
+    "run_id": "run-1792218145266-5687",
+    "status": "paused",
+    "completed_run_id": "run-1792218150464-2436",
+    "checkpoint_auto_approved": false,
+    "live_specialist": false
+  },
+  "pinned_canonical": {
+    "ok": true,
+    "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-dispatch-checkpoint-LCSrvc",
+    "source": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-rIkdUO/kujo/sources/dispatch-e1bbc21166022b00fb21ed000cc4f3cbb26e7e07",
+    "run_id": "run-1792218156518-9065",
+    "status": "paused",
+    "completed_run_id": "run-1792218159214-7707",
+    "checkpoint_auto_approved": false,
+    "live_specialist": false
+  },
+  "local_source_commit": "71ca927c65598ecfe7c1816068e047cf50b915e0",
+  "pinned_source_commit": "e1bbc21166022b00fb21ed000cc4f3cbb26e7e07",
+  "verification": {
+    "unit_tests": 204,
+    "canonical_e2e": "passed",
+    "knowledge_e2e_tests": 2,
+    "checkpoint_contract": "before completed exactly once; human paused and pending; after pending with zero attempts and no data; auto_approve false",
+    "other_contracts": [
+      "bounded tool-only workflow completed once",
+      "invalid workflow validation fails",
+      "escaping output path rejected"
+    ],
+    "future_gate": "Canonical checkpoint script now imported by E2E entrypoint. This turn ran the base E2E and checkpoint script separately."
+  },
+  "limitations": [
+    "Full Workflow specialist journey remains to implement, including native reject/cancel and inspect-before-retry reconciliation.",
+    "Checkpoint resumption/decision management is not yet exposed as a dedicated Ability.",
+    "No live specialist, new candidate, platform or registry certification."
+  ]
+}
