@@ -534,3 +534,16 @@ also running. Current pass completes correlation, not automatic creation/finaliz
 Next: opt-in automatic session start requests and human-verdict finish lifecycle,
 remaining recovery, six real specialists, full host/OS matrix and public release.
 All seven broad outcomes remain open. No new SignalBox finding is warranted.
+
+Final correlation acceptance: canonical E2E passed after explicit fixture exposure
+was corrected. Real Watchdog2jX9hN accepted run references and deduplicated a lost
+acknowledgement retry. PackedTOmi4m passed fresh install/0.1.0 upgrade,28sources,
+old-project preservation, starters/agent/ledger/knowledge/browser gates, including
+approved canonical correlation and repeated-link reconciliation. SHA256:
+709a27c7ed0c6cf8a48cd700405cb87c9ffff675d3091b3cadfb1d75e9354ef1.
+Executable/catalog bytes match1d37118/2c13229; later edits are tests/docs only.
+119 offline tests and native xPvZMx passed. The live Ship specialist was rechecked
+with opencode/glm-5.3-flash-free and again failed provider.auth HTTP403 before tool
+execution (/tmp/kujo-correlation-live-specialist.log). This is not acceptance of
+specialist execution. Automatic RunLedger start/finalization and the remaining
+full parity/recovery/platform/public release requirements remain open.
