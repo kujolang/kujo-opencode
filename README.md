@@ -450,11 +450,16 @@ one-time approval to start that session’s canonical RunLedger record. Declinin
 or leaving an uncertain result never triggers an automatic retry.
 
 When execution becomes idle, fails, completes or is interrupted, an in-progress
-record receives one inbox reminder to choose a verdict in Session RunLedger.
+record receives one inbox reminder. In the active session, the native UI offers
+evidence review, an explicit verdict, or **Keep working**. Finishing requests
+separate approval for the final snapshot. The offer is shown once per session;
+returning to a session reconciles missed events. If another dialog is open or the
+UI disconnects during presentation, use `/kujo` → Session RunLedger. Closing the
+offer or choosing Keep working preserves the in-progress record.
 Completion does not imply success. Finalization still requires your selected
 verdict and approval; no usage or cost is invented.
 
-Request/reminder markers survive reload and are bounded to128 sessions per
+Request/reminder/presentation markers survive reload and are bounded to128 sessions per
 project. **Reset tracking requests** clears only those markers after approval,
 allowing new requests; canonical run records are preserved. **Recover tracking
 journal** handles a stopped writer and refuses live ownership. Disable tracking

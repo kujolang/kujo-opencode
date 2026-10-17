@@ -25,3 +25,10 @@ test('session cancellation prevents a late approval from creating a record',asyn
  const f=await fixture(t);let release,entered;const ready=new Promise(r=>entered=r);let writes=0;const active=new AutomaticLedger({...f.options,manage:async({action,signal})=>{if(action==='status')return {state:'not_started'};entered();await new Promise(r=>release=r);signal.throwIfAborted();writes++;return {state:'in_progress'};}});
  const pending=active.before('one');await ready;active.cancel('one');release();await pending;assert.equal(writes,0);await active.before('one');assert.equal(writes,0);active.close();
 });
+
+test('native completion claims require a finished attempt and survive reload without choosing a verdict',async t=>{
+ const f=await fixture(t);let offers=0;let active=new AutomaticLedger({...f.options,onFinish:async()=>offers++});
+ await active.before('one');assert.equal((await active.review('one')).available,false);
+ await active.idle('one');assert.equal(offers,1);assert.equal((await active.review('one')).available,true);assert.equal((await active.review('one')).available,false);
+ active.close();active=new AutomaticLedger(f.options);assert.equal((await active.review('one')).available,false);assert.equal(f.state(),'in_progress');active.close();
+});

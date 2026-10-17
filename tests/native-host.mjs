@@ -14,7 +14,7 @@ const host=process.env.OPENCODE_BIN||'opencode';
 const hostEnv={...env}; delete hostEnv.KUJO_OPENCODE_HOME;
 const child=spawn(host,['serve','--hostname','127.0.0.1','--port','0'],{env:hostEnv,cwd:project,stdio:['ignore','pipe','pipe']});
 let output='';for(const stream of [child.stdout,child.stderr])stream.on('data',chunk=>output=(output+chunk).slice(-65536));
-let base,authorization;
+let base,authorization,tuiCleanup;
 try {
  for(let i=0;i<120;i++) {
   if(child.exitCode!==null)throw Error('Host exited');
@@ -197,6 +197,10 @@ try {
  if(process.env.KUJO_TEST_AUTOTRACK==='1'){
   await lifecycleChange('enable_tracking','once');
   const auto=(await api('/api/session',{title:'Automatic ledger hook acceptance',location:{directory:await realpath(project)},agent:'kujo-ship',model:{providerID:'opencode',id:'glm-5.3-flash-free'}})).data;
+  const {OpenCode}=await import('@opencode/client');const {setupTui}=await import('../lib/tui.mjs');
+  const dialogs=[];const nativeClient=OpenCode.make({baseUrl:base,headers:{Authorization:authorization}});
+  tuiCleanup=setupTui({location:{directory:await realpath(project)},client:nativeClient,keymap:{layer:()=>{}},ui:{router:{current:()=>({type:'session',sessionID:auto.id})},dialog:{select:async dialog=>{dialogs.push(dialog);return 'later';},alert:async dialog=>dialogs.push(dialog)},toast:{show:()=>{}}}});
+  await delay(200);
   const inference=api(`/api/session/${auto.id}/prompt`,{text:'Reply OK. Do not use any tools.'},180000).then(value=>({value}),error=>({error}));
   let permission;for(let i=0;i<60;i++){permission=(await api(`/api/session/${auto.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(permission)break;await delay(200);}
   assert.ok(permission,'automatic start must request native permission before inference');assert.equal(permission.metadata.ability,'kujo.runledger.runs.start');assert.deepEqual(permission.save,[]);
@@ -206,6 +210,14 @@ try {
   assert.equal(autoState,'in_progress');
   let reminder=false;for(let i=0;i<40;i++){reminder=JSON.stringify(await api(`/api/session/${auto.id}/inbox`)).includes('choose your verdict');if(reminder)break;await delay(100);}
   assert.equal(reminder,true,'idle must retain a human-verdict reminder');
+  for(let i=0;i<60&&!dialogs.some(d=>d.title==='Review this tracked attempt');i++)await delay(100);
+  assert.ok(dialogs.some(d=>d.title==='Review this tracked attempt'),'real native RPC event must drive the TUI completion flow');
+  tuiCleanup();tuiCleanup=undefined;
+  assert.equal((await api('/api/rpc/kujo.control/completion',{input:{sessionID:auto.id}})).output.available,false);
+  const finish=api('/api/rpc/kujo.control/runledger',{input:{sessionID:auto.id,action:'finish',status:'partial'}});
+  let finishPermission;for(let i=0;i<60;i++){finishPermission=(await api(`/api/session/${auto.id}/permission`)).data.find(p=>p.action==='kujo.runledger.session');if(finishPermission)break;await delay(100);}
+  assert.ok(finishPermission);assert.equal(finishPermission.metadata.input.status,'partial');assert.equal(finishPermission.metadata.ability,'kujo.runledger.runs.finish');assert.deepEqual(finishPermission.save,[]);
+  await api(`/api/session/${auto.id}/permission/${finishPermission.id}/reply`,{decision:'once'});assert.equal((await finish).output.state,'partial');
   await lifecycleChange('disable_tracking','once');
  }
  const {createApp}=await import('../lib/app.mjs');const {withDataRoot}=await import('../lib/paths.mjs');
@@ -223,4 +235,4 @@ try {
  await assert.rejects(api('/api/rpc/kujo.control/artifact',{input:{receiptID:'not-retained',index:0}}));
  const live=process.env.KUJO_TEST_MODEL ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
  console.log(JSON.stringify({ok:true,root,live,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||process.env.KUJO_TEST_AUTOTRACK==='1'}));
-} finally {child.kill('SIGTERM');}
+} finally {tuiCleanup?.();child.kill('SIGTERM');}

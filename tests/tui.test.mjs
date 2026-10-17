@@ -5,12 +5,13 @@ import {scopedHostContext} from '../lib/plugin-scope.mjs';
 import {homePaths,withDataRoot} from '../lib/paths.mjs';
 
 function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts=[]}={}) {
- const calls=[],alerts=[],toasts=[];let commands;
+ const calls=[],alerts=[],toasts=[];let commands,eventHandler,stopped=false;
  const location={directory:'/fixture/project'};
  const ctx={location,client:{rpc:definition=>{
   assert.equal(definition.id,'kujo.control');
-  return Object.fromEntries(['status','profile','evidence','specialist','capability','evidenceDetail','artifact','compare','lifecycle','runledger','browser','knowledge'].map(method=>[method,async(input,options)=>{
+  return {events:{on:(_name,handler)=>{eventHandler=handler;return ()=>stopped=true;}},...Object.fromEntries(['completion','status','profile','evidence','specialist','capability','evidenceDetail','artifact','compare','lifecycle','runledger','browser','knowledge'].map(method=>[method,async(input,options)=>{
    calls.push({method,input,options});assert.deepEqual(options,{location});
+   if(method==='completion')return {available:true,run_id:'fixture'};
    if(method==='knowledge')return input.action==='preview'?{files:[{path:'guide.md'}],bytes:12,digest:'a'.repeat(64),exclusions:['dotfiles'],index_input:{name:input.name,path:input.path,digest:'a'.repeat(64)}}:{state:'current'};
    if(method==='status'){if(waitStatus)await waitStatus;return {capabilities:[{id:'kujo.test.check',name:'check',description:'Check repository',active:true,inherited:true,mode:'profile'}],project:location.directory,version:'0.2.0',profile:'kujo.profile.essentials',specialists:[{id:'kujo-browser',title:'Browser verification',profile:'ship',description:'Verify pages',abilities:['kujo.lens.page.check'],available:[],missing:['kujo.lens.page.check']}],profiles:[{id:'kujo.profile.review',label:'Review',description:'Review repository'}],tools:[{name:'check',description:'Check repository'}]};}
    if(method==='browser'){if(['status','refresh'].includes(input.action))return {ready:false,state:'dependencies_missing',capabilities:[]};if(profileError)throw Error(profileError);return {ready:false,state:'installing'};}
@@ -22,10 +23,10 @@ function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts
    if(method==='artifact')return {kind:'file',content:'artifact text',notice:'Current contents'};
    if(method==='compare')return {same_ability:true,notice:'Timing is informational'};
    return {receipts:evidenceReceipts,coverage:'Recent retained evidence'};
-  }]));
+  }]))};
  }},ui:{router:{current:()=>({type:'session',sessionID:'fixture-session'})},dialog:{prompt:async()=>prompts.shift(),alert:async value=>alerts.push(value),select:async()=>choices.shift()},toast:{show:value=>toasts.push(value)}},keymap:{layer:factory=>{commands=factory().commands;}}};
  const cleanup=setupTui(ctx);
- return {calls,alerts,toasts,cleanup,run:id=>commands.find(c=>c.id===id).run()};
+ return {calls,alerts,toasts,cleanup,event:async(sessionID='fixture-session',directory=location.directory)=>{if(!stopped)await eventHandler({location:{directory},data:{sessionID}});},run:id=>commands.find(c=>c.id===id).run()};
 }
 test('native UI is idle until invoked and routes status and evidence to its workspace',async()=>{
  const f=fixture({choices:['check','project']});assert.equal(f.calls.length,0);
@@ -108,3 +109,17 @@ test('knowledge menu requires explicit corpus review before indexing and retains
  const cancel=fixture({prompts:['manual','docs'],choices:['preview','cancel']});await cancel.run('kujo.knowledge');assert.equal(cancel.calls.length,1);
  const question=fixture({prompts:['manual','How do modules work?'],choices:['query']});await question.run('kujo.knowledge');assert.equal(question.calls[0].input.question,'How do modules work?');
 });
+
+ test('automatic completion is workspace/session scoped and offers evidence before an explicit verdict',async()=>{
+  const f=fixture({choices:['evidence','finish','partial']});
+  await f.event('another-session');await f.event('fixture-session','/another-project');assert.equal(f.calls.length,0);
+  await f.event();assert.deepEqual(f.calls.map(c=>c.method),['completion','evidence','runledger']);
+  assert.deepEqual(f.calls[1].input,{scope:'session',sessionID:'fixture-session'});
+  assert.deepEqual(f.calls[2].input,{sessionID:'fixture-session',action:'finish',status:'partial'});
+  assert.equal(f.alerts[0].title,'Recorded session evidence');
+  f.cleanup();await f.event();assert.equal(f.calls.length,3);
+ });
+ test('automatic completion dismissal and verdict cancellation never finish; denied finish reports inspection',async()=>{
+  for(const choices of [[],['later'],['finish']]){const f=fixture({choices});await f.event();assert.deepEqual(f.calls.map(c=>c.method),['completion']);}
+  const denied=fixture({choices:['finish','pass'],profileError:'Human declined'});await denied.event();assert.match(denied.alerts[0].message,/Human declined/);assert.equal(denied.toasts.length,0);
+ });
