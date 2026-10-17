@@ -370,4 +370,9 @@ try {
  if(candidate)await verifyCandidate(candidate.directory);
  await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
  console.log(JSON.stringify(verification));
+} catch(error) {
+ const diagnostic={host:hostVersion,platform:process.platform,exit_code:child.exitCode,signal:child.signalCode,error_type:error.name,
+  output:output.replace(/server password [^\s]+/g,'server password [redacted]').replace(/(Authorization[:=]\s*)(?:Basic|Bearer)\s+[^\s]+/gi,'$1[redacted]').slice(-16000)};
+ await writeFile(join(root,'host-failure.json'),JSON.stringify(diagnostic,null,2)+'\n',{mode:0o600});
+ throw error;
 } finally {tuiCleanup?.();child.kill('SIGTERM');await watchdog?.stop();}

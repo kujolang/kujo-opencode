@@ -1,7 +1,7 @@
 # Specialist acceptance runner
 
-This is test infrastructure, not a declaration that any live specialist passed.
-The production adapter and current immutable candidate are unchanged.
+This document describes the test harness. Recorded results live in the dated
+acceptance files; the harness alone does not prove a specialist passed.
 
 `native-specialist-runner.mjs` creates a new owned session with an explicit Kujo
 agent and provider/model. It refuses a native fallback to ordinary Build. Each
@@ -33,7 +33,7 @@ base native checks and a separately approved full-profile selection. It checks:
 ```sh
 KUJO_TEST_RELEASE_DIR=/absolute/candidate \
 OPENCODE_BIN=/absolute/isolated/host/bin/opencode \
-KUJO_TEST_MODEL=opencode/glm-5.3-flash-free \
+KUJO_TEST_MODEL=openai/gpt-5.6-sol \
 KUJO_TEST_JOURNEY=understand npm run test:native
 ```
 
@@ -192,3 +192,11 @@ or permission. The usual separate correlation and human finish approvals follow.
 `nativeTransportRecovery` records the fault and recovered run in verification.json.
 This tests session tracking transport recovery, not Dispatch transport loss or
 live specialist reasoning. The relay is test-only and never forwards inference.
+
+## Run the six specialists together
+
+Set `KUJO_TEST_JOURNEY=all` to run all six journeys in separate scoped sessions
+within one disposable installation. Each retains its own operations and report
+file. A failed journey stops the suite; partial reports are not a complete pass.
+Use an explicitly authorized provider and the exact release candidate. This mode
+reduces repeated installation and disk use without sharing permission grants.

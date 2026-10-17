@@ -147,6 +147,7 @@ jobs:
         with:
           name: native-${{ matrix.os }}-${{ matrix.bound }}-${{ matrix.version }}-${{ github.sha }}
           path: |
+            ${{ steps.native.outputs.fixture }}/host-failure.json
             ${{ steps.native.outputs.fixture }}/verification.json
             ${{ steps.native.outputs.fixture }}/candidate-verification.json
           if-no-files-found: warn
