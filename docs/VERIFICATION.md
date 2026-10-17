@@ -31,3 +31,26 @@ claimed. No OpenCode 1 support or automatic host lifecycle hooks are claimed.
 
 Commands use the documented OpenCode 2 Markdown command format:
 https://opencode.ai/v2/docs/commands/
+
+
+## Rendered terminal acceptance (POSIX)
+
+This optional gate launches a private OpenCode TUI in a real PTY, drives keyboard
+navigation, and uses pyte to inspect the rendered screen. It creates its own Git
+project and Kujo data root, using sibling canonical source checkouts. It does not
+send a model prompt or approve tool effects. It retains text screen snapshots and
+verification.json in its printed temporary directory, and stops its own terminal.
+It does not certify Windows, all terminal emulators, granted-operation approval, or the finish dialog.
+
+```sh
+python3 -m venv /tmp/kujo-tui-env
+/tmp/kujo-tui-env/bin/pip install -r tests/requirements-tui.txt
+OPENCODE_BIN=/path/to/opencode /tmp/kujo-tui-env/bin/python tests/tui-terminal.py
+OPENCODE_BIN=/path/to/opencode /tmp/kujo-tui-env/bin/python tests/tui-terminal.py --columns 120 --rows 40
+```
+
+The gate covers slash discovery, status, installation details, home-screen session
+creation, profile selection and keyboard rejection (with unchanged configuration), capability discovery, browser readiness,
+session RunLedger, lifecycle controls and session-scoped empty evidence. Host
+approval and completion interactions remain covered separately by test:native;
+rendered granted-operation/finish acceptance is still required before full certification.

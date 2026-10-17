@@ -875,3 +875,33 @@ the acceptance harness. This supersedes the pending packed status. Logs:
 Full rendered-TUI usability, remaining lifecycle failure/reconnect scenarios,
 six live specialist tasks, service boundaries/recovery matrix, supported host/OS
 and public distribution remain unproven; the full goal stays active.
+
+## Rendered onboarding and permission rejection (2026-10-16)
+
+Actual PTY testing found a home-screen dead end: session-bound Kujo actions only
+said to open a session. Commit31f0678 adds an explicit Create a project session
+action and continues the requested setup without sending a model prompt. Cancel
+does not create a session; unload/navigation changes suppress late navigation.
+Session creation does not approve capabilities or effects. Error guidance now
+distinguishes declined permission from possible installation problems.
+
+132 offline tests, canonical E2E,16 final UI tests and native host discovery pass.
+The real rendered-terminal gate passed on OpenCode2.0.31 at80x24 (ou3ndq4s) and
+120x40 (h030wepg). It covers slash discovery, installation/status, creation from
+home, profile selection and real keyboard rejection with unchanged configuration,
+capability discovery, browser readiness, RunLedger, lifecycle and session-scoped
+empty evidence. pyte snapshots and verification.json are retained under
+/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-<id>.
+The optional Python dependencies are pinned in tests/requirements-tui.txt.
+
+The harness now waits for rendered states instead of sending a second Enter
+based on a short delay. Permission choices use arrow keys; verify the Reject
+highlight before Enter. An earlier Tab-based attempt approved only the disposable
+fixture profile and correctly failed the gate; it is not rejection evidence.
+Final logs: /tmp/kujo-rendered-tui-reject.log and
+/tmp/kujo-rendered-tui-wide-accepted.log. No inference or effect grant in final
+accepted runs. This proves these rendered paths on local POSIX, not all UI flows
+or platforms. Rendered granted-operation/final-verdict interaction, remaining
+lifecycle/recovery/service support, six live specialists, the supported host/OS
+matrix and public distribution remain open. The previous packed nilWU7 gate
+predates this UI fix; exact final release packaging still needs certification.

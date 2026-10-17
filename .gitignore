@@ -2,3 +2,4 @@ node_modules/
 *.tgz
 .kujo/
 .opencode/
+tests/__pycache__/
