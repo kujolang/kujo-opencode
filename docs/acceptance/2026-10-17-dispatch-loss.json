@@ -1,0 +1,43 @@
+{
+  "recorded": "2026-10-17",
+  "production_commit": "8f44d07",
+  "harness_commit": "05a79fe",
+  "local_preflight": {
+    "ok": true,
+    "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-dispatch-lost-response-bnkdKI",
+    "source": "/Users/robertdevore/2026/Kujolang/kujo-repos/dispatch",
+    "run_id": "run-1792218850721-4075",
+    "execution_calls": 1,
+    "result_loss_injected": true,
+    "index_rebuilt": true,
+    "live_specialist": false,
+    "native_transport_loss": false
+  },
+  "pinned_preflight": {
+    "ok": true,
+    "root": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-dispatch-lost-response-tO722b",
+    "source": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-rIkdUO/kujo/sources/dispatch-e1bbc21166022b00fb21ed000cc4f3cbb26e7e07",
+    "run_id": "run-1792218872484-1319",
+    "execution_calls": 1,
+    "result_loss_injected": true,
+    "index_rebuilt": true,
+    "live_specialist": false,
+    "native_transport_loss": false
+  },
+  "verification": {
+    "unit_tests": 207,
+    "canonical_e2e": "passed including 13-step Workflow, loss injection, Ship and checkpoint scripts",
+    "knowledge_tests": 2
+  },
+  "effects": "Canonical run listing may rebuild its index; declared write and native approval required.",
+  "boundaries": [
+    "Traversal index keys and symlinked state rejected before canonical reads.",
+    "10000 output entries; 2 MiB index; page size 1-200; offset <=1000000."
+  ],
+  "limits": [
+    "Loss injected after actual canonical adapter completion, before result delivered to fixture caller.",
+    "No native HTTP transport loss, live agent recovery or cancellation certified.",
+    "Checkpoint decision/continuation and final live reports remain incomplete.",
+    "Historical 713fbe4 candidate superseded; replacement/platform/release/registry gates remain."
+  ]
+}
