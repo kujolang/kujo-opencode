@@ -55,7 +55,7 @@ assert.equal(report.version, VERSION);
 
 const packageJson = JSON.parse(await readFile("package.json", "utf8"));
 assert.equal(VERSION, packageJson.version);
-assert.equal(packageJson.dependencies["@kujolang/kujo-runtime"], "1.8.0");
+assert.equal(packageJson.dependencies["@kujolang/kujo-runtime"], "1.8.1");
 assert.equal(packageJson.repository.url, "git+https://github.com/kujolang/kujo-opencode.git");
 assert.equal(packageJson.homepage, "https://github.com/kujolang/kujo-opencode#readme");
 assert.equal(packageJson.bugs.url, "https://github.com/kujolang/kujo-opencode/issues");

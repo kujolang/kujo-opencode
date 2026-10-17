@@ -7,7 +7,7 @@
     {"id":"patchbrief","repo":"kujolang/patchbrief","commit":"0e8d6bd6fd226b09b807f8758ade08096c8b70f0"},
     {"id":"changebucket","repo":"kujolang/changebucket","commit":"030eea63c60449f82c9ba2680227485d318fdb6d"},
     {"id":"shipcheck","repo":"kujolang/shipcheck","commit":"0a9f5795e9498f3698d5da6bb66642544251dd37"},
-    {"id":"dispatch","repo":"kujolang/dispatch","commit":"e1bbc21166022b00fb21ed000cc4f3cbb26e7e07"},
+    {"id":"dispatch","repo":"kujolang/dispatch","commit":"71ca927c65598ecfe7c1816068e047cf50b915e0"},
     {"id":"runledger","repo":"kujolang/runledger","commit":"334ddd4d33c8cb2612c8edab971ee69170824133"},
     {"id":"watchdog","repo":"kujolang/watchdog","commit":"9e82e8f5b05edca948f6a432ae517031388296e6"},
     {"id":"rag","repo":"kujolang/rag","commit":"85743f88c152d7c65f59d4697111faf85e36d8eb"},
