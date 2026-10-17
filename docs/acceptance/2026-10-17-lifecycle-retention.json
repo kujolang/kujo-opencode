@@ -72,5 +72,61 @@
     },
     "full_lifecycle_passed": false,
     "diagnostic_rerun_log": "/tmp/kujo-retention-lifecycle-minimum-diagnostic.log"
+  },
+  "diagnostic_replacement_live_attempt": {
+    "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-UDPRlU",
+    "log": "/tmp/kujo-retention-lifecycle-minimum-diagnostic.log",
+    "result": "failed_timeout",
+    "phase": "status read while retry approval pending",
+    "cause": "manageLifecycle serialized read-only status behind a mutation waiting for that approval",
+    "queue": [
+      {
+        "pending": 2,
+        "held": 2,
+        "discarded": 0,
+        "delivered": 14
+      }
+    ]
+  },
+  "replacement_fresh": {
+    "ok": true,
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-opencode-packed-TAwEWd",
+    "tarball": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-opencode-packed-TAwEWd/kujolang-kujo-opencode-0.2.0.tgz",
+    "registry_consumer": false,
+    "candidate_commit": "7c5ebc51aa3f5d69eb08991e2c7d96c50a2da5f8",
+    "candidate_sha256": "2b8073637d7995be5b52aefafffe8003667075560301a78148282ada77b573b6",
+    "candidate_integrity": "sha512-rREWijbY3wUXitSjpUKMsY5144dHOx2AZHu1bhw/0XR4KUkZOwd/kMoBt42BHhaymeZrbPMzStTU/aIyVrHpwA==",
+    "upgrade": "0.1.0 -> 0.2.0",
+    "old_project_retained": true,
+    "mixed_version_verified": true,
+    "fresh_sources": 28,
+    "packed_mcp_tools": 10,
+    "starter_kinds": [
+      "script",
+      "agent",
+      "api",
+      "mcp"
+    ],
+    "starter_services_verified": true,
+    "agent_fixture_verified": true,
+    "session_runledger_verified": true,
+    "browser_launch_verified": true,
+    "browser_check_verified": true,
+    "knowledge_verified": true,
+    "fixture_workdirs_retained": false
+  },
+  "status_read_fix": {
+    "commit": "b23b2bc",
+    "behavior": "workspace-validated status bypasses the lifecycle mutation queue; mutations remain serialized",
+    "regression_before": "/tmp/kujo-lifecycle-status-before.log",
+    "regression_after": "/tmp/kujo-lifecycle-status-after.log",
+    "focused_passed": 21,
+    "unit_passed": 229,
+    "unit_log": "/tmp/kujo-lifecycle-status-unit.log",
+    "e2e_passed": true,
+    "e2e_log": "/tmp/kujo-lifecycle-status-e2e.log",
+    "source_live_acceptance_pending": true,
+    "source_live_log": "/tmp/kujo-lifecycle-status-native.log",
+    "archive_rebuild_required": true
   }
 }
