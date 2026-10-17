@@ -86,7 +86,7 @@ try {
  await api(`/api/session/${session.id}/command`,{name:'kujo-evidence',text:''});
  // Drive only this isolated fixture's human permission endpoint. No live user
  // session or production mutation is approved by this acceptance harness.
- const selectedProfile=dispatchTransportEnabled?'full':process.env.KUJO_TEST_MODEL?'ship':'build';
+ const selectedProfile=process.env.KUJO_TEST_MODEL?'ship':'build';
  const changing=api('/api/rpc/kujo.control/profile',{input:{sessionID:session.id,profile:selectedProfile}});
  let pending;
  for(let i=0;i<40;i++) {const list=(await api(`/api/session/${session.id}/permission`)).data;pending=list.find(p=>p.action==='kujo.profile.change');if(pending)break;await delay(100);}
@@ -303,13 +303,15 @@ try {
  await assert.rejects(api('/api/rpc/kujo.control/artifact',{input:{receiptID:'not-retained',index:0}}));
  const live=process.env.KUJO_TEST_MODEL&&!journey&&!dispatchTransportEnabled ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
  let specialistJourney=null;
- if(journey){
+ if(journey||dispatchTransportEnabled){
   const changingFull=api('/api/rpc/kujo.control/profile',{input:{sessionID:session.id,profile:'full'}});
   let fullPermission;
   for(let i=0;i<40;i++){fullPermission=(await api(`/api/session/${session.id}/permission`)).data.find(p=>p.action==='kujo.profile.change');if(fullPermission)break;await delay(100);}
   assert.ok(fullPermission);assert.equal(fullPermission.metadata.profile,'kujo.profile.full');assert.deepEqual(fullPermission.save,[]);
   await api(`/api/session/${session.id}/permission/${fullPermission.id}/reply`,{decision:'once'});await changingFull;
   assert.equal(JSON.parse(await readFile(configPath,'utf8')).profile,'kujo.profile.full');
+ }
+ if(journey){
   const {OpenCode}=await import('@opencode/client');const nativeClient=OpenCode.make({baseUrl:base,headers:{Authorization:authorization}});
   try {
   const runJourney={understand:()=>import('./native-understand-acceptance.mjs').then(m=>m.nativeUnderstandAcceptance),build:()=>import('./native-build-acceptance.mjs').then(m=>m.nativeBuildAcceptance),review:()=>import('./native-review-acceptance.mjs').then(m=>m.nativeReviewAcceptance),browser:()=>import('./native-browser-acceptance.mjs').then(m=>m.nativeBrowserAcceptance),workflow:()=>import('./native-workflow-acceptance.mjs').then(m=>m.nativeWorkflowAcceptance),ship:()=>import('./native-ship-acceptance.mjs').then(m=>m.nativeShipAcceptance)};
