@@ -1,5 +1,8 @@
 # Prepublication check — 2026-10-17
 
+The later [Windows acceptance](2026-10-17-windows.md) resolves the Windows items
+below. The other release gates retain their recorded scope.
+
 **Not ready to publish.** No npm package, version tag or GitHub release was created.
 This record supersedes earlier descriptions of the remaining release work, without
 changing the scope of earlier passing evidence.
