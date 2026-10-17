@@ -1063,3 +1063,33 @@ Logs /tmp/kujo-watchdog-read-{unit,canonical,all,e2e,rendered,host}.log retain t
 checkpoint evidence. This is not remote TLS deployment or complete host/OS
 certification. Native rendered service execution approvals and the remaining
 original lifecycle/recovery/specialist/package/public-release gates stay open.
+
+## Rendered Leash rejection and granted delivery (2026-10-16)
+
+The real OpenCode2.0.31 Build agent using the visibly selected
+opencode/glm-5.3-flash-free passed the80x24 terminal gate in fixtureawngq_kf.
+Before native approval and after keyboard rejection, the private canonical Leash
+daemon had no events. A separate once-approved request created exactly one
+event and a succeeded canonical receipt with an approval ID, awaiting_decision
+status and unchanged native permissions. Notification providers and Dispatch
+callbacks were disabled; this does not prove remote notification delivery or
+workflow resumption. Log: /tmp/kujo-leash-rendered-retry.log. Rendered snapshots,
+verification.json and leash-delivery-evidence.json remain in
+/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-rendered-tui-awngq_kf.
+
+The fixture uses canonical leashd56c59c90, binary SHA256
+b79889ca39229684b7262e46f2382388b30191b26e4497989bc99100cb8758a9,
+registers its own device JWT and deletes its secret configuration on cleanup.
+The earlier c1o__7xe attempt is failed evidence: plain native rejection ends
+the model step, so expecting a model response afterward was an invalid test.
+The corrected test checks the rendered interruption before the separate prompt.
+
+Approval review quality remains open: OpenCode2.0.31 displays only the generic
+kujo.ability.approve label. Upstream packages/tui/src/util/permission.ts at
+v2.0.31 confirms that generic actions ignore custom metadata and message.
+A supported, readable operation review must accompany native approval; changing
+metadata alone cannot resolve this. Gateway rendered execution, all six scoped
+specialists, remaining lifecycle/recovery and final release/platform gates remain
+required. This checkpoint changes tests and documentation, not production code. The
+packaged service-support documentation changes package bytes, so a final exact
+candidate still requires its own certification.

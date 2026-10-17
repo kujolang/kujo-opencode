@@ -4,6 +4,8 @@ Default and --ledger modes do not request inference.
 --ledger explicitly approves only this disposable fixture’s profile/start/finish.
 --automatic sends a real prompt using the visible OpenCode free model; --ship
 also requires a successful scoped specialist receipt.
+--leash rejects then grants a fixture-only canonical delivery using that model;
+notification providers and workflow callbacks are disabled.
 Requires the optional pinned tests/requirements-tui.txt environment (POSIX only).
 """
 import argparse
@@ -22,6 +24,8 @@ import time
 import tempfile
 import uuid
 import pyte
+from leash_fixture import LeashFixture
+from datetime import datetime, timezone
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--host', default=os.environ.get('OPENCODE_BIN', 'opencode'))
@@ -29,9 +33,12 @@ parser.add_argument('--columns', type=int, default=80)
 parser.add_argument('--rows', type=int, default=24)
 parser.add_argument('--ship', action='store_true', help='With --automatic, execute a real Ship specialist scan')
 mode=parser.add_mutually_exclusive_group()
+mode.add_argument('--leash', action='store_true', help='With LEASH_TEST_BIN, reject and approve real fixture Leash delivery using the visible free model')
 mode.add_argument('--ledger', action='store_true', help='Approve fixture-only profile/start/finish operations through the rendered UI')
 mode.add_argument('--automatic', action='store_true', help='Exercise the automatic popup with the visible GLM-5.3-Flash Free model')
 args = parser.parse_args()
+if args.leash and not os.environ.get('LEASH_TEST_BIN'):
+    parser.error('--leash requires LEASH_TEST_BIN pointing to canonical leashd')
 if args.ship and not args.automatic:
     parser.error('--ship requires --automatic')
 if args.columns < 80 or args.rows < 24:
@@ -44,6 +51,9 @@ project.mkdir()
 subprocess.run(['git', 'init', '-q', str(project)], check=True)
 env = dict(os.environ, KUJO_OPENCODE_HOME=str(root / 'kujo'), TERM='xterm-256color')
 subprocess.run(['node', str(repo / 'bin/kujo-opencode.mjs'), 'setup', '--project', str(project), '--source-root', str(repo.parent), '--json'], env=env, check=True, stdout=subprocess.DEVNULL)
+leash=LeashFixture(root,os.environ['LEASH_TEST_BIN']) if args.leash else None
+if leash:
+    env.update(KUJO_LEASH_URL=leash.origin,KUJO_LEASH_TOKEN=leash.token)
 version = subprocess.check_output([args.host, '--version'], text=True).strip()
 session = 'ses_kujo_terminal_' + uuid.uuid4().hex
 screen = pyte.Screen(args.columns, args.rows)
@@ -227,7 +237,53 @@ try:
         choose('Session RunLedger', 'Record location', 'finished-record-menu')
         choose('Record location', 'Canonical RunLedger record', 'record-location')
         wait('.json', 'record-location')
-    result = dict(ok=True, host=version, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=args.automatic, effects_approved=args.ledger or args.automatic, rendered_ledger=args.ledger, rendered_automatic_completion=args.automatic, live_ship_specialist=args.ship)
+    if args.leash:
+        send('\x1b')
+        menu()
+        choose('Choose a profile', 'Choose Kujo capabilities', 'leash-full-profile')
+        choose('Full', 'Allow once', 'leash-full-approval')
+        assert choice_style('Allow once')==selected and choice_style('Reject')!=selected
+        send('\r')
+        wait('tools ready', 'leash-full-active')
+        assert json.loads((project/'.kujo/opencode.json').read_text())['profile']=='kujo.profile.full'
+        wait('GLM-5.3-Flash Free', 'leash-visible-model')
+        assert any('GLM-5.3-Flash Free' in line and 'OpenCode' in line for line in screen.display), 'Only the visible OpenCode free model is permitted'
+        event={'schema':'kujo.intervention-request/v2','request_id':'rendered-leash-fixture','boundary_id':'boundary-fixture','run_id':'run-fixture','state_revision':1,'reason':{'type':'evaluation_failed','message':'Local acceptance'},'summary':'Fixture only; notifications disabled','policy_decision_ref':'policy-fixture','evidence':[],'preservation':{'status':'satisfied'},'allowed_actions':['retry_evaluation','abort'],'created_at':datetime.now(timezone.utc).isoformat(),'expires_at':None,'callback':{'target':'dispatch://resume-decision/run-fixture'},'run':{'workflow_id':'fixture','step_id':'gate','attempt':1},'routing':{'channels':[],'audience':[]},'security':{'contains_sensitive_data':False}}
+        payload=json.dumps({'origin':leash.origin,'event':event},separators=(',',':'))
+        send('Call kujo_leash_deliver exactly once with '+payload+'. Do not use other tools or retry.')
+        send('\r')
+        wait('kujo.ability.approve', 'leash-reject-permission', seconds=90)
+        assert leash.events()==[], 'No canonical event before native approval'
+        send('\x1b[C')
+        assert choice_style('Reject')==selected and choice_style('Allow once')!=selected
+        send('\r')
+        # A plain native rejection interrupts the model step; it cannot emit a reply.
+        wait('interrupted', 'leash-rejected', seconds=30)
+        assert leash.events()==[], 'Rejected native permission must not deliver'
+        send('Now explicitly request kujo_leash_deliver once with the same exact input. I will approve this separate request. Do not use other tools or retry.')
+        send('\r')
+        wait('kujo.ability.approve', 'leash-allow-permission', seconds=90)
+        assert leash.events()==[], 'Still no canonical event before the separate grant'
+        assert choice_style('Allow once')==selected and choice_style('Reject')!=selected
+        send('\r')
+        deadline=time.monotonic()+45
+        receipts=[]
+        while time.monotonic()<deadline:
+            pump()
+            receipt_file=root/'kujo/receipts.jsonl'
+            if receipt_file.exists():
+                receipts=[json.loads(line) for line in receipt_file.read_text().splitlines() if line.strip()]
+            delivered=[r for r in receipts if r.get('ability_id')=='kujo.opencode.leash.deliver' and r.get('status')=='succeeded']
+            if delivered:
+                break
+        assert len(delivered)==1, 'Expected one succeeded canonical delivery receipt'
+        events=leash.events()
+        assert len(events)==1 and events[0]['id']==event['request_id']
+        assert delivered[0]['approval_id'] and delivered[0]['result']['status']=='awaiting_decision'
+        assert delivered[0]['result']['native_permissions']=='unchanged'
+        (root/'leash-delivery-evidence.json').write_text(json.dumps({'receipt':delivered[0],'events':events},indent=2))
+        (root/'leash-delivered.txt').write_text(current())
+    result = dict(ok=True, host=version, dimensions=[args.columns,args.rows], root=str(root), initial_requested_session=session, model_call=args.automatic or args.leash, effects_approved=args.ledger or args.automatic or args.leash, rendered_ledger=args.ledger, rendered_automatic_completion=args.automatic, live_ship_specialist=args.ship, rendered_leash=args.leash)
     (root/'verification.json').write_text(json.dumps(result, indent=2)+'\n')
     print(json.dumps(result))
 finally:
@@ -250,3 +306,5 @@ finally:
         os.kill(pid, signal.SIGKILL)
         os.waitpid(pid, 0)
     os.close(fd)
+    if leash:
+        leash.close()
