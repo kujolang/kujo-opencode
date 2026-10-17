@@ -1,0 +1,26 @@
+{
+  "candidate": {
+    "schema": "kujo.opencode.candidate/v1",
+    "name": "@kujolang/kujo-opencode",
+    "version": "0.2.0",
+    "commit": "f78cb5654bab655afbe0f5e1d5dbb7eb957963b4",
+    "tree": "420094399653ca5c8ef96dce2c6d9e8e4b54649e",
+    "archive": "kujolang-kujo-opencode-0.2.0.tgz",
+    "integrity": "sha512-2XDK3zMkBKARZ62PEsJZ7y0Jvh481yXytyWyPDbWx3d7CKSwZ+uUFrzY48z1x+GduEulnoYmU58CiFs16fXISw==",
+    "files": {
+      "build-record.json": "910283eda8d945b94ebcc1abc9caf3ef8cdd0c29046f5eb98d3337fd22bef6a4",
+      "kujolang-kujo-opencode-0.2.0.tgz": "4d0e350dab9d2c6a92113f764d1a09af8387464f9b3280b502322c56deacfda6",
+      "package-lock.json": "fbcd25076c26885cb916d02a26d70b418bed75c7cdd8c1c56a8886309c7d9c88",
+      "sbom.cdx.json": "a18d6f99b3e71f53e16fbb65c8d71090ab6d03265cd455697051099ba28ff9bc",
+      "sources.json": "0b01c68f060574e656719edcb18b4433dd6df034f7fa3db8fb542519bf91f9ca"
+    },
+    "acceptance": "pending",
+    "published": false
+  },
+  "directory": "/tmp/kujo-status-recovery-candidate",
+  "source_lifecycle_pass": "docs/acceptance/2026-10-17-lifecycle-retention.json",
+  "exact_archive_acceptance": "pending",
+  "latest_host_log": "/tmp/kujo-status-candidate-latest.log",
+  "latest_host": "2.0.32",
+  "published": false
+}
