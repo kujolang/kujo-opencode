@@ -1,3 +1,4 @@
+import {verifyMixedVersion} from './mixed-version-acceptance.mjs';
 import {createServer} from 'node:http';
 import {verifyCandidate} from '../scripts/release-candidate.mjs';
 import {copyFile} from 'node:fs/promises';
@@ -51,6 +52,7 @@ assert.ok((await readFile(join(env.KUJO_OPENCODE_HOME,'receipts.jsonl'),'utf8'))
 const oldCli=join(env.KUJO_OPENCODE_HOME,'runtime/0.1.0/bin/kujo-opencode.mjs');
 assert.equal(JSON.parse((await command(process.execPath,[oldCli,'status','--project',older,'--json'])).stdout).ok,true);
 assert.equal((await call(['demo'])).ok,true);
+await verifyMixedVersion({root,env,cli,oldCli,project,older});
 const fresh=join(root,'fresh'); await mkdir(fresh); await writeFile(join(fresh,'README.md'),'# Clean package fixture\n');
 const freshHome=join(home,'fresh-kujo'); const previousHome=env.KUJO_OPENCODE_HOME; env.KUJO_OPENCODE_HOME=freshHome;
 // This is the documented one-command tarball install path, with no global link.
@@ -121,7 +123,7 @@ const rpc=await new Promise((resolveResult,reject)=>{
 assert.equal(rpc.result.tools.length,10);
 for(const operation of ['preview','index','status','query','recover'])assert.ok(rpc.result.tools.some(tool=>tool.name===`kujo_knowledge_${operation}`));
 if(candidate)await verifyCandidate(candidate.directory);
-const verification={ok:true,root,tarball,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,starter_kinds:['script','agent','api','mcp'],starter_services_verified:true,agent_fixture_verified:true,session_runledger_verified:true,browser_launch_verified:true,browser_check_verified:true,knowledge_verified:true,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
+const verification={ok:true,root,tarball,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,mixed_version_verified:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,starter_kinds:['script','agent','api','mcp'],starter_services_verified:true,agent_fixture_verified:true,session_runledger_verified:true,browser_launch_verified:true,browser_check_verified:true,knowledge_verified:true,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
 await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
 // Keep the immutable tarballs and verification record, not hundreds of MiB of
 // duplicate clones/caches after every successful run. Failures retain diagnosis.
