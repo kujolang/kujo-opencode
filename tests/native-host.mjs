@@ -6,13 +6,13 @@ import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 const exec=promisify(execFile),repo=resolve('.');
-if(process.env.KUJO_TEST_TELEMETRY==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Telemetry acceptance needs an explicit model and ordinary Build agent');
+if(process.env.KUJO_TEST_TELEMETRY==='1'||process.env.KUJO_TEST_CANCEL_TELEMETRY==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Telemetry acceptance needs an explicit model and ordinary Build agent');
 if(process.env.KUJO_TEST_GUARD==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Guard acceptance needs an explicit model and ordinary Build agent');
 const root=await mkdtemp(join(tmpdir(),'kujo-native-host-'));const project=join(root,'project');await mkdir(project);
 await exec('git',['init',project]);
 const env={...process.env,KUJO_OPENCODE_HOME:join(root,'kujo')};
 await exec(process.execPath,[join(repo,'bin/kujo-opencode.mjs'),'setup','--project',project,'--source-root',resolve('..'),'--json'],{env,timeout:120000});
-const watchdog=process.env.KUJO_TEST_TELEMETRY==='1'?await (await import('./watchdog-host-fixture.mjs')).watchdogHostFixture(root,JSON.parse(await readFile(join(env.KUJO_OPENCODE_HOME,'installation.json'),'utf8'))):null;
+const watchdog=(process.env.KUJO_TEST_TELEMETRY==='1'||process.env.KUJO_TEST_CANCEL_TELEMETRY==='1')?await (await import('./watchdog-host-fixture.mjs')).watchdogHostFixture(root,JSON.parse(await readFile(join(env.KUJO_OPENCODE_HOME,'installation.json'),'utf8'))):null;
 if(watchdog)env.WDG_API_AUTH_TOKEN=watchdog.token;
 const host=process.env.OPENCODE_BIN||'opencode';
 const hostEnv={...env}; delete hostEnv.KUJO_OPENCODE_HOME;
@@ -261,11 +261,19 @@ try {
   await lifecycleChange('disable_guard','once');
  }
  let telemetry=null;
- if(watchdog){
+ if(process.env.KUJO_TEST_TELEMETRY==='1'){
   await lifecycleChange('enable','once');
   const {OpenCode}=await import('@opencode/client');const nativeClient=OpenCode.make({baseUrl:base,headers:{Authorization:authorization}});
   telemetry=await (await import('./native-telemetry-acceptance.mjs')).nativeTelemetryAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL,watchdog,reload:()=>nativeClient.location.reload(),disable:()=>lifecycleChange('disable','once')});
   await writeFile(join(root,'telemetry-evidence.json'),JSON.stringify(telemetry,null,2)+'\n');
  }
- console.log(JSON.stringify({ok:true,root,live,failureGuard,telemetry:telemetry?{...telemetry,events:undefined}:null,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||process.env.KUJO_TEST_AUTOTRACK==='1'}));
+ let cancellation=null;
+ if(process.env.KUJO_TEST_CANCEL_TELEMETRY==='1'){
+  await lifecycleChange('enable','once');
+  const {OpenCode}=await import('@opencode/client');const nativeClient=OpenCode.make({baseUrl:base,headers:{Authorization:authorization}});
+  cancellation=await (await import('./native-cancellation-acceptance.mjs')).nativeCancellationAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL,watchdog,interrupt:sessionID=>nativeClient.session.interrupt({sessionID,resume:false},{signal:AbortSignal.timeout(15000)})});
+  await writeFile(join(root,'cancellation-evidence.json'),JSON.stringify(cancellation,null,2)+'\n');
+  await lifecycleChange('disable','once');
+ }
+ console.log(JSON.stringify({ok:true,root,live,failureGuard,cancellation:cancellation?{...cancellation,events:undefined}:null,telemetry:telemetry?{...telemetry,events:undefined}:null,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||process.env.KUJO_TEST_AUTOTRACK==='1'}));
 } finally {tuiCleanup?.();child.kill('SIGTERM');await watchdog?.stop();}
