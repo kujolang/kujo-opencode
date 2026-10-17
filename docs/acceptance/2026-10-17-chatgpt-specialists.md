@@ -26,6 +26,6 @@ and prior failed attempts. Thirty focused harness regressions pass. Runtime and
 production permission behavior are unchanged by the harness corrections.
 
 This verifies the requested ChatGPT testing path, not full release readiness.
-No npm publication occurred. Windows compatibility failures, the rest of the
-host/platform acceptance matrix, and registry publication/provenance remain
-separate gates. The OpenCode free-model restricted-agent issue remains distinct.
+No npm publication occurred. The subsequent [Windows and host matrix acceptance](2026-10-17-windows.md)
+resolved the earlier Windows failures for its recorded archive. Final-archive
+acceptance and registry publication/provenance remain separate gates. The OpenCode free-model restricted-agent issue remains distinct.
