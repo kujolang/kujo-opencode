@@ -2,6 +2,7 @@
 
 ## 0.2.0
 
+- Reject Leash events without their canonical identity before delivery and expose identity requirements in the tool schema.
 - Packaged one-paste installation and an isolated network fresh-install/0.1.0 upgrade gate.
 - Preserve JSONC comments, existing settings, and older project runtime projections.
 - Add /kujo, /kujo-review, /kujo-doctor and a real first repository scan.

@@ -46,3 +46,26 @@ test('redirects, rejection, malformed, oversized and mismatched acknowledgements
 
 import {serviceStatus} from '../lib/service-status.mjs';
 test('local service diagnostics tolerate invalid origins and never expose supplied credentials',()=>{const state=serviceStatus([],{KUJO_LEASH_URL:'https://user:secret@example.com',KUJO_LEASH_TOKEN:'private-token',KUJO_ABILITY_GATEWAY_URL:'http://127.0.0.1:4200',KUJO_ABILITY_GATEWAY_TOKEN:'private-token'});assert.equal(state.find(s=>s.id==='leash').configured,false);assert.equal(state.find(s=>s.id==='gateway').configured,true);assert.ok(state.every(s=>s.network_requested===false&&!s.enabled));assert.ok(!JSON.stringify(state).includes('private-token'));assert.ok(!JSON.stringify(state).includes('secret'));});
+
+test('missing or malformed canonical event identities send no request',async t=>{
+ const f=await fixture(t,(_req,res)=>res.end('{}'));
+ for(const schema of ['v2','legacy'])for(const id of [undefined,null,0,'','   ']) {
+  const inputEvent=schema==='v2'?{schema:'kujo.intervention-request/v2',request_id:id,event_id:'not-a-v2-identity'}:{schema_version:'kujo.intervention-event/v1',event_id:id,request_id:'not-a-legacy-identity'};
+  await assert.rejects(deliverLeash({origin:f.origin,event:inputEvent},{env:f.env}),e=>e.code==='leash_event_identity'&&e.message.includes(schema==='v2'?'request_id':'event_id')&&e.message.includes('No request was sent'));
+ }
+ assert.equal(f.requests.length,0);
+});
+
+test('canonical v2 and legacy identities are preserved and bound to acknowledgements',async t=>{
+ const f=await fixture(t,(_req,res,body)=>{const input=JSON.parse(body);res.end(JSON.stringify({event_id:input.schema==='kujo.intervention-request/v2'?input.request_id:input.event_id,status:'awaiting_decision'}));});
+ for(const inputEvent of [{...event,event_id:'ignored-legacy-field'},{schema_version:'kujo.intervention-event/v1',event_id:'legacy-identity',summary:'Fixture'}]){
+  const original=JSON.stringify(inputEvent);Object.freeze(inputEvent);
+  const result=await deliverLeash({origin:f.origin,event:inputEvent},{env:f.env});
+  assert.equal(result.event_id,inputEvent.request_id||inputEvent.event_id);assert.equal(JSON.stringify(inputEvent),original);
+  assert.deepEqual(JSON.parse(f.requests.at(-1).body),inputEvent);
+ }
+ assert.equal(f.requests.length,2);
+ const definition=(await loadCatalog()).abilities.find(item=>item.adapter==='leash_deliver').definition;
+ assert.equal(definition.input_schema.properties.event.properties.request_id.minLength,1);
+ assert.equal(definition.input_schema.properties.event.properties.event_id.minLength,1);
+});

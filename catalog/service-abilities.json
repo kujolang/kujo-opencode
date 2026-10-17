@@ -37,7 +37,7 @@
     "definition": {
       "schema": "kujo.ability/v1",
       "id": "kujo.opencode.leash.deliver",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "title": "Submit a Leash intervention",
       "description": "Send one reviewed canonical intervention event to the configured Leash service. Does not grant native permissions or observe a human decision.",
       "input_schema": {
@@ -52,7 +52,23 @@
           "event": {
             "type": "object",
             "additionalProperties": true,
-            "description": "Canonical Leash legacy event or kujo.intervention-request/v2 object, validated by Leash."
+            "description": "Canonical Leash event: include request_id for kujo.intervention-request/v2 or event_id for a legacy event. Preserve that identity exactly for acknowledgement and reconciliation. Leash validates the full event.",
+            "properties": {
+              "schema": {
+                "type": "string",
+                "description": "Use kujo.intervention-request/v2 for a v2 request; preserve the supplied canonical schema."
+              },
+              "request_id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Required identity for kujo.intervention-request/v2. Copy the supplied request_id exactly; do not omit or generate a replacement."
+              },
+              "event_id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Required identity for legacy intervention events. Copy the supplied event_id exactly."
+              }
+            }
           }
         },
         "required": [

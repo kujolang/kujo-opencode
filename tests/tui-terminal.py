@@ -315,10 +315,16 @@ try:
         assert any('GLM-5.3-Flash Free' in line and 'OpenCode' in line for line in screen.display), 'Only the visible OpenCode free model is permitted'
         event={'schema':'kujo.intervention-request/v2','request_id':'rendered-leash-fixture','boundary_id':'boundary-fixture','run_id':'run-fixture','state_revision':1,'reason':{'type':'evaluation_failed','message':'Local acceptance'},'summary':'Fixture only; notifications disabled','policy_decision_ref':'policy-fixture','evidence':[],'preservation':{'status':'satisfied'},'allowed_actions':['retry_evaluation','abort'],'created_at':datetime.now(timezone.utc).isoformat(),'expires_at':None,'callback':{'target':'dispatch://resume-decision/run-fixture'},'run':{'workflow_id':'fixture','step_id':'gate','attempt':1},'routing':{'channels':[],'audience':[]},'security':{'contains_sensitive_data':False}}
         payload=json.dumps(gateway.input if gateway else {'origin':target.origin,'event':event},separators=(',',':'))
+        def assert_reviewed_input():
+            receipts=[json.loads(line) for line in (root/'kujo/receipts.jsonl').read_text(encoding='utf-8').splitlines() if line.strip()]
+            pending=[r for r in receipts if r.get('ability_id')==ability and r.get('status')=='approval_required']
+            assert pending, 'Review must have a canonical approval-required receipt'
+            assert pending[-1]['error']['details']['input']==json.loads(payload), 'Model changed fixture input; no native grant was made'
         send('Call '+tool+' exactly once with '+payload+'. Do not use other tools or retry.')
         send('\r')
         wait('Review Kujo operation', service+'-operation-review', seconds=90)
         assert unchanged(), 'Review itself cannot deliver'
+        assert_reviewed_input()
         choose('Operation', 'Operation · 1/1', service+'-operation-detail')
         wait(title, service+'-operation-detail')
         send('\x1b')
@@ -347,9 +353,10 @@ try:
         wait('commands', service+'-rejected', seconds=30)
         assert 'Permission required' not in current()
         assert unchanged(), 'Rejected native permission must not deliver'
-        send('Now explicitly request '+tool+' once with the same exact input. I will approve this separate request. Do not use other tools or retry.')
+        send('Now explicitly request '+tool+' once with this exact input: '+payload+'. I will approve this separate request. Do not use other tools or retry.')
         send('\r')
         wait('Review Kujo operation', service+'-second-review', seconds=90)
+        assert_reviewed_input()
         choose('Operation', 'Operation · 1/1', service+'-second-operation')
         wait(title, service+'-second-operation')
         send('\x1b')
@@ -441,6 +448,13 @@ try:
             (root/'verification.json').write_text(json.dumps(result, indent=2)+'\n')
             raise
     print(json.dumps(result))
+except Exception as error:
+    (root/'failure.txt').write_text(current(), encoding='utf-8')
+    failure=dict(ok=False, root=str(root), host=version, error_type=type(error).__name__)
+    if candidate:
+        failure.update(candidate_commit=candidate['commit'], candidate_sha256=candidate['files'][candidate['archive']])
+    (root/'failure-summary.json').write_text(json.dumps(failure,indent=2)+'\n')
+    raise
 finally:
     # Only the owned standalone terminal is stopped; never touch a user server.
     try:

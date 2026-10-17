@@ -5,6 +5,12 @@ Watchdog reads, Leash and the application gateway without network requests. A co
 is not proof of service health, authentication or permission. Tokens belong in
 the environment that starts OpenCode, never in prompts or project configuration.
 
+Leash delivery requires the supplied stable `request_id` for v2 requests or
+`event_id` for legacy events. Missing or empty identities fail locally before
+any request is sent. Preserve the identity when inspecting or reconciling a
+delivery; the adapter does not invent a replacement. Leash owns full event
+validation.
+
 | Service task | OpenCode behavior | Verification and remaining scope |
 | --- | --- | --- |
 | Watchdog lifecycle | Explicitly enabled metadata delivery, bounded durable retry and canonical RunLedger correlation; loopback service only | Canonical delivery and lost-acknowledgement checks exist; remaining real lifecycle/platform scenarios remain in production readiness |
