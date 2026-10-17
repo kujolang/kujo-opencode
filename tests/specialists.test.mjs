@@ -1,3 +1,4 @@
+import './native-specialist-runner.test.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {loadCatalog,profileAbilities} from '../lib/catalog.mjs';

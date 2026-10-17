@@ -8,6 +8,8 @@ import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 const exec=promisify(execFile),repo=resolve('.');
+const journey=process.env.KUJO_TEST_JOURNEY;
+if(journey){assert.equal(journey,'understand','Only implemented specialist journeys may run');assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Journey needs an explicit model and owns its specialist identity');for(const flag of ['KUJO_TEST_GUARD','KUJO_TEST_TELEMETRY','KUJO_TEST_CANCEL_TELEMETRY','KUJO_TEST_AUTOTRACK'])assert.notEqual(process.env[flag],'1','Run specialist and lifecycle acceptance separately');}
 if(process.env.KUJO_TEST_TELEMETRY==='1'||process.env.KUJO_TEST_CANCEL_TELEMETRY==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Telemetry acceptance needs an explicit model and ordinary Build agent');
 if(process.env.KUJO_TEST_GUARD==='1')assert.ok(process.env.KUJO_TEST_MODEL&&!process.env.KUJO_TEST_AGENT,'Guard acceptance needs an explicit model and ordinary Build agent');
 const root=await mkdtemp(join(tmpdir(),'kujo-native-host-'));const project=join(root,'project');await mkdir(project);
@@ -281,7 +283,25 @@ try {
  const detail=(await api('/api/rpc/kujo.control/evidenceDetail',{input:{receiptID:projectEvidence.receipts[0].receipt_id}})).output;
  assert.equal(detail.receipt.metadata.project_root,await realpath(project));
  await assert.rejects(api('/api/rpc/kujo.control/artifact',{input:{receiptID:'not-retained',index:0}}));
- const live=process.env.KUJO_TEST_MODEL ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
+ const live=process.env.KUJO_TEST_MODEL&&!journey ? await (await import('./native-model-acceptance.mjs')).nativeModelAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL}) : null;
+ let specialistJourney=null;
+ if(journey){
+  const changingFull=api('/api/rpc/kujo.control/profile',{input:{sessionID:session.id,profile:'full'}});
+  let fullPermission;
+  for(let i=0;i<40;i++){fullPermission=(await api(`/api/session/${session.id}/permission`)).data.find(p=>p.action==='kujo.profile.change');if(fullPermission)break;await delay(100);}
+  assert.ok(fullPermission);assert.equal(fullPermission.metadata.profile,'kujo.profile.full');assert.deepEqual(fullPermission.save,[]);
+  await api(`/api/session/${session.id}/permission/${fullPermission.id}/reply`,{decision:'once'});await changingFull;
+  assert.equal(JSON.parse(await readFile(configPath,'utf8')).profile,'kujo.profile.full');
+  const {OpenCode}=await import('@opencode/client');const nativeClient=OpenCode.make({baseUrl:base,headers:{Authorization:authorization}});
+  try {
+  specialistJourney=await (await import('./native-understand-acceptance.mjs')).nativeUnderstandAcceptance({api,project,dataRoot:env.KUJO_OPENCODE_HOME,model:process.env.KUJO_TEST_MODEL,interrupt:sessionID=>nativeClient.session.interrupt({sessionID,resume:false},{signal:AbortSignal.timeout(15000)})});
+  } catch(error) {
+   const provider=String(error.message).match(/Live provider failed before acceptance: provider\.[a-z]+ \(HTTP [0-9]+\)/)?.[0];
+   await writeFile(join(root,'specialist-failure.json'),JSON.stringify({ok:false,journey,host:hostVersion,model:process.env.KUJO_TEST_MODEL,error_type:error.name,reason:provider||'Specialist acceptance failed; inspect retained fixture evidence and test log',...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256}:{})},null,2)+'\n');
+   throw error;
+  }
+  await writeFile(join(root,'specialist-evidence.json'),JSON.stringify(specialistJourney,null,2)+'\n');
+ }
  let failureGuard=null;
  if(process.env.KUJO_TEST_GUARD==='1'){
   await lifecycleChange('enable_guard','once');
@@ -304,7 +324,7 @@ try {
   await writeFile(join(root,'cancellation-evidence.json'),JSON.stringify(cancellation,null,2)+'\n');
   await lifecycleChange('disable','once');
  }
- const verification={ok:true,root,host:hostVersion,platform:process.platform,arch:process.arch,pinned_sources:pinned,rendered_tui:false,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),live,failureGuard,cancellation:cancellation?{...cancellation,events:undefined}:null,telemetry:telemetry?{...telemetry,events:undefined}:null,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||process.env.KUJO_TEST_AUTOTRACK==='1'};
+ const verification={ok:true,root,host:hostVersion,platform:process.platform,arch:process.arch,pinned_sources:pinned,rendered_tui:false,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),live,specialistJourney,failureGuard,cancellation:cancellation?{...cancellation,events:undefined}:null,telemetry:telemetry?{...telemetry,events:undefined}:null,commands:commands.filter(c=>c.name.startsWith('kujo-')).map(c=>c.name),native_status_recorded:true,native_evidence_recorded:true,native_profile_permission:true,native_capability_permissions:true,native_lifecycle_permissions:true,native_session_runledger:true,native_browser_readiness:true,native_knowledge_verified:true,native_automatic_tracking:process.env.KUJO_TEST_AUTOTRACK==='1',browser_ready:browserBefore.ready,model_call:Boolean(live)||Boolean(specialistJourney)||process.env.KUJO_TEST_AUTOTRACK==='1'};
  if(candidate)await verifyCandidate(candidate.directory);
  await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
  console.log(JSON.stringify(verification));
