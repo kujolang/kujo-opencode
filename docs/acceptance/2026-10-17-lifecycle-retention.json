@@ -48,5 +48,15 @@
       "configured_read": true,
       "read_auth_rejection": true
     }
+  },
+  "replacement_candidate": {
+    "commit": "7c5ebc51aa3f5d69eb08991e2c7d96c50a2da5f8",
+    "tree": "0541f7a23bdf47f23a8a71785b65c1da7507e2d0",
+    "archive": "kujolang-kujo-opencode-0.2.0.tgz",
+    "integrity": "sha512-rREWijbY3wUXitSjpUKMsY5144dHOx2AZHu1bhw/0XR4KUkZOwd/kMoBt42BHhaymeZrbPMzStTU/aIyVrHpwA==",
+    "acceptance": "pending",
+    "published": false,
+    "sha256": "2b8073637d7995be5b52aefafffe8003667075560301a78148282ada77b573b6",
+    "directory": "/tmp/kujo-retention-candidate"
   }
 }
