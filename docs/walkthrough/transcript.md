@@ -1,51 +1,53 @@
-# Provisional narration — do not generate yet
+# Final narration — reconciled to the captured session
 
-Written with the Orwell skill. Reconcile every line with captured results and offsets before speech generation. The numerical result in s05 is an expected target, not verified output. Keep a useful portion of each segment silent so viewers can read the actual UI. Target 240 seconds; no music.
+Written with the Orwell skill. Voice: Brian; use the producer-confirmed ElevenLabs model. “Koo-joe” is a speech-only pronunciation spelling; display the brand as **Kujo**. Narration is grounded in the receipts below, not the original predicted outcomes. No music under narration; the original Kujo sting plays in the intro and outro.
 
-## s01 · 0–15s · The task
+The revised walkthrough lasts 185 seconds: a 3-second branded intro, 179 seconds of recorded workflow, and a 3-second branded outro. Speech is unchanged; idle tails are shortened while approvals and results remain visible. Label shortened waiting, retain approvals, and disclose the operator's Git preparation. Do not label this script as release-ready: its CLI negative exit-code coverage remains open.
 
-Voiceover: We’ll use OpenCode to build a small Kujo script. It reads four check results and gives us a short report. Then we’ll inspect the code, run it, test it, and review what changed.
+## s01 · 3–19 seconds
 
-Screen: Live project and task fixture.
+Let's build a small Kujo script in OpenCode. It reads check results from a JSON file, counts passes and failures, and lists the failed checks. We'll follow the code through inspection, execution, tests, and review.
 
-## s02 · 15–42s · Understand the input
+Evidence: assets/captured/demo-project/checks.json.
 
-Voiceover: First, I ask Scout to inspect the project. The input has a name and a status for each check. Three pass and one fails. Those numbers give us a result we can verify ourselves. Scout writes a local report, so we review that request before it runs.
+## s02 · 19–40 seconds
 
-Screen: Kujo menu, Understand, real Scout request and approval.
+We start with the Understand specialist. Scout maps the project, and Scent previews which files would fit a context pack. These results describe the project and file selection. They do not establish the contents of our input fixture. That distinction matters when we decide what the agent actually knows.
 
-## s03 · 42–92s · Write the custom program
+Evidence: receipt-932da13a-cd8a-4d10-b610-25bad102e9ab; receipt-9e110984-1319-44a7-8220-fab62b699424.
 
-Voiceover: Now I switch to OpenCode’s regular Build agent to write the program. Kujo’s Build specialist has a narrower job: it checks source and runs reviewed files. The program counts the results and lists failed checks in order. We also ask for tests: mixed results, all checks passing, an empty list, and bad input.
+## s03 · 40–67.0 seconds
 
-Screen: Ordinary OpenCode Build prompt and actual edits; code visible.
+Now we switch to OpenCode's regular Build agent to write the custom code. It separates the summary logic from the command-line entry point and adds tests. The input has four checks. Three pass; docs fails. We want those totals and the failed name in a short, predictable report. This editing step uses OpenCode's normal tools.
 
-## s04 · 92–118s · Inspect before running
+Evidence: assets/captured/demo-project/main.kujo; assets/captured/demo-project/summary.kujo; assets/captured/session/full-session.cast.
 
-Voiceover: Next, Kujo checks the source and previews its formatting. These checks help us catch source problems, but they do not prove the program works. We still need to run it with the input we reviewed.
+## s04 · 67.0–84.0 seconds
 
-Screen: Kujo Build source diagnostics and formatting preview.
+Kujo Build takes over for verification. Source inspection passes for the entry point and its helper. The formatting preview proposes no changes. These are source checks. We still need to run the program and compare its output with the input.
 
-## s05 · 118–153s · Approve the exact run
+Evidence: receipt-71223449-cb27-4dfd-aba0-2471ca9b68cb; receipt-65d84347-4d20-41ee-8abe-732f4542a926; receipt-b48436a8-9250-4fa2-bd4d-075612ec4cba.
 
-Voiceover: The run preview lists the source and input files and records their digests. We inspect the command and approve that exact request. Kujo runs a copy of those reviewed files. We compare its output with our fixture: four checks, three passed, and one failed. The failed check should be docs.
+## s05 · 84.0–111.0 seconds
 
-Screen: Actual preview manifest, approval, result.
+The run preview includes both source files and the JSON input. We review the exact files, command, and effects before approving execution. The program then runs from that reviewed snapshot. The result matches: four checks, three passed, one failed, and docs named below. The snapshot records what ran; it is not an operating-system sandbox.
 
-## s06 · 153–185s · Test the behavior
+Evidence: receipt-fd37fd9f-b1ff-4fe4-ad07-17ee67835bf3; receipt-0260ba05-137f-4ebf-857e-176c282f9bb7; assets/captured/session/run-result.png.
 
-Voiceover: We use the same review process for the tests. The expected output is included before execution; the tool does not rewrite it to make a test pass. Here we compare the actual results with the cases we asked for. Any failure needs a fix and a fresh preview.
+## s06 · 111.0–134.0 seconds
 
-Screen: Actual test preview, approval and test output.
+Next, we preview and approve the interpreter tests, including their expected output. All five fixtures pass, with no expected-output updates. They cover mixed results, all-pass and empty inputs, plus malformed and invalid data through the summary helper. That gives us useful evidence, while leaving one gap for review.
 
-## s07 · 185–218s · Review the change
+Evidence: receipt-271d2009-83e1-421d-bfa8-06e1cb65d2c2; receipt-c4a36ca2-77ef-4bb8-ad12-ab81a6f21508; assets/captured/session/test-result.png.
 
-Voiceover: Now we switch to Review. PatchBrief summarizes the diff. ChangeBucket measures its size. These reports help us see whether a small task stayed small, and which files deserve a closer look. They support our review; they do not replace it.
+## s07 · 134.0–160.0 seconds
 
-Screen: Review specialist PatchBrief and ChangeBucket real output.
+Before review, I mark the new files for Git's diff view outside OpenCode. PatchBrief summarizes the change; ChangeBucket counts twelve files, one hundred twenty-four additions, and two deletions. The reviewer spots the gap: helper tests cover bad input, but no command-line test proves the error message and nonzero exit code. We keep that finding open.
 
-## s08 · 218–240s · Inspect retained evidence
+Evidence: assets/captured/session/operator-housekeeping.json; receipt-a707cd42-462b-43ba-a975-c70c948e26c3; receipt-05f58aee-80ac-43d9-bc63-8b816a7f8623; assets/captured/session/review-result.png.
 
-Voiceover: The receipts keep the command, output, and artifact locations together. We can return to the result after the chat moves on. This is Kujo OpenCode’s release candidate. The script, tests, and full recording accompany this walkthrough so you can inspect what happened.
+## s08 · 160.0–182.0 seconds
 
-Screen: Evidence history with actual receipt; close on finished source.
+Finally, we inspect the receipts for the successful run and tests. They retain the results and artifact locations. This is Kujo OpenCode's release candidate, shown in a real session: code written, checks run, and a remaining test gap made visible. The full recording preserves the workflow behind this walkthrough.
+
+Evidence: assets/captured/session/current.txt; assets/captured/kujo-home/receipts.jsonl.

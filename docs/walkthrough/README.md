@@ -1,11 +1,29 @@
-# OpenCode walkthrough production plan
+# OpenCode walkthrough
 
-Status: planned, not recorded. This is a production handoff, not product verification or a finished demo.
+A recorded OpenCode session builds a small Kujo status report, then inspects, runs, tests and reviews it. The [transcript](transcript.md) follows the actual results. The [demo source](demo/) includes all five interpreter fixtures and their expected output.
 
-The walkthrough will build a small Kujo status report in OpenCode and show source checks, reviewed execution, tests, change review and receipts. Preserve the full recording; derive the narrated edit from actual results. The [narration](transcript.md) is provisional and must match the capture before speech generation.
+The narrated edit runs **3:05**. It removes 61 seconds of idle holds from the first four-minute edit and adds a three-second Kujo/OpenCode glitch bumper at each end. The eight ElevenLabs v4 voice segments remain intact. Short pauses preserve time to read code, approvals and results.
 
-The first preflight on 2026-10-17 found less than 450 MiB free on the recording machine and no external volume. Recording and rendering await sufficient space (allow at least 5 GB for working media). HyperFrames 0.8.166, FFmpeg and ffprobe are installed. The skill refresh was stopped to avoid exhausting disk space; retry it before composition. No footage, speech or render was produced.
+## What the recording shows
 
-ElevenLabs authentication passed. The requested v4 model is documented by [ElevenLabs](https://elevenlabs.io/text-to-speech-api). A v4 speech request has not yet been tested. Use the existing account through the shared VideoOps adapter; confirm voice, current allowance and request bounds before generation. Do not substitute another model silently.
+OpenCode's regular Build agent writes the code. Kujo specialists use Scout and Scent for context, inspect and format the source, preview and approve execution, run five passing interpreter fixtures, then review the diff with PatchBrief and ChangeBucket. Receipts preserve the results. The operator marks new files for Git's diff view outside OpenCode; the edit discloses that step.
 
-Resume with the [capture prompts](demo-prompts.md) and [creative brief](creative-brief.md). Confirm the current release candidate, capture real tool results, reconcile the narration, generate v4 speech, edit, and run technical checks plus independent visual and audio review. No npm publication or video upload is part of this work.
+The report prints four checks, three passes and one failure: docs. Review finds a real remaining gap: helper tests cover invalid data, but a command-line negative test has not yet established the error text and nonzero exit code. This demonstration does not establish release readiness or replace final npm acceptance.
+
+## Production evidence
+
+The local production folder is `video-productions/opencode-kujo-walkthrough` beside `kujo-repos` in the Kujolang workspace. Large media stay outside this repository.
+
+- Narrated video: `output/draft.mp4`.
+- Full terminal recording: `assets/captured/session/full-session-realtime.mp4` (13:38.5).
+- Timestamped terminal capture: `assets/captured/session/full-session.cast`.
+- Downloadable source: `output/status-summary-demo.zip`.
+- Editable composition: `production/hyperframes/index.html`.
+- Exact cuts and revision record: `production/edit-plan.json` and `production/revision-record.json`.
+- Export checks and independent review: `review/`.
+
+The recording preserves actual OpenCode terminal output, replayed from a timestamped PTY capture and sampled at two frames per second. The edit labels shortened waits and the generated source-file card. It uses a developer-source installation of the release candidate with OpenCode 2.0.32 and the authorized ChatGPT provider; it is not a fresh installation of a published npm package.
+
+Brian narrates through ElevenLabs `eleven_v4`: eight synthesis requests used 1,069 included credits. The first returned valid audio but failed optional alignment validation; that same audio was recovered locally without another synthesis request. The other seven used standard speech generation. No replacement voice or model was used. The original Kujo logo, licensed font and bumper sting come from the user's earlier video assets.
+
+The export uses a streaming FFmpeg edit to keep disk use low. Its HyperFrames composition passed runtime, layout and contrast checks with one timeline-organization warning. Technical audio checks are separate from listening review; see the exact-candidate review record before publication. No video upload or npm publication was performed.

@@ -1,0 +1,19 @@
+{
+  "duration_seconds": 185,
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "fps": 30,
+  "video_sha256": "a12de40b7750741fd808b99d45bb6740c2155c9637a3088491351bfadf3a4a02",
+  "full_recording_sha256": "2ca4b1fb2de413de364f3227a5ca6f9186d30a925f883bfe88a1a2ebbc73e44b",
+  "source_capture_sha256": "71425c38d5cde4609404bd60830334fba00d238823d5f24f9580d5b9a8bbe3c9",
+  "technical_audio_passed": true,
+  "perceptual_audio_review": "REVIEW_INCOMPLETE",
+  "loudness_lufs": -16.19,
+  "true_peak_dbtp": -1.32,
+  "interpreter_fixtures_passed": 5,
+  "note": "Exact candidate review is retained in production review/; listening is not inferred from technical checks.",
+  "independent_visual_review": "No mandatory visual defects found in sampled decoded frames",
+  "candidate_review": "Technical PASS; perceptual REVIEW_INCOMPLETE because complete listening was unavailable"
+}
