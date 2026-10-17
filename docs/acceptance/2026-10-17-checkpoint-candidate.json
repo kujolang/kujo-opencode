@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-17",
+  "scope": "replacement archive fresh install and upgrade; specialist report acceptance infrastructure",
+  "fresh": {
+    "ok": true,
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-opencode-packed-RCJ83Q",
+    "tarball": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-opencode-packed-RCJ83Q/kujolang-kujo-opencode-0.2.0.tgz",
+    "registry_consumer": false,
+    "candidate_commit": "2f80e136a359e068321372b0bedb1ca23ce21934",
+    "candidate_sha256": "08bd3febbb186d47e96d7b5365482b2970c5a83c5e9db32126de7d4e28c87fd1",
+    "candidate_integrity": "sha512-ODpzXE+BRnwv9QeuGnuQGNJsQmlsmdIAA50c4xNXA2LNyMkM8HSxlWZ4rwBPl4ba/hOxPYE6UckVFOiNIFJJ/g==",
+    "upgrade": "0.1.0 -> 0.2.0",
+    "old_project_retained": true,
+    "mixed_version_verified": true,
+    "fresh_sources": 28,
+    "packed_mcp_tools": 10,
+    "starter_kinds": [
+      "script",
+      "agent",
+      "api",
+      "mcp"
+    ],
+    "starter_services_verified": true,
+    "agent_fixture_verified": true,
+    "session_runledger_verified": true,
+    "browser_launch_verified": true,
+    "browser_check_verified": true,
+    "knowledge_verified": true,
+    "fixture_workdirs_retained": true
+  },
+  "unit": {
+    "passed": 222,
+    "log": "/tmp/kujo-specialist-report-unit.log"
+  },
+  "report_gate": {
+    "commit": "fbdecb0",
+    "focused_tests": 21,
+    "live_report_verified": false
+  },
+  "release_prerequisites": {
+    "npm_auth": "E401",
+    "github_release_environments": [],
+    "github_run": 39006656688,
+    "conclusion": "failure",
+    "annotation": "Account payment/spending limit prevented job start"
+  },
+  "native_understand": "running; /tmp/kujo-checkpoint-understand.log; exec session 89906",
+  "production_parity_certified": false
+}
