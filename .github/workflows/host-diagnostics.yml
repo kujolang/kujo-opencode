@@ -1,0 +1,75 @@
+name: Windows candidate diagnostics
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_run_id:
+        required: true
+        type: string
+      candidate_sha256:
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+jobs:
+  windows:
+    runs-on: windows-2025
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Verify and download the immutable candidate
+        id: candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+          EXPECTED_SHA256: ${{ inputs.candidate_sha256 }}
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';import {execFileSync} from 'node:child_process';import {verifyCandidate} from './scripts/release-candidate.mjs';
+          const id=process.env.CANDIDATE_RUN_ID;assert.match(id,/^[1-9][0-9]*$/);assert.match(process.env.EXPECTED_SHA256,/^[a-f0-9]{64}$/);
+          const repo='kujolang/kujo-opencode';assert.equal(process.env.GITHUB_REPOSITORY,repo);
+          const run=JSON.parse(execFileSync('gh',['api',`repos/${repo}/actions/runs/${id}`],{encoding:'utf8'}));
+          assert.equal(run.path,'.github/workflows/release-candidate.yml');assert.equal(run.event,'workflow_dispatch');assert.equal(run.conclusion,'success');assert.equal(run.repository.full_name,repo);
+          execFileSync('gh',['run','download',id,'--repo',repo,'--name','kujo-candidate-'+run.head_sha,'--dir',process.env.RUNNER_TEMP+'/candidate'],{stdio:'inherit'});
+          const candidate=await verifyCandidate(process.env.RUNNER_TEMP+'/candidate');assert.equal(candidate.commit,run.head_sha);assert.equal(candidate.sha256,process.env.EXPECTED_SHA256);
+          console.log(JSON.stringify({candidate_commit:candidate.commit,sha256:candidate.sha256,harness_commit:process.env.GITHUB_SHA,diagnostic_only:true}));
+          JS
+      - name: Install the official host
+        id: host
+        run: npm run test:host-install -- 2.0.32 "$RUNNER_TEMP/host"
+      - name: Native permissions and management
+        id: native
+        env:
+          OPENCODE_BIN: ${{ steps.host.outputs.host }}
+          KUJO_TEST_RELEASE_DIR: ${{ runner.temp }}/candidate
+        run: npm run test:native
+      - name: Rendered onboarding and approvals
+        if: always() && steps.host.outcome == 'success' && steps.candidate.outcome == 'success'
+        id: rendered
+        run: |
+          python -m venv "$RUNNER_TEMP/tui-venv"
+          TUI_PYTHON="$RUNNER_TEMP/tui-venv/Scripts/python.exe"
+          "$TUI_PYTHON" -m pip install -r tests/requirements-tui.txt
+          "$TUI_PYTHON" tests/terminal-transport-test.py
+          "$TUI_PYTHON" tests/tui-terminal.py --candidate "$RUNNER_TEMP/candidate" --host "$RUNNER_TEMP/host/bin/opencode.exe" --ledger --columns 80 --rows 24
+      - name: Retain diagnostics and verification
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: windows-candidate-diagnostics-${{ github.sha }}
+          path: |
+            ${{ steps.native.outputs.fixture }}/host-failure.json
+            ${{ steps.native.outputs.fixture }}/verification.json
+            ${{ steps.rendered.outputs.fixture }}/*.txt
+            ${{ steps.rendered.outputs.fixture }}/verification.json
+            ${{ steps.rendered.outputs.fixture }}/candidate-verification.json
+            ${{ runner.temp }}/host/host-provenance.json
+          if-no-files-found: warn
+          retention-days: 30
