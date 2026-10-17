@@ -26,3 +26,26 @@ test('maintainer may approve their own release while human review stays required
  assert.equal(validateRelease(f).tag,'v0.2.0');
  f.environment.protection_rules[0].reviewers=[];assert.throws(()=>validateRelease(f));
 });
+
+test('publication metadata uses canonical GitHub endpoints, including repository root',async()=>{
+ const {readFile,mkdtemp,rm}=await import('node:fs/promises');
+ const {tmpdir}=await import('node:os');
+ const {join}=await import('node:path');
+ const {execFile}=await import('node:child_process');
+ const {promisify}=await import('node:util');
+ const action=await readFile(new URL('../.github/actions/verify-release/action.yml',import.meta.url),'utf8');
+ const source=action.split("node --input-type=module <<'JS'\n")[1].split('\n        JS')[0];
+ const directory=await mkdtemp(join(tmpdir(),'kujo-release-metadata-'));
+ const mock=`
+ const expected=['https://api.github.com/repos/kujolang/kujo-opencode','https://api.github.com/repos/kujolang/kujo-opencode/environments/npm-release','https://api.github.com/repos/kujolang/kujo-opencode/actions/runs/123'];
+ globalThis.fetch=async url=>{
+  if(!expected.includes(url))throw Error('Unexpected metadata URL: '+url);
+  return {ok:true,json:async()=>url===expected[0]?{private:false}:url===expected[1]?{name:'npm-release'}:{head_sha:'${sha}',conclusion:'success',path:'.github/workflows/release-candidate.yml'}};
+ };
+ `;
+ try{
+  await promisify(execFile)(process.execPath,['--input-type=module','-e',mock+source],{env:{...process.env,CANDIDATE_RUN_ID:'123',CANDIDATE_SHA256:digest,GITHUB_SHA:sha,GITHUB_REF:'refs/tags/v0.2.0',RUNNER_TEMP:directory,GITHUB_REPOSITORY:'kujolang/kujo-opencode',GH_TOKEN:'test-only',ACCEPTANCE_JSON:'{}'}});
+  const context=JSON.parse(await readFile(join(directory,'release-context.json'),'utf8'));
+  assert.equal(context.repo.private,false);assert.equal(context.environment.name,'npm-release');assert.equal(context.run.head_sha,sha);
+ }finally{await rm(directory,{recursive:true,force:true});}
+});
