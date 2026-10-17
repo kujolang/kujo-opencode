@@ -1,24 +1,38 @@
 # Kujo OpenCode
 
+[![Version](https://img.shields.io/badge/version-0.2.0-black)](package.json)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
+[![built with Kujo](https://img.shields.io/badge/built%20with-Kujo-white.svg)](https://github.com/kujolang/kujo)
+[![OpenCode](https://img.shields.io/badge/OpenCode-2-black)](https://opencode.ai/v2/docs/)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-lightgrey)](https://nodejs.org/)
+
 Run Kujo tools inside OpenCode 2. Inspect a repository, build and test Kujo programs,
 review changes, check a browser workflow, and gather release evidence. OpenCode
 handles your model account; Kujo runs tools locally and records their results.
 
-**0.2.0 is a release candidate. npm publication is pending.** All six specialists
-passed on macOS with OpenCode 2.0.32 and a connected ChatGPT account. The full
-platform and release checks remain open. See [release readiness](docs/PRODUCTION-READINESS.md).
+All six specialists have passed with a connected ChatGPT account on macOS.
+Native and rendered host checks passed on Linux, macOS and Windows with OpenCode
+2.0.31 and 2.0.32. Those results have separate archive scopes; see
+[release readiness](docs/PRODUCTION-READINESS.md) for the exact evidence and
+remaining publication gates.
 
 ## Install
 
 You need Node.js 20+, npm, Git and [OpenCode 2](https://opencode.ai/v2/docs/).
-From your project directory, install a reviewed candidate archive:
+For a published version, install from npm, then configure your project:
 
 ```sh
-npm install --global /path/to/kujolang-kujo-opencode-0.2.0.tgz
+npm install --global @kujolang/kujo-opencode@0.2.0
 kujo-opencode setup
 kujo-opencode doctor
 kujo-opencode demo
 opencode
+```
+
+Check the [release page](https://github.com/kujolang/kujo-opencode/releases) before using the npm command. Until 0.2.0 is published, install a reviewed archive instead:
+
+```sh
+npm install --global /path/to/kujolang-kujo-opencode-0.2.0.tgz
 ```
 
 Setup downloads 28 pinned repositories, installs the Kujo runtime and adds the
@@ -82,7 +96,7 @@ before retrying.
 
 ## Maintain your installation
 
-Install a newer archive, then run `kujo-opencode update` in each project and
+Install the newer npm version or reviewed archive, then run `kujo-opencode update` in each project and
 restart OpenCode. Profiles, overrides and receipts survive updates. Setup merges
 existing JSON/JSONC configuration and preserves other providers and servers.
 

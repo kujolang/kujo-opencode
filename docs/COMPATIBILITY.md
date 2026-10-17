@@ -2,17 +2,18 @@
 
 Kujo OpenCode 0.2.0 is still undergoing release acceptance. Public npm publication
 is pending. Use the tarball installation in the README; do not assume an npm
-package or a green cross-platform certification exists.
+package exists. Native and rendered cross-platform checks have passed for the
+[recorded Windows candidate](acceptance/2026-10-17-windows.md).
 
 ## Compatibility
 
 | Component | Requirement and current evidence |
 | --- | --- |
 | Node.js | 20 or newer; package declares this minimum |
-| OpenCode | Version 2 required; local host checks use 2.0.31 and 2.0.32; the full matrix is pending |
+| OpenCode | Version 2 required; native and rendered host checks passed on 2.0.31 and 2.0.32 across three OSes |
 | OpenCode 1 | Unsupported |
 | macOS | Local installation, upgrade and terminal workflows verified on macOS 26.6.2 x86_64 |
-| Linux and Windows | Node 20/22 package CI passed; complete native/rendered platform acceptance is pending |
+| Linux and Windows | Node 20/22 package CI and exact-candidate native/rendered checks passed; live-model release evidence has a separate scope |
 | Models | OpenCode owns authentication, availability and billing. Kujo does not proxy inference or choose a paid fallback |
 | Kujo runtime | Adapter installs its pinned runtime; no global Kujo installation required |
 | Browser checks | Optional Chromium installation and operating-system dependencies required |
@@ -27,7 +28,8 @@ free GLM and DeepSeek paths returned HTTP 403 for restricted specialists. Changi
 a Kujo profile does not repair provider authorization. Use an entitled provider;
 never weaken the specialist's permissions to work around an access refusal.
 
-The complete minimum/latest host and platform matrix remains pending. A new host
+The recorded minimum/latest native and rendered matrix passed. This does not
+certify all live-model workflows or a different package archive. A new host
 release needs discovery, permission, terminal and workflow checks before we claim
 support.
 

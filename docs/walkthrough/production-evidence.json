@@ -29,5 +29,6 @@
   "voice": "Siren",
   "voice_id": "eXpIbVcVbLo8ZJQDlDnl",
   "model": "eleven_v4",
-  "script_revision": "342-word conversational rewrite; all nine segments regenerated at user request"
+  "script_revision": "342-word conversational rewrite; all nine segments regenerated at user request",
+  "user_approval": "Approved for use by user on 2026-10-17; review/user-approval.json"
 }

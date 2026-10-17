@@ -53,7 +53,7 @@ complete release contract yet.
 | Specialists | Understand, Build, Review, Browser, Workflow and Ship passed with ChatGPT | Revalidate affected behavior after candidate changes; retain release evidence |
 | Capabilities | Canonical source/test, starters, Agents SDK, knowledge, browser and service workflows | Confirm the comparison against the final archive and declared platform limits |
 | Recovery | Local interruption, rollback, concurrent setup, mixed versions, repair and uninstall | Supported-platform acceptance for the final archive |
-| CI and compatibility | Fresh-install and Node 20/22 package jobs passed on Linux, macOS and Windows ([run 39044492319](https://github.com/kujolang/kujo-opencode/actions/runs/39044492319)) | Run the full minimum/latest host matrix |
+| CI and compatibility | Fresh-install and Node 20/22 package jobs passed on Linux, macOS and Windows ([run 39044492319](https://github.com/kujolang/kujo-opencode/actions/runs/39044492319)) | Retain the [passing native/rendered matrix](acceptance/2026-10-17-windows.md) for its exact archive; revalidate the final archive |
 | Publication | Public repository; protected `npm-release` environment and publication workflow | npm publisher setup, reviewed candidate, matching tag, provenance and registry consumer checks |
 
 The release environment requires `robertdevore` to review and prevents self-review.
@@ -66,15 +66,16 @@ it does not establish that those free-provider requests now work.
 
 ## Before promotion
 
-A preview video may show the verified macOS + ChatGPT workflow and identify it as
-a candidate. The launch video should use the published npm package after its
-consumer checks pass. Show setup, one approved operation and its receipt. Keep
-platform, provider and optional-service claims within the recorded evidence.
+The user approved the 145-second Siren walkthrough on 2026-10-17. Its recorded
+workflow, approvals and receipts remain valid evidence for the demonstrated
+installation. Before promotion, verify the flow against the published npm package
+and ensure the installation link works. Keep platform, provider and optional-service
+claims within the recorded evidence. Video approval does not approve publication.
 
 ## Evidence index and scope
 
 - [Host matrix](HOST-MATRIX.md): exact archive, official v2 hosts, native versus
-  rendered coverage and remaining Windows acceptance.
+  rendered coverage and completed Windows acceptance.
 - [Capability comparison](CAPABILITY-PARITY.md): CMD/Pi/Paperclip source revisions
   and task-by-task comparison. Earlier remaining-work descriptions must be read
   with the newer evidence in the handoff; no tool count establishes parity.

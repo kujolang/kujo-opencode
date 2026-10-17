@@ -1,9 +1,8 @@
 # Exact-candidate host checks
 
-The `Exact candidate host matrix` workflow is prepared for Linux, macOS and
-Windows. It uses 2.0.31 as its minimum test target and resolves the latest version
-of the official `@opencode/cli` v2 package once per run. These are test targets,
-not a declaration that the complete matrix has passed. The Linux runner is
+The `Exact candidate host matrix` workflow passed on Linux, macOS and Windows
+for the [recorded candidate](acceptance/2026-10-17-windows.md). It uses 2.0.31 as its minimum test target and resolves the latest version
+of the official `@opencode/cli` v2 package once per run. These are recorded test targets; a newer host or archive needs its own evidence. The Linux runner is
 glibc Ubuntu; musl distributions are outside this matrix. The general GitHub latest
 release and the `opencode-ai` npm package can still refer to v1; the workflow
 must not silently test that different host generation.
@@ -56,12 +55,11 @@ input, early exit and cleanup before the OpenCode journey. Windows invokes npm's
 JavaScript entrypoint through node, avoiding shell interpolation of fixture paths.
 The transport follows the upstream [pywinpty 3.0.5 API](https://github.com/andfoy/pywinpty/blob/v3.0.5/winpty/ptyprocess.py).
 
-Windows rendered-terminal acceptance remains open. All six specialists passed
-locally with ChatGPT on macOS/OpenCode 2.0.32; that result does not prove Windows
-support. Adding ConPTY transport and a CI step does not prove Windows passed. Local POSIX tests cannot close that requirement. These records are
-required in addition to native API checks before the release report can mark the
-full platform requirement passed. CI now runs in the public repository. A job that never starts supplies no
-compatibility evidence.
+Windows rendered-terminal acceptance passed with ConPTY, alongside Linux and
+macOS, in [run 39051805077](https://github.com/kujolang/kujo-opencode/actions/runs/39051805077).
+These jobs made no model calls. Six-specialist ChatGPT acceptance is recorded
+separately and used an earlier archive. Final release approval must bind the
+required native, rendered and live-model evidence to the chosen archive.
 
 For local rendered acceptance after installing tests/requirements-tui.txt in
 a private Python environment (Windows requires its conditional pywinpty wheel):

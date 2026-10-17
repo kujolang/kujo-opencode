@@ -21,8 +21,9 @@ for installation, upgrade and real OpenCode checks against one archive.
 
 Windows path and npm fixes passed the Node 20/22 Linux/macOS/Windows matrix and
 fresh installation in [run 39044492319](https://github.com/kujolang/kujo-opencode/actions/runs/39044492319).
-The local E2E gate also passed. These checks do not include a complete rendered
-platform matrix or a public-registry install.
+The local E2E gate also passed. The later [Windows acceptance](acceptance/2026-10-17-windows.md)
+adds the complete native/rendered host matrix on three OSes. A public-registry
+install and final-archive live-model acceptance remain separate gates.
 
 ## Historical baseline
 
