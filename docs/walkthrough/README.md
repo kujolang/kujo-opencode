@@ -2,7 +2,7 @@
 
 A recorded OpenCode session builds a small Kujo status report, then inspects, runs, tests and reviews it. The [transcript](transcript.md) follows the actual results. The [demo source](demo/) includes all five interpreter fixtures and their expected output.
 
-The narrated edit runs **3:07**. It removes 61 seconds of idle holds from the first four-minute edit and adds a three-second Kujo/OpenCode glitch intro and a five-second outro. The eight original ElevenLabs v4 voice segments remain intact. The intro reads “Trust at the Speed of AI.” The outro shows and speaks “Kujo, trust at the speed of AI.” Both bumpers use the official SVG wordmark from [OpenCode’s brand assets](https://opencode.ai/brand). Short pauses preserve time to read code, approvals and results.
+The narrated edit runs **3:07**. It removes 61 seconds of idle holds from the first four-minute edit and adds a three-second Kujo/OpenCode glitch intro and a five-second outro. The eight original ElevenLabs v4 voice segments remain intact. The intro reads “Trust at the Speed of AI.” The outro shows and speaks “Kujo, trust at the speed of AI.” The bumper footers are removed from the posting copy. Both bumpers use the official SVG wordmark from [OpenCode’s brand assets](https://opencode.ai/brand). Short pauses preserve time to read code, approvals and results.
 
 ## What the recording shows
 
