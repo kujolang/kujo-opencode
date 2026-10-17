@@ -166,5 +166,6 @@
       "title": "Kujo \u00d7 OpenCode outro"
     }
   ],
-  "timing_authority": "production/edit-plan.json"
+  "timing_authority": "production/edit-plan.json",
+  "duration_seconds": 187
 }

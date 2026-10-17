@@ -2,7 +2,7 @@
 
 Written with the Orwell skill. Voice: Brian; use the producer-confirmed ElevenLabs model. “Koo-joe” is a speech-only pronunciation spelling; display the brand as **Kujo**. Narration is grounded in the receipts below, not the original predicted outcomes. No music under narration; the original Kujo sting plays in the intro and outro.
 
-The revised walkthrough lasts 185 seconds: a 3-second branded intro, 179 seconds of recorded workflow, and a 3-second branded outro. Speech is unchanged; idle tails are shortened while approvals and results remain visible. Label shortened waiting, retain approvals, and disclose the operator's Git preparation. Do not label this script as release-ready: its CLI negative exit-code coverage remains open.
+The revised walkthrough lasts 187 seconds: a 3-second branded intro, 179 seconds of recorded workflow, and a 5-second branded outro. The eight walkthrough voice segments are unchanged; a new spoken send-off closes the outro. Idle tails are shortened while approvals and results remain visible. Label shortened waiting, retain approvals, and disclose the operator's Git preparation. Do not label this script as release-ready: its CLI negative exit-code coverage remains open.
 
 ## s01 · 3–19 seconds
 
@@ -51,3 +51,9 @@ Evidence: assets/captured/session/operator-housekeeping.json; receipt-a707cd42-4
 Finally, we inspect the receipts for the successful run and tests. They retain the results and artifact locations. This is Kujo OpenCode's release candidate, shown in a real session: code written, checks run, and a remaining test gap made visible. The full recording preserves the workflow behind this walkthrough.
 
 Evidence: assets/captured/session/current.txt; assets/captured/kujo-home/receipts.jsonl.
+
+## Spoken outro · 183–186.36 seconds
+
+Kujo, trust at the speed of AI.
+
+Evidence: assets/generated/outro-delivery.json; media/narration-outro-v4-audio-001/result.json. Brian, ElevenLabs V4. Screen text matches this line; the speech input uses the established Koo-joe pronunciation spelling.

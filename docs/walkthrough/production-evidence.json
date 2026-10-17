@@ -1,19 +1,27 @@
 {
-  "duration_seconds": 185,
+  "duration_seconds": 187,
   "dimensions": [
     1920,
     1080
   ],
   "fps": 30,
-  "video_sha256": "a12de40b7750741fd808b99d45bb6740c2155c9637a3088491351bfadf3a4a02",
+  "video_sha256": "5bf47457b55432b531cdf57efe4e57b58d3ffe902d3e825703657094a2acb736",
   "full_recording_sha256": "2ca4b1fb2de413de364f3227a5ca6f9186d30a925f883bfe88a1a2ebbc73e44b",
   "source_capture_sha256": "71425c38d5cde4609404bd60830334fba00d238823d5f24f9580d5b9a8bbe3c9",
   "technical_audio_passed": true,
   "perceptual_audio_review": "REVIEW_INCOMPLETE",
-  "loudness_lufs": -16.19,
+  "loudness_lufs": -16.21,
   "true_peak_dbtp": -1.32,
   "interpreter_fixtures_passed": 5,
   "note": "Exact candidate review is retained in production review/; listening is not inferred from technical checks.",
   "independent_visual_review": "No mandatory visual defects found in sampled decoded frames",
-  "candidate_review": "Technical PASS; perceptual REVIEW_INCOMPLETE because complete listening was unavailable"
+  "candidate_review": "Technical PASS; perceptual REVIEW_INCOMPLETE because complete listening was unavailable",
+  "phone_video_sha256": "9b55aa367607bab195ba63d9b075745f93f0b2ea60e201daf12a98158b8d48ab",
+  "phone_video_bytes": 6684249,
+  "observed_voice_credits": 1084,
+  "intro_tagline": "Trust at the Speed of AI",
+  "outro_tagline": "Kujo, trust at the speed of AI.",
+  "outro_voice_seconds": 3.36,
+  "opencode_logo_source": "https://opencode.ai/brand",
+  "opencode_svg_sha256": "63577a14ab51a97bda2a1d4bcf751ad151d0fe58caab0f62fcba9816791b525f"
 }
