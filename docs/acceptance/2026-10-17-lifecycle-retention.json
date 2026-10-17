@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-17",
+  "candidate_commit": "2f80e136a359e068321372b0bedb1ca23ce21934",
+  "candidate_sha256": "08bd3febbb186d47e96d7b5365482b2970c5a83c5e9db32126de7d4e28c87fd1",
+  "host": "OpenCode 2.0.31",
+  "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-u7TdxC",
+  "log": "/tmp/kujo-checkpoint-lifecycle-minimum.log",
+  "result": "failed",
+  "failure": "9 records discarded during canonical Watchdog outage; no full lifecycle pass",
+  "queues": [
+    {
+      "file": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-u7TdxC/kujo/lifecycle/ca31cdd4446c82d884b0266e1a3ede451a8d2a859cc1884d3995a924ebeea009/queue.json",
+      "pending": 0,
+      "delivered": 36,
+      "discarded": 9,
+      "last_code": "http_200"
+    }
+  ],
+  "failure_guard": {
+    "session_id": "ses_eb74a7c85ffe2z8CqOn9osfQee",
+    "model": "opencode/glm-5.3-flash-free",
+    "agent": "build",
+    "interventions": 1,
+    "notification": true,
+    "telemetry_enabled": false,
+    "failed_receipts": [
+      "receipt-c28991d3-1484-46c9-8cf5-82cdfdc2fdc1",
+      "receipt-0adc377e-b87b-4578-8230-a4da23ce227d",
+      "receipt-42b245d5-51f6-49a4-a386-2bbc202c9efb"
+    ],
+    "approval_granted": false
+  },
+  "candidate_superseded_by_retention_fix": true,
+  "fixed_candidate_live_verification": false,
+  "local_fix_verification": {
+    "unit_passed": 228,
+    "unit_log": "/tmp/kujo-retained-lifecycle-unit.log",
+    "focused_passed": 62,
+    "ui_after_copy_change_passed": 43,
+    "e2e_passed": true,
+    "e2e_log": "/tmp/kujo-retained-lifecycle-e2e.log",
+    "canonical_watchdog": {
+      "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-watchdog-lifecycle-23q4Q2",
+      "canonical_records": 1,
+      "duplicate_suppressed": true,
+      "exhausted_acknowledgements_retained": true,
+      "explicit_retry_rearmed": 1,
+      "configured_read": true,
+      "read_auth_rejection": true
+    }
+  }
+}

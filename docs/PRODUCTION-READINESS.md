@@ -36,11 +36,12 @@ proxy, automatic approval, hidden network telemetry, or duplicated product logic
 
 ## Current acceptance status — 2026-10-17
 
-The seven outcomes above remain open. The Dispatch checkpoint correction changes
-the production payload after candidate `713fbe4`; its earlier exact-archive
-records remain historical evidence and cannot certify the next candidate.
-Build a replacement after remaining product changes and repeat the applicable
-exact-archive acceptance gates.
+The seven outcomes above remain open. Live lifecycle acceptance on candidate
+`2f80e13` exposed nine discarded records during a Watchdog outage. The retention
+correction preserves exhausted deliveries for explicit approved retry and changes
+the production payload. Earlier candidate passes remain historical evidence;
+rebuild the candidate and repeat applicable exact-archive gates after verifying
+the correction. See [the failure record](acceptance/2026-10-17-lifecycle-retention.json).
 
 Implementation and local acceptance are
 substantial; complete production parity is not yet certified. The table separates
@@ -96,7 +97,8 @@ are dated observations, not permanent claims about provider or account state.
 - [Historical checkpoints](ACCEPTANCE-HISTORY.md): chronological implementation
   evidence. Historical successes apply only to their recorded bytes and scope.
 
-The currently recorded packed baseline is commit 4feac59, archive SHA-256
-`e8937c2c1bd9971dbac327e171e940cc02ae794529e67229b1a20e1163a0ee25`.
-Subsequent source and documentation changes require a new archive. Never combine
-separate historical successes into a claim that an untested final package passed.
+The last tested archive is candidate `2f80e13`, SHA-256
+`08bd3febbb186d47e96d7b5365482b2970c5a83c5e9db32126de7d4e28c87fd1`.
+It passed fresh-install/upgrade and macOS native/rendered manual approval checks
+on OpenCode 2.0.31/2.0.32, but failed the extended lifecycle outage check. The
+retention fix requires a new archive. No current candidate has full acceptance.
