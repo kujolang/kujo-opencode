@@ -1,0 +1,172 @@
+{
+  "schema": "videoops.asset-requirements-plan/v1",
+  "requirements": [
+    {
+      "id": "capture-main",
+      "shot_ids": [
+        "s01",
+        "s02",
+        "s03",
+        "s04",
+        "s05",
+        "s06",
+        "s07",
+        "s08"
+      ],
+      "required": true,
+      "intent": "Continuous genuine OpenCode terminal recording of demo-prompts.md",
+      "source_priority": [
+        "first-party capture"
+      ],
+      "resolution": "1920x1080",
+      "duration": "entire real session; edit selects 240 seconds with marked time compression",
+      "status": "BLOCKED",
+      "blocker": "Producer must resolve disk headroom before capture",
+      "authenticity": "Actual UI, real tool receipts and approvals; no synthetic success frames",
+      "acceptance": "Readable text; raw session retained; no secrets; baseline and session IDs documented; actual results mapped to shots"
+    },
+    {
+      "id": "voice-s01",
+      "shot_ids": [
+        "s01"
+      ],
+      "required": true,
+      "intent": "We\u2019ll use OpenCode to build a small Kujo script. It reads four check results and gives us a short report. Then we\u2019ll inspect the code, run it, test it, and review what changed.",
+      "language": "en",
+      "source_priority": [
+        "ElevenLabs requested V4 speech after availability verification"
+      ],
+      "duration_seconds": 15,
+      "alignment": "word or character timestamps preferred; explicit unavailable if absent",
+      "status": "BLOCKED",
+      "blocker": "Capture-dependent final transcript and exact requested model/voice must be resolved",
+      "acceptance": "Natural pacing, accurate tool names, no invented PASS, preserved original audio and provider receipt"
+    },
+    {
+      "id": "voice-s02",
+      "shot_ids": [
+        "s02"
+      ],
+      "required": true,
+      "intent": "First, I ask Scout to inspect the project. The input has a name and a status for each check. Three pass and one fails. Those numbers give us a result we can verify ourselves. Scout writes a local report, so we review that request before it runs.",
+      "language": "en",
+      "source_priority": [
+        "ElevenLabs requested V4 speech after availability verification"
+      ],
+      "duration_seconds": 27,
+      "alignment": "word or character timestamps preferred; explicit unavailable if absent",
+      "status": "BLOCKED",
+      "blocker": "Capture-dependent final transcript and exact requested model/voice must be resolved",
+      "acceptance": "Natural pacing, accurate tool names, no invented PASS, preserved original audio and provider receipt"
+    },
+    {
+      "id": "voice-s03",
+      "shot_ids": [
+        "s03"
+      ],
+      "required": true,
+      "intent": "Now I switch to OpenCode\u2019s regular Build agent to write the program. Kujo\u2019s Build specialist has a narrower job: it checks source and runs reviewed files. The program counts the results and lists failed checks in order. We also ask for tests: mixed results, all checks passing, an empty list, and bad input.",
+      "language": "en",
+      "source_priority": [
+        "ElevenLabs requested V4 speech after availability verification"
+      ],
+      "duration_seconds": 50,
+      "alignment": "word or character timestamps preferred; explicit unavailable if absent",
+      "status": "BLOCKED",
+      "blocker": "Capture-dependent final transcript and exact requested model/voice must be resolved",
+      "acceptance": "Natural pacing, accurate tool names, no invented PASS, preserved original audio and provider receipt"
+    },
+    {
+      "id": "voice-s04",
+      "shot_ids": [
+        "s04"
+      ],
+      "required": true,
+      "intent": "Next, Kujo checks the source and previews its formatting. These checks help us catch source problems, but they do not prove the program works. We still need to run it with the input we reviewed.",
+      "language": "en",
+      "source_priority": [
+        "ElevenLabs requested V4 speech after availability verification"
+      ],
+      "duration_seconds": 26,
+      "alignment": "word or character timestamps preferred; explicit unavailable if absent",
+      "status": "BLOCKED",
+      "blocker": "Capture-dependent final transcript and exact requested model/voice must be resolved",
+      "acceptance": "Natural pacing, accurate tool names, no invented PASS, preserved original audio and provider receipt"
+    },
+    {
+      "id": "voice-s05",
+      "shot_ids": [
+        "s05"
+      ],
+      "required": true,
+      "intent": "The run preview lists the source and input files and records their digests. We inspect the command and approve that exact request. Kujo runs a copy of those reviewed files. We compare its output with our fixture: four checks, three passed, and one failed. The failed check should be docs.",
+      "language": "en",
+      "source_priority": [
+        "ElevenLabs requested V4 speech after availability verification"
+      ],
+      "duration_seconds": 35,
+      "alignment": "word or character timestamps preferred; explicit unavailable if absent",
+      "status": "BLOCKED",
+      "blocker": "Capture-dependent final transcript and exact requested model/voice must be resolved",
+      "acceptance": "Natural pacing, accurate tool names, no invented PASS, preserved original audio and provider receipt"
+    },
+    {
+      "id": "voice-s06",
+      "shot_ids": [
+        "s06"
+      ],
+      "required": true,
+      "intent": "We use the same review process for the tests. The expected output is included before execution; the tool does not rewrite it to make a test pass. Here we compare the actual results with the cases we asked for. Any failure needs a fix and a fresh preview.",
+      "language": "en",
+      "source_priority": [
+        "ElevenLabs requested V4 speech after availability verification"
+      ],
+      "duration_seconds": 32,
+      "alignment": "word or character timestamps preferred; explicit unavailable if absent",
+      "status": "BLOCKED",
+      "blocker": "Capture-dependent final transcript and exact requested model/voice must be resolved",
+      "acceptance": "Natural pacing, accurate tool names, no invented PASS, preserved original audio and provider receipt"
+    },
+    {
+      "id": "voice-s07",
+      "shot_ids": [
+        "s07"
+      ],
+      "required": true,
+      "intent": "Now we switch to Review. PatchBrief summarizes the diff. ChangeBucket measures its size. These reports help us see whether a small task stayed small, and which files deserve a closer look. They support our review; they do not replace it.",
+      "language": "en",
+      "source_priority": [
+        "ElevenLabs requested V4 speech after availability verification"
+      ],
+      "duration_seconds": 33,
+      "alignment": "word or character timestamps preferred; explicit unavailable if absent",
+      "status": "BLOCKED",
+      "blocker": "Capture-dependent final transcript and exact requested model/voice must be resolved",
+      "acceptance": "Natural pacing, accurate tool names, no invented PASS, preserved original audio and provider receipt"
+    },
+    {
+      "id": "voice-s08",
+      "shot_ids": [
+        "s08"
+      ],
+      "required": true,
+      "intent": "The receipts keep the command, output, and artifact locations together. We can return to the result after the chat moves on. This is Kujo OpenCode\u2019s release candidate. The script, tests, and full recording accompany this walkthrough so you can inspect what happened.",
+      "language": "en",
+      "source_priority": [
+        "ElevenLabs requested V4 speech after availability verification"
+      ],
+      "duration_seconds": 22,
+      "alignment": "word or character timestamps preferred; explicit unavailable if absent",
+      "status": "BLOCKED",
+      "blocker": "Capture-dependent final transcript and exact requested model/voice must be resolved",
+      "acceptance": "Natural pacing, accurate tool names, no invented PASS, preserved original audio and provider receipt"
+    }
+  ],
+  "not_required": [
+    "music",
+    "sound effects",
+    "stock imagery",
+    "AI-generated video"
+  ],
+  "rights": "first-party capture and authorized generated voice; Scout must record actual license and provider usage terms"
+}

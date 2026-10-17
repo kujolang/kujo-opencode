@@ -1,0 +1,156 @@
+{
+  "shots": [
+    {
+      "id": "s01",
+      "start": 0,
+      "end": 15,
+      "duration": 15,
+      "purpose": "The task",
+      "visual": "Live project and task fixture",
+      "voiceover": "We\u2019ll use OpenCode to build a small Kujo script. It reads four check results and gives us a short report. Then we\u2019ll inspect the code, run it, test it, and review what changed.",
+      "audio": "Narration after capture validation; otherwise silence",
+      "onscreen_text": "Kujo OpenCode 0.2.0 release candidate",
+      "asset_requirement_ids": [
+        "capture-main",
+        "voice-s01"
+      ],
+      "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
+      "transition_in": "hard cut",
+      "transition_out": "hard cut",
+      "priority": "required"
+    },
+    {
+      "id": "s02",
+      "start": 15,
+      "end": 42,
+      "duration": 27,
+      "purpose": "Understand the input",
+      "visual": "Kujo menu, Understand, real Scout request and approval",
+      "voiceover": "First, I ask Scout to inspect the project. The input has a name and a status for each check. Three pass and one fails. Those numbers give us a result we can verify ourselves. Scout writes a local report, so we review that request before it runs.",
+      "audio": "Narration after capture validation; otherwise silence",
+      "onscreen_text": null,
+      "asset_requirement_ids": [
+        "capture-main",
+        "voice-s02"
+      ],
+      "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
+      "transition_in": "hard cut",
+      "transition_out": "hard cut",
+      "priority": "required"
+    },
+    {
+      "id": "s03",
+      "start": 42,
+      "end": 92,
+      "duration": 50,
+      "purpose": "Write the custom program",
+      "visual": "Ordinary OpenCode Build prompt and actual edits; code visible",
+      "voiceover": "Now I switch to OpenCode\u2019s regular Build agent to write the program. Kujo\u2019s Build specialist has a narrower job: it checks source and runs reviewed files. The program counts the results and lists failed checks in order. We also ask for tests: mixed results, all checks passing, an empty list, and bad input.",
+      "audio": "Narration after capture validation; otherwise silence",
+      "onscreen_text": null,
+      "asset_requirement_ids": [
+        "capture-main",
+        "voice-s03"
+      ],
+      "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
+      "transition_in": "hard cut",
+      "transition_out": "hard cut",
+      "priority": "required"
+    },
+    {
+      "id": "s04",
+      "start": 92,
+      "end": 118,
+      "duration": 26,
+      "purpose": "Inspect before running",
+      "visual": "Kujo Build source diagnostics and formatting preview",
+      "voiceover": "Next, Kujo checks the source and previews its formatting. These checks help us catch source problems, but they do not prove the program works. We still need to run it with the input we reviewed.",
+      "audio": "Narration after capture validation; otherwise silence",
+      "onscreen_text": null,
+      "asset_requirement_ids": [
+        "capture-main",
+        "voice-s04"
+      ],
+      "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
+      "transition_in": "hard cut",
+      "transition_out": "hard cut",
+      "priority": "required"
+    },
+    {
+      "id": "s05",
+      "start": 118,
+      "end": 153,
+      "duration": 35,
+      "purpose": "Approve the exact run",
+      "visual": "Actual preview manifest, approval, result",
+      "voiceover": "The run preview lists the source and input files and records their digests. We inspect the command and approve that exact request. Kujo runs a copy of those reviewed files. We compare its output with our fixture: four checks, three passed, and one failed. The failed check should be docs.",
+      "audio": "Narration after capture validation; otherwise silence",
+      "onscreen_text": null,
+      "asset_requirement_ids": [
+        "capture-main",
+        "voice-s05"
+      ],
+      "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
+      "transition_in": "hard cut",
+      "transition_out": "hard cut",
+      "priority": "required"
+    },
+    {
+      "id": "s06",
+      "start": 153,
+      "end": 185,
+      "duration": 32,
+      "purpose": "Test the behavior",
+      "visual": "Actual test preview, approval and test output",
+      "voiceover": "We use the same review process for the tests. The expected output is included before execution; the tool does not rewrite it to make a test pass. Here we compare the actual results with the cases we asked for. Any failure needs a fix and a fresh preview.",
+      "audio": "Narration after capture validation; otherwise silence",
+      "onscreen_text": null,
+      "asset_requirement_ids": [
+        "capture-main",
+        "voice-s06"
+      ],
+      "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
+      "transition_in": "hard cut",
+      "transition_out": "hard cut",
+      "priority": "required"
+    },
+    {
+      "id": "s07",
+      "start": 185,
+      "end": 218,
+      "duration": 33,
+      "purpose": "Review the change",
+      "visual": "Review specialist PatchBrief and ChangeBucket real output",
+      "voiceover": "Now we switch to Review. PatchBrief summarizes the diff. ChangeBucket measures its size. These reports help us see whether a small task stayed small, and which files deserve a closer look. They support our review; they do not replace it.",
+      "audio": "Narration after capture validation; otherwise silence",
+      "onscreen_text": null,
+      "asset_requirement_ids": [
+        "capture-main",
+        "voice-s07"
+      ],
+      "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
+      "transition_in": "hard cut",
+      "transition_out": "hard cut",
+      "priority": "required"
+    },
+    {
+      "id": "s08",
+      "start": 218,
+      "end": 240,
+      "duration": 22,
+      "purpose": "Inspect retained evidence",
+      "visual": "Evidence history with actual receipt; close on finished source",
+      "voiceover": "The receipts keep the command, output, and artifact locations together. We can return to the result after the chat moves on. This is Kujo OpenCode\u2019s release candidate. The script, tests, and full recording accompany this walkthrough so you can inspect what happened.",
+      "audio": "Narration after capture validation; otherwise silence",
+      "onscreen_text": "Kujo OpenCode 0.2.0 release candidate",
+      "asset_requirement_ids": [
+        "capture-main",
+        "voice-s08"
+      ],
+      "motion": "Static readable terminal; crop/punch-in only to actual UI detail",
+      "transition_in": "hard cut",
+      "transition_out": "hard cut",
+      "priority": "required"
+    }
+  ]
+}
