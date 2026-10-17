@@ -56,9 +56,9 @@ complete release contract yet.
 | CI and compatibility | Fresh-install and Node 20/22 package jobs passed on Linux, macOS and Windows ([run 39044492319](https://github.com/kujolang/kujo-opencode/actions/runs/39044492319)) | Retain the [passing native/rendered matrix](acceptance/2026-10-17-windows.md) for its exact archive; revalidate the final archive |
 | Publication | Public repository; protected `npm-release` environment and publication workflow | npm publisher setup, reviewed candidate, matching tag, provenance and registry consumer checks |
 
-The release environment requires `robertdevore` to review and prevents self-review.
-A run initiated by that account needs another eligible reviewer, or a different
-maintainer must initiate the run. Do not disable the protection to publish.
+The release environment requires `robertdevore` to review. On 2026-10-17 the
+maintainer authorized self-review, so that account may dispatch and approve its
+own run. Human approval remains required and administrator bypass stays disabled.
 
 The free-model restriction remains open: scoped requests to the requested free
 providers returned HTTP 403. ChatGPT acceptance supplies a working provider path;

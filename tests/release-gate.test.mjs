@@ -8,7 +8,7 @@ function fixture(){
 }
 test('release gate binds source, archive, version tag and reviewed evidence inventory',()=>{
  assert.equal(validateRelease(fixture()).tag,'v0.2.0');
- for(const mutate of [f=>f.repo.private=true,f=>f.environment.protection_rules=[],f=>f.environment.protection_rules[0].prevent_self_review=false,f=>f.run.conclusion='failure',f=>f.run.repository.full_name='foreign/repo',f=>f.run.path='untrusted.yml',f=>f.run.event='pull_request',f=>f.run.id=124,f=>f.candidate.commit='c'.repeat(40),f=>f.ref='refs/heads/main',f=>f.digest='d'.repeat(64),f=>f.report.sha256='e'.repeat(64),f=>f.report.candidate_run_id='124']){const f=fixture();mutate(f);assert.throws(()=>validateRelease(f));}
+ for(const mutate of [f=>f.repo.private=true,f=>f.environment.protection_rules=[],f=>f.environment.protection_rules[0].reviewers=[],f=>f.run.conclusion='failure',f=>f.run.repository.full_name='foreign/repo',f=>f.run.path='untrusted.yml',f=>f.run.event='pull_request',f=>f.run.id=124,f=>f.candidate.commit='c'.repeat(40),f=>f.ref='refs/heads/main',f=>f.digest='d'.repeat(64),f=>f.report.sha256='e'.repeat(64),f=>f.report.candidate_run_id='124']){const f=fixture();mutate(f);assert.throws(()=>validateRelease(f));}
 });
 test('missing specialist/platform outcomes and unretained or foreign evidence block release',()=>{
  for(const mutate of [f=>delete f.report.requirements.recovery,f=>f.report.requirements.lifecycle.status='pending',f=>delete f.report.specialists.browser,f=>f.report.specialists.ship.evidence=[],f=>delete f.report.host_matrix.win32,f=>delete f.report.host_matrix.linux.minimum,f=>f.report.host_matrix.darwin.latest.version='1.0.0',f=>f.report.requirements.recovery.evidence=['https://example.com/passed'],f=>f.report.requirements.recovery.evidence=['https://github.com/foreign/repo/actions/runs/123'],f=>f.report.requirements.recovery.evidence=['file:///tmp/pass.json']]){const f=fixture();mutate(f);assert.throws(()=>validateRelease(f));}
@@ -19,4 +19,10 @@ test('registry acceptance requires matching bytes and a canonical provenance end
  const dist={integrity:candidate.integrity,attestations:{url:'https://registry.npmjs.org/-/npm/v1/attestations/@kujolang/kujo-opencode@0.2.0',provenance:{predicateType:'https://slsa.dev/provenance/v1'}}};
  validateRegistryDist(candidate,dist);
  for(const mutate of [d=>d.integrity='other',d=>delete d.attestations,d=>d.attestations.url='https://example.com/attestation',d=>d.attestations.url+='?override=1',d=>d.attestations.provenance.predicateType='unknown']){const d=structuredClone(dist);mutate(d);assert.throws(()=>validateRegistryDist(candidate,d));}
+});
+
+test('maintainer may approve their own release while human review stays required',()=>{
+ const f=fixture();f.environment.protection_rules[0].prevent_self_review=false;
+ assert.equal(validateRelease(f).tag,'v0.2.0');
+ f.environment.protection_rules[0].reviewers=[];assert.throws(()=>validateRelease(f));
 });

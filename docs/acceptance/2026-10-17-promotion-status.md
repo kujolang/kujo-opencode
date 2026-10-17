@@ -27,9 +27,13 @@ The read-only `Retain local acceptance evidence` workflow checks candidate ident
 ## Publication still requires
 
 1. Complete npm sign-in and establish package ownership/trusted publishing for `kujolang/kujo-opencode`, workflow `publish.yml`, environment `npm-release`. The local npm account was unauthorized at the start of this pass.
-2. Provide another eligible reviewer or dispatcher. The repository currently lists only `robertdevore`; `npm-release` requires that account's approval and prevents self-review. Protection remains enabled.
+2. Approve the protected release run as `robertdevore`. The maintainer authorized self-review after this report was written; a second reviewer is no longer required. Human approval and the other release checks remain enabled.
 3. Review the full release contract and exact evidence, including declared platform boundaries. Produce the required digest-bound acceptance report only when each requirement is supported.
 4. Follow [RELEASING.md](../RELEASING.md): matching version tag, candidate run at the tag, protected publication of the reviewed archive, registry integrity/provenance and fresh consumer install/upgrade checks, then GitHub release assets.
 5. Confirm the public install command works before posting the approved video and launch copy.
 
 No npm publication, version tag, GitHub release or public video upload occurred in this pass. The free GLM/DeepSeek specialist route remains unverified; ChatGPT is the tested provider path.
+
+## Maintainer approval policy update
+
+On 2026-10-17 the user explicitly chose to approve the release themselves. The environment and release validator now permit that. Because the validator and release docs are packaged files, this change requires a new candidate; the earlier archive evidence above remains valid for its recorded bytes and must not be relabeled as testing the new archive.

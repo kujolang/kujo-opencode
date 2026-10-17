@@ -12,7 +12,7 @@ export function validateRelease({candidate,repo,environment,run,report,sha,ref,d
  assert.equal(repo.full_name,repository);assert.equal(repo.private,false,'npm provenance requires a public repository');
  assert.equal(environment.name,'npm-release');
  const reviewers=environment.protection_rules?.find(rule=>rule.type==='required_reviewers');
- assert.ok(reviewers?.reviewers?.length&&reviewers.prevent_self_review===true,'Release environment requires reviewers and prevents self-review');
+ assert.ok(reviewers?.reviewers?.length&&typeof reviewers.prevent_self_review==='boolean','Release environment requires explicit human review; self-review follows the maintainer policy');
  assert.equal(run.repository?.full_name,repository);assert.equal(run.event,'workflow_dispatch');
  assert.equal(String(run.id),runID);assert.equal(run.path,'.github/workflows/release-candidate.yml');
  assert.equal(run.status,'completed');assert.equal(run.conclusion,'success','Candidate workflow must pass');

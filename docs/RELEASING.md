@@ -68,11 +68,12 @@ release is claimed by candidate preparation.
 
 `publish.yml` is a manually dispatched, tag-only publication path. It is prepared
 but has not published a release. The repository is public. The `npm-release`
-environment requires `robertdevore` to review, prevents self-review and permits
+environment requires `robertdevore` to review, allows self-review and permits
 only `v*` tags. npm authorization and complete candidate acceptance remain open.
 
-Keep the release protections in place. A reviewer cannot approve a run they
-initiated: use a different maintainer to dispatch, or add another eligible reviewer.
+The maintainer explicitly authorized self-review on 2026-10-17. The same account
+may dispatch and approve the run. Human approval is still required; administrator
+bypass remains disabled. No second maintainer is required.
 At the desk, configure the
 npm trusted publisher for `kujolang/kujo-opencode`, workflow `publish.yml`, and
 environment `npm-release`, permitting direct publishing. No npm token is stored in
