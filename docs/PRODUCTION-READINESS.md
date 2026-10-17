@@ -818,3 +818,22 @@ native checks exposed and corrected those test/observer gaps. PackeduWlYRq passe
 baseline automatic-controller/canonical ledger gates but predates cancellation,
 capacity-message, explicit completion-event and prerequisite refinements. Final
 native acceptance and packed retry are pending below.
+
+Final automatic-tracking acceptance: 127 offline tests, canonical E2E, 26 focused
+checks and real OpenCode2.0.31 native vUpjuO passed. The native gate exercised an
+actual model-request hook, exact start permission, canonical creation and a finish
+reminder; this does not certify a successful specialist task. Missing tracking
+capabilities return actionable structured RPC feedback rather than a masked500.
+
+Packed lAGkXk passed the complete fresh-install/0.1.0 upgrade gate, with28sources,
+old-project preservation, starter services/agent fixture, canonical session-ledger
+automatic request suppression/reset/reminder coverage, knowledge and real browser
+checks. SHA256:97b1748d33fab3e50bb283ce4a6ba6ba34e998df7bbf832c53da10ae355232ba.
+Executable/catalog bytes match b73cb3d. This supersedes pending package/native
+statuses above; ZYRNQm also passed but predates that final RPC refinement.
+
+Remaining: native human-verdict presentation/finalization, real cancellation and
+reconnect/failure-intervention acceptance, all six live specialist workflows,
+service-boundary parity, remaining mixed-version/multiproject/recovery scenarios,
+the exact supported host/OS matrix, and public release/registry acceptance. All
+seven broad production outcomes remain open. Local acceptance is not full parity.

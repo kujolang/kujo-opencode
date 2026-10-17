@@ -571,3 +571,22 @@ Next: automatic native presentation of human verdict selection/finalization and
 expanded real cancellation/reconnect acceptance, then remaining recovery, six
 live specialists, exact host/OS certification and public distribution. Preserve
 all seven outcomes; no full lifecycle completion is claimed. No new SignalBox item.
+
+Final automatic-tracking acceptance: 127 offline tests, canonical E2E, 26 focused
+checks and real OpenCode2.0.31 native vUpjuO passed. The native gate exercised an
+actual model-request hook, exact start permission, canonical creation and a finish
+reminder; this does not certify a successful specialist task. Missing tracking
+capabilities return actionable structured RPC feedback rather than a masked500.
+
+Packed lAGkXk passed the complete fresh-install/0.1.0 upgrade gate, with28sources,
+old-project preservation, starter services/agent fixture, canonical session-ledger
+automatic request suppression/reset/reminder coverage, knowledge and real browser
+checks. SHA256:97b1748d33fab3e50bb283ce4a6ba6ba34e998df7bbf832c53da10ae355232ba.
+Executable/catalog bytes match b73cb3d. This supersedes pending package/native
+statuses above; ZYRNQm also passed but predates that final RPC refinement.
+
+Remaining: native human-verdict presentation/finalization, real cancellation and
+reconnect/failure-intervention acceptance, all six live specialist workflows,
+service-boundary parity, remaining mixed-version/multiproject/recovery scenarios,
+the exact supported host/OS matrix, and public release/registry acceptance. All
+seven broad production outcomes remain open. Local acceptance is not full parity.
