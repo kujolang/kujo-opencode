@@ -167,3 +167,50 @@ its daemon socket is absent; no container matrix was run. A user question is pen
 about another already-authorized OpenCode provider for scoped specialist acceptance.
 Do not choose a paid fallback without the user's answer. All local test processes
 are terminal. No candidate/publish workflow was dispatched.
+
+## Isolated minimum/latest v2 host acceptance (2026-10-17)
+
+4b68316 adds verified official native host installation. The host-matrix workflow
+now resolves @opencode/cli's v2 channel once and tests minimum2.0.31/latest on
+Ubuntu glibc, macOS and Windows. It requires the exact successful candidate source
+and archive, uses pinned source acquisition without sibling checkouts, and retains
+host provenance plus native/payload evidence. The native harness automatically
+writes verification.json and can install a candidate tarball with
+KUJO_TEST_RELEASE_DIR. No adapter/executor code changed. 179 offline tests and
+actionlint1.7.12 passed (/tmp/kujo-host-matrix-all.log and
+/tmp/kujo-host-matrix-lint-final.log). See HOST-MATRIX.md for scope and commands.
+
+Official v2 npm latest resolved2.0.32. General GitHub latest and opencode-ai npm
+still selectedv1.19.3; do not use them for this matrix. The official v2 docs identify
+@opencode/cli. Isolated baseline x64 binary installs passed SHA512/--version checks:
+2.0.31 /tmp/kujo-isolated-host-2.0.31/bin/opencode, SHA256
+b73356ad2368c54ea51b869032bc419c96faea18a41d0c0f427923bcf583f688;
+2.0.32 /tmp/kujo-isolated-host-2.0.32/bin/opencode, SHA256
+5de9ff73d2e46934371dd96c9f012be58b98fc0084f966e643fa89d3b6e69070.
+Each directory has host-provenance.json. The user's global installation was not
+replaced. Windows distribution is a standalone official native executable;
+unsupported global Windows package-manager setup is not used.
+
+The exact4feac59 candidate e8937c2c1bd9971dbac327e171e940cc02ae794529e67229b1a20e1163a0ee25
+passed pinned-source native management/permission/RunLedger/knowledge/browser-control
+acceptance on both macOS hosts: xOvc8l(2.0.31),mtXUxm(2.0.32). Both also passed
+explicit test:opencode discovery and candidate-provenance comparison of all69
+runtime payload files. ManifestSHA256
+b0ba144fac730640cd891f9461abdccca88e188dee026facadd46faec3b141a4;
+runtimeSHA256979d49503d71eb87e5696aea844a51e7129e23c89e36abc8e4d4378bc78985b5.
+Logs /tmp/kujo-pinned-host-{minimum,latest}.log and
+/tmp/kujo-host-{minimum,latest}-{discovery,candidate-proof}.log. Fixtures under
+/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/ retain verification and payload proof.
+These runs made no model requests and do not constitute rendered TUI acceptance.
+The matrix workflow itself has not executed; Linux/Windows remain unverified.
+
+A separate pinned-candidate scoped Ship GLM-free test on2.0.32 still failed with
+provider.auth HTTP403 before tool execution (/tmp/kujo-pinned-ship-latest.log).
+Do not retry this unchanged provider/host combination without new evidence.
+The user question about another already-authorized provider remains pending.
+Next local acceptance opportunity: adapt the rendered PTY harness to consume the
+exact candidate and check actual2.0.32 UI, preserving its POSIX scope. Continue
+public release account setup and real CI/platform/specialist evidence when their
+external prerequisites become available. The current new package metadata/test
+installer are not identical to4feac59; final release still needs a newly built,
+fully accepted immutable candidate. All test processes are terminal.
