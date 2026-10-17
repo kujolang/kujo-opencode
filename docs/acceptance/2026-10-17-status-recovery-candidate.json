@@ -22,5 +22,49 @@
   "exact_archive_acceptance": "pending",
   "latest_host_log": "/tmp/kujo-status-candidate-latest.log",
   "latest_host": "2.0.32",
-  "published": false
+  "published": false,
+  "release_prerequisites": {
+    "checked_at": "2026-10-17T07:58:00Z",
+    "github_run": 39015426601,
+    "github_commit": "736577d5577e52cb4f3b27124a05bf0565763e80",
+    "jobs_executed_steps": 0,
+    "annotation_id": 117346447494,
+    "blocking_message": "The job was not started because recent account payments have failed or your spending limit needs to be increased.",
+    "npm_whoami": "E401",
+    "repository_private": true,
+    "release_environments": []
+  },
+  "latest_first_attempt": {
+    "result": "failed_cancellation_permission_timeout",
+    "fixture": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-native-host-pxAF6W",
+    "telemetry": {
+      "watchdog": {
+        "source_commit": "9e82e8f5b05edca948f6a432ae517031388296e6",
+        "source_clean": true,
+        "runtime_sha256": "cc811ce04910d68f6703f8717eb6dc4fcd05666a29f738dee88bf57d52f852c2"
+      },
+      "queue_delivered": 28,
+      "queue_discarded": 0,
+      "session_id": "ses_eb7227cedffeDhngsC8mv64HJa",
+      "run_id": "2026-10-17-glm-5-3-flash-free-opencode-session-ses-eb7227cedffedhngsc8mv64hja-001",
+      "trace_id": "2e7ecb5c19dad75164f8d3b55273c774",
+      "model": "opencode/glm-5.3-flash-free",
+      "agent": "build",
+      "receipt_ids": [
+        "receipt-dda7b115-7116-46b9-a75f-b1ac652cd7df",
+        "receipt-a0f57305-3eb1-44a6-b92b-dde71d341a23"
+      ],
+      "record_count": 28,
+      "service_outage_recovered": true,
+      "explicit_retry_rearmed": 1,
+      "host_reload_recovered": true,
+      "metadata_only": true,
+      "opt_out_verified": true,
+      "opt_out_assistant_observed": true,
+      "record_still_in_progress": true
+    },
+    "diagnostic": "/tmp/kujo-candidate-cancel-diagnostic.json",
+    "diagnosis": "Retained assistant response explicitly declined synthetic sentinel-framed directive and requested confirmation.",
+    "correction": "Natural request with cancellation purpose and harmless privacy canary; same exact input approval, absent-effect and metadata assertions."
+  }
 }
