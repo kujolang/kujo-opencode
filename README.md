@@ -453,8 +453,9 @@ When execution becomes idle, fails, completes or is interrupted, an in-progress
 record receives one inbox reminder. In the active session, the native UI offers
 evidence review, an explicit verdict, or **Keep working**. Finishing requests
 separate approval for the final snapshot. The offer is shown once per session;
-returning to a session reconciles missed events. If another dialog is open or the
-UI disconnects during presentation, use `/kujo` → Session RunLedger. Closing the
+returning to a session reconciles missed events. An event arriving during another
+Kujo dialog is shown after it closes, provided you are still in that session.
+If the UI disconnects during presentation, use `/kujo` → Session RunLedger. Closing the
 offer or choosing Keep working preserves the in-progress record.
 Completion does not imply success. Finalization still requires your selected
 verdict and approval; no usage or cost is invented.

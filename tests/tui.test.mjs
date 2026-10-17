@@ -26,7 +26,7 @@ function fixture({choices=[],prompts=[],profileError,waitStatus,evidenceReceipts
   }]))};
  }},ui:{model:{current:()=>selectedModel},router:{current:()=>route,navigate:next=>{route=next;}},dialog:{prompt:async()=>prompts.shift(),alert:async value=>alerts.push(value),select:async()=>choices.shift()},toast:{show:value=>toasts.push(value)}},keymap:{layer:factory=>{commands=factory().commands;}}};
  const cleanup=setupTui(ctx);
- return {calls,alerts,toasts,cleanup,route:()=>route,event:async(sessionID='fixture-session',directory=location.directory)=>{if(!stopped)await eventHandler({location:{directory},data:{sessionID}});},run:id=>commands.find(c=>c.id===id).run()};
+ return {calls,alerts,toasts,cleanup,route:()=>route,navigate:next=>{route=next;},event:async(sessionID='fixture-session',directory=location.directory)=>{if(!stopped)await eventHandler({location:{directory},data:{sessionID}});},run:id=>commands.find(c=>c.id===id).run()};
 }
 test('native UI is idle until invoked and routes status and evidence to its workspace',async()=>{
  const f=fixture({choices:['check','project']});assert.equal(f.calls.length,0);
@@ -149,4 +149,18 @@ test('manual ledger start persists the visible prompt model before requesting th
  assert.deepEqual(f.calls.map(c=>c.method),['runledger','switchModel','runledger']);
  assert.deepEqual(f.calls[1].input,{sessionID:'fixture-session',model:{providerID:'fixture',id:'selected'}});
  assert.equal(f.calls[2].input.action,'start');
+});
+
+test('completion arriving during another Kujo dialog is coalesced and presented after it closes',async()=>{
+ let release;const f=fixture({choices:[undefined,'later'],waitStatus:new Promise(r=>release=r)});
+ const status=f.run('kujo.status');await new Promise(r=>setImmediate(r));await f.event();await f.event();
+ assert.deepEqual(f.calls.map(c=>c.method),['status']);release();await status;
+ assert.deepEqual(f.calls.map(c=>c.method),['status','completion']);
+});
+test('queued completion cannot follow the user into another session or survive unload',async()=>{
+ for(const unload of [false,true]){
+  let release;const f=fixture({waitStatus:new Promise(r=>release=r)});const status=f.run('kujo.status');await new Promise(r=>setImmediate(r));await f.event();
+  if(unload)f.cleanup();else f.navigate({type:'session',sessionID:'other'});
+  release();await status;assert.deepEqual(f.calls.map(c=>c.method),['status']);
+ }
 });
