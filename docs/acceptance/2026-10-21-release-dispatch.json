@@ -1,0 +1,101 @@
+{
+  "schema": "kujo.opencode.promotion-dispatch-acceptance/v1",
+  "date": "2026-10-21",
+  "scope": "macOS x64, OpenCode 2.1.2, local Hermes free Beam: retained Dispatch run reconciled after lost approval reply without duplicate execution.",
+  "verification": {
+    "ok": true,
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-release-wave-20261021-v473tlwr/host-fixtures/kujo-native-host-JExM4J",
+    "host": "opencode v2.1.2",
+    "platform": "darwin",
+    "arch": "x64",
+    "pinned_sources": true,
+    "rendered_tui": false,
+    "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+    "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+    "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+    "live": null,
+    "specialistJourney": null,
+    "specialistJourneys": [],
+    "dispatchTransport": {
+      "scope": "Native one-time approval HTTP reply lost; retained Dispatch run discovered and inspected without workflow retry",
+      "agent": "build",
+      "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+      "session_id": "ses_e9f944006ffe6YxLOBFCu0u9b6",
+      "transport": {
+        "forwarded_requests": 1,
+        "upstream_status": 204,
+        "upstream_response_consumed": true,
+        "client_response_lost": true
+      },
+      "reviewed_inputs": [
+        {
+          "ability": "kujo.dispatch.workflow.run",
+          "input": {
+            "path": "dispatch-transport",
+            "topic": "Recover the retained run after an approval reply is lost",
+            "workflow_file": "workflow.json",
+            "input_json": "{\"recovery_case\":\"lost-native-approval-reply\"}",
+            "output_dir": "runs"
+          }
+        },
+        {
+          "ability": "kujo.dispatch.runs.list",
+          "input": {
+            "path": "dispatch-transport",
+            "output_dir": "runs",
+            "limit": 50,
+            "offset": 0
+          }
+        },
+        {
+          "ability": "kujo.dispatch.run.inspect",
+          "input": {
+            "output_dir": "runs",
+            "path": "dispatch-transport",
+            "run_id": "run-1792619042515-1148"
+          }
+        }
+      ],
+      "run_id": "run-1792619042515-1148",
+      "receipt_ids": [
+        "receipt-4ea7a0f4-d978-46ad-8859-f6e9fedc2d6c",
+        "receipt-2d109b0e-4f9c-4033-aee8-1e389352c2f0",
+        "receipt-fb4a034b-8ecc-40c8-9107-58e3d97210a4"
+      ],
+      "workflow_executions": 1,
+      "canonical_state_unchanged_by_reconciliation": true
+    },
+    "failureGuard": null,
+    "cancellation": null,
+    "telemetry": null,
+    "commands": [
+      "kujo-status",
+      "kujo-evidence",
+      "kujo-profile",
+      "kujo-doctor",
+      "kujo-review"
+    ],
+    "native_status_recorded": true,
+    "native_evidence_recorded": true,
+    "native_profile_permission": true,
+    "native_capability_permissions": true,
+    "native_lifecycle_permissions": true,
+    "native_session_runledger": true,
+    "nativeTransportRecovery": {
+      "forwarded_requests": 1,
+      "upstream_status": 200,
+      "upstream_response_consumed": true,
+      "client_response_lost": true,
+      "scope": "session RunLedger start; no inference or Dispatch transport claim",
+      "run_id": "2026-10-21-glm-5-3-flash-free-opencode-session-ses-e9f945d15ffeul1kh0owenpvja-001"
+    },
+    "native_browser_readiness": true,
+    "native_knowledge_verified": true,
+    "native_automatic_tracking": false,
+    "browser_ready": false,
+    "model_call": true
+  },
+  "command_flags": [
+    "KUJO_TEST_DISPATCH_TRANSPORT=1"
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "schema": "kujo.opencode.promotion-lifecycle-acceptance/v1",
+  "date": "2026-10-21",
+  "scope": "macOS x64, OpenCode 2.1.2, local Hermes free Beam: native read/write permissions, bounded intervention, cancellation, metadata-only delivery, outage/reload recovery and opt-out. Automatic tracking exercises native pre-inference and completion hooks; it does not establish health of OpenCode free inference.",
+  "verification": {
+    "ok": true,
+    "root": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-release-wave-20261021-v473tlwr/host-fixtures/kujo-native-host-9sW2T9",
+    "host": "opencode v2.1.2",
+    "platform": "darwin",
+    "arch": "x64",
+    "pinned_sources": true,
+    "rendered_tui": false,
+    "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+    "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+    "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+    "live": {
+      "read_receipt": "receipt-c9ff3846-08b6-4c0d-b549-3b1d1e34aa0d",
+      "denied_without_write": true,
+      "write_receipt": "receipt-714f3202-a065-45c4-aa6d-3884dce6c4dd"
+    },
+    "specialistJourney": null,
+    "specialistJourneys": [],
+    "dispatchTransport": null,
+    "failureGuard": {
+      "session_id": "ses_e9f976e67ffeYoamrj021vWLP1",
+      "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+      "agent": "build",
+      "interventions": 1,
+      "notification": true,
+      "telemetry_enabled": false,
+      "failed_receipts": [
+        "receipt-5979753b-446c-4b8e-8309-236c5b3c8745",
+        "receipt-171e2351-02ff-41f5-893e-43324f3dcb8f",
+        "receipt-8d640da8-4e3f-4b1f-9a59-5751245aec77"
+      ],
+      "approval_granted": false
+    },
+    "cancellation": {
+      "watchdog": {
+        "source_commit": "9e82e8f5b05edca948f6a432ae517031388296e6",
+        "source_clean": true,
+        "runtime_sha256": "cc811ce04910d68f6703f8717eb6dc4fcd05666a29f738dee88bf57d52f852c2"
+      },
+      "session_id": "ses_e9f965665ffeXIx6f5WBALomZV",
+      "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+      "agent": "build",
+      "permission_requested": true,
+      "approval_granted": false,
+      "effect_absent": true,
+      "remaining_permissions": 0,
+      "cancellation_records": 1,
+      "receipt_ids": [
+        "receipt-833862ea-711c-47ee-af51-b77db0d66247"
+      ],
+      "metadata_only": true
+    },
+    "telemetry": {
+      "watchdog": {
+        "source_commit": "9e82e8f5b05edca948f6a432ae517031388296e6",
+        "source_clean": true,
+        "runtime_sha256": "cc811ce04910d68f6703f8717eb6dc4fcd05666a29f738dee88bf57d52f852c2"
+      },
+      "queue_delivered": 16,
+      "queue_discarded": 0,
+      "session_id": "ses_e9f972bedffemzRkNLy8r21DXV",
+      "run_id": "2026-10-21-reflection-beam-1-0-501b-a23b-free-opencode-session-ses-e9f972bedffemzrknly8r21dxv-001",
+      "trace_id": "5980e3a8225251ff374b8706a63f6046",
+      "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+      "agent": "build",
+      "receipt_ids": [
+        "receipt-6420849d-4488-4248-803a-4616c111f7c4",
+        "receipt-503ce061-9bbc-48e9-bd32-420244e5e61b"
+      ],
+      "record_count": 16,
+      "service_outage_recovered": true,
+      "explicit_retry_rearmed": 2,
+      "host_reload_recovered": true,
+      "metadata_only": true,
+      "opt_out_verified": true,
+      "opt_out_assistant_observed": true,
+      "record_still_in_progress": true
+    },
+    "commands": [
+      "kujo-status",
+      "kujo-evidence",
+      "kujo-profile"
+    ],
+    "native_status_recorded": true,
+    "native_evidence_recorded": true,
+    "native_profile_permission": true,
+    "native_capability_permissions": true,
+    "native_lifecycle_permissions": true,
+    "native_session_runledger": true,
+    "nativeTransportRecovery": {
+      "forwarded_requests": 1,
+      "upstream_status": 200,
+      "upstream_response_consumed": true,
+      "client_response_lost": true,
+      "scope": "session RunLedger start; no inference or Dispatch transport claim",
+      "run_id": "2026-10-21-glm-5-3-flash-free-opencode-session-ses-e9f981953ffe73tces6mfiyitg-001"
+    },
+    "native_browser_readiness": true,
+    "native_knowledge_verified": true,
+    "native_automatic_tracking": true,
+    "browser_ready": false,
+    "model_call": true
+  },
+  "command_flags": [
+    "KUJO_TEST_GUARD=1",
+    "KUJO_TEST_TELEMETRY=1",
+    "KUJO_TEST_CANCEL_TELEMETRY=1",
+    "KUJO_TEST_AUTOTRACK=1"
+  ]
+}

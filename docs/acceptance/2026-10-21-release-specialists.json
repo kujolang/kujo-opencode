@@ -1,0 +1,1153 @@
+{
+  "schema": "kujo.opencode.promotion-specialist-acceptance/v1",
+  "date": "2026-10-21",
+  "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+  "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+  "authentication": "Existing authorized local Hermes connection; no provider credentials retained.",
+  "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+  "scope": "macOS x64, official OpenCode 2.1.2, immutable candidate; six real specialist journeys and receipt-grounded model reports. No live-model claim for Windows/Linux.",
+  "all_six_passed": true,
+  "checks": 50,
+  "results": [
+    {
+      "name": "understand",
+      "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+      "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+      "journey": {
+        "agent": "kujo-understand",
+        "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+        "session_id": "ses_e9f97ff8effe08kwsc0kB0iH0r",
+        "scope": "canonical Scout/Scent fixture; not repository safety certification",
+        "steps": [
+          {
+            "agent": "kujo-understand",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.scout.repository.inspect",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-a40cef8f-f3c4-4128-a1f9-839e9961003e"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-understand",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.scout.repository.inspect",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-38013b9c-cc7a-42cf-99c7-026824c00c49",
+              "receipt-a8886bb9-c1c6-4d5b-ad12-ca59a36cc0f2"
+            ],
+            "terminal_receipt": "receipt-a8886bb9-c1c6-4d5b-ad12-ca59a36cc0f2"
+          },
+          {
+            "agent": "kujo-understand",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.scent.context.pack",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-89742444-3de8-4f21-9a47-e4d701505a7b",
+              "receipt-5f387521-31d2-44f0-b789-c2bfc97ef694"
+            ],
+            "terminal_receipt": "receipt-5f387521-31d2-44f0-b789-c2bfc97ef694"
+          },
+          {
+            "agent": "kujo-understand",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.scent.context.pack",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-0ab09599-586d-4ffb-be57-4da7f959eecb",
+              "receipt-4ca77591-8ebc-401d-a947-92e501f14fc9"
+            ],
+            "terminal_receipt": "receipt-4ca77591-8ebc-401d-a947-92e501f14fc9"
+          },
+          {
+            "agent": "kujo-understand",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.scout.repository.inspect",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-ad18d474-643a-4d8f-ac2a-b3746eb143ce",
+              "receipt-6decb400-a498-4d72-9149-1de0bb7706be"
+            ],
+            "terminal_receipt": "receipt-6decb400-a498-4d72-9149-1de0bb7706be"
+          }
+        ],
+        "report": {
+          "message_ids": [
+            "msg_160688dd00019jwAnPC4yhw1Gu"
+          ],
+          "operations": [
+            {
+              "ability": "kujo.scout.repository.inspect",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-a40cef8f-f3c4-4128-a1f9-839e9961003e"
+              ],
+              "explanation": "First Scout inspect on '.' (quick=true) was declined by the user; receipt shows approval_required status with error ability_approval_required. No artifacts produced."
+            },
+            {
+              "ability": "kujo.scout.repository.inspect",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-a8886bb9-c1c6-4d5b-ad12-ca59a36cc0f2"
+              ],
+              "explanation": "Scout inspect on '.' (quick=true) succeeded after one-time approval; 23 code files analyzed, 1 dependency, 0 routes, 0 security findings, minimal output profile written to .kujo/understand-scout."
+            },
+            {
+              "ability": "kujo.scent.context.pack",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-5f387521-31d2-44f0-b789-c2bfc97ef694"
+              ],
+              "explanation": "Scent pack dry-run on '.' (task about understand-fixture.kujo, budget 4000) succeeded; estimated 2602 tokens across 9 files, no artifacts written."
+            },
+            {
+              "ability": "kujo.scent.context.pack",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-4ca77591-8ebc-401d-a947-92e501f14fc9"
+              ],
+              "explanation": "Scent pack on '.' (same task, budget 4000, dry_run=false) succeeded and materialized .kujo/scent with context.md and context.json (9 files, 2602 estimated tokens)."
+            },
+            {
+              "ability": "kujo.scout.repository.inspect",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-6decb400-a498-4d72-9149-1de0bb7706be"
+              ],
+              "explanation": "Scout inspect on nonexistent path '.missing-understand-scope' (quick=true) failed with ENOENT after approval was granted; no artifacts written to .kujo/no-output."
+            }
+          ],
+          "limitations": "This session did not verify: actual contents of generated Scout artifacts or the Scent pack; whether understand-fixture.kujo was included in the pack; deep/full scan results (quick mode only); any release readiness. The preparatory receipt-list read was excluded from operations. Only tool-reported receipts and structured results are cited as evidence."
+        }
+      }
+    },
+    {
+      "name": "build",
+      "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+      "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+      "journey": {
+        "agent": "kujo-build",
+        "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+        "session_id": "ses_e9f974b91ffee9ziuO4wgrf6j2",
+        "scope": "reviewed imported test snapshots; no OS sandbox claim",
+        "steps": [
+          {
+            "agent": "kujo-build",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.opencode.source.inspect",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-de82ba8d-c9d0-4918-8452-58f9e7a2514f"
+            ],
+            "terminal_receipt": "receipt-de82ba8d-c9d0-4918-8452-58f9e7a2514f"
+          },
+          {
+            "agent": "kujo-build",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.opencode.source.format",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-95825121-e047-40b6-932e-181fcf62dbb5"
+            ],
+            "terminal_receipt": "receipt-95825121-e047-40b6-932e-181fcf62dbb5"
+          },
+          {
+            "agent": "kujo-build",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.opencode.source.preview",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-cf55c0cc-e89b-46bd-950c-98599dc034fa"
+            ],
+            "terminal_receipt": "receipt-cf55c0cc-e89b-46bd-950c-98599dc034fa"
+          },
+          {
+            "agent": "kujo-build",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.opencode.source.execute",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-c1584fbf-10e4-457c-a62d-abd645af41f2"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-build",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.opencode.source.execute",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-ce586fb9-0f13-4008-a103-c9ea32f617b6",
+              "receipt-71e3c7b0-ff94-409f-86cb-6c32aa4fc8a8"
+            ],
+            "terminal_receipt": "receipt-71e3c7b0-ff94-409f-86cb-6c32aa4fc8a8"
+          },
+          {
+            "agent": "kujo-build",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.opencode.source.execute",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-362ae662-76ba-40e4-8ae1-1040432a1374",
+              "receipt-d7d6c2f7-1c03-4bb9-83cd-614e5db6e313"
+            ],
+            "terminal_receipt": "receipt-d7d6c2f7-1c03-4bb9-83cd-614e5db6e313"
+          },
+          {
+            "agent": "kujo-build",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.opencode.source.preview",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-aa7dc0fc-8b6c-41fc-939c-8987b1cd2677"
+            ],
+            "terminal_receipt": "receipt-aa7dc0fc-8b6c-41fc-939c-8987b1cd2677"
+          },
+          {
+            "agent": "kujo-build",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.opencode.source.execute",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-422d26be-3c47-42a4-9626-747f5268a148",
+              "receipt-522d0321-20cd-4515-ab58-20d39f5eb3bb"
+            ],
+            "terminal_receipt": "receipt-522d0321-20cd-4515-ab58-20d39f5eb3bb"
+          }
+        ],
+        "report": {
+          "message_ids": [
+            "msg_1606964040012kLjBKgHPFVblq"
+          ],
+          "operations": [
+            {
+              "ability": "kujo.opencode.source.inspect",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-de82ba8d-c9d0-4918-8452-58f9e7a2514f"
+              ],
+              "explanation": "Inspected src/specialist_helper.kujo; valid, 1 statement, 4 bytecode instructions, no lint diagnostics."
+            },
+            {
+              "ability": "kujo.opencode.source.format",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-95825121-e047-40b6-932e-181fcf62dbb5"
+              ],
+              "explanation": "Previewed formatting of src/specialist_helper.kujo; changed=true, no files written."
+            },
+            {
+              "ability": "kujo.opencode.source.preview",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-cf55c0cc-e89b-46bd-950c-98599dc034fa"
+              ],
+              "explanation": "Previewed test snapshot (3 files); helper digest 3f48b9ea..., expected output 'reviewed import'."
+            },
+            {
+              "ability": "kujo.opencode.source.execute",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-c1584fbf-10e4-457c-a62d-abd645af41f2"
+              ],
+              "explanation": "Human declined the approval request; no execution occurred."
+            },
+            {
+              "ability": "kujo.opencode.source.execute",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-71e3c7b0-ff94-409f-86cb-6c32aa4fc8a8"
+              ],
+              "explanation": "Executed test snapshot; 1/1 tests passed, exit code 0."
+            },
+            {
+              "ability": "kujo.opencode.source.execute",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-d7d6c2f7-1c03-4bb9-83cd-614e5db6e313"
+              ],
+              "explanation": "Blocked by kujo_source_changed guard: src/specialist_helper.kujo digest no longer matched previewed bytes."
+            },
+            {
+              "ability": "kujo.opencode.source.preview",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-aa7dc0fc-8b6c-41fc-939c-8987b1cd2677"
+              ],
+              "explanation": "Re-previewed test snapshot; helper digest changed to 00aa6536..., now returns 'changed import'."
+            },
+            {
+              "ability": "kujo.opencode.source.execute",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-522d0321-20cd-4515-ab58-20d39f5eb3bb"
+              ],
+              "explanation": "Executed test snapshot; 0/1 tests passed, exit code 3 \u2014 expected 'reviewed import' but got 'changed import'."
+            }
+          ],
+          "limitations": "Single-file inspect and format checks do not establish import or runtime correctness. Snapshot execution is trusted, not sandboxed. The session did not fix the test-expectation mismatch or verify broader integration beyond the reviewed snapshot. No dependency installation, build, or release-gate validation was performed."
+        }
+      }
+    },
+    {
+      "name": "review",
+      "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+      "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+      "journey": {
+        "agent": "kujo-review",
+        "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+        "session_id": "ses_e9f96816bffexw8Y06NQexvXeF",
+        "scope": "real Git diff, heuristic footprint and contract validation; no review approval manufactured",
+        "steps": [
+          {
+            "concurrent_group": "review-opening",
+            "agent": "kujo-review",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.changebucket.changes.measure",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-237b2178-9168-4ea7-b120-4c0a5058cc0c"
+            ],
+            "terminal_receipt": "receipt-237b2178-9168-4ea7-b120-4c0a5058cc0c"
+          },
+          {
+            "concurrent_group": "review-opening",
+            "agent": "kujo-review",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.patchbrief.changes.summarize",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-004320af-a6c9-4161-b095-36d94e25ea0b"
+            ],
+            "terminal_receipt": "receipt-004320af-a6c9-4161-b095-36d94e25ea0b"
+          },
+          {
+            "agent": "kujo-review",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.spec.contract.validate",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-f456f904-67f1-43a7-82e8-2b82a343a1ea"
+            ],
+            "terminal_receipt": "receipt-f456f904-67f1-43a7-82e8-2b82a343a1ea"
+          },
+          {
+            "agent": "kujo-review",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.spec.contract.validate",
+            "decision": "none",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-725b321a-c640-4baa-8baf-08410e98bc77"
+            ],
+            "terminal_receipt": "receipt-725b321a-c640-4baa-8baf-08410e98bc77"
+          }
+        ],
+        "report": {
+          "message_ids": [
+            "msg_16069d1ea0011joKqW7iUjcGPi"
+          ],
+          "operations": [
+            {
+              "ability": "kujo.patchbrief.changes.summarize",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-004320af-a6c9-4161-b095-36d94e25ea0b"
+              ],
+              "explanation": "Summarized git changes for specialist-review on branch main; 1 Markdown file changed (+1/-1 lines), likely purpose 'Bug fix', no high-risk patterns detected by heuristic check only."
+            },
+            {
+              "ability": "kujo.changebucket.changes.measure",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-237b2178-9168-4ea7-b120-4c0a5058cc0c"
+              ],
+              "explanation": "Measured change footprint for specialist-review against HEAD; 1 file modified (review-fixture.md, docs category), total churn 2, risk level low; no budget limits were supplied so budget check was not enforced (checked: false, passed: true)."
+            },
+            {
+              "ability": "kujo.spec.contract.validate",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-f456f904-67f1-43a7-82e8-2b82a343a1ea"
+              ],
+              "explanation": "Validated valid.spec.json in non-strict mode; result valid: true with no errors or warnings."
+            },
+            {
+              "ability": "kujo.spec.contract.validate",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-725b321a-c640-4baa-8baf-08410e98bc77"
+              ],
+              "explanation": "Validated invalid.spec.json in strict mode; canonical command exited 1, result valid: false with error 'Missing required field: goal'. No retry was performed."
+            }
+          ],
+          "limitations": "Only four substantive operations were performed, all read-only. No Fence, Concord, Dossier, or other spec checks were run. PatchBrief risk assessment was heuristic only. ChangeBucket budget enforcement was not exercised (no limits supplied). The failed spec validation indicates invalid.spec.json is missing required field 'goal', but no remediation was attempted. No source was modified and no review approval was granted."
+        }
+      }
+    },
+    {
+      "name": "browser",
+      "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+      "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+      "journey": {
+        "agent": "kujo-browser",
+        "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+        "session_id": "ses_e9f961e9effeunxg2pHFz040uC",
+        "browser": {
+          "before": {
+            "ready": false,
+            "state": "dependencies_missing",
+            "bridge": "/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-release-wave-20261021-v473tlwr/host-fixtures/kujo-native-host-fhmcp6/kujo/sources/lens-852cb91928cfa0ab5dbdaecb3fb8fc51aa69db6b/bridge",
+            "capabilities": [
+              "kujo.lens.flow.validate",
+              "kujo.lens.page.check"
+            ],
+            "source_commit": "852cb91928cfa0ab5dbdaecb3fb8fc51aa69db6b"
+          },
+          "after": {
+            "ready": true,
+            "state": "ready",
+            "mode": "headless-shell",
+            "bridge": "/private/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T/kujo-release-wave-20261021-v473tlwr/host-fixtures/kujo-native-host-fhmcp6/kujo/sources/lens-852cb91928cfa0ab5dbdaecb3fb8fc51aa69db6b/bridge",
+            "capabilities": [
+              "kujo.lens.flow.validate",
+              "kujo.lens.page.check"
+            ],
+            "source_commit": "852cb91928cfa0ab5dbdaecb3fb8fc51aa69db6b"
+          },
+          "installed": true
+        },
+        "scope": "real desktop/mobile page evidence; external opt-in rejected without contacting a public endpoint",
+        "steps": [
+          {
+            "agent": "kujo-browser",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.lens.flow.validate",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-251260ff-0092-4e65-8d9b-94c2152fc19b"
+            ],
+            "terminal_receipt": "receipt-251260ff-0092-4e65-8d9b-94c2152fc19b"
+          },
+          {
+            "agent": "kujo-browser",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.lens.flow.validate",
+            "decision": "none",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-ec3b7c14-9fa9-4be7-8e84-752811492dc2"
+            ],
+            "terminal_receipt": "receipt-ec3b7c14-9fa9-4be7-8e84-752811492dc2"
+          },
+          {
+            "agent": "kujo-browser",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.lens.page.check",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-b235656e-adc3-410c-a479-40c6ee022d14"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-browser",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.lens.page.check",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-ce902352-fd24-4e72-a838-3379a7b0fb8e",
+              "receipt-9b12e204-4090-44bb-b5c3-a84f6e886b06"
+            ],
+            "terminal_receipt": "receipt-9b12e204-4090-44bb-b5c3-a84f6e886b06"
+          },
+          {
+            "agent": "kujo-browser",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.lens.page.check",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-601ed3e0-9100-4e7e-ad87-4160bc7e842a",
+              "receipt-e83dfa66-d451-4b9b-82eb-3a4d51ac01d7"
+            ],
+            "terminal_receipt": "receipt-e83dfa66-d451-4b9b-82eb-3a4d51ac01d7"
+          },
+          {
+            "agent": "kujo-browser",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.lens.page.check",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-8de4b676-d518-47a3-a93c-d1481cad4b99"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-browser",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.lens.page.check",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-bfe6469b-7c93-4236-8e19-a087bd3f5911",
+              "receipt-a3d07bce-a147-475b-b1ce-78915f9d9d34"
+            ],
+            "terminal_receipt": "receipt-a3d07bce-a147-475b-b1ce-78915f9d9d34"
+          }
+        ],
+        "report": {
+          "message_ids": [
+            "msg_1606ae26d001omxMMWW4rbIas0"
+          ],
+          "operations": [
+            {
+              "ability": "kujo.lens.flow.validate",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-251260ff-0092-4e65-8d9b-94c2152fc19b"
+              ],
+              "explanation": "Flow 'Browser specialist fixture' (valid-flow.json) validated successfully: 3 steps (visit, assert_text, assert_no_console_errors), 0 problems."
+            },
+            {
+              "ability": "kujo.lens.flow.validate",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-ec3b7c14-9fa9-4be7-8e84-752811492dc2"
+              ],
+              "explanation": "Flow 'Invalid flow' (invalid-flow.json) failed validation: 1 problem \u2014 a click step missing its selector."
+            },
+            {
+              "ability": "kujo.lens.page.check",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-b235656e-adc3-410c-a479-40c6ee022d14"
+              ],
+              "explanation": "Browser check against http://127.0.0.1:49994 (output_dir 'rejected') was not approved; human declined the approval request for external/write effects (ability_approval_required)."
+            },
+            {
+              "ability": "kujo.lens.page.check",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-9b12e204-4090-44bb-b5c3-a84f6e886b06"
+              ],
+              "explanation": "Browser check against http://127.0.0.1:49994/ (output_dir 'accepted') passed: 0 errors, 0 warnings, 1 info finding; report at specialist-browser/accepted/lens-report.md."
+            },
+            {
+              "ability": "kujo.lens.page.check",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-e83dfa66-d451-4b9b-82eb-3a4d51ac01d7"
+              ],
+              "explanation": "Browser check against https://example.invalid (output_dir 'external-denied', allow_external false) was approved but rejected by guardrail: Lens accepts loopback URLs unless allow_external is explicitly true (ability_url_forbidden)."
+            },
+            {
+              "ability": "kujo.lens.page.check",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-8de4b676-d518-47a3-a93c-d1481cad4b99"
+              ],
+              "explanation": "Browser check against https://example.invalid (output_dir 'external-rejected', allow_external true) was not approved; human declined the approval request for external/write effects (ability_approval_required)."
+            },
+            {
+              "ability": "kujo.lens.page.check",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-a3d07bce-a147-475b-b1ce-78915f9d9d34"
+              ],
+              "explanation": "Browser check against http://127.0.0.1:49994/failure (output_dir 'browser-failed') failed QA: 4 errors, 0 critical, 1 info; report at specialist-browser/browser-failed/lens-report.md."
+            }
+          ],
+          "limitations": "This session did not verify external-URL browser checks (both external attempts were rejected by guardrail or declined by human). Specific error details in the failed browser check report were not retrieved (only structured counts available). The info finding in the passing check was not inspected. Browser dependency installation status was not verified. No overall release readiness claim is made."
+        }
+      }
+    },
+    {
+      "name": "workflow",
+      "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+      "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+      "journey": {
+        "agent": "kujo-workflow",
+        "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+        "session_id": "ses_e9f94fa60ffe96HfjqcWSzZyo1",
+        "scope": "bounded canonical tool workflows, pending checkpoint and inspect-before-retry evidence; no automatic checkpoint decision or resume",
+        "steps": [
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.workflow.validate",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-1b229f89-ad92-4291-978a-60b38e8ea03a"
+            ],
+            "terminal_receipt": "receipt-1b229f89-ad92-4291-978a-60b38e8ea03a"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.workflow.run",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-7cc506d1-21ac-4b15-bc80-09087abe834b"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.workflow.run",
+            "decision": "cancel",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-e6d04f54-0992-4cae-abdf-2aeac7ef38c5"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.workflow.run",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-0f30c0a4-8724-4a74-84a7-d45c1d94eade",
+              "receipt-75eb1442-a176-4979-9d6a-a9c71110146b"
+            ],
+            "terminal_receipt": "receipt-75eb1442-a176-4979-9d6a-a9c71110146b"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.runs.list",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-fa6b14cd-f9d3-436c-a228-f9b7aeacce7a",
+              "receipt-e6cf5cb5-2c76-4de3-a587-f7608001fde1"
+            ],
+            "terminal_receipt": "receipt-e6cf5cb5-2c76-4de3-a587-f7608001fde1"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.run.inspect",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-2ac5c8ce-30f9-477a-aa50-73f7cd6dd058",
+              "receipt-19931d72-6336-45a6-ab47-174d4576cea1"
+            ],
+            "terminal_receipt": "receipt-19931d72-6336-45a6-ab47-174d4576cea1"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.workflow.run",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-f7f47c6d-756e-4e66-ab2e-fa245caadc80",
+              "receipt-79988805-e05b-4cb2-a182-cf1b9c88b5a9"
+            ],
+            "terminal_receipt": "receipt-79988805-e05b-4cb2-a182-cf1b9c88b5a9"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.runs.list",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-1b5cd3c2-54d3-4a84-be59-ef8137a0b7ab",
+              "receipt-150246ec-512a-4d8d-bffe-032aaddf5c45"
+            ],
+            "terminal_receipt": "receipt-150246ec-512a-4d8d-bffe-032aaddf5c45"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.run.inspect",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-72cbe2f6-95d4-41d3-94ef-1b4a38cdaeba",
+              "receipt-818dda8a-dd58-4d3d-b18d-f6de09db8312"
+            ],
+            "terminal_receipt": "receipt-818dda8a-dd58-4d3d-b18d-f6de09db8312"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.checkpoint.decide",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-73ec9140-6f6f-4995-8175-13292459c514"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.checkpoint.decide",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-c4a50f66-ba65-43eb-993e-5487ad3e3be6",
+              "receipt-3d6c601b-0ac8-436b-b91d-d722622153eb"
+            ],
+            "terminal_receipt": "receipt-3d6c601b-0ac8-436b-b91d-d722622153eb"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.run.inspect",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-2d6bdbfc-226c-4458-bbb8-32ece2d0cc67",
+              "receipt-a4079802-6549-4c1a-a659-a8f57fc2fffa"
+            ],
+            "terminal_receipt": "receipt-a4079802-6549-4c1a-a659-a8f57fc2fffa"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.checkpoint.decide",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-43b10036-7ed3-4e24-ba3a-ce77cc50ae74",
+              "receipt-6d6bfabe-d036-4dbf-b185-bb6bd9e6a61c"
+            ],
+            "terminal_receipt": "receipt-6d6bfabe-d036-4dbf-b185-bb6bd9e6a61c"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.run.inspect",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-078ca900-fe7d-4f36-9ea9-13b0c8abc927",
+              "receipt-e08f0879-077c-4bab-a173-e1c12c052d40"
+            ],
+            "terminal_receipt": "receipt-e08f0879-077c-4bab-a173-e1c12c052d40"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.workflow.run",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-52588c6d-890e-4c4f-90f4-3f9441bb244b",
+              "receipt-acffa6c9-7877-498a-a61e-7c8f2b3d44ed"
+            ],
+            "terminal_receipt": "receipt-acffa6c9-7877-498a-a61e-7c8f2b3d44ed"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.runs.list",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-5d30ca6b-f96c-4ae4-86a6-c7dd5eb542c5",
+              "receipt-ac0209a9-4e17-4b08-89bc-56e2ddfb7579"
+            ],
+            "terminal_receipt": "receipt-ac0209a9-4e17-4b08-89bc-56e2ddfb7579"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.run.inspect",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-365289a0-d443-41c9-9c61-de8093735b1e",
+              "receipt-2e90fdb0-8adf-4a2c-9be3-611155d3f4bf"
+            ],
+            "terminal_receipt": "receipt-2e90fdb0-8adf-4a2c-9be3-611155d3f4bf"
+          },
+          {
+            "agent": "kujo-workflow",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.dispatch.workflow.validate",
+            "decision": "none",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-eb1f10d2-9b44-42f3-9f18-711ef4e91af1"
+            ],
+            "terminal_receipt": "receipt-eb1f10d2-9b44-42f3-9f18-711ef4e91af1"
+          }
+        ],
+        "report": {
+          "message_ids": [
+            "msg_1606d00ec001CAZZ9LXj7v7Lda"
+          ],
+          "operations": [
+            {
+              "ability": "kujo.dispatch.workflow.validate",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-1b229f89-ad92-4291-978a-60b38e8ea03a"
+              ],
+              "explanation": "Validated specialist-workflow/complete.json; preflight passed offline with no errors or warnings, workflow_id specialist-workflow."
+            },
+            {
+              "ability": "kujo.dispatch.workflow.run",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-7cc506d1-21ac-4b15-bc80-09087abe834b"
+              ],
+              "explanation": "User declined the tool call; no execution occurred. Receipt-list evidence shows approval_required status with ability_approval_required error."
+            },
+            {
+              "ability": "kujo.dispatch.workflow.run",
+              "outcome": "cancelled",
+              "receipt_ids": [
+                "receipt-e6d04f54-0992-4cae-abdf-2aeac7ef38c5"
+              ],
+              "explanation": "Tool execution was interrupted before running; no run created. Receipt-list evidence shows approval_required status with ability_approval_required error."
+            },
+            {
+              "ability": "kujo.dispatch.workflow.run",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-75eb1442-a176-4979-9d6a-a9c71110146b"
+              ],
+              "explanation": "Executed complete.json with topic 'Bounded explicit Workflow acceptance'; run run-1792619018441-8583 completed with 1 step (timestamp_tool), exit code 0."
+            },
+            {
+              "ability": "kujo.dispatch.runs.list",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-e6cf5cb5-2c76-4de3-a587-f7608001fde1"
+              ],
+              "explanation": "Listed runs in complete/ output dir; found 1 completed run (run-1792619018441-8583) with 1 issue (missing report.json)."
+            },
+            {
+              "ability": "kujo.dispatch.run.inspect",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-19931d72-6336-45a6-ab47-174d4576cea1"
+              ],
+              "explanation": "Inspected run-1792619018441-8583; status completed, 1 step completed, no approvals or checkpoints, health issue: completed run missing report.json."
+            },
+            {
+              "ability": "kujo.dispatch.workflow.run",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-79988805-e05b-4cb2-a182-cf1b9c88b5a9"
+              ],
+              "explanation": "Executed checkpoint.json; run run-1792619042158-3364 paused at human checkpoint (step 'human') after completing step 'before'; 3 total steps."
+            },
+            {
+              "ability": "kujo.dispatch.runs.list",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-150246ec-512a-4d8d-bffe-032aaddf5c45"
+              ],
+              "explanation": "Listed runs in checkpoint/ output dir; found 1 paused run (run-1792619042158-3364), resumable, 0 issues."
+            },
+            {
+              "ability": "kujo.dispatch.run.inspect",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-818dda8a-dd58-4d3d-b18d-f6de09db8312"
+              ],
+              "explanation": "Inspected paused run; control view showed pending human intervention (event_id evt_run_1792619042158_3364_human, decision_id approval-human-1792619043655, state_revision 5, allowed actions approve/reject/request_changes/reply)."
+            },
+            {
+              "ability": "kujo.dispatch.checkpoint.decide",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-73ec9140-6f6f-4995-8175-13292459c514"
+              ],
+              "explanation": "User declined the tool call; no checkpoint decision applied. Receipt-list evidence shows approval_required status with ability_approval_required error."
+            },
+            {
+              "ability": "kujo.dispatch.checkpoint.decide",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-3d6c601b-0ac8-436b-b91d-d722622153eb"
+              ],
+              "explanation": "Applied approval but decision failed with dispatch_checkpoint_changed because expected_revision 6 did not match actual revision 5; no state mutation occurred."
+            },
+            {
+              "ability": "kujo.dispatch.run.inspect",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-a4079802-6549-4c1a-a659-a8f57fc2fffa"
+              ],
+              "explanation": "Re-inspected paused run; confirmed state_revision still 5, checkpoint unchanged after failed decision attempt, decision still pending."
+            },
+            {
+              "ability": "kujo.dispatch.checkpoint.decide",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-6d6bfabe-d036-4dbf-b185-bb6bd9e6a61c"
+              ],
+              "explanation": "Applied approve decision with expected_revision 5; run status became completed, step 'human' marked approved with reviewer note 'Explicit isolated acceptance decision'."
+            },
+            {
+              "ability": "kujo.dispatch.run.inspect",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-e08f0879-077c-4bab-a173-e1c12c052d40"
+              ],
+              "explanation": "Inspected completed run; all 3 steps completed (before, human, after), 2 approval entries (original pending + applied approved), health issue: completed run missing report.json, state_revision 12."
+            },
+            {
+              "ability": "kujo.dispatch.workflow.run",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-acffa6c9-7877-498a-a61e-7c8f2b3d44ed"
+              ],
+              "explanation": "Executed failed.json; run run-1792619099805-7164 failed at step 'bad-output' with non-retryable step_output_schema_validation_failed (missing required key 'missing_field')."
+            },
+            {
+              "ability": "kujo.dispatch.runs.list",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-ac0209a9-4e17-4b08-89bc-56e2ddfb7579"
+              ],
+              "explanation": "Listed runs in failed/ output dir; found 1 failed run (run-1792619099805-7164), not resumable, 0 issues."
+            },
+            {
+              "ability": "kujo.dispatch.run.inspect",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-2e90fdb0-8adf-4a2c-9be3-611155d3f4bf"
+              ],
+              "explanation": "Inspected failed run; 1 step 'bad-output' failed with non-retryable schema validation error, output_schema required ['missing_field'], no approvals or checkpoints."
+            },
+            {
+              "ability": "kujo.dispatch.workflow.validate",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-eb1f10d2-9b44-42f3-9f18-711ef4e91af1"
+              ],
+              "explanation": "Validated specialist-workflow/invalid.json; failed with 'step invalid has unsupported type: unknown'; no run created."
+            }
+          ],
+          "limitations": "This session exercised only Dispatch validate, run, runs-list, inspect, and checkpoint-decide abilities against three workflow files (complete.json, checkpoint.json, failed.json, invalid.json). It did not verify overall release readiness, did not test gateway, Leash, knowledge, RunLedger, Muzzle, or other Kujo abilities, did not test concurrent runs or resume, did not verify report generation (report.json/report_md were absent in all runs), did not test checkpoint reject or request_changes decisions, did not verify the checkpoint run's resume path, and did not verify any other workflow files beyond those explicitly requested."
+        }
+      }
+    },
+    {
+      "name": "ship",
+      "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+      "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+      "journey": {
+        "agent": "kujo-ship",
+        "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+        "session_id": "ses_e9f92d0f3ffeO3VbZUyFBr0f8c",
+        "scope": "informational release scan, actual passing/failing Eval and linked RunLedger; no publication",
+        "steps": [
+          {
+            "agent": "kujo-ship",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.shipcheck.repository.scan",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-01f41ddd-162c-43ad-af85-7ab2d35fddf1"
+            ],
+            "terminal_receipt": "receipt-01f41ddd-162c-43ad-af85-7ab2d35fddf1"
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.runledger.runs.start",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-d650dfad-3302-44d9-8983-dcf13666a5a3",
+              "receipt-0d77aeea-a6b3-4455-81b7-0a1dd844c705"
+            ],
+            "terminal_receipt": "receipt-0d77aeea-a6b3-4455-81b7-0a1dd844c705"
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.eval.suite.run",
+            "decision": "reject",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-7e611b21-58aa-4222-ba88-8684d0276c66"
+            ],
+            "terminal_receipt": null
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.eval.suite.run",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-cab45c3a-ae49-424c-a16a-8845b3e45e66",
+              "receipt-32a6db03-1d97-407c-b85b-7a7592b57992"
+            ],
+            "terminal_receipt": "receipt-32a6db03-1d97-407c-b85b-7a7592b57992"
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.eval.suite.run",
+            "decision": "once",
+            "expected_status": "failed",
+            "receipt_ids": [
+              "receipt-a3276772-55e9-4f05-a41a-77a996c9df35",
+              "receipt-65b7d0c4-8b58-45b8-b886-3d443a9b1bb7"
+            ],
+            "terminal_receipt": "receipt-65b7d0c4-8b58-45b8-b886-3d443a9b1bb7"
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.opencode.runledger.correlate",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-580f1325-2e77-4a4e-a38f-daf8067d4300",
+              "receipt-af2c00db-e2b0-495f-b542-67f0c7d811d9"
+            ],
+            "terminal_receipt": "receipt-af2c00db-e2b0-495f-b542-67f0c7d811d9"
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.runledger.runs.finish",
+            "decision": "once",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-91e1667f-62ed-4ab7-98e0-4686009904f7",
+              "receipt-2db91ea8-7d15-4232-99fd-df6916072435"
+            ],
+            "terminal_receipt": "receipt-2db91ea8-7d15-4232-99fd-df6916072435"
+          },
+          {
+            "agent": "kujo-ship",
+            "model": "hermes/reflection/beam-1.0-501b-a23b:free",
+            "ability": "kujo.runledger.runs.report",
+            "decision": "none",
+            "expected_status": "succeeded",
+            "receipt_ids": [
+              "receipt-c5268012-78f5-4201-9f78-b276db1a7033"
+            ],
+            "terminal_receipt": "receipt-c5268012-78f5-4201-9f78-b276db1a7033"
+          }
+        ],
+        "report": {
+          "message_ids": [
+            "msg_1606e0a30001BUb32X5w6kEos2"
+          ],
+          "operations": [
+            {
+              "ability": "kujo.shipcheck.repository.scan",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-01f41ddd-162c-43ad-af85-7ab2d35fddf1"
+              ],
+              "explanation": "Informational repository scan succeeded: 16 checks, 1 passed, 4 failed errors, 11 warnings; release gate not passed."
+            },
+            {
+              "ability": "kujo.runledger.runs.start",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-0d77aeea-a6b3-4455-81b7-0a1dd844c705"
+              ],
+              "explanation": "Started RunLedger run 2026-10-21-reflection-beam-1-0-501b-a23b-free-ship-acceptance-actual-eval-outcomes-no-publication-001; no git baseline was captured."
+            },
+            {
+              "ability": "kujo.eval.suite.run",
+              "outcome": "rejected",
+              "receipt_ids": [
+                "receipt-7e611b21-58aa-4222-ba88-8684d0276c66"
+              ],
+              "explanation": "Eval request for pass.json with output_dir rejected-eval was declined; receipt-list evidence shows approval_required and not_started, with no execution or result."
+            },
+            {
+              "ability": "kujo.eval.suite.run",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-32a6db03-1d97-407c-b85b-7a7592b57992"
+              ],
+              "explanation": "Eval request for pass.json with output_dir passed-eval succeeded: 1 of 1 check passed, with a non-fatal type-checking warning about an undefined function."
+            },
+            {
+              "ability": "kujo.eval.suite.run",
+              "outcome": "failed",
+              "receipt_ids": [
+                "receipt-65b7d0c4-8b58-45b8-b886-3d443a9b1bb7"
+              ],
+              "explanation": "Eval request for fail.json with output_dir failed-eval failed because missing.txt did not exist: 0 of 1 check passed."
+            },
+            {
+              "ability": "kujo.opencode.runledger.correlate",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-af2c00db-e2b0-495f-b542-67f0c7d811d9"
+              ],
+              "explanation": "Correlated the RunLedger run with eval run ID eval-8b3022041a9f38fd626833dc; the correlation stores a reference and does not verify the eval outcome."
+            },
+            {
+              "ability": "kujo.runledger.runs.finish",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-2db91ea8-7d15-4232-99fd-df6916072435"
+              ],
+              "explanation": "Finished the RunLedger run with status fail and verdict stating the fixture Eval failed, the ShipCheck scan is informational, and no release is authorized or published."
+            },
+            {
+              "ability": "kujo.runledger.runs.report",
+              "outcome": "succeeded",
+              "receipt_ids": [
+                "receipt-c5268012-78f5-4201-9f78-b276db1a7033"
+              ],
+              "explanation": "Generated the RunLedger report: 1 run total, 0 pass, 0 partial, 1 fail, 0 abandoned; no cost data recorded."
+            }
+          ],
+          "limitations": "This session did not verify comprehensive repository quality or release readiness. The ShipCheck result was an informational metadata scan with 4 failing errors and 11 warnings. Eval coverage was limited to single file-existence checks, one of which failed. The RunLedger run had no git baseline, cost data, or validated correlated eval outcome. No publication, push, release, or shipping approval occurred."
+        }
+      }
+    }
+  ],
+  "prior_attempts": [
+    {
+      "provider": "openai/gpt-5.6-sol",
+      "outcome": "Blocked before acceptance; refreshed ChatGPT login succeeded but subscription sharing usage limit exhausted."
+    },
+    {
+      "provider": "opencode/glm-5.3-flash-free",
+      "outcome": "HTTP 403 before acceptance."
+    }
+  ]
+}

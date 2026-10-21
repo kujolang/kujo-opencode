@@ -1,0 +1,695 @@
+{
+  "schema": "kujo.opencode.promotion-host-acceptance/v1",
+  "date": "2026-10-21",
+  "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+  "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+  "candidate_run_id": 39677049414,
+  "host_matrix_run_id": 39677592639,
+  "host_matrix_url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639",
+  "status": "passed",
+  "scope": "Fresh install and upgrade on three OSes; native and rendered acceptance on minimum OpenCode 2.0.31 and latest 2.1.2. No model inference in CI.",
+  "jobs": [
+    {
+      "name": "resolve",
+      "conclusion": "success",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/job/119491385645"
+    },
+    {
+      "name": "native (macos-15, latest, 2.1.2)",
+      "conclusion": "success",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/job/119491490636"
+    },
+    {
+      "name": "native (ubuntu-24.04, minimum, 2.0.31)",
+      "conclusion": "success",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/job/119491490659"
+    },
+    {
+      "name": "native (ubuntu-24.04, latest, 2.1.2)",
+      "conclusion": "success",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/job/119491490670"
+    },
+    {
+      "name": "native (windows-2025, latest, 2.1.2)",
+      "conclusion": "success",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/job/119491490715"
+    },
+    {
+      "name": "native (windows-2025, minimum, 2.0.31)",
+      "conclusion": "success",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/job/119491490718"
+    },
+    {
+      "name": "native (macos-15, minimum, 2.0.31)",
+      "conclusion": "success",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/job/119491490829"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12383285015,
+      "name": "host-ubuntu-24.04-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12383285015"
+    },
+    {
+      "id": 12383160625,
+      "name": "host-windows-2025-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12383160625"
+    },
+    {
+      "id": 12382862362,
+      "name": "host-windows-2025-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382862362"
+    },
+    {
+      "id": 12382774251,
+      "name": "host-macos-15-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382774251"
+    },
+    {
+      "id": 12382754407,
+      "name": "native-macos-15-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382754407"
+    },
+    {
+      "id": 12382689866,
+      "name": "native-macos-15-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382689866"
+    },
+    {
+      "id": 12382619471,
+      "name": "fresh-macos-15-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382619471"
+    },
+    {
+      "id": 12382473641,
+      "name": "native-ubuntu-24.04-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382473641"
+    },
+    {
+      "id": 12382444513,
+      "name": "rendered-ubuntu-24.04-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382444513"
+    },
+    {
+      "id": 12382438844,
+      "name": "rendered-windows-2025-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382438844"
+    },
+    {
+      "id": 12382364676,
+      "name": "fresh-windows-2025-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382364676"
+    },
+    {
+      "id": 12382283815,
+      "name": "rendered-ubuntu-24.04-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382283815"
+    },
+    {
+      "id": 12382119945,
+      "name": "native-windows-2025-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382119945"
+    },
+    {
+      "id": 12382058591,
+      "name": "rendered-macos-15-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382058591"
+    },
+    {
+      "id": 12382008203,
+      "name": "native-ubuntu-24.04-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382008203"
+    },
+    {
+      "id": 12382003071,
+      "name": "fresh-ubuntu-24.04-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12382003071"
+    },
+    {
+      "id": 12381823334,
+      "name": "host-ubuntu-24.04-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12381823334"
+    },
+    {
+      "id": 12381708754,
+      "name": "host-macos-15-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12381708754"
+    },
+    {
+      "id": 12381633640,
+      "name": "native-windows-2025-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12381633640"
+    },
+    {
+      "id": 12381443715,
+      "name": "rendered-windows-2025-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12381443715"
+    },
+    {
+      "id": 12381283731,
+      "name": "rendered-macos-15-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "url": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639/artifacts/12381283731"
+    }
+  ],
+  "verification": [
+    {
+      "artifact": "fresh-macos-15-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "root": "/var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/kujo-opencode-packed-I9BUDh",
+        "tarball": "/var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/kujo-opencode-packed-I9BUDh/kujolang-kujo-opencode-0.2.1.tgz",
+        "registry_consumer": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "upgrade": "0.1.0 -> 0.2.1",
+        "old_project_retained": true,
+        "mixed_version_verified": true,
+        "fresh_sources": 28,
+        "packed_mcp_tools": 10,
+        "starter_kinds": [
+          "script",
+          "agent",
+          "api",
+          "mcp"
+        ],
+        "starter_services_verified": true,
+        "agent_fixture_verified": true,
+        "session_runledger_verified": true,
+        "browser_launch_verified": true,
+        "browser_check_verified": true,
+        "knowledge_verified": true,
+        "fixture_workdirs_retained": false
+      }
+    },
+    {
+      "artifact": "fresh-ubuntu-24.04-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "root": "/tmp/kujo-opencode-packed-bjUYpH",
+        "tarball": "/tmp/kujo-opencode-packed-bjUYpH/kujolang-kujo-opencode-0.2.1.tgz",
+        "registry_consumer": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "upgrade": "0.1.0 -> 0.2.1",
+        "old_project_retained": true,
+        "mixed_version_verified": true,
+        "fresh_sources": 28,
+        "packed_mcp_tools": 10,
+        "starter_kinds": [
+          "script",
+          "agent",
+          "api",
+          "mcp"
+        ],
+        "starter_services_verified": true,
+        "agent_fixture_verified": true,
+        "session_runledger_verified": true,
+        "browser_launch_verified": true,
+        "browser_check_verified": true,
+        "knowledge_verified": true,
+        "fixture_workdirs_retained": false
+      }
+    },
+    {
+      "artifact": "fresh-windows-2025-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "root": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kujo-opencode-packed-hxNVCX",
+        "tarball": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kujo-opencode-packed-hxNVCX\\kujolang-kujo-opencode-0.2.1.tgz",
+        "registry_consumer": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "upgrade": "0.1.0 -> 0.2.1",
+        "old_project_retained": true,
+        "mixed_version_verified": true,
+        "fresh_sources": 28,
+        "packed_mcp_tools": 10,
+        "starter_kinds": [
+          "script",
+          "agent",
+          "api",
+          "mcp"
+        ],
+        "starter_services_verified": true,
+        "agent_fixture_verified": true,
+        "session_runledger_verified": true,
+        "browser_launch_verified": true,
+        "browser_check_verified": true,
+        "knowledge_verified": true,
+        "fixture_workdirs_retained": false
+      }
+    },
+    {
+      "artifact": "native-macos-15-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "root": "/var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/kujo-native-host-wl8t6F",
+        "host": "opencode v2.1.2",
+        "platform": "darwin",
+        "arch": "arm64",
+        "pinned_sources": true,
+        "rendered_tui": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "live": null,
+        "specialistJourney": null,
+        "specialistJourneys": [],
+        "dispatchTransport": null,
+        "failureGuard": null,
+        "cancellation": null,
+        "telemetry": null,
+        "commands": [
+          "kujo-status",
+          "kujo-evidence",
+          "kujo-profile"
+        ],
+        "native_status_recorded": true,
+        "native_evidence_recorded": true,
+        "native_profile_permission": true,
+        "native_capability_permissions": true,
+        "native_lifecycle_permissions": true,
+        "native_session_runledger": true,
+        "nativeTransportRecovery": {
+          "forwarded_requests": 1,
+          "upstream_status": 200,
+          "upstream_response_consumed": true,
+          "client_response_lost": true,
+          "scope": "session RunLedger start; no inference or Dispatch transport claim",
+          "run_id": "2026-10-21-glm-5-3-flash-free-opencode-session-ses-e9fa97e45ffevoeqgiceob2ebe-001"
+        },
+        "native_browser_readiness": true,
+        "native_knowledge_verified": true,
+        "native_automatic_tracking": false,
+        "browser_ready": false,
+        "model_call": false
+      }
+    },
+    {
+      "artifact": "native-macos-15-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "root": "/var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/kujo-native-host-1LST79",
+        "host": "opencode v2.0.31",
+        "platform": "darwin",
+        "arch": "arm64",
+        "pinned_sources": true,
+        "rendered_tui": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "live": null,
+        "specialistJourney": null,
+        "specialistJourneys": [],
+        "dispatchTransport": null,
+        "failureGuard": null,
+        "cancellation": null,
+        "telemetry": null,
+        "commands": [
+          "kujo-status",
+          "kujo-evidence",
+          "kujo-profile",
+          "kujo-doctor",
+          "kujo-review"
+        ],
+        "native_status_recorded": true,
+        "native_evidence_recorded": true,
+        "native_profile_permission": true,
+        "native_capability_permissions": true,
+        "native_lifecycle_permissions": true,
+        "native_session_runledger": true,
+        "nativeTransportRecovery": {
+          "forwarded_requests": 1,
+          "upstream_status": 200,
+          "upstream_response_consumed": true,
+          "client_response_lost": true,
+          "scope": "session RunLedger start; no inference or Dispatch transport claim",
+          "run_id": "2026-10-21-glm-5-3-flash-free-opencode-session-ses-e9fa79940ffe98nfhgppronwzr-001"
+        },
+        "native_browser_readiness": true,
+        "native_knowledge_verified": true,
+        "native_automatic_tracking": false,
+        "browser_ready": false,
+        "model_call": false
+      }
+    },
+    {
+      "artifact": "native-ubuntu-24.04-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "root": "/tmp/kujo-native-host-4051pt",
+        "host": "opencode v2.1.2",
+        "platform": "linux",
+        "arch": "x64",
+        "pinned_sources": true,
+        "rendered_tui": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "live": null,
+        "specialistJourney": null,
+        "specialistJourneys": [],
+        "dispatchTransport": null,
+        "failureGuard": null,
+        "cancellation": null,
+        "telemetry": null,
+        "commands": [
+          "kujo-status",
+          "kujo-evidence",
+          "kujo-profile",
+          "kujo-doctor",
+          "kujo-review"
+        ],
+        "native_status_recorded": true,
+        "native_evidence_recorded": true,
+        "native_profile_permission": true,
+        "native_capability_permissions": true,
+        "native_lifecycle_permissions": true,
+        "native_session_runledger": true,
+        "nativeTransportRecovery": {
+          "forwarded_requests": 1,
+          "upstream_status": 200,
+          "upstream_response_consumed": true,
+          "client_response_lost": true,
+          "scope": "session RunLedger start; no inference or Dispatch transport claim",
+          "run_id": "2026-10-21-glm-5-3-flash-free-opencode-session-ses-e9fab4532ffecw44fub0mgzkwl-001"
+        },
+        "native_browser_readiness": true,
+        "native_knowledge_verified": true,
+        "native_automatic_tracking": false,
+        "browser_ready": false,
+        "model_call": false
+      }
+    },
+    {
+      "artifact": "native-ubuntu-24.04-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "root": "/tmp/kujo-native-host-UfIWMe",
+        "host": "opencode v2.0.31",
+        "platform": "linux",
+        "arch": "x64",
+        "pinned_sources": true,
+        "rendered_tui": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "live": null,
+        "specialistJourney": null,
+        "specialistJourneys": [],
+        "dispatchTransport": null,
+        "failureGuard": null,
+        "cancellation": null,
+        "telemetry": null,
+        "commands": [
+          "kujo-status",
+          "kujo-evidence",
+          "kujo-profile",
+          "kujo-doctor",
+          "kujo-review"
+        ],
+        "native_status_recorded": true,
+        "native_evidence_recorded": true,
+        "native_profile_permission": true,
+        "native_capability_permissions": true,
+        "native_lifecycle_permissions": true,
+        "native_session_runledger": true,
+        "nativeTransportRecovery": {
+          "forwarded_requests": 1,
+          "upstream_status": 200,
+          "upstream_response_consumed": true,
+          "client_response_lost": true,
+          "scope": "session RunLedger start; no inference or Dispatch transport claim",
+          "run_id": "2026-10-21-glm-5-3-flash-free-opencode-session-ses-e9fa9afbeffedh9se7m514tysv-001"
+        },
+        "native_browser_readiness": true,
+        "native_knowledge_verified": true,
+        "native_automatic_tracking": false,
+        "browser_ready": false,
+        "model_call": false
+      }
+    },
+    {
+      "artifact": "native-windows-2025-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "root": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kujo-native-host-VyqNWG",
+        "host": "opencode v2.1.2",
+        "platform": "win32",
+        "arch": "x64",
+        "pinned_sources": true,
+        "rendered_tui": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "live": null,
+        "specialistJourney": null,
+        "specialistJourneys": [],
+        "dispatchTransport": null,
+        "failureGuard": null,
+        "cancellation": null,
+        "telemetry": null,
+        "commands": [
+          "kujo-status",
+          "kujo-evidence",
+          "kujo-profile",
+          "kujo-doctor",
+          "kujo-review"
+        ],
+        "native_status_recorded": true,
+        "native_evidence_recorded": true,
+        "native_profile_permission": true,
+        "native_capability_permissions": true,
+        "native_lifecycle_permissions": true,
+        "native_session_runledger": true,
+        "nativeTransportRecovery": {
+          "forwarded_requests": 1,
+          "upstream_status": 200,
+          "upstream_response_consumed": true,
+          "client_response_lost": true,
+          "scope": "session RunLedger start; no inference or Dispatch transport claim",
+          "run_id": "2026-10-21-glm-5-3-flash-free-opencode-session-ses-e9fa9e3c3ffebqky8zl6m0kugn-001"
+        },
+        "native_browser_readiness": true,
+        "native_knowledge_verified": true,
+        "native_automatic_tracking": false,
+        "browser_ready": false,
+        "model_call": false
+      }
+    },
+    {
+      "artifact": "native-windows-2025-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "root": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kujo-native-host-A8LP4g",
+        "host": "opencode v2.0.31",
+        "platform": "win32",
+        "arch": "x64",
+        "pinned_sources": true,
+        "rendered_tui": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "live": null,
+        "specialistJourney": null,
+        "specialistJourneys": [],
+        "dispatchTransport": null,
+        "failureGuard": null,
+        "cancellation": null,
+        "telemetry": null,
+        "commands": [
+          "kujo-status",
+          "kujo-evidence",
+          "kujo-profile",
+          "kujo-doctor",
+          "kujo-review"
+        ],
+        "native_status_recorded": true,
+        "native_evidence_recorded": true,
+        "native_profile_permission": true,
+        "native_capability_permissions": true,
+        "native_lifecycle_permissions": true,
+        "native_session_runledger": true,
+        "nativeTransportRecovery": {
+          "forwarded_requests": 1,
+          "upstream_status": 200,
+          "upstream_response_consumed": true,
+          "client_response_lost": true,
+          "scope": "session RunLedger start; no inference or Dispatch transport claim",
+          "run_id": "2026-10-21-glm-5-3-flash-free-opencode-session-ses-e9fa831bcffepoqgnchx3bi1zg-001"
+        },
+        "native_browser_readiness": true,
+        "native_knowledge_verified": true,
+        "native_automatic_tracking": false,
+        "browser_ready": false,
+        "model_call": false
+      }
+    },
+    {
+      "artifact": "rendered-macos-15-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "host": "opencode v2.1.2",
+        "terminal_backend": "posix",
+        "service_result_pages": null,
+        "dimensions": [
+          80,
+          24
+        ],
+        "root": "/var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/kujo-rendered-tui-fy31un7q",
+        "initial_requested_session": "ses_kujo_terminal_dc290c428bbe4f898bc1567a3090785a",
+        "model_call": false,
+        "effects_approved": true,
+        "rendered_ledger": true,
+        "rendered_automatic_completion": false,
+        "rendered_completion_evidence": false,
+        "live_ship_specialist": false,
+        "rendered_leash": false,
+        "rendered_gateway": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "pinned_sources": true
+      }
+    },
+    {
+      "artifact": "rendered-macos-15-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "host": "opencode v2.0.31",
+        "terminal_backend": "posix",
+        "service_result_pages": null,
+        "dimensions": [
+          80,
+          24
+        ],
+        "root": "/var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/kujo-rendered-tui-56hegm_f",
+        "initial_requested_session": "ses_kujo_terminal_6ddc3c2d0559402cbdd8768e7109cf4e",
+        "model_call": false,
+        "effects_approved": true,
+        "rendered_ledger": true,
+        "rendered_automatic_completion": false,
+        "rendered_completion_evidence": false,
+        "live_ship_specialist": false,
+        "rendered_leash": false,
+        "rendered_gateway": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "pinned_sources": true
+      }
+    },
+    {
+      "artifact": "rendered-ubuntu-24.04-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "host": "opencode v2.1.2",
+        "terminal_backend": "posix",
+        "service_result_pages": null,
+        "dimensions": [
+          80,
+          24
+        ],
+        "root": "/tmp/kujo-rendered-tui-ik5nvbal",
+        "initial_requested_session": "ses_kujo_terminal_c4602a5e30fe4dec9d979ba69514e182",
+        "model_call": false,
+        "effects_approved": true,
+        "rendered_ledger": true,
+        "rendered_automatic_completion": false,
+        "rendered_completion_evidence": false,
+        "live_ship_specialist": false,
+        "rendered_leash": false,
+        "rendered_gateway": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "pinned_sources": true
+      }
+    },
+    {
+      "artifact": "rendered-ubuntu-24.04-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "host": "opencode v2.0.31",
+        "terminal_backend": "posix",
+        "service_result_pages": null,
+        "dimensions": [
+          80,
+          24
+        ],
+        "root": "/tmp/kujo-rendered-tui-l0x0mia0",
+        "initial_requested_session": "ses_kujo_terminal_ac5d7edecf1346efb74c5edbb30941e1",
+        "model_call": false,
+        "effects_approved": true,
+        "rendered_ledger": true,
+        "rendered_automatic_completion": false,
+        "rendered_completion_evidence": false,
+        "live_ship_specialist": false,
+        "rendered_leash": false,
+        "rendered_gateway": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "pinned_sources": true
+      }
+    },
+    {
+      "artifact": "rendered-windows-2025-latest-2.1.2-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "host": "opencode v2.1.2",
+        "terminal_backend": "conpty",
+        "service_result_pages": null,
+        "dimensions": [
+          80,
+          24
+        ],
+        "root": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kujo-rendered-tui-_eq8npmm",
+        "initial_requested_session": "ses_kujo_terminal_293129836b3a490cad7d93b2bd3030c5",
+        "model_call": false,
+        "effects_approved": true,
+        "rendered_ledger": true,
+        "rendered_automatic_completion": false,
+        "rendered_completion_evidence": false,
+        "live_ship_specialist": false,
+        "rendered_leash": false,
+        "rendered_gateway": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "pinned_sources": true
+      }
+    },
+    {
+      "artifact": "rendered-windows-2025-minimum-2.0.31-09073bbaf6aac70029b0706a710cd077d7565f04",
+      "evidence": {
+        "ok": true,
+        "host": "opencode v2.0.31",
+        "terminal_backend": "conpty",
+        "service_result_pages": null,
+        "dimensions": [
+          80,
+          24
+        ],
+        "root": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kujo-rendered-tui-06lim3yc",
+        "initial_requested_session": "ses_kujo_terminal_cf5898c1afa94561b19b714c5e0e93fc",
+        "model_call": false,
+        "effects_approved": true,
+        "rendered_ledger": true,
+        "rendered_automatic_completion": false,
+        "rendered_completion_evidence": false,
+        "live_ship_specialist": false,
+        "rendered_leash": false,
+        "rendered_gateway": false,
+        "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+        "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+        "candidate_integrity": "sha512-W4Lx14fzrc07i3CMvHwddRXClyYKzvueV/xMeS1XpIVxbQLtanPjUm6tfQrlvftfnctPq6Ma3F5PrDNngUZAZQ==",
+        "pinned_sources": true
+      }
+    }
+  ]
+}
