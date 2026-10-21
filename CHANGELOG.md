@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 — 2026-10-21
+
+- Update supported Node.js runtime versions and release packaging metadata.
+
 ## 0.2.0 — unreleased
 
 - Fix Windows project activation paths and invoke npm without a command shell.

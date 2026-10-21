@@ -1,6 +1,6 @@
 # Kujo OpenCode
 
-[![Version](https://img.shields.io/badge/version-0.2.0-black)](https://www.npmjs.com/package/@kujolang/kujo-opencode/v/0.2.0)
+[![Version](https://img.shields.io/badge/version-0.2.1-black)](https://www.npmjs.com/package/@kujolang/kujo-opencode/v/0.2.1)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 [![built with Kujo](https://img.shields.io/badge/built%20with-Kujo-white.svg)](https://github.com/kujolang/kujo)
 [![OpenCode](https://img.shields.io/badge/OpenCode-2-black)](https://opencode.ai/v2/docs/)
@@ -18,10 +18,10 @@ the exact package identity, test scope and provider limits.
 ## Install
 
 You need Node.js 20+, npm, Git and [OpenCode 2](https://opencode.ai/v2/docs/).
-Install version 0.2.0 from npm, then configure your project:
+Install version 0.2.1 from npm, then configure your project:
 
 ```sh
-npm install --global @kujolang/kujo-opencode@0.2.0
+npm install --global @kujolang/kujo-opencode@0.2.1
 kujo-opencode setup
 kujo-opencode doctor
 kujo-opencode demo
@@ -32,7 +32,7 @@ You can also install the matching archive from the
 [release page](https://github.com/kujolang/kujo-opencode/releases):
 
 ```sh
-npm install --global /path/to/kujolang-kujo-opencode-0.2.0.tgz
+npm install --global /path/to/kujolang-kujo-opencode-0.2.1.tgz
 ```
 
 Setup downloads 28 pinned repositories, installs the Kujo runtime and adds the
