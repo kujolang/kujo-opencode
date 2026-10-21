@@ -1,3 +1,4 @@
+import {VERSION} from '../lib/version.mjs';
 import {verifyMixedVersion} from './mixed-version-acceptance.mjs';
 import {createHash} from 'node:crypto';
 import {createServer} from 'node:http';
@@ -138,7 +139,7 @@ const rpc=await new Promise((resolveResult,reject)=>{
 assert.equal(rpc.result.tools.length,10);
 for(const operation of ['preview','index','status','query','recover'])assert.ok(rpc.result.tools.some(tool=>tool.name===`kujo_knowledge_${operation}`));
 if(candidate)await verifyCandidate(candidate.directory);
-const verification={ok:true,root,tarball,registry_consumer:registry,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),upgrade:'0.1.0 -> 0.2.0',old_project_retained:true,mixed_version_verified:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,starter_kinds:['script','agent','api','mcp'],starter_services_verified:true,agent_fixture_verified:true,session_runledger_verified:true,browser_launch_verified:true,browser_check_verified:true,knowledge_verified:true,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
+const verification={ok:true,root,tarball,registry_consumer:registry,...(candidate?{candidate_commit:candidate.commit,candidate_sha256:candidate.sha256,candidate_integrity:candidate.integrity}:{}),upgrade:`0.1.0 -> ${VERSION}`,old_project_retained:true,mixed_version_verified:true,fresh_sources:Object.keys(installed.sources).length,packed_mcp_tools:rpc.result.tools.length,starter_kinds:['script','agent','api','mcp'],starter_services_verified:true,agent_fixture_verified:true,session_runledger_verified:true,browser_launch_verified:true,browser_check_verified:true,knowledge_verified:true,fixture_workdirs_retained:process.env.KUJO_TEST_KEEP_FIXTURE==='1'};
 await writeFile(join(root,'verification.json'),JSON.stringify(verification,null,2)+'\n');
 // Keep the immutable tarballs and verification record, not hundreds of MiB of
 // duplicate clones/caches after every successful run. Failures retain diagnosis.
