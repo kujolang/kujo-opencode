@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 [![built with Kujo](https://img.shields.io/badge/built%20with-Kujo-white.svg)](https://github.com/kujolang/kujo)
 [![OpenCode](https://img.shields.io/badge/OpenCode-2-black)](https://opencode.ai/v2/docs/)
-[![Node.js](https://img.shields.io/badge/Node.js-20%2B-lightgrey)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-22.23.4%2B%20%7C%2024.22.1%2B%20%7C%2026.12.1%2B-lightgrey)](https://nodejs.org/)
 
 Run Kujo tools inside OpenCode 2. Inspect a repository, build and test Kujo programs,
 review changes, check a browser workflow, and gather release evidence. OpenCode
@@ -17,7 +17,7 @@ the exact package identity, test scope and provider limits.
 
 ## Install
 
-You need Node.js 20+, npm, Git and [OpenCode 2](https://opencode.ai/v2/docs/).
+You need Node.js 22.23.4+ on the 22.x line, 24.22.1+ on the 24.x line, or 26.12.1+, npm, Git and [OpenCode 2](https://opencode.ai/v2/docs/).
 Install version 0.2.1 from npm, then configure your project:
 
 ```sh
