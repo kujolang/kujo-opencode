@@ -34,7 +34,22 @@ Each outcome requires a checked-in test or acceptance record with exact runtime,
 package digest and host version. Failure paths are part of acceptance. No model
 proxy, automatic approval, hidden network telemetry, or duplicated product logic.
 
-## Current acceptance status — 2026-10-17
+## Latest release — 2026-10-21
+
+[Version 0.2.1](acceptance/2026-10-21-publication.json) is published on npm and
+GitHub from the exact accepted archive. The [host matrix](acceptance/2026-10-21-release-hosts.json)
+passed on Linux, macOS and Windows with OpenCode 2.0.31 and 2.1.2.
+All six specialists passed 50 operations with receipt-grounded reports through
+an explicitly configured local Hermes free Beam connection on macOS x64.
+[Lifecycle](acceptance/2026-10-21-release-lifecycle.json),
+[specialist](acceptance/2026-10-21-release-specialists.json) and
+[Dispatch recovery](acceptance/2026-10-21-release-dispatch.json) records retain
+that provider and platform scope. Registry integrity, signatures/provenance,
+fresh installation and upgrade passed in the protected publication workflow.
+Node requirements are enforced by the package engines: 22.23.4+ on 22.x,
+24.22.1+ on 24.x, or 26.12.1+.
+
+## Historical 0.2.0 acceptance — 2026-10-17
 
 The release tag `v0.2.0` points to `587401b86e0fe1c5bfc2c8373946abbfb8d607dd`.
 The live acceptance archive was built from `bef63f4200e3bf530cf4baab21aa524e6fca13ea`.

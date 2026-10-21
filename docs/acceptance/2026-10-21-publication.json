@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-21",
+  "version": "0.2.1",
+  "tag": "v0.2.1",
+  "candidate_commit": "09073bbaf6aac70029b0706a710cd077d7565f04",
+  "candidate_sha256": "56c6f9c431dbae3d0a74e77b74b6d326227be2b93a63fd90788ed551ad543983",
+  "candidate_run": "https://github.com/kujolang/kujo-opencode/actions/runs/39681660830",
+  "host_matrix_run": "https://github.com/kujolang/kujo-opencode/actions/runs/39677592639",
+  "live_acceptance_run": "https://github.com/kujolang/kujo-opencode/actions/runs/39681666092",
+  "publication_run": "https://github.com/kujolang/kujo-opencode/actions/runs/39682637704",
+  "release": "https://github.com/kujolang/kujo-opencode/releases/tag/v0.2.1",
+  "registry_consumer": "passed: exact integrity, signatures/provenance, fresh installation and upgrade",
+  "public_github_archive": "SHA-256 matches accepted candidate",
+  "live_provider_scope": "macOS x64/OpenCode 2.1.2 through the explicitly configured local Hermes free Beam connection; all six specialists and 50 operations, lifecycle and Dispatch recovery passed."
+}
